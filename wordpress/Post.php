@@ -5,6 +5,12 @@ namespace Charm\WordPress;
 use WP_Post,
     WP_Query;
 
+/**
+ * Class Post
+ *
+ * @author Ryan Sechrest
+ * @package Charm\WordPress
+ */
 class Post
 {
     /**
@@ -266,6 +272,7 @@ class Post
     /**
      * Create instance and load from key
      *
+     * @see WP_Post
      * @param int|string|WP_Post $key
      * @return Post
      */
@@ -288,10 +295,11 @@ class Post
     /**
      * Get posts via WP_Query
      *
+     * @see WP_Post, WP_Query
      * @param array $params
      * @return Post[]
      */
-    public static function get($params)
+    public static function get(array $params)
     {
         $posts = [];
         $query = new WP_Query($params);
@@ -299,7 +307,7 @@ class Post
             return $posts;
         }
 
-        return array_map(function($post) {
+        return array_map(function(WP_Post $post) {
             return Post::init($post);
         }, $query->posts);
     }
@@ -309,6 +317,7 @@ class Post
     /**
      * Load instance from ID
      *
+     * @see get_post(), WP_Post
      * @param int $id
      */
     private function load_from_id($id)
@@ -326,6 +335,7 @@ class Post
     /**
      * Load instance from path
      *
+     * @see get_page_by_path(), WP_Post
      * @param string $path
      */
     private function load_from_path($path)
@@ -343,6 +353,7 @@ class Post
     /**
      * Load instance from WP_Post object
      *
+     * @see WP_Post
      * @param WP_Post $post
      */
     private function load_from_post(WP_Post $post)
@@ -374,6 +385,8 @@ class Post
 
     /**
      * Load instance from global WP_Post object
+     *
+     * @see get_post(), WP_Post
      */
     private function load_from_global_post()
     {
@@ -417,6 +430,7 @@ class Post
     /**
      * Create new post
      *
+     * @see wp_insert_post()
      * @return bool
      */
     public function create()
@@ -433,6 +447,7 @@ class Post
     /**
      * Update existing post
      *
+     * @see wp_update_post()
      * @return bool
      */
     public function update()
@@ -448,6 +463,7 @@ class Post
     /**
      * Move post to trash
      *
+     * @see wp_delete_post()
      * @return bool
      */
     public function trash()
@@ -462,6 +478,7 @@ class Post
     /**
      * Restore post from trash
      *
+     * @see wp_untrash_post()
      * @return bool
      */
     public function restore()
@@ -476,6 +493,7 @@ class Post
     /**
      * Delete post permanently
      *
+     * @see wp_delete_post()
      * @return bool
      */
     public function delete()
@@ -573,6 +591,7 @@ class Post
     /**
      * Convert instance to JSON
      *
+     * @see json_encode()
      * @return string
      */
     public function to_json()
