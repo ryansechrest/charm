@@ -295,7 +295,8 @@ class Post
     /**
      * Get posts via WP_Query
      *
-     * @see WP_Post, WP_Query
+     * @see WP_Post
+     * @see WP_Query
      * @param array $params
      * @return Post[]
      */
@@ -317,7 +318,8 @@ class Post
     /**
      * Load instance from ID
      *
-     * @see get_post(), WP_Post
+     * @see get_post()
+     * @see WP_Post
      * @param int $id
      */
     private function load_from_id($id)
@@ -335,7 +337,8 @@ class Post
     /**
      * Load instance from path
      *
-     * @see get_page_by_path(), WP_Post
+     * @see get_page_by_path()
+     * @see WP_Post
      * @param string $path
      */
     private function load_from_path($path)
@@ -386,7 +389,8 @@ class Post
     /**
      * Load instance from global WP_Post object
      *
-     * @see get_post(), WP_Post
+     * @see get_post()
+     * @see WP_Post
      */
     private function load_from_global_post()
     {
