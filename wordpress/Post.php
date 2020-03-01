@@ -515,73 +515,73 @@ class Post
     public function to_array()
     {
         $data = [];
-        if ($this->id) {
+        if ($this->id !== null) {
             $data['id'] = $this->id;
         }
-        if ($this->post_author) {
+        if ($this->post_author !== null) {
             $data['post_author'] = $this->post_author;
         }
-        if ($this->post_date) {
+        if ($this->post_date !== null) {
             $data['post_date'] = $this->post_date;
         }
-        if ($this->post_date_gmt) {
+        if ($this->post_date_gmt !== null) {
             $data['post_date_gmt'] = $this->post_date_gmt;
         }
-        if ($this->post_content) {
+        if ($this->post_content !== null) {
             $data['post_content'] = $this->post_content;
         }
-        if ($this->post_title) {
+        if ($this->post_title !== null) {
             $data['post_title'] = $this->post_title;
         }
-        if ($this->post_excerpt) {
+        if ($this->post_excerpt !== null) {
             $data['post_excerpt'] = $this->post_excerpt;
         }
-        if ($this->post_status) {
+        if ($this->post_status !== null) {
             $data['post_status'] = $this->post_status;
         }
-        if ($this->comment_status) {
+        if ($this->comment_status !== null) {
             $data['comment_status'] = $this->comment_status;
         }
-        if ($this->ping_status) {
+        if ($this->ping_status !== null) {
             $data['ping_status'] = $this->ping_status;
         }
-        if ($this->post_password) {
+        if ($this->post_password !== null) {
             $data['post_password'] = $this->post_password;
         }
-        if ($this->post_name) {
+        if ($this->post_name !== null) {
             $data['post_name'] = $this->post_name;
         }
-        if ($this->to_ping) {
+        if ($this->to_ping !== null) {
             $data['to_ping'] = $this->to_ping;
         }
-        if ($this->pinged) {
+        if ($this->pinged !== null) {
             $data['pinged'] = $this->pinged;
         }
-        if ($this->post_modified) {
+        if ($this->post_modified !== null) {
             $data['post_modified'] = $this->post_modified;
         }
-        if ($this->post_modified_gmt) {
+        if ($this->post_modified_gmt !== null) {
             $data['post_modified_gmt'] = $this->post_modified_gmt;
         }
-        if ($this->post_content_filtered) {
+        if ($this->post_content_filtered !== null) {
             $data['post_content_filtered'] = $this->post_content_filtered;
         }
-        if ($this->post_parent) {
+        if ($this->post_parent !== null) {
             $data['post_parent'] = $this->post_parent;
         }
-        if ($this->guid) {
+        if ($this->guid !== null) {
             $data['guid'] = $this->guid;
         }
-        if ($this->menu_order) {
+        if ($this->menu_order !== null) {
             $data['menu_order'] = $this->menu_order;
         }
-        if ($this->post_type) {
+        if ($this->post_type !== null) {
             $data['post_type'] = $this->post_type;
         }
-        if ($this->post_mime_type) {
+        if ($this->post_mime_type !== null) {
             $data['post_mime_type'] = $this->post_mime_type;
         }
-        if ($this->comment_count) {
+        if ($this->comment_count !== null) {
             $data['comment_count'] = $this->comment_count;
         }
 
