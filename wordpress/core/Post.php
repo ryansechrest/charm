@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\WordPress;
+namespace Charm\WordPress\Core;
 
 use WP_Post,
     WP_Query;
@@ -9,7 +9,7 @@ use WP_Post,
  * Class Post
  *
  * @author Ryan Sechrest
- * @package Charm\WordPress
+ * @package Charm\WordPress\Core
  */
 class Post
 {
@@ -269,19 +269,19 @@ class Post
     }
 
     /************************************************************************************/
-    // Public instantiation methods
+    // Instantiation methods
 
     /**
-     * Initialize instance
+     * Initialize post
      *
      * @see WP_Post
      * @param int|string|WP_Post $key
-     * @return Post
+     * @return null|Post
      */
-    public static function init($key)
+    public static function init($key = null)
     {
-        $class = get_called_class();
-        $post = new $class();
+        $child = get_called_class();
+        $post = new $child();
         if (is_int($key) || ctype_digit($key)) {
             $post->load_from_id($key);
         } elseif (is_string($key)) {
@@ -291,12 +291,15 @@ class Post
         } else {
             $post->load_from_global_post();
         }
+        if ($post->get_id() === 0) {
+            return null;
+        }
 
         return $post;
     }
 
     /**
-     * Get posts via WP_Query
+     * Get posts
      *
      * @see WP_Post
      * @see WP_Query
@@ -312,8 +315,8 @@ class Post
         }
 
         return array_map(function(WP_Post $post) {
-            $class = get_called_class();
-            return $class::init($post);
+            $child = get_called_class();
+            return $child::init($post);
         }, $query->posts);
     }
 
@@ -324,38 +327,22 @@ class Post
      * Load instance from ID
      *
      * @see get_post()
-     * @see WP_Post
      * @param int $id
      */
     private function load_from_id($id)
     {
-        $post = get_post($id);
-        if (!is_object($post)) {
-            return;
-        }
-        if (get_class($post) !== 'WP_Post') {
-            return;
-        }
-        $this->load_from_post($post);
+        $this->load_from_post(get_post($id));
     }
 
     /**
      * Load instance from path
      *
      * @see get_page_by_path()
-     * @see WP_Post
      * @param string $path
      */
     private function load_from_path($path)
     {
-        $post = get_page_by_path($path);
-        if (!is_object($post)) {
-            return;
-        }
-        if (get_class($post) !== 'WP_Post') {
-            return;
-        }
-        $this->load_from_post($post);
+        $this->load_from_post(get_page_by_path($path));
     }
 
     /**
@@ -366,6 +353,12 @@ class Post
      */
     private function load_from_post(WP_Post $post)
     {
+        if (!is_object($post)) {
+            return;
+        }
+        if (get_class($post) !== 'WP_Post') {
+            return;
+        }
         $this->id = $post->ID;
         $this->post_author = $post->post_author;
         $this->post_date = $post->post_date;
@@ -395,18 +388,10 @@ class Post
      * Load instance from global WP_Post object
      *
      * @see get_post()
-     * @see WP_Post
      */
     private function load_from_global_post()
     {
-        $post = get_post();
-        if (!is_object($post)) {
-            return;
-        }
-        if (get_class($post) !== 'WP_Post') {
-            return;
-        }
-        $this->load_from_post($post);
+        $this->load_from_post(get_post());
     }
 
     /**
@@ -421,7 +406,7 @@ class Post
     }
 
     /************************************************************************************/
-    // Public instantiation methods
+    // Action methods
 
     /**
      * Save post
@@ -602,7 +587,6 @@ class Post
     /**
      * Convert instance to JSON
      *
-     * @see json_encode()
      * @return string
      */
     public function to_json()
