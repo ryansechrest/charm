@@ -17,7 +17,7 @@ class PostMeta extends Meta
      *
      * @param array $data
      */
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         $data['meta_type'] = 'post';
         parent::__construct($data);

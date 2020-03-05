@@ -17,7 +17,7 @@ class CommentMeta extends Meta
      *
      * @param array $data
      */
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         $data['meta_type'] = 'comment';
         parent::__construct($data);

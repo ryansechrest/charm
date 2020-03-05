@@ -182,7 +182,7 @@ class Post
      *
      * @param array $data
      */
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         if (!is_array($data)) {
             return;
@@ -275,7 +275,7 @@ class Post
      * Initialize post
      *
      * @see WP_Post
-     * @param int|string|WP_Post $key
+     * @param int|null|string|WP_Post $key
      * @return null|Post
      */
     public static function init($key = null)
@@ -329,7 +329,7 @@ class Post
      * @see get_post()
      * @param int $id
      */
-    private function load_from_id($id)
+    private function load_from_id(int $id)
     {
         $this->load_from_post(get_post($id));
     }
@@ -340,7 +340,7 @@ class Post
      * @see get_page_by_path()
      * @param string $path
      */
-    private function load_from_path($path)
+    private function load_from_path(string $path)
     {
         $this->load_from_post(get_page_by_path($path));
     }
@@ -413,7 +413,7 @@ class Post
      *
      * @return bool
      */
-    public function save()
+    public function save(): bool
     {
         if (!$this->id) {
             return $this->create();
@@ -428,7 +428,7 @@ class Post
      * @see wp_insert_post()
      * @return bool
      */
-    public function create()
+    public function create(): bool
     {
         if (!$id = wp_insert_post($this->to_array())) {
             return false;
@@ -445,7 +445,7 @@ class Post
      * @see wp_update_post()
      * @return bool
      */
-    public function update()
+    public function update(): bool
     {
         if (!$id = wp_update_post($this->to_array())) {
             return false;
@@ -461,7 +461,7 @@ class Post
      * @see wp_delete_post()
      * @return bool
      */
-    public function trash()
+    public function trash(): bool
     {
         if (!wp_delete_post($this->id)) {
             return false;
@@ -476,7 +476,7 @@ class Post
      * @see wp_untrash_post()
      * @return bool
      */
-    public function restore()
+    public function restore(): bool
     {
         if (!wp_untrash_post($this->id)) {
             return false;
@@ -491,7 +491,7 @@ class Post
      * @see wp_delete_post()
      * @return bool
      */
-    public function delete()
+    public function delete(): bool
     {
         if (!wp_delete_post($this->id, true)) {
             return false;
@@ -508,7 +508,7 @@ class Post
      *
      * @return array
      */
-    public function to_array()
+    public function to_array(): array
     {
         $data = [];
         if ($this->id !== null) {
@@ -589,7 +589,7 @@ class Post
      *
      * @return string
      */
-    public function to_json()
+    public function to_json(): string
     {
         return json_encode($this->to_array());
     }
@@ -602,7 +602,7 @@ class Post
      *
      * @return int
      */
-    public function get_id()
+    public function get_id(): int
     {
         return $this->id;
     }
@@ -612,7 +612,7 @@ class Post
      *
      * @param int $id
      */
-    public function set_id($id)
+    public function set_id(int $id)
     {
         $this->id = $id;
     }
@@ -622,7 +622,7 @@ class Post
      *
      * @return int
      */
-    public function get_post_author()
+    public function get_post_author(): int
     {
         return $this->post_author;
     }
@@ -632,7 +632,7 @@ class Post
      *
      * @param int $post_author
      */
-    public function set_post_author($post_author)
+    public function set_post_author(int $post_author)
     {
         $this->post_author = $post_author;
     }
@@ -642,7 +642,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_date()
+    public function get_post_date(): string
     {
         return $this->post_date;
     }
@@ -652,7 +652,7 @@ class Post
      *
      * @param string $post_date
      */
-    public function set_post_date($post_date)
+    public function set_post_date(string $post_date)
     {
         $this->post_date = $post_date;
     }
@@ -662,7 +662,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_date_gmt()
+    public function get_post_date_gmt(): string
     {
         return $this->post_date_gmt;
     }
@@ -672,7 +672,7 @@ class Post
      *
      * @param string $post_date_gmt
      */
-    public function set_post_date_gmt($post_date_gmt)
+    public function set_post_date_gmt(string $post_date_gmt)
     {
         $this->post_date_gmt = $post_date_gmt;
     }
@@ -682,7 +682,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_content()
+    public function get_post_content(): string
     {
         return $this->post_content;
     }
@@ -692,7 +692,7 @@ class Post
      *
      * @param string $post_content
      */
-    public function set_post_content($post_content)
+    public function set_post_content(string $post_content)
     {
         $this->post_content = $post_content;
     }
@@ -702,7 +702,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_title()
+    public function get_post_title(): string
     {
         return $this->post_title;
     }
@@ -712,7 +712,7 @@ class Post
      *
      * @param string $post_title
      */
-    public function set_post_title($post_title)
+    public function set_post_title(string $post_title)
     {
         $this->post_title = $post_title;
     }
@@ -722,7 +722,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_excerpt()
+    public function get_post_excerpt(): string
     {
         return $this->post_excerpt;
     }
@@ -732,7 +732,7 @@ class Post
      *
      * @param string $post_excerpt
      */
-    public function set_post_excerpt($post_excerpt)
+    public function set_post_excerpt(string $post_excerpt)
     {
         $this->post_excerpt = $post_excerpt;
     }
@@ -742,7 +742,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_status()
+    public function get_post_status(): string
     {
         return $this->post_status;
     }
@@ -752,7 +752,7 @@ class Post
      *
      * @param string $post_status
      */
-    public function set_post_status($post_status)
+    public function set_post_status(string $post_status)
     {
         $this->post_status = $post_status;
     }
@@ -762,7 +762,7 @@ class Post
      *
      * @return string
      */
-    public function get_comment_status()
+    public function get_comment_status(): string
     {
         return $this->comment_status;
     }
@@ -772,7 +772,7 @@ class Post
      *
      * @param string $comment_status
      */
-    public function set_comment_status($comment_status)
+    public function set_comment_status(string $comment_status)
     {
         $this->comment_status = $comment_status;
     }
@@ -782,7 +782,7 @@ class Post
      *
      * @return string
      */
-    public function get_ping_status()
+    public function get_ping_status(): string
     {
         return $this->ping_status;
     }
@@ -792,7 +792,7 @@ class Post
      *
      * @param string $ping_status
      */
-    public function set_ping_status($ping_status)
+    public function set_ping_status(string $ping_status)
     {
         $this->ping_status = $ping_status;
     }
@@ -802,7 +802,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_password()
+    public function get_post_password(): string
     {
         return $this->post_password;
     }
@@ -812,7 +812,7 @@ class Post
      *
      * @param string $post_password
      */
-    public function set_post_password($post_password)
+    public function set_post_password(string $post_password)
     {
         $this->post_password = $post_password;
     }
@@ -822,7 +822,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_name()
+    public function get_post_name(): string
     {
         return $this->post_name;
     }
@@ -832,47 +832,47 @@ class Post
      *
      * @param string $post_name
      */
-    public function set_post_name($post_name)
+    public function set_post_name(string $post_name)
     {
         $this->post_name = $post_name;
     }
 
     /**
-     * Get URLs to ping
+     * Get to ping
      *
      * @return string
      */
-    public function get_to_ping()
+    public function get_to_ping(): string
     {
         return $this->to_ping;
     }
 
     /**
-     * Set URLs to ping
+     * Set to ping
      *
      * @param string $to_ping
      */
-    public function set_to_ping($to_ping)
+    public function set_to_ping(string $to_ping)
     {
         $this->to_ping = $to_ping;
     }
 
     /**
-     * Get URLs pinged
+     * Get pinged
      *
      * @return string
      */
-    public function get_pinged()
+    public function get_pinged(): string
     {
         return $this->pinged;
     }
 
     /**
-     * Set URLs pinged
+     * Set pinged
      *
      * @param string $pinged
      */
-    public function set_pinged($pinged)
+    public function set_pinged(string $pinged)
     {
         $this->pinged = $pinged;
     }
@@ -882,7 +882,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_modified()
+    public function get_post_modified(): string
     {
         return $this->post_modified;
     }
@@ -892,7 +892,7 @@ class Post
      *
      * @param string $post_modified
      */
-    public function set_post_modified($post_modified)
+    public function set_post_modified(string $post_modified)
     {
         $this->post_modified = $post_modified;
     }
@@ -902,7 +902,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_modified_gmt()
+    public function get_post_modified_gmt(): string
     {
         return $this->post_modified_gmt;
     }
@@ -912,27 +912,27 @@ class Post
      *
      * @param string $post_modified_gmt
      */
-    public function set_post_modified_gmt($post_modified_gmt)
+    public function set_post_modified_gmt(string $post_modified_gmt)
     {
         $this->post_modified_gmt = $post_modified_gmt;
     }
 
     /**
-     * Get filtered post content
+     * Get post content filtered
      *
      * @return string
      */
-    public function get_post_content_filtered()
+    public function get_post_content_filtered(): string
     {
         return $this->post_content_filtered;
     }
 
     /**
-     * Set filtered post content
+     * Set post content filtered
      *
      * @param string $post_content_filtered
      */
-    public function set_post_content_filtered($post_content_filtered)
+    public function set_post_content_filtered(string $post_content_filtered)
     {
         $this->post_content_filtered = $post_content_filtered;
     }
@@ -942,7 +942,7 @@ class Post
      *
      * @return int
      */
-    public function get_post_parent()
+    public function get_post_parent(): int
     {
         return $this->post_parent;
     }
@@ -952,7 +952,7 @@ class Post
      *
      * @param int $post_parent
      */
-    public function set_post_parent($post_parent)
+    public function set_post_parent(int $post_parent)
     {
         $this->post_parent = $post_parent;
     }
@@ -962,7 +962,7 @@ class Post
      *
      * @return string
      */
-    public function get_guid()
+    public function get_guid(): string
     {
         return $this->guid;
     }
@@ -972,7 +972,7 @@ class Post
      *
      * @param string $guid
      */
-    public function set_guid($guid)
+    public function set_guid(string $guid)
     {
         $this->guid = $guid;
     }
@@ -982,7 +982,7 @@ class Post
      *
      * @return int
      */
-    public function get_menu_order()
+    public function get_menu_order(): int
     {
         return $this->menu_order;
     }
@@ -992,7 +992,7 @@ class Post
      *
      * @param int $menu_order
      */
-    public function set_menu_order($menu_order)
+    public function set_menu_order(int $menu_order)
     {
         $this->menu_order = $menu_order;
     }
@@ -1002,7 +1002,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_type()
+    public function get_post_type(): string
     {
         return $this->post_type;
     }
@@ -1012,7 +1012,7 @@ class Post
      *
      * @param string $post_type
      */
-    public function set_post_type($post_type)
+    public function set_post_type(string $post_type)
     {
         $this->post_type = $post_type;
     }
@@ -1022,7 +1022,7 @@ class Post
      *
      * @return string
      */
-    public function get_post_mime_type()
+    public function get_post_mime_type(): string
     {
         return $this->post_mime_type;
     }
@@ -1032,7 +1032,7 @@ class Post
      *
      * @param string $post_mime_type
      */
-    public function set_post_mime_type($post_mime_type)
+    public function set_post_mime_type(string $post_mime_type)
     {
         $this->post_mime_type = $post_mime_type;
     }
@@ -1042,7 +1042,7 @@ class Post
      *
      * @return int
      */
-    public function get_comment_count()
+    public function get_comment_count(): int
     {
         return $this->comment_count;
     }
@@ -1052,7 +1052,7 @@ class Post
      *
      * @param int $comment_count
      */
-    public function set_comment_count($comment_count)
+    public function set_comment_count(int $comment_count)
     {
         $this->comment_count = $comment_count;
     }

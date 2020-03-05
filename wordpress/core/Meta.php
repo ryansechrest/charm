@@ -67,7 +67,7 @@ class Meta
      *
      * @param array $data
      */
-    public function __construct($data = [])
+    public function __construct(array $data = [])
     {
         if (!is_array($data)) {
             return;
@@ -150,8 +150,9 @@ class Meta
      * @param array $meta_values
      * @return array
      */
-    private static function load_all($meta_type, $object_id, $meta_values)
-    {
+    private static function load_all(
+        string $meta_type, int $object_id, $meta_values
+    ): array {
         $all = [];
         foreach ($meta_values as $meta_key => $meta_value) {
             if (!is_array($meta_values)) {
@@ -180,8 +181,9 @@ class Meta
      * @param array $meta_values
      * @return Meta[]
      */
-    private static function load_multi($meta_type, $object_id, $meta_key, $meta_values)
-    {
+    private static function load_multi(
+        string $meta_type, int $object_id, string $meta_key, $meta_values
+    ): array {
         $multi = [];
         foreach ($meta_values as $meta_value) {
             $multi[] = self::load_single(
@@ -201,8 +203,9 @@ class Meta
      * @param mixed $meta_value
      * @return Meta
      */
-    private static function load_single($meta_type, $object_id, $meta_key, $meta_value)
-    {
+    private static function load_single(
+        string $meta_type, int $object_id, string $meta_key, $meta_value
+    ): Meta {
         $data = [
             'meta_type' => $meta_type,
             'object_id' => $object_id,
@@ -223,7 +226,7 @@ class Meta
      *
      * @return bool
      */
-    public function save()
+    public function save(): bool
     {
         if (!$this->from_db) {
             return $this->create();
@@ -238,7 +241,7 @@ class Meta
      * @see add_metadata()
      * @return bool
      */
-    public function create()
+    public function create(): bool
     {
         if (!$meta_id = add_metadata(
             $this->meta_type, $this->object_id, $this->meta_key, $this->meta_value
@@ -257,7 +260,7 @@ class Meta
      * @see update_metadata()
      * @return bool
      */
-    public function update()
+    public function update(): bool
     {
         if (!update_metadata(
             $this->meta_type,
@@ -279,7 +282,7 @@ class Meta
      * @see delete_metadata()
      * @return bool
      */
-    public function delete()
+    public function delete(): bool
     {
         if (!delete_metadata(
             $this->meta_type, $this->object_id, $this->meta_key, $this->meta_value
@@ -299,7 +302,7 @@ class Meta
      * @see maybe_unserialize()
      * @return array
      */
-    public function array()
+    public function array(): array
     {
         $array = maybe_unserialize($this->meta_value);
         if (!is_array($array)) {
@@ -312,11 +315,11 @@ class Meta
     /**
      * Return value as integer
      *
-     * @return string
+     * @return int
      */
-    public function integer()
+    public function integer(): int
     {
-        if (!ctype_digit($this->meta_value)) {
+        if (!is_numeric($this->meta_value)) {
             return 0;
         }
 
@@ -328,7 +331,7 @@ class Meta
      *
      * @return string
      */
-    public function text()
+    public function text(): string
     {
         if (!$string = (string) $this->meta_value) {
             return '';
@@ -345,7 +348,7 @@ class Meta
      *
      * @return string
      */
-    public function get_meta_type()
+    public function get_meta_type(): string
     {
         return $this->meta_type;
     }
@@ -355,7 +358,7 @@ class Meta
      *
      * @param string $meta_type
      */
-    public function set_meta_type($meta_type)
+    public function set_meta_type(string $meta_type)
     {
         $this->meta_type = $meta_type;
     }
@@ -365,7 +368,7 @@ class Meta
      *
      * @return int
      */
-    public function get_meta_id()
+    public function get_meta_id(): int
     {
         return $this->meta_id;
     }
@@ -375,7 +378,7 @@ class Meta
      *
      * @param int $meta_id
      */
-    public function set_meta_id($meta_id)
+    public function set_meta_id(int $meta_id)
     {
         $this->meta_id = $meta_id;
     }
@@ -385,7 +388,7 @@ class Meta
      *
      * @return int
      */
-    public function get_object_id()
+    public function get_object_id(): int
     {
         return $this->object_id;
     }
@@ -395,7 +398,7 @@ class Meta
      *
      * @param int $object_id
      */
-    public function set_object_id($object_id)
+    public function set_object_id(int $object_id)
     {
         $this->object_id = $object_id;
     }
@@ -405,17 +408,17 @@ class Meta
      *
      * @return string
      */
-    public function get_meta_key()
+    public function get_meta_key(): string
     {
         return $this->meta_key;
     }
 
     /**
-     * Set meta ID
+     * Set meta key
      *
      * @param string $meta_key
      */
-    public function set_meta_key($meta_key)
+    public function set_meta_key(string $meta_key)
     {
         $this->meta_key = $meta_key;
     }
@@ -441,7 +444,7 @@ class Meta
     }
 
     /**
-     * Get previous meta value
+     * Get previous value
      *
      * @return mixed
      */
@@ -451,7 +454,7 @@ class Meta
     }
 
     /**
-     * Set previous meta value
+     * Set previous value
      *
      * @param mixed $prev_value
      */
@@ -461,21 +464,21 @@ class Meta
     }
 
     /**
-     * Is from database
+     * Is from DB?
      *
      * @return bool
      */
-    public function is_from_db()
+    public function is_from_db(): bool
     {
         return $this->from_db;
     }
 
     /**
-     * Set is from database
+     * Set from DB
      *
      * @param bool $from_db
      */
-    public function set_from_db($from_db)
+    public function set_from_db(bool $from_db)
     {
         $this->from_db = $from_db;
     }
