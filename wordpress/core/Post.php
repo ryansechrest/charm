@@ -198,10 +198,10 @@ class Post
     public function load(array $data)
     {
         if (isset($data['id'])) {
-            $this->id = $data['id'];
+            $this->id = (int) $data['id'];
         }
         if (isset($data['post_author'])) {
-            $this->post_author = $data['post_author'];
+            $this->post_author = (int) $data['post_author'];
         }
         if (isset($data['post_date'])) {
             $this->post_date = $data['post_date'];
@@ -249,13 +249,13 @@ class Post
             $this->post_content_filtered = $data['post_content_filtered'];
         }
         if (isset($data['post_parent'])) {
-            $this->post_parent = $data['post_parent'];
+            $this->post_parent = (int) $data['post_parent'];
         }
         if (isset($data['guid'])) {
             $this->guid = $data['guid'];
         }
         if (isset($data['menu_order'])) {
-            $this->menu_order = $data['menu_order'];
+            $this->menu_order = (int) $data['menu_order'];
         }
         if (isset($data['post_type'])) {
             $this->post_type = $data['post_type'];
@@ -264,7 +264,7 @@ class Post
             $this->post_mime_type = $data['post_mime_type'];
         }
         if (isset($data['comment_count'])) {
-            $this->comment_count = $data['comment_count'];
+            $this->comment_count = (int) $data['comment_count'];
         }
     }
 
@@ -359,8 +359,8 @@ class Post
         if (get_class($post) !== 'WP_Post') {
             return;
         }
-        $this->id = $post->ID;
-        $this->post_author = $post->post_author;
+        $this->id = (int) $post->ID;
+        $this->post_author = (int) $post->post_author;
         $this->post_date = $post->post_date;
         $this->post_date_gmt = $post->post_date_gmt;
         $this->post_content = $post->post_content;
@@ -376,12 +376,12 @@ class Post
         $this->post_modified = $post->post_modified;
         $this->post_modified_gmt = $post->post_modified_gmt;
         $this->post_content_filtered = $post->post_content_filtered;
-        $this->post_parent = $post->post_parent;
+        $this->post_parent = (int) $post->post_parent;
         $this->guid = $post->guid;
-        $this->menu_order = $post->menu_order;
+        $this->menu_order = (int) $post->menu_order;
         $this->post_type = $post->post_type;
         $this->post_mime_type = $post->post_mime_type;
-        $this->comment_count = $post->comment_count;
+        $this->comment_count = (int) $post->comment_count;
     }
 
     /**
