@@ -175,6 +175,7 @@ class Post
     private $comment_count;
 
     /************************************************************************************/
+    // Default constructor and load method
 
     /**
      * Default constructor
@@ -268,9 +269,10 @@ class Post
     }
 
     /************************************************************************************/
+    // Public instantiation methods
 
     /**
-     * Create instance and load from key
+     * Initialize instance
      *
      * @see WP_Post
      * @param int|string|WP_Post $key
@@ -278,7 +280,8 @@ class Post
      */
     public static function init($key)
     {
-        $post = new Post();
+        $class = get_called_class();
+        $post = new $class();
         if (is_int($key) || ctype_digit($key)) {
             $post->load_from_id($key);
         } elseif (is_string($key)) {
@@ -309,11 +312,13 @@ class Post
         }
 
         return array_map(function(WP_Post $post) {
-            return Post::init($post);
+            $class = get_called_class();
+            return $class::init($post);
         }, $query->posts);
     }
 
     /************************************************************************************/
+    // Private load methods
 
     /**
      * Load instance from ID
@@ -416,6 +421,7 @@ class Post
     }
 
     /************************************************************************************/
+    // Public instantiation methods
 
     /**
      * Save post
@@ -510,6 +516,7 @@ class Post
     }
 
     /************************************************************************************/
+    // Conversion methods
 
     /**
      * Convert instance to array
@@ -604,6 +611,7 @@ class Post
     }
 
     /************************************************************************************/
+    // Get and set methods
 
     /**
      * Get ID
