@@ -1,5 +1,11 @@
 <?php
 
+namespace Charm;
+
+if (!defined('ABSPATH')) {
+    die('Whatcha doin? Ƹ̵̡Ӝ̵̨̄Ʒ');
+}
+
 /**
  * Plugin Name: Charm
  * Plugin URI: https://wpcharm.com/
