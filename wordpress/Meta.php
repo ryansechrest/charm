@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\WordPress\Core;
+namespace Charm\WordPress;
 
 use Charm\App\Feature\Conversion;
 use Charm\App\Feature\Crud;
@@ -9,7 +9,7 @@ use Charm\App\Feature\Crud;
  * Class Meta
  *
  * @author Ryan Sechrest
- * @package Charm\WordPress\Core
+ * @package Charm\WordPress
  */
 class Meta implements Conversion, Crud
 {
@@ -98,7 +98,7 @@ class Meta implements Conversion, Crud
             $this->meta_key = $data['meta_key'];
         }
         if (isset($data['meta_value'])) {
-            $this->meta_value = $this->prev_value = $data['meta_value'];
+            $this->meta_value = $data['meta_value'];
         }
         if (isset($data['prev_value'])) {
             $this->prev_value = $data['prev_value'];
@@ -118,7 +118,7 @@ class Meta implements Conversion, Crud
      * @param array $params
      * @return array|Meta|Meta[]|null
      */
-    public static function get(array $params)
+    public static function init($params)
     {
         if (!isset($params['meta_type']) || !isset($params['object_id'])) {
             return null;
@@ -147,6 +147,18 @@ class Meta implements Conversion, Crud
         return self::load_single(
             $meta_type, $object_id, $meta_key, $meta_values[0]
         );
+    }
+
+    /**
+     * Get metas
+     *
+     * @todo Implement Meta::get()
+     * @param array $params
+     * @return Meta[]
+     */
+    public static function get(array $params): array
+    {
+        return [];
     }
 
     /************************************************************************************/
@@ -221,6 +233,7 @@ class Meta implements Conversion, Crud
             'object_id' => $object_id,
             'meta_key' => $meta_key,
             'meta_value' => $meta_value,
+            'prev_value' => $meta_value,
             'from_db' => true,
         ];
         $child = get_called_class();
@@ -304,7 +317,46 @@ class Meta implements Conversion, Crud
     }
 
     /************************************************************************************/
-    // Cast methods
+    // Conversion methods
+
+    /**
+     * Convert instance to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        $data = [];
+        $data['meta_type'] = $this->meta_type;
+        $data['meta_id'] = $this->meta_id;
+        $data['object_id'] = $this->object_id;
+        $data['meta_key'] = $this->meta_key;
+        $data['meta_value'] = $this->meta_value;
+
+        return $data;
+    }
+
+    /**
+     * Convert instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Convert instance to stdClass
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Value access methods
 
     /**
      * Return value as array
@@ -348,45 +400,6 @@ class Meta implements Conversion, Crud
         }
 
         return $string;
-    }
-
-    /************************************************************************************/
-    // Conversion methods
-
-    /**
-     * Convert instance to array
-     *
-     * @return array
-     */
-    public function to_array(): array
-    {
-        $data = [];
-        $data['meta_type'] = $this->meta_type;
-        $data['meta_id'] = $this->meta_id;
-        $data['object_id'] = $this->object_id;
-        $data['meta_key'] = $this->meta_key;
-        $data['meta_value'] = $this->meta_value;
-
-        return $data;
-    }
-
-    /**
-     * Convert instance to JSON
-     *
-     * @return string
-     */
-    public function to_json(): string
-    {
-        return json_encode($this->to_array());
-    }
-    /**
-     * Convert instance to stdClass
-     *
-     * @return object
-     */
-    public function to_object(): object
-    {
-        return (object) $this->to_array();
     }
 
     /************************************************************************************/
