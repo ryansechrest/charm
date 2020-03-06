@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Plugin Name: Charm
+ * Plugin Name: Charm Ƹ̵̡Ӝ̵̨̄Ʒ
  * Plugin URI: https://wpcharm.com/
- * Description: Charm is a WordPress framework for developers to build entities and relationships.
+ * Description: A charming WordPress framework for developers to build entities and relationships.
  * Version: 1.0.0
  * Requires at least: 5.3.2
  * Requires PHP: 7.3
