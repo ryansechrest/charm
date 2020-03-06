@@ -6,7 +6,7 @@ Open up Terminal and `cd` into your project's directory. It's the one with your 
 
 ### 1. Create `mu-plugins` directory
 
-Create the `mu-plugins` directory if it doesn't already exist:
+Create the `mu-plugins` directory (unless it already exists):
 
 ```shell
 mkdir -p wp-content/mu-plugins
@@ -14,7 +14,7 @@ mkdir -p wp-content/mu-plugins
 
 ### 2. Clone Charm into `mu-plugins` directory
 
-Clone Charm into its own directory called `charm` in `mu-plugins`:
+Clone Charm into the `mu-plugins` directory as `charm`:
 
 ```shell
 cd wp-content/mu-plugins
@@ -23,20 +23,21 @@ git clone https://github.com/ryansechrest/charm.git
 
 Your `mu-plugins` directory should now look something like this:
 
-```shell
+```
 |-- mu-plugins
 |   |-- charm
+|   |   |-- app
 |   |   |-- wordpress
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
 |   |   |-- plugin.php
 |   |   |-- README.md
-|   |   |-- run
+|   |   |-- run.php
 ```
 
 ### 3. Activate Charm
 
-Activate Charm by copying `plugin.php` into the root of your `mu-plugins` directory and rename it to `_charm.php`, or run:
+Activate Charm by copying `plugin.php` into the root of your `mu-plugins` directory as `_charm.php`, or run:
 
 ```shell
 php charm/run.php activate
@@ -44,7 +45,7 @@ php charm/run.php activate
 
 Your `mu-plugins` directory should now look something like this:
 
-```shell
+```
 |-- mu-plugins
 |   |-- charm
 |   |   |-- wordpress
@@ -56,9 +57,11 @@ Your `mu-plugins` directory should now look something like this:
 |   |-- _charm.php
 ```
 
-The reason for the underscore is so that Charm loads as early as possible, which means you can use it in your plugin, theme, or even another mu-plugin.
+The reason for the underscore is so that Charm loads as early as possible.
 
-That's all there is to it. Charm is ready to go!
+That allows you to use Charm in your plugin, theme, or even another mu-plugin.
+
+You're all set from here!
 
 ### Update Charm
 

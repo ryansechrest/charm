@@ -2,55 +2,58 @@
 
 namespace Charm\WordPress\Core;
 
+use Charm\App\Feature\Conversion;
+use Charm\App\Feature\Crud;
+
 /**
  * Class Meta
  *
  * @author Ryan Sechrest
  * @package Charm\WordPress\Core
  */
-class Meta
+class Meta implements Conversion, Crud
 {
     /**
      * Meta type
      *
      * @var string
      */
-    private $meta_type;
+    private $meta_type = '';
 
     /**
      * Meta ID
      *
      * @var int
      */
-    private $meta_id;
+    private $meta_id = 0;
 
     /**
      * Object ID
      *
      * @var int
      */
-    private $object_id;
+    private $object_id = 0;
 
     /**
      * Meta key
      *
      * @var string
      */
-    private $meta_key;
+    private $meta_key = '';
 
     /**
      * Meta value
      *
      * @var mixed
      */
-    private $meta_value;
+    private $meta_value = null;
 
     /**
      * Previous meta value
      *
      * @var mixed
      */
-    private $prev_value;
+    private $prev_value = null;
 
     /**
      * Loaded from database?
@@ -63,7 +66,7 @@ class Meta
     // Default constructor and load method
 
     /**
-     * Default constructor
+     * Meta constructor
      *
      * @param array $data
      */
@@ -80,7 +83,7 @@ class Meta
      *
      * @param array $data
      */
-    public function load(array $data)
+    public function load(array $data): void
     {
         if (isset($data['meta_type'])) {
             $this->meta_type = $data['meta_type'];
@@ -109,16 +112,23 @@ class Meta
     // Instantiation methods
 
     /**
-     * Get meta data
+     * Initialize meta(s)
      *
      * @see get_metadata()
-     * @param string $meta_type
-     * @param int $object_id
-     * @param string $meta_key
+     * @param array $params
      * @return array|Meta|Meta[]|null
      */
-    public static function get($meta_type, $object_id, $meta_key = '')
+    public static function get(array $params)
     {
+        if (!isset($params['meta_type']) || !isset($params['object_id'])) {
+            return null;
+        }
+        $meta_type = $params['meta_type'];
+        $object_id = $params['object_id'];
+        $meta_key = '';
+        if (isset($params['meta_key'])) {
+            $meta_key = $params['meta_key'];
+        }
         $meta_values = get_metadata($meta_type, $object_id, $meta_key);
         if (!is_array($meta_values) || count($meta_values) === 0) {
             return null;
@@ -151,7 +161,7 @@ class Meta
      * @return array
      */
     private static function load_all(
-        string $meta_type, int $object_id, $meta_values
+        string $meta_type, int $object_id, array $meta_values
     ): array {
         $all = [];
         foreach ($meta_values as $meta_key => $meta_value) {
@@ -182,7 +192,7 @@ class Meta
      * @return Meta[]
      */
     private static function load_multi(
-        string $meta_type, int $object_id, string $meta_key, $meta_values
+        string $meta_type, int $object_id, string $meta_key, array $meta_values
     ): array {
         $multi = [];
         foreach ($meta_values as $meta_value) {
@@ -341,6 +351,45 @@ class Meta
     }
 
     /************************************************************************************/
+    // Conversion methods
+
+    /**
+     * Convert instance to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        $data = [];
+        $data['meta_type'] = $this->meta_type;
+        $data['meta_id'] = $this->meta_id;
+        $data['object_id'] = $this->object_id;
+        $data['meta_key'] = $this->meta_key;
+        $data['meta_value'] = $this->meta_value;
+
+        return $data;
+    }
+
+    /**
+     * Convert instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Convert instance to stdClass
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
     // Get and set methods
 
     /**
@@ -358,7 +407,7 @@ class Meta
      *
      * @param string $meta_type
      */
-    public function set_meta_type(string $meta_type)
+    public function set_meta_type(string $meta_type): void
     {
         $this->meta_type = $meta_type;
     }
@@ -378,7 +427,7 @@ class Meta
      *
      * @param int $meta_id
      */
-    public function set_meta_id(int $meta_id)
+    public function set_meta_id(int $meta_id): void
     {
         $this->meta_id = $meta_id;
     }
@@ -398,7 +447,7 @@ class Meta
      *
      * @param int $object_id
      */
-    public function set_object_id(int $object_id)
+    public function set_object_id(int $object_id): void
     {
         $this->object_id = $object_id;
     }
@@ -418,7 +467,7 @@ class Meta
      *
      * @param string $meta_key
      */
-    public function set_meta_key(string $meta_key)
+    public function set_meta_key(string $meta_key): void
     {
         $this->meta_key = $meta_key;
     }
@@ -438,7 +487,7 @@ class Meta
      *
      * @param mixed $meta_value
      */
-    public function set_meta_value($meta_value)
+    public function set_meta_value($meta_value): void
     {
         $this->meta_value = $meta_value;
     }
@@ -458,13 +507,13 @@ class Meta
      *
      * @param mixed $prev_value
      */
-    public function set_prev_value($prev_value)
+    public function set_prev_value($prev_value): void
     {
         $this->prev_value = $prev_value;
     }
 
     /**
-     * Is from DB?
+     * Is value from database?
      *
      * @return bool
      */
@@ -474,12 +523,26 @@ class Meta
     }
 
     /**
-     * Set from DB
+     * Set whether value is from database
      *
      * @param bool $from_db
      */
-    public function set_from_db(bool $from_db)
+    public function set_from_db(bool $from_db): void
     {
         $this->from_db = $from_db;
+    }
+
+    /**
+     * Has value changed?
+     *
+     * @return bool
+     */
+    public function has_changed()
+    {
+        if ($this->meta_value !== $this->prev_value) {
+            return true;
+        }
+
+        return false;
     }
 }
