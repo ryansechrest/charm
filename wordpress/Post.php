@@ -1,9 +1,10 @@
 <?php
 
-namespace Charm\WordPress\Core;
+namespace Charm\WordPress;
 
 use Charm\App\DataType\DateTime;
 use Charm\App\Feature\Conversion;
+use Charm\WordPress\Meta\PostMeta;
 use Exception;
 use WP_Post;
 use WP_Query;
@@ -12,7 +13,7 @@ use WP_Query;
  * Class Post
  *
  * @author Ryan Sechrest
- * @package Charm\WordPress\Core
+ * @package Charm\WordPress
  */
 class Post implements Conversion
 {
@@ -184,6 +185,13 @@ class Post implements Conversion
      */
     private $permalink = '';
 
+    /**
+     * Post metas
+     *
+     * @var PostMeta[]
+     */
+    private $metas = [];
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -276,6 +284,12 @@ class Post implements Conversion
         if (isset($data['comment_count'])) {
             $this->comment_count = (int) $data['comment_count'];
         }
+        if (isset($data['permalink'])) {
+            $this->permalink = $data['permalink'];
+        }
+        if (isset($data['metas'])) {
+            $this->metas = $data['metas'];
+        }
     }
 
     /************************************************************************************/
@@ -290,6 +304,7 @@ class Post implements Conversion
      */
     public static function init($key = null)
     {
+        /* @var Post $post */
         $child = get_called_class();
         $post = new $child();
         if (is_int($key) || ctype_digit($key)) {
@@ -325,6 +340,7 @@ class Post implements Conversion
         }
 
         return array_map(function(WP_Post $post) {
+            /* @var Post $child */
             $child = get_called_class();
             return $child::init($post);
         }, $query->posts);
@@ -337,7 +353,6 @@ class Post implements Conversion
      * Load instance from ID
      *
      * @see get_post()
-     * @throws Exception
      * @param int $id
      */
     private function load_from_id(int $id): void
@@ -352,7 +367,6 @@ class Post implements Conversion
      * Load instance from path
      *
      * @see get_page_by_path()
-     * @throws Exception
      * @param string $path
      */
     private function load_from_path(string $path): void
@@ -361,43 +375,6 @@ class Post implements Conversion
             return;
         }
         $this->load_from_post($post);
-    }
-
-    /**
-     * Load instance from WP_Post object
-     *
-     * @see DateTime
-     * @see WP_Post
-     * @throws Exception
-     * @param WP_Post $post
-     */
-    private function load_from_post(WP_Post $post): void
-    {
-        $timezone = get_option('timezone_string');
-        $this->id = (int) $post->ID;
-        $this->post_author = (int) $post->post_author;
-        $this->post_date = DateTime::init($post->post_date, $timezone);
-        $this->post_date_gmt = DateTime::init_utc($post->post_date_gmt);
-        $this->post_content = $post->post_content;
-        $this->post_title = $post->post_title;
-        $this->post_excerpt = $post->post_excerpt;
-        $this->post_status = $post->post_status;
-        $this->comment_status = $post->comment_status;
-        $this->ping_status = $post->ping_status;
-        $this->post_password = $post->post_password;
-        $this->post_name = $post->post_name;
-        $this->to_ping = $post->to_ping;
-        $this->pinged = $post->pinged;
-        $this->post_modified = DateTime::init($post->post_modified, $timezone);
-        $this->post_modified_gmt = DateTime::init_utc($post->post_modified_gmt);
-        $this->post_content_filtered = $post->post_content_filtered;
-        $this->post_parent = (int) $post->post_parent;
-        $this->guid = $post->guid;
-        $this->menu_order = (int) $post->menu_order;
-        $this->post_type = $post->post_type;
-        $this->post_mime_type = $post->post_mime_type;
-        $this->comment_count = (int) $post->comment_count;
-        $this->permalink = get_permalink($this->id);
     }
 
     /**
@@ -414,6 +391,48 @@ class Post implements Conversion
     }
 
     /**
+     * Load instance from WP_Post object
+     *
+     * @see DateTime
+     * @see get_option()
+     * @see WP_Post
+     * @param WP_Post $post
+     */
+    private function load_from_post(WP_Post $post): void
+    {
+        $timezone = get_option('timezone_string');
+        try {
+            $this->id = (int) $post->ID;
+            $this->post_author = (int) $post->post_author;
+            $this->post_date = DateTime::init($post->post_date, $timezone);
+            $this->post_date_gmt = DateTime::init_utc($post->post_date_gmt);
+            $this->post_content = $post->post_content;
+            $this->post_title = $post->post_title;
+            $this->post_excerpt = $post->post_excerpt;
+            $this->post_status = $post->post_status;
+            $this->comment_status = $post->comment_status;
+            $this->ping_status = $post->ping_status;
+            $this->post_password = $post->post_password;
+            $this->post_name = $post->post_name;
+            $this->to_ping = $post->to_ping;
+            $this->pinged = $post->pinged;
+            $this->post_modified = DateTime::init($post->post_modified, $timezone);
+            $this->post_modified_gmt = DateTime::init_utc($post->post_modified_gmt);
+            $this->post_content_filtered = $post->post_content_filtered;
+            $this->post_parent = (int) $post->post_parent;
+            $this->guid = $post->guid;
+            $this->menu_order = (int) $post->menu_order;
+            $this->post_type = $post->post_type;
+            $this->post_mime_type = $post->post_mime_type;
+            $this->comment_count = (int) $post->comment_count;
+            $this->permalink = get_permalink($this->id);
+        } catch (Exception $e) {
+            // Quiet please.
+        }
+        $this->load_metas();
+    }
+
+    /**
      * Reload instance from database
      */
     private function reload(): void
@@ -424,35 +443,71 @@ class Post implements Conversion
         $this->load_from_id($this->id);
     }
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Load post metas
+     */
+    private function load_metas(): void
+    {
+        $metas = PostMeta::init(['post_id' => $this->id]);
+        if (!is_array($metas)) {
+            return;
+        }
+        $this->metas = $metas;
+    }
+
+    /**
+     * Save post metas
+     */
+    private function save_metas(): void
+    {
+        foreach ($this->metas as $meta) {
+            if (!$meta->has_changed()) {
+                continue;
+            }
+            if (!$meta->is_from_db()) {
+                $meta->create();
+            }
+            $meta->update();
+        }
+    }
+
     /************************************************************************************/
     // Action methods
 
     /**
      * Save post
      *
+     * @param string $post_status
      * @return bool
      */
-    public function save(): bool
+    public function save($post_status = ''): bool
     {
         if (!$this->id) {
-            return $this->create();
+            return $this->create($post_status);
         }
 
-        return $this->update();
+        return $this->update($post_status);
     }
 
     /**
      * Create new post
      *
      * @see wp_insert_post()
+     * @param string $post_status
      * @return bool
      */
-    public function create(): bool
+    public function create($post_status = ''): bool
     {
+        if ($post_status) {
+            $this->post_status = $post_status;
+        }
         if (!$id = wp_insert_post($this->to_array())) {
             return false;
         }
         $this->id = $id;
+        $this->save_metas();
         $this->reload();
 
         return true;
@@ -462,13 +517,18 @@ class Post implements Conversion
      * Update existing post
      *
      * @see wp_update_post()
+     * @param string $post_status
      * @return bool
      */
-    public function update(): bool
+    public function update($post_status = ''): bool
     {
+        if ($post_status) {
+            $this->post_status = $post_status;
+        }
         if (!$id = wp_update_post($this->to_array())) {
             return false;
         }
+        $this->save_metas();
         $this->reload();
 
         return true;
@@ -554,6 +614,7 @@ class Post implements Conversion
         $data['post_mime_type'] = $this->post_mime_type;
         $data['comment_count'] = $this->comment_count;
         $data['permalink'] = $this->permalink;
+        $data['metas'] = $this->metas;
 
         return $data;
     }
@@ -575,6 +636,27 @@ class Post implements Conversion
     public function to_object(): object
     {
         return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get post meta
+     *
+     * @param string key
+     * @return null|PostMeta
+     */
+    public function meta(string $key)
+    {
+        if (count($this->metas) === 0) {
+            $this->load_metas();
+        }
+        if (!isset($this->metas[$key])) {
+            return null;
+        }
+
+        return $this->metas[$key];
     }
 
     /************************************************************************************/

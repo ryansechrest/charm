@@ -1,9 +1,10 @@
 <?php
 
-namespace Charm\WordPress\Core;
+namespace Charm\WordPress;
 
 use Charm\App\DataType\DateTime;
 use Charm\App\Feature\Conversion;
+use Charm\WordPress\Meta\UserMeta;
 use Exception;
 use WP_User;
 
@@ -11,7 +12,7 @@ use WP_User;
  * Class User
  *
  * @author Ryan Sechrest
- * @package Charm\WordPress\Core
+ * @package Charm\WordPress
  */
 class User implements Conversion
 {
@@ -60,9 +61,9 @@ class User implements Conversion
     /**
      * User registered
      *
-     * @var string
+     * @var DateTime
      */
-    private $user_registered = '';
+    private $user_registered = null;
 
     /**
      * User activation key
@@ -84,6 +85,13 @@ class User implements Conversion
      * @var string
      */
     private $display_name = '';
+
+    /**
+     * User metas
+     *
+     * @var UserMeta[]
+     */
+    private $metas = [];
 
     /************************************************************************************/
     // Default constructor and load method
@@ -138,6 +146,9 @@ class User implements Conversion
         if (isset($data['display_name'])) {
             $this->display_name = $data['display_name'];
         }
+        if (isset($data['metas'])) {
+            $this->metas = $data['metas'];
+        }
     }
 
     /************************************************************************************/
@@ -151,6 +162,7 @@ class User implements Conversion
      */
     public static function init($key = null)
     {
+        /* @var User $user */
         $child = get_called_class();
         $user = new $child();
         if (is_int($key) || is_numeric($key)) {
@@ -174,6 +186,7 @@ class User implements Conversion
     /**
      * Get users
      *
+     * @todo Implement User::get()
      * @param array $params
      * @return User[]
      */
@@ -188,7 +201,6 @@ class User implements Conversion
     /**
      * Load instance from ID
      *
-     * @throws Exception
      * @see get_user_by()
      * @param int $id
      */
@@ -200,7 +212,6 @@ class User implements Conversion
     /**
      * Load instance from login
      *
-     * @throws Exception
      * @see get_user_by()
      * @param string $login
      */
@@ -212,40 +223,12 @@ class User implements Conversion
     /**
      * Load instance from email
      *
-     * @throws Exception
      * @see get_user_by()
      * @param string $email
      */
     private function load_from_email(string $email): void
     {
         $this->load_from_user(get_user_by('email', $email));
-    }
-
-    /**
-     * Load instance from WP_User object
-     *
-     * @see DateTime
-     * @throws Exception
-     * @param WP_User $user
-     */
-    private function load_from_user(WP_User $user): void
-    {
-        if (!is_object($user)) {
-            return;
-        }
-        if (get_class($user) !== 'WP_User') {
-            return;
-        }
-        $this->id = (int) $user->data->ID;
-        $this->user_login = $user->data->user_login;
-        $this->user_pass = $user->data->user_pass;
-        $this->user_nicename = $user->data->user_nicename;
-        $this->user_email = $user->data->user_email;
-        $this->user_url = $user->data->user_url;
-        $this->user_registered = DateTime::init_utc($user->data->user_registered);
-        $this->user_activation_key = $user->data->user_activation_key;
-        $this->user_status = (int) $user->data->user_status;
-        $this->display_name = $user->data->display_name;
     }
 
     /**
@@ -259,6 +242,31 @@ class User implements Conversion
     }
 
     /**
+     * Load instance from WP_User object
+     *
+     * @see DateTime
+     * @param WP_User $user
+     */
+    private function load_from_user(WP_User $user): void
+    {
+        try {
+            $this->id = (int) $user->data->ID;
+            $this->user_login = $user->data->user_login;
+            $this->user_pass = $user->data->user_pass;
+            $this->user_nicename = $user->data->user_nicename;
+            $this->user_email = $user->data->user_email;
+            $this->user_url = $user->data->user_url;
+            $this->user_registered = DateTime::init_utc($user->data->user_registered);
+            $this->user_activation_key = $user->data->user_activation_key;
+            $this->user_status = (int) $user->data->user_status;
+            $this->display_name = $user->data->display_name;
+        } catch (Exception $e) {
+            // Quiet please.
+        }
+        $this->load_metas();
+    }
+
+    /**
      * Reload instance from database
      */
     private function reload(): void
@@ -267,6 +275,36 @@ class User implements Conversion
             return;
         }
         $this->load_from_id($this->id);
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Load post metas
+     */
+    private function load_metas(): void
+    {
+        $metas = UserMeta::init(['user_id' => $this->id]);
+        if (!is_array($metas)) {
+            return;
+        }
+        $this->metas = $metas;
+    }
+
+    /**
+     * Save user metas
+     */
+    private function save_metas(): void
+    {
+        foreach ($this->metas as $meta) {
+            if (!$meta->has_changed()) {
+                continue;
+            }
+            if (!$meta->is_from_db()) {
+                $meta->create();
+            }
+            $meta->update();
+        }
     }
 
     /************************************************************************************/
@@ -298,6 +336,7 @@ class User implements Conversion
             return false;
         }
         $this->id = $id;
+        $this->save_metas();
         $this->reload();
 
         return true;
@@ -314,6 +353,7 @@ class User implements Conversion
         if (!$id = wp_update_user($this->to_array())) {
             return false;
         }
+        $this->save_metas();
         $this->reload();
 
         return true;
@@ -355,6 +395,7 @@ class User implements Conversion
         $data['user_activation_key'] = $this->user_activation_key;
         $data['user_status'] = $this->user_status;
         $data['display_name'] = $this->display_name;
+        $data['metas'] = $this->metas;
 
         return $data;
     }
@@ -377,6 +418,27 @@ class User implements Conversion
     public function to_object(): object
     {
         return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get user meta
+     *
+     * @param string key
+     * @return null|UserMeta
+     */
+    public function meta(string $key)
+    {
+        if (count($this->metas) === 0) {
+            $this->load_metas();
+        }
+        if (!isset($this->metas[$key])) {
+            return null;
+        }
+
+        return $this->metas[$key];
     }
 
     /************************************************************************************/
@@ -505,9 +567,9 @@ class User implements Conversion
     /**
      * Get user registered
      *
-     * @return string
+     * @return DateTime
      */
-    public function get_user_registered(): string
+    public function get_user_registered(): DateTime
     {
         return $this->user_registered;
     }
