@@ -2,7 +2,7 @@
 
 namespace Charm\WordPress\Meta;
 
-use Charm\WordPress\Core\Meta;
+use Charm\WordPress\Meta;
 
 /**
  * Class UserMeta
@@ -13,7 +13,7 @@ use Charm\WordPress\Core\Meta;
 class UserMeta extends Meta
 {
     /**
-     * Default constructor
+     * UserMeta constructor
      *
      * @param array $data
      */
@@ -27,15 +27,31 @@ class UserMeta extends Meta
     // Instantiation methods
 
     /**
-     * Get user meta
+     * Initialize comment user(s)
      *
-     * @param int $user_id
-     * @param string $meta_key
-     * @param string $meta_type
+     * @param array $params
      * @return null|UserMeta|UserMeta[]
      */
-    public static function get($user_id, $meta_key = '', $meta_type = 'user')
+    public static function init($params)
     {
-        return parent::get($meta_type, $user_id, $meta_key);
+        if (!isset($params['user_id'])) {
+            return null;
+        }
+        $params['meta_type'] = 'user';
+        $params['object_id'] = $params['user_id'];
+
+        return parent::init($params);
+    }
+
+    /**
+     * Get user metas
+     *
+     * @todo Implement UserMeta::get()
+     * @param array $params
+     * @return UserMeta[]
+     */
+    public static function get(array $params): array
+    {
+        return [];
     }
 }

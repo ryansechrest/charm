@@ -2,7 +2,7 @@
 
 namespace Charm\WordPress\Meta;
 
-use Charm\WordPress\Core\Meta;
+use Charm\WordPress\Meta;
 
 /**
  * Class CommentMeta
@@ -13,7 +13,7 @@ use Charm\WordPress\Core\Meta;
 class CommentMeta extends Meta
 {
     /**
-     * Default constructor
+     * CommentMeta constructor
      *
      * @param array $data
      */
@@ -27,15 +27,31 @@ class CommentMeta extends Meta
     // Instantiation methods
 
     /**
-     * Get comment meta
+     * Initialize comment meta(s)
      *
-     * @param int $comment_id
-     * @param string $meta_key
-     * @param string $meta_type
+     * @param array $params
      * @return CommentMeta|CommentMeta[]|null
      */
-    public static function get($comment_id, $meta_key = '', $meta_type = 'comment')
+    public static function init($params)
     {
-        return parent::get($meta_type, $comment_id, $meta_key);
+        if (!isset($params['comment_id'])) {
+            return null;
+        }
+        $params['meta_type'] = 'comment';
+        $params['object_id'] = $params['comment_id'];
+
+        return parent::init($params);
+    }
+
+    /**
+     * Get comment metas
+     *
+     * @todo Implement CommentMeta::get()
+     * @param array $params
+     * @return CommentMeta[]
+     */
+    public static function get(array $params): array
+    {
+        return [];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Charm\WordPress\Meta;
 
-use Charm\WordPress\Core\Meta;
+use Charm\WordPress\Meta;
 
 /**
  * Class PostMeta
@@ -13,7 +13,7 @@ use Charm\WordPress\Core\Meta;
 class PostMeta extends Meta
 {
     /**
-     * Default constructor
+     * PostMeta constructor
      *
      * @param array $data
      */
@@ -27,15 +27,31 @@ class PostMeta extends Meta
     // Instantiation methods
 
     /**
-     * Get post meta
+     * Initialize post meta(s)
      *
-     * @param int $post_id
-     * @param string $meta_key
-     * @param string $meta_type
+     * @param array $params
      * @return null|PostMeta|PostMeta[]
      */
-    public static function get($post_id, $meta_key = '', $meta_type = 'post')
+    public static function init($params)
     {
-        return parent::get($meta_type, $post_id, $meta_key);
+        if (!isset($params['post_id'])) {
+            return null;
+        }
+        $params['meta_type'] = 'post';
+        $params['object_id'] = $params['post_id'];
+
+        return parent::init($params);
+    }
+
+    /**
+     * Get post metas
+     *
+     * @todo Implement PostMeta::get()
+     * @param array $params
+     * @return PostMeta[]
+     */
+    public static function get(array $params): array
+    {
+        return [];
     }
 }
