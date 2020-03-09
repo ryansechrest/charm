@@ -1,14 +1,14 @@
 <?php
 
-namespace Charm\App\Feature;
+namespace Charm\App\Blueprint;
 
 /**
  * Interface Conversion
  *
  * @author Ryan Sechrest
- * @package Charm\App\Feature
+ * @package Charm\App\Blueprint
  */
-interface Conversion
+interface Cast
 {
     /**
      * Convert instance to array

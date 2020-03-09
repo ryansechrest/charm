@@ -3,12 +3,12 @@
 namespace Charm\App\Feature;
 
 /**
- * Interface Crud
+ * Interface Entity
  *
  * @author Ryan Sechrest
  * @package Charm\App\Feature
  */
-interface Crud
+interface Entity
 {
     /**
      * Initialize instance(s)
