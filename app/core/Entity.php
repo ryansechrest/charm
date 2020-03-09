@@ -2,8 +2,9 @@
 
 namespace Charm\App\Core;
 
-use Charm\App\Feature\Conversion;
-use Charm\App\Feature\Crud;
+use Charm\App\Blueprint\Entity as EntityBlueprint;
+use Charm\App\Feature\Cast;
+use Charm\App\Feature\LoadProperties;
 
 /**
  * Class Entity
@@ -11,87 +12,15 @@ use Charm\App\Feature\Crud;
  * @author Ryan Sechrest
  * @package Charm\App\Core
  */
-abstract class Entity implements Conversion, Crud
+abstract class Entity implements EntityBlueprint
 {
-    /**
-     * Entity constructor
-     *
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        if (!is_array($data)) {
-            return;
-        }
-        $this->load($data);
-    }
-
-    /**
-     * Load instance with data
-     *
-     * @param array $data
-     */
-    public function load(array $data): void
-    {
-        if (!is_array($data)) {
-            return;
-        }
-        foreach ($data as $property => $object) {
-            if (!property_exists($this, $property)) {
-                continue;
-            }
-            $this->$property = $object;
-        }
-    }
-
-    /************************************************************************************/
-    // Instantiation methods
+    use Cast, LoadProperties;
 
     /**
      * Initialize object
      *
-     * @param int|null|object|string $key
+     * @param int|null|self|string $key
      * @return null|self
      */
-    abstract public static function init($key = null);
-
-    /************************************************************************************/
-    // Conversion methods
-
-    /**
-     * Convert instance to array
-     *
-     * @return array
-     */
-    public function to_array(): array
-    {
-        $data = [];
-        foreach(array_keys(get_object_vars($this)) as $property) {
-            $data[$property] = null;
-            if (method_exists($this->$property, 'to_array')) {
-                $data[$property] = $this->$property->to_array();
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Convert instance to JSON
-     *
-     * @return string
-     */
-    public function to_json(): string
-    {
-        return json_encode($this->to_array());
-    }
-    /**
-     * Convert instance to stdClass
-     *
-     * @return object
-     */
-    public function to_object(): object
-    {
-        return (object) $this->to_array();
-    }
+    abstract public static function init($key);
 }
