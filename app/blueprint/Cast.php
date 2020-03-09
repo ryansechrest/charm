@@ -3,7 +3,7 @@
 namespace Charm\App\Blueprint;
 
 /**
- * Interface Conversion
+ * Interface Cast
  *
  * @author Ryan Sechrest
  * @package Charm\App\Blueprint
@@ -11,21 +11,21 @@ namespace Charm\App\Blueprint;
 interface Cast
 {
     /**
-     * Convert instance to array
+     * Cast instance to array
      *
      * @return array
      */
     public function to_array(): array;
 
     /**
-     * Convert instance to JSON
+     * Cast instance to JSON
      *
      * @return string
      */
     public function to_json(): string;
 
     /**
-     * Convert instance to object
+     * Cast instance to object
      *
      * @return object
      */
