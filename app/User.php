@@ -60,45 +60,41 @@ class User extends Entity
     /**
      * Save user
      *
-     * @todo Implement User->save()
      * @return bool
      */
     public function save(): bool
     {
-        return false;
+        return $this->wp_user->save();
     }
 
     /**
      * Create user
      *
-     * @todo Implement User->create()
      * @return bool
      */
     public function create(): bool
     {
-        return false;
+        return $this->wp_user->create();
     }
 
     /**
      * Update user
      *
-     * @todo Implement User->update()
      * @return bool
      */
     public function update(): bool
     {
-        return false;
+        return $this->wp_user->update();
     }
 
     /**
      * Delete user
      *
-     * @todo Implement User->delete()
      * @return bool
      */
     public function delete(): bool
     {
-        return false;
+        return $this->wp_user->delete();
     }
 
     /************************************************************************************/

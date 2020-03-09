@@ -61,45 +61,41 @@ class Meta
     /**
      * Save meta
      *
-     * @todo Implement Meta->save()
      * @return bool
      */
     public function save(): bool
     {
-        return false;
+        return $this->wp_meta->save();
     }
 
     /**
      * Create meta
      *
-     * @todo Implement Meta->create()
      * @return bool
      */
     public function create(): bool
     {
-        return false;
+        return $this->wp_meta->create();
     }
 
     /**
      * Update meta
      *
-     * @todo Implement Meta->update()
      * @return bool
      */
     public function update(): bool
     {
-        return false;
+        return $this->wp_meta->update();
     }
 
     /**
      * Delete meta
      *
-     * @todo Implement Meta->delete()
      * @return bool
      */
     public function delete(): bool
     {
-        return false;
+        return $this->wp_meta->delete();
     }
 
     /************************************************************************************/
@@ -114,8 +110,11 @@ class Meta
     public function array(): array
     {
         $array = maybe_unserialize($this->wp_meta->get_meta_value());
-        if (!is_array($array)) {
+        if ($array === null) {
             return [];
+        }
+        if (!is_array($array)) {
+            return [$array];
         }
 
         return $array;

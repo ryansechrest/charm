@@ -68,13 +68,14 @@ class Post extends Entity
     /**
      * Get posts
      *
-     * @todo Implement Post::get()
      * @param array $params
      * @return Post[]
      */
     public static function get(array $params): array
     {
-        return [];
+        return array_map(function(WpPost $post) {
+            return new Post($post->to_array());
+        }, WpPost::get($params));
     }
 
     /************************************************************************************/
@@ -83,67 +84,64 @@ class Post extends Entity
     /**
      * Save post
      *
-     * @todo Implement Post->save()
+     * @param string $status
      * @return bool
      */
-    public function save(): bool
+    public function save($status = ''): bool
     {
-        return false;
+        return $this->wp_post->save($status);
     }
 
     /**
      * Create post
      *
-     * @todo Implement Post->create()
+     * @param string $status
      * @return bool
      */
-    public function create(): bool
+    public function create($status = ''): bool
     {
-        return false;
+        return $this->wp_post->create($status);
     }
 
     /**
      * Update post
      *
-     * @todo Implement Post->update()
+     * @param string $status
      * @return bool
      */
-    public function update(): bool
+    public function update($status = ''): bool
     {
-        return false;
+        return $this->wp_post->update($status);
     }
 
     /**
      * Move post to trash
      *
-     * @todo Implement Post->trash()
      * @return bool
      */
     public function trash(): bool
     {
-        return false;
+        return $this->wp_post->trash();
     }
 
     /**
      * Restore post from trash
      *
-     * @todo Implement Post->restore()
      * @return bool
      */
     public function restore(): bool
     {
-        return false;
+        return $this->wp_post->restore();
     }
 
     /**
      * Delete post
      *
-     * @todo Implement Post->delete()
      * @return bool
      */
     public function delete(): bool
     {
-        return false;
+        return $this->wp_post->delete();
     }
 
     /************************************************************************************/
@@ -188,6 +186,7 @@ class Post extends Entity
     public function meta(string $key)
     {
         $wp_meta = $this->wp_post->meta($key);
+        var_dump($wp_meta);
         if (!is_array($wp_meta)) {
             return new Meta(['wp_meta' => $wp_meta]);
         }
