@@ -121,11 +121,32 @@ class Meta
     }
 
     /**
+     * Return value as bool
+     *
+     * @return bool
+     */
+    public function bool(): bool
+    {
+        $bool = $this->wp_meta->get_meta_value();
+        if (is_bool($bool)) {
+            return $bool;
+        }
+        if (is_string($bool) && $bool === 'true') {
+            return true;
+        }
+        if (is_numeric($bool) && $bool == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Return value as integer
      *
      * @return int
      */
-    public function integer(): int
+    public function int(): int
     {
         if (!is_numeric($this->wp_meta->get_meta_value())) {
             return 0;
