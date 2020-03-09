@@ -4,7 +4,6 @@ namespace Charm\App;
 
 use Charm\App\Core\Entity;
 use Charm\App\DataType\DateTime;
-use Charm\WordPress\Meta\UserMeta;
 use Charm\WordPress\User as WpUser;
 use WP_User;
 
@@ -53,45 +52,6 @@ class User extends Entity
     public static function get(array $params): array
     {
         return [];
-    }
-
-    /************************************************************************************/
-    // Conversion methods
-
-    /**
-     * Convert instance to array
-     *
-     * @return array
-     */
-    public function to_array(): array
-    {
-        $data = [
-            'wp_user' => [],
-        ];
-        if ($this->wp_user !== null) {
-            $data['wp_user'] = $this->wp_user->to_array();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Convert instance to JSON
-     *
-     * @return string
-     */
-    public function to_json(): string
-    {
-        return json_encode($this->to_array());
-    }
-    /**
-     * Convert instance to stdClass
-     *
-     * @return object
-     */
-    public function to_object(): object
-    {
-        return (object) $this->to_array();
     }
 
     /************************************************************************************/
@@ -149,7 +109,7 @@ class User extends Entity
      *
      * @return WpUser
      */
-    public function user(): WpUser
+    public function wp_user(): WpUser
     {
         return $this->wp_user;
     }
@@ -158,11 +118,20 @@ class User extends Entity
      * Get user meta
      *
      * @param string $key
-     * @return null|UserMeta|UserMeta[]
+     * @return Meta|Meta[]
      */
     public function meta(string $key)
     {
-        return $this->wp_user->meta($key);
+        $wp_meta = $this->wp_user->meta($key);
+        if (!is_array($wp_meta)) {
+            return new Meta(['wp_meta' => $wp_meta]);
+        }
+        $metas = [];
+        foreach ($wp_meta as $meta) {
+            $metas[] = new Meta(['wp_meta' => $meta]);
+        }
+
+        return $metas;
     }
 
     /**

@@ -5,7 +5,6 @@ namespace Charm\App;
 use Charm\App\Core\Entity;
 use Charm\App\DataType\DateTime;
 use Charm\WordPress\Post as WpPost;
-use Charm\WordPress\Meta\PostMeta;
 use WP_Post;
 
 /**
@@ -155,7 +154,7 @@ class Post extends Entity
      *
      * @return WpPost
      */
-    public function post(): WpPost
+    public function wp_post(): WpPost
     {
         return $this->wp_post;
     }
@@ -184,11 +183,20 @@ class Post extends Entity
      * Get post meta
      *
      * @param string $key
-     * @return null|PostMeta|PostMeta[]
+     * @return Meta|Meta[]
      */
     public function meta(string $key)
     {
-        return $this->wp_post->meta($key);
+        $wp_meta = $this->wp_post->meta($key);
+        if (!is_array($wp_meta)) {
+            return new Meta(['wp_meta' => $wp_meta]);
+        }
+        $metas = [];
+        foreach ($wp_meta as $meta) {
+            $metas[] = new Meta(['wp_meta' => $meta]);
+        }
+
+        return $metas;
     }
 
     /**
