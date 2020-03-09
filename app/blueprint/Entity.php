@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\App\Feature;
+namespace Charm\App\Blueprint;
 
 /**
  * Interface Entity
  *
  * @author Ryan Sechrest
- * @package Charm\App\Feature
+ * @package Charm\App\Blueprint
  */
 interface Entity
 {
