@@ -472,10 +472,7 @@ class Post implements Cast, Entity
             if (!$meta->has_changed()) {
                 continue;
             }
-            if (!$meta->is_from_db()) {
-                $meta->create();
-            }
-            $meta->update();
+            $meta->save();
         }
     }
 
