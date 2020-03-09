@@ -2,9 +2,10 @@
 
 namespace Charm\WordPress;
 
+use Charm\App\Blueprint\Cast;
+use Charm\App\Blueprint\Entity;
 use Charm\App\DataType\DateTime;
-use Charm\App\Feature\Conversion;
-use Charm\WordPress\Meta\PostMeta;
+use Charm\App\Feature\Cast as CastFeature;
 use Exception;
 use WP_Post;
 use WP_Query;
@@ -15,8 +16,10 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class Post implements Conversion
+class Post implements Cast, Entity
 {
+    use CastFeature;
+
     /**
      * ID
      *
@@ -188,7 +191,7 @@ class Post implements Conversion
     /**
      * Post metas
      *
-     * @var PostMeta[]
+     * @var Meta[]
      */
     private $metas = [];
 
@@ -450,7 +453,10 @@ class Post implements Conversion
      */
     private function load_metas(): void
     {
-        $metas = PostMeta::init(['post_id' => $this->id]);
+        $metas = Meta::init([
+            'meta_type' => 'post',
+            'object_id' => $this->id,
+        ]);
         if (!is_array($metas)) {
             return;
         }
@@ -580,7 +586,7 @@ class Post implements Conversion
     }
 
     /************************************************************************************/
-    // Conversion methods
+    // Cast methods
 
     /**
      * Convert instance to array
@@ -619,25 +625,6 @@ class Post implements Conversion
         return $data;
     }
 
-    /**
-     * Convert instance to JSON
-     *
-     * @return string
-     */
-    public function to_json(): string
-    {
-        return json_encode($this->to_array());
-    }
-    /**
-     * Convert instance to stdClass
-     *
-     * @return object
-     */
-    public function to_object(): object
-    {
-        return (object) $this->to_array();
-    }
-
     /************************************************************************************/
     // Object access methods
 
@@ -645,7 +632,7 @@ class Post implements Conversion
      * Get post meta
      *
      * @param string key
-     * @return null|PostMeta
+     * @return Meta
      */
     public function meta(string $key)
     {
@@ -653,7 +640,11 @@ class Post implements Conversion
             $this->load_metas();
         }
         if (!isset($this->metas[$key])) {
-            return null;
+            $this->metas[$key] = new Meta([
+                'meta_type' => 'post',
+                'object_id' => $this->id,
+                'meta_key' => $key,
+            ]);
         }
 
         return $this->metas[$key];

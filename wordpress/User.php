@@ -2,9 +2,10 @@
 
 namespace Charm\WordPress;
 
+use Charm\App\Blueprint\Cast;
+use Charm\App\Blueprint\Entity;
 use Charm\App\DataType\DateTime;
-use Charm\App\Feature\Conversion;
-use Charm\WordPress\Meta\UserMeta;
+use Charm\App\Feature\Cast as CastFeature;
 use Exception;
 use WP_User;
 
@@ -14,8 +15,10 @@ use WP_User;
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class User implements Conversion
+class User implements Cast, Entity
 {
+    use CastFeature;
+
     /**
      * ID
      *
@@ -89,7 +92,7 @@ class User implements Conversion
     /**
      * User metas
      *
-     * @var UserMeta[]
+     * @var Meta[]
      */
     private $metas = [];
 
@@ -190,7 +193,7 @@ class User implements Conversion
      * @param array $params
      * @return User[]
      */
-    public static function get(array $params)
+    public static function get(array $params): array
     {
         return [];
     }
@@ -284,7 +287,10 @@ class User implements Conversion
      */
     private function load_metas(): void
     {
-        $metas = UserMeta::init(['user_id' => $this->id]);
+        $metas = Meta::init([
+            'meta_type' => 'user',
+            'object_id' => $this->id,
+        ]);
         if (!is_array($metas)) {
             return;
         }
@@ -375,7 +381,7 @@ class User implements Conversion
     }
 
     /************************************************************************************/
-    // Conversion methods
+    // Cast methods
 
     /**
      * Convert instance to array
@@ -400,26 +406,6 @@ class User implements Conversion
         return $data;
     }
 
-    /**
-     * Convert instance to JSON
-     *
-     * @return string
-     */
-    public function to_json(): string
-    {
-        return json_encode($this->to_array());
-    }
-
-    /**
-     * Convert instance to object
-     *
-     * @return object
-     */
-    public function to_object(): object
-    {
-        return (object) $this->to_array();
-    }
-
     /************************************************************************************/
     // Object access methods
 
@@ -427,7 +413,7 @@ class User implements Conversion
      * Get user meta
      *
      * @param string key
-     * @return null|UserMeta
+     * @return Meta
      */
     public function meta(string $key)
     {
@@ -435,7 +421,11 @@ class User implements Conversion
             $this->load_metas();
         }
         if (!isset($this->metas[$key])) {
-            return null;
+            $this->metas[$key] = new Meta([
+                'meta_type' => 'user',
+                'object_id' => $this->id,
+                'meta_key' => $key,
+            ]);
         }
 
         return $this->metas[$key];

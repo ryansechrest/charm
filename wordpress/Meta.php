@@ -2,8 +2,9 @@
 
 namespace Charm\WordPress;
 
-use Charm\App\Feature\Conversion;
-use Charm\App\Feature\Crud;
+use Charm\App\Blueprint\Cast;
+use Charm\App\Blueprint\Entity;
+use Charm\App\Feature\Cast as CastFeature;
 
 /**
  * Class Meta
@@ -11,8 +12,10 @@ use Charm\App\Feature\Crud;
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class Meta implements Conversion, Crud
+class Meta implements Cast, Entity
 {
+    use CastFeature;
+
     /**
      * Meta type
      *
@@ -334,72 +337,6 @@ class Meta implements Conversion, Crud
         $data['meta_value'] = $this->meta_value;
 
         return $data;
-    }
-
-    /**
-     * Convert instance to JSON
-     *
-     * @return string
-     */
-    public function to_json(): string
-    {
-        return json_encode($this->to_array());
-    }
-    /**
-     * Convert instance to stdClass
-     *
-     * @return object
-     */
-    public function to_object(): object
-    {
-        return (object) $this->to_array();
-    }
-
-    /************************************************************************************/
-    // Value access methods
-
-    /**
-     * Return value as array
-     *
-     * @see maybe_unserialize()
-     * @return array
-     */
-    public function array(): array
-    {
-        $array = maybe_unserialize($this->meta_value);
-        if (!is_array($array)) {
-            return [];
-        }
-
-        return $array;
-    }
-
-    /**
-     * Return value as integer
-     *
-     * @return int
-     */
-    public function integer(): int
-    {
-        if (!is_numeric($this->meta_value)) {
-            return 0;
-        }
-
-        return (int) $this->meta_value;
-    }
-
-    /**
-     * Return value as text
-     *
-     * @return string
-     */
-    public function text(): string
-    {
-        if (!$string = (string) $this->meta_value) {
-            return '';
-        }
-
-        return $string;
     }
 
     /************************************************************************************/
