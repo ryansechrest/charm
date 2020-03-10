@@ -18,161 +18,161 @@ class Post
      *
      * @var int
      */
-    private $id = 0;
+    protected $id = 0;
 
     /**
      * Post author
      *
      * @var int
      */
-    private $post_author = 0;
+    protected $post_author = 0;
 
     /**
      * Post date
      *
      * @var string
      */
-    private $post_date = '';
+    protected $post_date = '';
 
     /**
      * Post date (GMT)
      *
      * @var string
      */
-    private $post_date_gmt = '';
+    protected $post_date_gmt = '';
 
     /**
      * Post content
      *
      * @var string
      */
-    private $post_content = '';
+    protected $post_content = '';
 
     /**
      * Post title
      *
      * @var string
      */
-    private $post_title = '';
+    protected $post_title = '';
 
     /**
      * Post excerpt
      *
      * @var string
      */
-    private $post_excerpt = '';
+    protected $post_excerpt = '';
 
     /**
      * Post status
      *
      * @var string
      */
-    private $post_status = '';
+    protected $post_status = '';
 
     /**
      * Comment status
      *
      * @var string
      */
-    private $comment_status = '';
+    protected $comment_status = '';
 
     /**
      * Ping status
      *
      * @var string
      */
-    private $ping_status = '';
+    protected $ping_status = '';
 
     /**
      * Post password
      *
      * @var string
      */
-    private $post_password = '';
+    protected $post_password = '';
 
     /**
      * Post name
      *
      * @var string
      */
-    private $post_name = '';
+    protected $post_name = '';
 
     /**
      * URLs to ping
      *
      * @var string
      */
-    private $to_ping = '';
+    protected $to_ping = '';
 
     /**
      * URLs pinged
      *
      * @var string
      */
-    private $pinged = '';
+    protected $pinged = '';
 
     /**
      * Post modified
      *
      * @var string
      */
-    private $post_modified = '';
+    protected $post_modified = '';
 
     /**
      * Post modified (GMT)
      *
      * @var string
      */
-    private $post_modified_gmt = '';
+    protected $post_modified_gmt = '';
 
     /**
      * Filtered post content
      *
      * @var string
      */
-    private $post_content_filtered = '';
+    protected $post_content_filtered = '';
 
     /**
      * Post parent
      *
      * @var int
      */
-    private $post_parent = 0;
+    protected $post_parent = 0;
 
     /**
      * GUID
      *
      * @var string
      */
-    private $guid = '';
+    protected $guid = '';
 
     /**
      * Menu order
      *
      * @var int
      */
-    private $menu_order = 0;
+    protected $menu_order = 0;
 
     /**
      * Post type
      *
      * @var string
      */
-    private $post_type = '';
+    protected $post_type = '';
 
     /**
      * Post mime type
      *
      * @var string
      */
-    private $post_mime_type = '';
+    protected $post_mime_type = '';
 
     /**
      * Comment count
      *
      * @var int
      */
-    private $comment_count = 0;
+    protected $comment_count = 0;
 
     /************************************************************************************/
     // Default constructor and load method

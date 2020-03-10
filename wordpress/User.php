@@ -17,70 +17,70 @@ class User
      *
      * @var int
      */
-    private $id = 0;
+    protected $id = 0;
 
     /**
      * User login
      *
      * @var string
      */
-    private $user_login = '';
+    protected $user_login = '';
 
     /**
      * User pass
      *
      * @var string
      */
-    private $user_pass = '';
+    protected $user_pass = '';
 
     /**
      * User nice name
      *
      * @var string
      */
-    private $user_nicename = '';
+    protected $user_nicename = '';
 
     /**
      * User email
      *
      * @var string
      */
-    private $user_email = '';
+    protected $user_email = '';
 
     /**
      * User URL
      *
      * @var string
      */
-    private $user_url = '';
+    protected $user_url = '';
 
     /**
      * User registered
      *
      * @var string
      */
-    private $user_registered = '';
+    protected $user_registered = '';
 
     /**
      * User activation key
      *
      * @var string
      */
-    private $user_activation_key = '';
+    protected $user_activation_key = '';
 
     /**
      * User status
      *
      * @var string
      */
-    private $user_status = '';
+    protected $user_status = '';
 
     /**
      * User display name
      *
      * @var string
      */
-    private $display_name = '';
+    protected $display_name = '';
 
     /************************************************************************************/
     // Default constructor and load method

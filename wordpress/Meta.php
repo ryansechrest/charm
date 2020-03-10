@@ -15,35 +15,35 @@ class Meta
      *
      * @var string
      */
-    private $meta_type = '';
+    protected $meta_type = '';
 
     /**
      * Meta ID
      *
      * @var int
      */
-    private $meta_id = 0;
+    protected $meta_id = 0;
 
     /**
      * Object ID
      *
      * @var int
      */
-    private $object_id = 0;
+    protected $object_id = 0;
 
     /**
      * Meta key
      *
      * @var string
      */
-    private $meta_key = '';
+    protected $meta_key = '';
 
     /**
      * Meta value
      *
      * @var mixed
      */
-    private $meta_value = null;
+    protected $meta_value = null;
 
     /*----------------------------------------------------------------------------------*/
 
@@ -52,14 +52,14 @@ class Meta
      *
      * @var mixed
      */
-    private $prev_value = null;
+    protected $prev_value = null;
 
     /**
      * Loaded from database?
      *
      * @var bool
      */
-    private $from_db = false;
+    protected $from_db = false;
 
     /************************************************************************************/
     // Default constructor and load method
