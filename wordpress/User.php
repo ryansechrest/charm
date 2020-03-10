@@ -334,6 +334,25 @@ class User
         return $data;
     }
 
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
+    }
+
     /************************************************************************************/
     // Get and set methods
 
