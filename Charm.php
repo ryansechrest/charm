@@ -9,21 +9,21 @@ class Charm
      *
      * @var string
      */
-    private $version;
+    private $version = '';
 
     /**
      * Commands
      *
      * @var array
      */
-    private $commands;
+    private $commands = [];
 
     /**
      * Logs
      *
      * @var array
      */
-    private $logs;
+    private $logs = [];
 
     /************************************************************************************/
 
@@ -49,7 +49,7 @@ class Charm
      *
      * @return Charm
      */
-    public static function init()
+    public static function init(): Charm
     {
         return new Charm();
     }
@@ -62,7 +62,7 @@ class Charm
      * @param array $args
      * @return bool
      */
-    public function run($args)
+    public function run(array $args): bool
     {
         if (!isset($args[1])) {
             $this->log($this->red('Please provide a command:'));
@@ -99,7 +99,7 @@ class Charm
      *
      * @return bool
      */
-    private function activate()
+    private function activate(): bool
     {
         $this->log_subheader('Activate');
         if (!$this->copy_plugin_file()) {
@@ -114,7 +114,7 @@ class Charm
      *
      * @return bool
      */
-    private function update()
+    private function update(): bool
     {
         $this->log_subheader('Update');
         if (!$this->copy_plugin_file()) {
@@ -129,7 +129,7 @@ class Charm
      *
      * @return bool
      */
-    private function deactivate()
+    private function deactivate(): bool
     {
         $this->log_subheader('Deactivate');
         if (!$this->remove_plugin_file()) {
@@ -142,7 +142,7 @@ class Charm
     /**
      * List available commands
      */
-    private function help()
+    private function help(): void
     {
         $this->log($this->white('[a]ctivate') . ' ..................... Activate Charm plugin');
         $this->log($this->white('[u]pdate') . ' .............. Update Charm to latest version');
@@ -158,7 +158,7 @@ class Charm
      *
      * @return bool
      */
-    private function copy_plugin_file()
+    private function copy_plugin_file(): bool
     {
         $source_file = dirname(__FILE__) . '/plugin.php';
         $destination_file = dirname(dirname(__FILE__)) . '/_charm.php';
@@ -183,7 +183,7 @@ class Charm
      *
      * @return bool
      */
-    private function remove_plugin_file()
+    private function remove_plugin_file(): bool
     {
         $file = dirname(dirname(__FILE__)) . '/_charm.php';
         $this->log_action(
@@ -207,7 +207,7 @@ class Charm
     /**
      * Start Charm process
      */
-    public function start()
+    public function start(): void
     {
         $this->log_header();
     }
@@ -215,7 +215,7 @@ class Charm
     /**
      * Finish Charm process
      */
-    public function finish()
+    public function finish(): void
     {
         $this->log_footer();
         $this->display_log();
@@ -226,7 +226,7 @@ class Charm
     /**
      * Log Charm header
      */
-    private function log_header()
+    private function log_header(): void
     {
         $this->log();
         $this->log($this->yellow('Charm v' . $this->version));
@@ -239,7 +239,7 @@ class Charm
      *
      * @param string $text
      */
-    private function log_subheader($text)
+    private function log_subheader(string $text): void
     {
         $this->log('# ' . $text);
         $line = '---';
@@ -253,7 +253,7 @@ class Charm
     /**
      * Log Charm footer
      */
-    private function log_footer()
+    private function log_footer(): void
     {
         $this->log('================================= by Ryan Sechrest Ƹ̵̡Ӝ̵̨̄Ʒ');
         $this->log('Thank you for using Charm!');
@@ -265,7 +265,7 @@ class Charm
      *
      * @param string $text
      */
-    private function log($text = '')
+    private function log(string $text = ''): void
     {
         $this->logs[] = $text;
     }
@@ -275,7 +275,7 @@ class Charm
      *
      * @param string $text
      */
-    private function log_action($text)
+    private function log_action(string $text): void
     {
         $this->log('🔸️️️️ ' . $text . '...');
     }
@@ -285,7 +285,7 @@ class Charm
      *
      * @param string $text
      */
-    private function log_success($text)
+    private function log_success(string $text): void
     {
         $this->log('   ' . $this->green('Success: ' . $text));
         $this->log();
@@ -296,7 +296,7 @@ class Charm
      *
      * @param string $text
      */
-    private function log_error($text)
+    private function log_error(string $text): void
     {
         $this->log('   ' . $this->red('Error: ' . $text));
         $this->log();
@@ -305,7 +305,7 @@ class Charm
     /**
      * Display log on screen
      */
-    private function display_log()
+    private function display_log(): void
     {
         $this->logs = array_map(function($log) {
             return ' ' . $log;
@@ -322,7 +322,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function mark($text)
+    private function mark(string $text): string
     {
         return $this->white($text);
     }
@@ -333,7 +333,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function red($text)
+    private function red(string $text): string
     {
         return "\e[1;31m" . $text . "\e[0m";
     }
@@ -344,7 +344,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function green($text)
+    private function green(string $text): string
     {
         return "\e[1;32m" . $text . "\e[0m";
     }
@@ -355,7 +355,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function yellow($text)
+    private function yellow(string $text): string
     {
         return "\e[1;33m" . $text . "\e[0m";
     }
@@ -366,7 +366,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function blue($text)
+    private function blue(string $text): string
     {
         return "\e[1;34m" . $text . "\e[0m";
     }
@@ -377,7 +377,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function magenta($text)
+    private function magenta(string $text): string
     {
         return "\e[1;35m" . $text . "\e[0m";
     }
@@ -388,7 +388,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function cyan($text)
+    private function cyan(string $text): string
     {
         return "\e[1;36m" . $text . "\e[0m";
     }
@@ -399,7 +399,7 @@ class Charm
      * @param string $text
      * @return string
      */
-    private function white($text)
+    private function white(string $text): string
     {
         return "\e[1;37m" . $text . "\e[0m";
     }
