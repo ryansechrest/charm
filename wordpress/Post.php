@@ -2,11 +2,6 @@
 
 namespace Charm\WordPress;
 
-use Charm\App\Blueprint\Cast;
-use Charm\App\Blueprint\Entity;
-use Charm\App\DataType\DateTime;
-use Charm\App\Feature\Cast as CastFeature;
-use Exception;
 use WP_Post;
 use WP_Query;
 
@@ -16,10 +11,8 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class Post implements Cast, Entity
+class Post
 {
-    use CastFeature;
-
     /**
      * ID
      *
@@ -37,16 +30,16 @@ class Post implements Cast, Entity
     /**
      * Post date
      *
-     * @var DateTime
+     * @var string
      */
-    private $post_date = null;
+    private $post_date = '';
 
     /**
      * Post date (GMT)
      *
-     * @var DateTime
+     * @var string
      */
-    private $post_date_gmt = null;
+    private $post_date_gmt = '';
 
     /**
      * Post content
@@ -121,16 +114,16 @@ class Post implements Cast, Entity
     /**
      * Post modified
      *
-     * @var DateTime
+     * @var string
      */
-    private $post_modified = null;
+    private $post_modified = '';
 
     /**
      * Post modified (GMT)
      *
-     * @var DateTime
+     * @var string
      */
-    private $post_modified_gmt = null;
+    private $post_modified_gmt = '';
 
     /**
      * Filtered post content
@@ -180,20 +173,6 @@ class Post implements Cast, Entity
      * @var int
      */
     private $comment_count = 0;
-
-    /**
-     * Permalink
-     *
-     * @var string
-     */
-    private $permalink = '';
-
-    /**
-     * Post metas
-     *
-     * @var Meta[]
-     */
-    private $metas = [];
 
     /************************************************************************************/
     // Default constructor and load method
@@ -287,12 +266,6 @@ class Post implements Cast, Entity
         if (isset($data['comment_count'])) {
             $this->comment_count = (int) $data['comment_count'];
         }
-        if (isset($data['permalink'])) {
-            $this->permalink = $data['permalink'];
-        }
-        if (isset($data['metas'])) {
-            $this->metas = $data['metas'];
-        }
     }
 
     /************************************************************************************/
@@ -302,14 +275,12 @@ class Post implements Cast, Entity
      * Initialize post
      *
      * @see WP_Post
-     * @param int|null|string|WP_Post $key
-     * @return null|Post
+     * @param int|string|WP_Post|null $key
+     * @return Post|null
      */
     public static function init($key = null)
     {
-        /* @var Post $post */
-        $child = get_called_class();
-        $post = new $child();
+        $post = new Post();
         if (is_int($key) || ctype_digit($key)) {
             $post->load_from_id($key);
         } elseif (is_string($key)) {
@@ -343,9 +314,7 @@ class Post implements Cast, Entity
         }
 
         return array_map(function(WP_Post $post) {
-            /* @var Post $child */
-            $child = get_called_class();
-            return $child::init($post);
+            return Post::init($post);
         }, $query->posts);
     }
 
@@ -396,43 +365,34 @@ class Post implements Cast, Entity
     /**
      * Load instance from WP_Post object
      *
-     * @see DateTime
-     * @see get_option()
      * @see WP_Post
      * @param WP_Post $post
      */
     private function load_from_post(WP_Post $post): void
     {
-        $timezone = get_option('timezone_string');
-        try {
-            $this->id = (int) $post->ID;
-            $this->post_author = (int) $post->post_author;
-            $this->post_date = DateTime::init($post->post_date, $timezone);
-            $this->post_date_gmt = DateTime::init_utc($post->post_date_gmt);
-            $this->post_content = $post->post_content;
-            $this->post_title = $post->post_title;
-            $this->post_excerpt = $post->post_excerpt;
-            $this->post_status = $post->post_status;
-            $this->comment_status = $post->comment_status;
-            $this->ping_status = $post->ping_status;
-            $this->post_password = $post->post_password;
-            $this->post_name = $post->post_name;
-            $this->to_ping = $post->to_ping;
-            $this->pinged = $post->pinged;
-            $this->post_modified = DateTime::init($post->post_modified, $timezone);
-            $this->post_modified_gmt = DateTime::init_utc($post->post_modified_gmt);
-            $this->post_content_filtered = $post->post_content_filtered;
-            $this->post_parent = (int) $post->post_parent;
-            $this->guid = $post->guid;
-            $this->menu_order = (int) $post->menu_order;
-            $this->post_type = $post->post_type;
-            $this->post_mime_type = $post->post_mime_type;
-            $this->comment_count = (int) $post->comment_count;
-            $this->permalink = get_permalink($this->id);
-        } catch (Exception $e) {
-            // Quiet please.
-        }
-        $this->load_metas();
+        $this->id = (int) $post->ID;
+        $this->post_author = (int) $post->post_author;
+        $this->post_date = $post->post_date;
+        $this->post_date_gmt = $post->post_date_gmt;
+        $this->post_content = $post->post_content;
+        $this->post_title = $post->post_title;
+        $this->post_excerpt = $post->post_excerpt;
+        $this->post_status = $post->post_status;
+        $this->comment_status = $post->comment_status;
+        $this->ping_status = $post->ping_status;
+        $this->post_password = $post->post_password;
+        $this->post_name = $post->post_name;
+        $this->to_ping = $post->to_ping;
+        $this->pinged = $post->pinged;
+        $this->post_modified = $post->post_modified;
+        $this->post_modified_gmt = $post->post_modified_gmt;
+        $this->post_content_filtered = $post->post_content_filtered;
+        $this->post_parent = (int) $post->post_parent;
+        $this->guid = $post->guid;
+        $this->menu_order = (int) $post->menu_order;
+        $this->post_type = $post->post_type;
+        $this->post_mime_type = $post->post_mime_type;
+        $this->comment_count = (int) $post->comment_count;
     }
 
     /**
@@ -446,71 +406,35 @@ class Post implements Cast, Entity
         $this->load_from_id($this->id);
     }
 
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Load post metas
-     */
-    private function load_metas(): void
-    {
-        $metas = Meta::init([
-            'meta_type' => 'post',
-            'object_id' => $this->id,
-        ]);
-        if (!is_array($metas)) {
-            return;
-        }
-        $this->metas = $metas;
-    }
-
-    /**
-     * Save post metas
-     */
-    private function save_metas(): void
-    {
-        foreach ($this->metas as $meta) {
-            if (!$meta->has_changed()) {
-                continue;
-            }
-            $meta->save();
-        }
-    }
-
     /************************************************************************************/
     // Action methods
 
     /**
      * Save post
      *
-     * @param string $post_status
      * @return bool
      */
-    public function save($post_status = ''): bool
+    public function save(): bool
     {
         if (!$this->id) {
-            return $this->create($post_status);
+            return $this->create();
         }
 
-        return $this->update($post_status);
+        return $this->update();
     }
 
     /**
      * Create new post
      *
      * @see wp_insert_post()
-     * @param string $post_status
      * @return bool
      */
-    public function create($post_status = ''): bool
+    public function create(): bool
     {
-        if ($post_status) {
-            $this->post_status = $post_status;
-        }
         if (!$id = wp_insert_post($this->to_array())) {
             return false;
         }
         $this->id = $id;
-        $this->save_metas();
         $this->reload();
 
         return true;
@@ -520,18 +444,13 @@ class Post implements Cast, Entity
      * Update existing post
      *
      * @see wp_update_post()
-     * @param string $post_status
      * @return bool
      */
-    public function update($post_status = ''): bool
+    public function update(): bool
     {
-        if ($post_status) {
-            $this->post_status = $post_status;
-        }
         if (!$id = wp_update_post($this->to_array())) {
             return false;
         }
-        $this->save_metas();
         $this->reload();
 
         return true;
@@ -586,7 +505,7 @@ class Post implements Cast, Entity
     // Cast methods
 
     /**
-     * Convert instance to array
+     * Cast instance to array
      *
      * @return array
      */
@@ -595,8 +514,8 @@ class Post implements Cast, Entity
         $data = [];
         $data['ID'] = $this->id;
         $data['post_author'] = $this->post_author;
-        $data['post_date'] = $this->post_date->format_db();
-        $data['post_date_gmt'] = $this->post_date_gmt->format_db();
+        $data['post_date'] = $this->post_date;
+        $data['post_date_gmt'] = $this->post_date_gmt;
         $data['post_content'] = $this->post_content;
         $data['post_title'] = $this->post_title;
         $data['post_excerpt'] = $this->post_excerpt;
@@ -607,8 +526,8 @@ class Post implements Cast, Entity
         $data['post_name'] = $this->post_name;
         $data['to_ping'] = $this->to_ping;
         $data['pinged'] = $this->pinged;
-        $data['post_modified'] = $this->post_modified->format_db();
-        $data['post_modified_gmt'] = $this->post_modified_gmt->format_db();
+        $data['post_modified'] = $this->post_modified;
+        $data['post_modified_gmt'] = $this->post_modified_gmt;
         $data['post_content_filtered'] = $this->post_content_filtered;
         $data['post_parent'] = $this->post_parent;
         $data['guid'] = $this->guid;
@@ -616,35 +535,43 @@ class Post implements Cast, Entity
         $data['post_type'] = $this->post_type;
         $data['post_mime_type'] = $this->post_mime_type;
         $data['comment_count'] = $this->comment_count;
-        $data['permalink'] = $this->permalink;
-        $data['metas'] = $this->metas;
 
         return $data;
     }
 
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
+    }
+
     /************************************************************************************/
-    // Object access methods
+    // Chainable set methods
 
     /**
-     * Get post meta
+     * Set post status
      *
-     * @param string key
-     * @return Meta
+     * @param string $status
+     * @return Post
      */
-    public function meta(string $key)
+    public function status($status)
     {
-        if (count($this->metas) === 0) {
-            $this->load_metas();
-        }
-        if (!isset($this->metas[$key])) {
-            $this->metas[$key] = new Meta([
-                'meta_type' => 'post',
-                'object_id' => $this->id,
-                'meta_key' => $key,
-            ]);
-        }
+        $this->post_status = $status;
 
-        return $this->metas[$key];
+        return $this;
     }
 
     /************************************************************************************/
@@ -670,6 +597,8 @@ class Post implements Cast, Entity
         $this->id = $id;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post author
      *
@@ -690,12 +619,14 @@ class Post implements Cast, Entity
         $this->post_author = $post_author;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post date
      *
-     * @return DateTime
+     * @return string
      */
-    public function get_post_date(): DateTime
+    public function get_post_date(): string
     {
         return $this->post_date;
     }
@@ -703,19 +634,21 @@ class Post implements Cast, Entity
     /**
      * Set post date
      *
-     * @param DateTime $post_date
+     * @param string $post_date
      */
-    public function set_post_date(DateTime $post_date): void
+    public function set_post_date(string $post_date): void
     {
         $this->post_date = $post_date;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post date (GMT)
      *
-     * @return DateTime
+     * @return string
      */
-    public function get_post_date_gmt(): DateTime
+    public function get_post_date_gmt(): string
     {
         return $this->post_date_gmt;
     }
@@ -723,12 +656,14 @@ class Post implements Cast, Entity
     /**
      * Set post date (GMT)
      *
-     * @param DateTime $post_date_gmt
+     * @param string $post_date_gmt
      */
-    public function set_post_date_gmt(DateTime $post_date_gmt): void
+    public function set_post_date_gmt(string $post_date_gmt): void
     {
         $this->post_date_gmt = $post_date_gmt;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post content
@@ -750,6 +685,8 @@ class Post implements Cast, Entity
         $this->post_content = $post_content;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post title
      *
@@ -769,6 +706,8 @@ class Post implements Cast, Entity
     {
         $this->post_title = $post_title;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post excerpt
@@ -790,6 +729,8 @@ class Post implements Cast, Entity
         $this->post_excerpt = $post_excerpt;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post status
      *
@@ -809,6 +750,8 @@ class Post implements Cast, Entity
     {
         $this->post_status = $post_status;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get comment status
@@ -830,6 +773,8 @@ class Post implements Cast, Entity
         $this->comment_status = $comment_status;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get ping status
      *
@@ -849,6 +794,8 @@ class Post implements Cast, Entity
     {
         $this->ping_status = $ping_status;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post password
@@ -870,6 +817,8 @@ class Post implements Cast, Entity
         $this->post_password = $post_password;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post name
      *
@@ -889,6 +838,8 @@ class Post implements Cast, Entity
     {
         $this->post_name = $post_name;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get to ping
@@ -910,6 +861,8 @@ class Post implements Cast, Entity
         $this->to_ping = $to_ping;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get pinged
      *
@@ -930,12 +883,14 @@ class Post implements Cast, Entity
         $this->pinged = $pinged;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post modified
      *
-     * @return DateTime
+     * @return string
      */
-    public function get_post_modified(): DateTime
+    public function get_post_modified(): string
     {
         return $this->post_modified;
     }
@@ -943,19 +898,21 @@ class Post implements Cast, Entity
     /**
      * Set post modified
      *
-     * @param DateTime $post_modified
+     * @param string $post_modified
      */
-    public function set_post_modified(DateTime $post_modified): void
+    public function set_post_modified(string $post_modified): void
     {
         $this->post_modified = $post_modified;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post modified (GMT)
      *
-     * @return DateTime
+     * @return string
      */
-    public function get_post_modified_gmt(): DateTime
+    public function get_post_modified_gmt(): string
     {
         return $this->post_modified_gmt;
     }
@@ -963,12 +920,14 @@ class Post implements Cast, Entity
     /**
      * Set post modified (GMT)
      *
-     * @param DateTime $post_modified_gmt
+     * @param string $post_modified_gmt
      */
-    public function set_post_modified_gmt(DateTime $post_modified_gmt): void
+    public function set_post_modified_gmt(string $post_modified_gmt): void
     {
         $this->post_modified_gmt = $post_modified_gmt;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post content filtered
@@ -990,6 +949,8 @@ class Post implements Cast, Entity
         $this->post_content_filtered = $post_content_filtered;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post parent
      *
@@ -1009,6 +970,8 @@ class Post implements Cast, Entity
     {
         $this->post_parent = $post_parent;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get GUID
@@ -1030,6 +993,8 @@ class Post implements Cast, Entity
         $this->guid = $guid;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get menu order
      *
@@ -1049,6 +1014,8 @@ class Post implements Cast, Entity
     {
         $this->menu_order = $menu_order;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post type
@@ -1070,6 +1037,8 @@ class Post implements Cast, Entity
         $this->post_type = $post_type;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get post mime type
      *
@@ -1090,6 +1059,8 @@ class Post implements Cast, Entity
         $this->post_mime_type = $post_mime_type;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get comment count
      *
@@ -1108,25 +1079,5 @@ class Post implements Cast, Entity
     public function set_comment_count(int $comment_count): void
     {
         $this->comment_count = $comment_count;
-    }
-
-    /**
-     * Get permalink
-     *
-     * @return string
-     */
-    public function get_permalink(): string
-    {
-        return $this->permalink;
-    }
-
-    /**
-     * Set permalink
-     *
-     * @param string $permalink
-     */
-    public function set_permalink(string $permalink): void
-    {
-        $this->permalink = $permalink;
     }
 }
