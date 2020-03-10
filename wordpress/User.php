@@ -145,11 +145,11 @@ class User
      *
      * @see WP_User
      * @param int|string|WP_User|null $key
-     * @return User|null
+     * @return static|null
      */
     public static function init($key = null)
     {
-        $user = new User();
+        $user = new static();
         if (is_int($key) || is_numeric($key)) {
             $user->load_from_id($key);
         } elseif (is_string($key) && !is_email($key)) {

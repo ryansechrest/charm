@@ -276,11 +276,11 @@ class Post
      *
      * @see WP_Post
      * @param int|string|WP_Post|null $key
-     * @return Post|null
+     * @return static|null
      */
     public static function init($key = null)
     {
-        $post = new Post();
+        $post = new static();
         if (is_int($key) || ctype_digit($key)) {
             $post->load_from_id($key);
         } elseif (is_string($key)) {
@@ -303,7 +303,7 @@ class Post
      * @see WP_Post
      * @see WP_Query
      * @param array $params
-     * @return Post[]
+     * @return static[]
      */
     public static function get(array $params): array
     {
@@ -314,7 +314,7 @@ class Post
         }
 
         return array_map(function(WP_Post $post) {
-            return Post::init($post);
+            return static::init($post);
         }, $query->posts);
     }
 
@@ -565,7 +565,7 @@ class Post
      * Set post status
      *
      * @param string $status
-     * @return Post
+     * @return $this
      */
     public function status($status)
     {
