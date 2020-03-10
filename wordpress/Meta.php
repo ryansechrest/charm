@@ -2,20 +2,14 @@
 
 namespace Charm\WordPress;
 
-use Charm\App\Blueprint\Cast;
-use Charm\App\Blueprint\Entity;
-use Charm\App\Feature\Cast as CastFeature;
-
 /**
  * Class Meta
  *
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class Meta implements Cast, Entity
+class Meta
 {
-    use CastFeature;
-
     /**
      * Meta type
      *
@@ -50,6 +44,8 @@ class Meta implements Cast, Entity
      * @var mixed
      */
     private $meta_value = null;
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Previous meta value
@@ -119,7 +115,7 @@ class Meta implements Cast, Entity
      *
      * @see get_metadata()
      * @param array $params
-     * @return array|Meta|Meta[]|null
+     * @return array|static|static[]|null
      */
     public static function init($params)
     {
@@ -150,18 +146,6 @@ class Meta implements Cast, Entity
         return self::load_single(
             $meta_type, $object_id, $meta_key, $meta_values[0]
         );
-    }
-
-    /**
-     * Get metas
-     *
-     * @todo Implement Meta::get()
-     * @param array $params
-     * @return Meta[]
-     */
-    public static function get(array $params): array
-    {
-        return [];
     }
 
     /************************************************************************************/
@@ -226,11 +210,11 @@ class Meta implements Cast, Entity
      * @param int $object_id
      * @param string $meta_key
      * @param mixed $meta_value
-     * @return Meta
+     * @return static
      */
     private static function load_single(
         string $meta_type, int $object_id, string $meta_key, $meta_value
-    ): Meta {
+    ) {
         $data = [
             'meta_type' => $meta_type,
             'object_id' => $object_id,
@@ -239,9 +223,8 @@ class Meta implements Cast, Entity
             'prev_value' => $meta_value,
             'from_db' => true,
         ];
-        $child = get_called_class();
 
-        return new $child($data);
+        return new static($data);
     }
 
     /************************************************************************************/
@@ -269,9 +252,13 @@ class Meta implements Cast, Entity
      */
     public function create(): bool
     {
-        if (!$meta_id = add_metadata(
-            $this->meta_type, $this->object_id, $this->meta_key, $this->meta_value
-        )) {
+        $meta_id = add_metadata(
+            $this->meta_type,
+            $this->object_id,
+            $this->meta_key,
+            $this->meta_value
+        );
+        if (!$meta_id) {
             return false;
         }
         $this->meta_id = $meta_id;
@@ -288,13 +275,14 @@ class Meta implements Cast, Entity
      */
     public function update(): bool
     {
-        if (!update_metadata(
+        $success = update_metadata(
             $this->meta_type,
             $this->object_id,
             $this->meta_key,
             $this->meta_value,
             $this->prev_value
-        )) {
+        );
+        if (!$success) {
             return false;
         }
         $this->prev_value = $this->meta_value;
@@ -310,20 +298,25 @@ class Meta implements Cast, Entity
      */
     public function delete(): bool
     {
-        if (!delete_metadata(
-            $this->meta_type, $this->object_id, $this->meta_key, $this->meta_value
-        )) {
+        $success = delete_metadata(
+            $this->meta_type,
+            $this->object_id,
+            $this->meta_key,
+            $this->meta_value
+        );
+        if (!$success) {
             return false;
         }
+        $this->from_db = false;
 
         return true;
     }
 
     /************************************************************************************/
-    // Conversion methods
+    // Cast methods
 
     /**
-     * Convert instance to array
+     * Cast instance to array
      *
      * @return array
      */
@@ -337,6 +330,25 @@ class Meta implements Cast, Entity
         $data['meta_value'] = $this->meta_value;
 
         return $data;
+    }
+
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
     }
 
     /************************************************************************************/
@@ -362,6 +374,8 @@ class Meta implements Cast, Entity
         $this->meta_type = $meta_type;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get meta ID
      *
@@ -381,6 +395,8 @@ class Meta implements Cast, Entity
     {
         $this->meta_id = $meta_id;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get object ID
@@ -402,6 +418,8 @@ class Meta implements Cast, Entity
         $this->object_id = $object_id;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get meta key
      *
@@ -421,6 +439,8 @@ class Meta implements Cast, Entity
     {
         $this->meta_key = $meta_key;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get meta value
@@ -442,6 +462,8 @@ class Meta implements Cast, Entity
         $this->meta_value = $meta_value;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get previous value
      *
@@ -462,6 +484,8 @@ class Meta implements Cast, Entity
         $this->prev_value = $prev_value;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Is value from database?
      *
@@ -481,6 +505,8 @@ class Meta implements Cast, Entity
     {
         $this->from_db = $from_db;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Has value changed?
