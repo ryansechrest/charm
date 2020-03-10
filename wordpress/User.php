@@ -394,7 +394,7 @@ class User implements Cast, Entity
         $data['user_nicename'] = $this->user_nicename;
         $data['user_email'] = $this->user_email;
         $data['user_url'] = $this->user_url;
-        $data['user_registered'] = $this->user_registered;
+        $data['user_registered'] = $this->user_registered->format_db();
         $data['user_activation_key'] = $this->user_activation_key;
         $data['user_status'] = $this->user_status;
         $data['display_name'] = $this->display_name;
