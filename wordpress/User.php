@@ -143,6 +143,7 @@ class User
     /**
      * Initialize user
      *
+     * @see WP_User
      * @param int|string|WP_User|null $key
      * @return User|null
      */
@@ -216,7 +217,7 @@ class User
     /**
      * Load instance from WP_User object
      *
-     * @see DateTime
+     * @see WP_User
      * @param WP_User $user
      */
     private function load_from_user(WP_User $user): void
@@ -313,7 +314,7 @@ class User
     // Cast methods
 
     /**
-     * Convert instance to array
+     * Cast instance to array
      *
      * @return array
      */
