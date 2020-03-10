@@ -2,11 +2,6 @@
 
 namespace Charm\WordPress;
 
-use Charm\App\Blueprint\Cast;
-use Charm\App\Blueprint\Entity;
-use Charm\App\DataType\DateTime;
-use Charm\App\Feature\Cast as CastFeature;
-use Exception;
 use WP_User;
 
 /**
@@ -15,10 +10,8 @@ use WP_User;
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class User implements Cast, Entity
+class User
 {
-    use CastFeature;
-
     /**
      * ID
      *
@@ -64,9 +57,9 @@ class User implements Cast, Entity
     /**
      * User registered
      *
-     * @var DateTime
+     * @var string
      */
-    private $user_registered = null;
+    private $user_registered = '';
 
     /**
      * User activation key
@@ -88,13 +81,6 @@ class User implements Cast, Entity
      * @var string
      */
     private $display_name = '';
-
-    /**
-     * User metas
-     *
-     * @var Meta[]
-     */
-    private $metas = [];
 
     /************************************************************************************/
     // Default constructor and load method
@@ -149,9 +135,6 @@ class User implements Cast, Entity
         if (isset($data['display_name'])) {
             $this->display_name = $data['display_name'];
         }
-        if (isset($data['metas'])) {
-            $this->metas = $data['metas'];
-        }
     }
 
     /************************************************************************************/
@@ -160,14 +143,12 @@ class User implements Cast, Entity
     /**
      * Initialize user
      *
-     * @param int|null|string|WP_User $key
-     * @return null|User
+     * @param int|string|WP_User|null $key
+     * @return User|null
      */
     public static function init($key = null)
     {
-        /* @var User $user */
-        $child = get_called_class();
-        $user = new $child();
+        $user = new User();
         if (is_int($key) || is_numeric($key)) {
             $user->load_from_id($key);
         } elseif (is_string($key) && !is_email($key)) {
@@ -184,18 +165,6 @@ class User implements Cast, Entity
         }
 
         return $user;
-    }
-
-    /**
-     * Get users
-     *
-     * @todo Implement User::get()
-     * @param array $params
-     * @return User[]
-     */
-    public static function get(array $params): array
-    {
-        return [];
     }
 
     /************************************************************************************/
@@ -252,21 +221,16 @@ class User implements Cast, Entity
      */
     private function load_from_user(WP_User $user): void
     {
-        try {
-            $this->id = (int) $user->data->ID;
-            $this->user_login = $user->data->user_login;
-            $this->user_pass = $user->data->user_pass;
-            $this->user_nicename = $user->data->user_nicename;
-            $this->user_email = $user->data->user_email;
-            $this->user_url = $user->data->user_url;
-            $this->user_registered = DateTime::init_utc($user->data->user_registered);
-            $this->user_activation_key = $user->data->user_activation_key;
-            $this->user_status = (int) $user->data->user_status;
-            $this->display_name = $user->data->display_name;
-        } catch (Exception $e) {
-            // Quiet please.
-        }
-        $this->load_metas();
+        $this->id = (int) $user->data->ID;
+        $this->user_login = $user->data->user_login;
+        $this->user_pass = $user->data->user_pass;
+        $this->user_nicename = $user->data->user_nicename;
+        $this->user_email = $user->data->user_email;
+        $this->user_url = $user->data->user_url;
+        $this->user_registered = $user->data->user_registered;
+        $this->user_activation_key = $user->data->user_activation_key;
+        $this->user_status = (int) $user->data->user_status;
+        $this->display_name = $user->data->display_name;
     }
 
     /**
@@ -278,36 +242,6 @@ class User implements Cast, Entity
             return;
         }
         $this->load_from_id($this->id);
-    }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Load post metas
-     */
-    private function load_metas(): void
-    {
-        $metas = Meta::init([
-            'meta_type' => 'user',
-            'object_id' => $this->id,
-        ]);
-        if (!is_array($metas)) {
-            return;
-        }
-        $this->metas = $metas;
-    }
-
-    /**
-     * Save user metas
-     */
-    private function save_metas(): void
-    {
-        foreach ($this->metas as $meta) {
-            if (!$meta->has_changed()) {
-                continue;
-            }
-            $meta->save();
-        }
     }
 
     /************************************************************************************/
@@ -339,7 +273,6 @@ class User implements Cast, Entity
             return false;
         }
         $this->id = $id;
-        $this->save_metas();
         $this->reload();
 
         return true;
@@ -356,7 +289,6 @@ class User implements Cast, Entity
         if (!$id = wp_update_user($this->to_array())) {
             return false;
         }
-        $this->save_metas();
         $this->reload();
 
         return true;
@@ -394,38 +326,12 @@ class User implements Cast, Entity
         $data['user_nicename'] = $this->user_nicename;
         $data['user_email'] = $this->user_email;
         $data['user_url'] = $this->user_url;
-        $data['user_registered'] = $this->user_registered->format_db();
+        $data['user_registered'] = $this->user_registered;
         $data['user_activation_key'] = $this->user_activation_key;
         $data['user_status'] = $this->user_status;
         $data['display_name'] = $this->display_name;
-        $data['metas'] = $this->metas;
 
         return $data;
-    }
-
-    /************************************************************************************/
-    // Object access methods
-
-    /**
-     * Get user meta
-     *
-     * @param string key
-     * @return Meta
-     */
-    public function meta(string $key)
-    {
-        if (count($this->metas) === 0) {
-            $this->load_metas();
-        }
-        if (!isset($this->metas[$key])) {
-            $this->metas[$key] = new Meta([
-                'meta_type' => 'user',
-                'object_id' => $this->id,
-                'meta_key' => $key,
-            ]);
-        }
-
-        return $this->metas[$key];
     }
 
     /************************************************************************************/
@@ -451,6 +357,8 @@ class User implements Cast, Entity
         $this->id = $id;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get user login
      *
@@ -470,6 +378,8 @@ class User implements Cast, Entity
     {
         $this->user_login = $user_login;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get user pass
@@ -491,6 +401,8 @@ class User implements Cast, Entity
         $this->user_pass = $user_pass;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get user nicename
      *
@@ -510,6 +422,8 @@ class User implements Cast, Entity
     {
         $this->user_nicename = $user_nicename;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get user email
@@ -531,6 +445,8 @@ class User implements Cast, Entity
         $this->user_email = $user_email;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get user URL
      *
@@ -551,12 +467,14 @@ class User implements Cast, Entity
         $this->user_url = $user_url;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get user registered
      *
-     * @return DateTime
+     * @return string
      */
-    public function get_user_registered(): DateTime
+    public function get_user_registered(): string
     {
         return $this->user_registered;
     }
@@ -570,6 +488,8 @@ class User implements Cast, Entity
     {
         $this->user_registered = $user_registered;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get user activation key
@@ -591,6 +511,8 @@ class User implements Cast, Entity
         $this->user_activation_key = $user_activation_key;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
      * Get user status
      *
@@ -610,6 +532,8 @@ class User implements Cast, Entity
     {
         $this->user_status = $user_status;
     }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get display name
