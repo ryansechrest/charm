@@ -14,11 +14,19 @@ use Charm\WordPress\User as WpUser;
 class User extends WpUser
 {
     /**
-     * Created date
+     * DateTime class
+     */
+    const DATETIME = 'Charm\App\DataType\DateTime::init';
+
+    /************************************************************************************/
+    // Object properties
+
+    /**
+     * User registered object
      *
      * @var DateTime|null
      */
-    protected $registration_date = null;
+    protected $user_registered_obj = null;
 
     /************************************************************************************/
     // Object access methods
@@ -28,8 +36,10 @@ class User extends WpUser
      *
      * @return DateTime
      */
-    public function registration_date()
+    public function user_registered()
     {
-        return $this->registration_date = DateTime::init($this->post_date_gmt);
+        return $this->user_registered_obj = call_user_func(
+            static::DATETIME, $this->user_registered
+        );
     }
 }
