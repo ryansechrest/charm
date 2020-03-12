@@ -14,18 +14,62 @@ use Charm\WordPress\Post as WpPost;
 class Post extends WpPost
 {
     /**
-     * Post user
+     * Post type
+     */
+    const POST_TYPE = '';
+
+    /**
+     * User class
+     */
+    const USER = 'Charm\App\User';
+
+    /**
+     * Post class
+     */
+    const POST = 'Charm\App\Post';
+
+    /**
+     * Meta class
+     */
+    const META = 'Charm\App\Meta';
+
+    /**
+     * DateTime class
+     */
+    const DATETIME = 'Charm\App\DataType\DateTime';
+
+    /************************************************************************************/
+    // Default constructor and load method
+
+    /**
+     * Load instance with data
+     *
+     * @param array $data
+     */
+    public function load(array $data): void
+    {
+        if (!isset($data['post_type'])) {
+            $data['post_type'] = static::POST_TYPE;
+        }
+        parent::load($data);
+    }
+
+    /************************************************************************************/
+    // Object properties
+
+    /**
+     * Post author object
      *
      * @var User|null
      */
-    protected $user = null;
+    protected $post_author_obj = null;
 
     /**
-     * Post parent
+     * Post parent object
      *
      * @var Post|null
      */
-    protected $parent = null;
+    protected $post_parent_obj = null;
 
     /**
      * Post metas
@@ -35,68 +79,72 @@ class Post extends WpPost
     protected $metas = [];
 
     /**
-     * Created date
+     * Post date object
      *
      * @var DateTime|null
      */
-    protected $created_date = null;
+    protected $post_date_obj = null;
 
     /**
-     * Created date (UTC)
+     * Post date object (GMT)
      *
      * @var DateTime|null
      */
-    protected $created_date_utc = null;
+    protected $post_date_gmt_obj = null;
 
     /**
-     * Updated date
+     * Post modified object
      *
      * @var DateTime|null
      */
-    protected $updated_date = null;
+    protected $post_modified_obj = null;
 
     /**
-     * Updated date (UTC)
+     * Post modified object (GMT)
      *
      * @var DateTime|null
      */
-    protected $updated_date_utc = null;
+    protected $post_modified_gmt_obj = null;
 
     /************************************************************************************/
     // Object access methods
 
     /**
-     * Get user
+     * Get post author
      *
      * @return User|null
      */
-    public function user()
+    public function post_author()
     {
-        if ($this->user) {
-            return $this->user;
+        if ($this->post_author_obj) {
+            return $this->post_author_obj;
         }
         if (!$this->post_author) {
             return null;
         }
 
-        return $this->user = User::init($this->post_author);
+        return $this->post_author_obj = call_user_func(
+            static::USER . '::init', $this->post_author
+        );
     }
 
     /**
-     * Get parent
+     * Get post parent
      *
      * @return Post|null
      */
-    public function parent()
+    public function post_parent()
     {
-        if ($this->parent) {
-            return $this->parent;
+        if ($this->post_parent_obj) {
+            return $this->post_parent_obj;
         }
         if (!$this->post_parent) {
             return null;
         }
 
-        return $this->parent = Post::init($this->post_parent);
+        return $this->post_parent_obj = call_user_func(
+            static::POST . '::init', $this->post_parent
+        );
     }
 
     /**
@@ -113,10 +161,12 @@ class Post extends WpPost
         if (!$this->id) {
             return null;
         }
-        $this->metas = Meta::init([
-            'meta_type' => 'post',
-            'object_id' => $this->id,
-        ]);
+        $this->metas = call_user_func(
+            static::META . '::init', [
+                'meta_type' => static::POST_TYPE,
+                'object_id' => $this->id,
+            ]
+        );
         if (!isset($this->metas[$key])) {
             return null;
         }
@@ -125,46 +175,54 @@ class Post extends WpPost
     }
 
     /**
-     * Get created date
+     * Get post date
      *
      * @return DateTime
      */
-    public function created_date()
+    public function post_date()
     {
         $timezone = get_option('timezone_string');
 
-        return $this->created_date = DateTime::init($this->post_date, $timezone);
+        return $this->post_date_obj = call_user_func(
+            static::DATETIME, $this->post_date, $timezone
+        );
     }
 
     /**
-     * Get created date
+     * Get post date (GMT)
      *
      * @return DateTime
      */
-    public function created_date_utc()
+    public function post_date_gmt()
     {
-        return $this->created_date_utc = DateTime::init($this->post_date_gmt);
+        return $this->post_date_gmt_obj = call_user_func(
+            static::DATETIME, $this->post_date_gmt
+        );
     }
 
     /**
-     * Get updated date
+     * Get post modified
      *
      * @return DateTime
      */
-    public function updated_date()
+    public function post_modified()
     {
         $timezone = get_option('timezone_string');
 
-        return $this->updated_date = DateTime::init($this->post_modified, $timezone);
+        return $this->post_modified_obj = call_user_func(
+            static::DATETIME, $this->post_modified, $timezone
+        );
     }
 
     /**
-     * Get updated date (UTC)
+     * Get post modified (GMT)
      *
      * @return DateTime
      */
-    public function updated_date_utc()
+    public function post_modified_gmt()
     {
-        return $this->updated_date_utc = DateTime::init($this->post_modified_gmt);
+        return $this->post_modified_gmt_obj = call_user_func(
+            static::DATETIME, $this->post_modified_gmt
+        );
     }
 }
