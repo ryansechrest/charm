@@ -56,6 +56,72 @@ class PostType extends WpPostType
     // Action methods
 
     /**
+     * Initialize properties to WordPress defaults
+     */
+    public function initialize(): void {
+        if ($this->public === null) {
+            $this->public = false;
+        }
+        if ($this->hierarchical === null) {
+            $this->hierarchical = false;
+        }
+        if ($this->exclude_from_search === null) {
+            $this->exclude_from_search = !$this->public;
+        }
+        if ($this->publicly_queryable === null) {
+            $this->publicly_queryable = $this->public;
+        }
+        if ($this->show_ui === null) {
+            $this->show_ui = $this->public;
+        }
+        if ($this->show_in_menu === '') {
+            $this->show_in_menu = $this->show_ui;
+        }
+        if ($this->show_in_nav_menus === null) {
+            $this->show_in_nav_menus = $this->public;
+        }
+        if ($this->show_in_admin_bar === null) {
+            $this->show_in_admin_bar = $this->show_in_menu;
+        }
+        if ($this->show_in_rest === null) {
+            $this->show_in_rest = false;
+        }
+        if ($this->rest_base === '') {
+            $this->rest_base = $this->post_type;
+        }
+        if ($this->rest_controller_class === '') {
+            $this->rest_controller_class = 'WP_REST_Posts_Controller';
+        }
+        if ($this->capability_type === '') {
+            $this->capability_type = 'post';
+        }
+        if ($this->map_meta_cap === null) {
+            $this->map_meta_cap = false;
+        }
+        if (count($this->supports) === 0) {
+            $this->supports = ['title', 'editor'];
+        }
+        if ($this->has_archive === '') {
+            $this->has_archive = false;
+        }
+        if (count($this->rewrite) === 0) {
+            $this->rewrite = [
+                'slug' => $this->post_type,
+                'with_front' => true,
+                'feeds' => $this->has_archive,
+                'pages' => true,
+                'ep_mask' => EP_PERMALINK,
+            ];
+        }
+        if ($this->query_var === '') {
+            $this->query_var = $this->post_type;
+        }
+        if ($this->can_export === null) {
+            $this->can_export = true;
+        }
+    }
+
+    /**
      * Autocomplete everything
      */
     public function autocomplete(): void
