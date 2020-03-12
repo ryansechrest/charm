@@ -501,9 +501,6 @@ class PostType
         if ($this->show_in_menu !== '') {
             $data['show_in_menu'] = $this->show_in_menu;
         }
-        if ($this->show_in_menu !== '') {
-            $data['show_in_menu'] = $this->show_in_menu;
-        }
         if ($this->show_in_nav_menus !== null) {
             $data['show_in_nav_menus'] = $this->show_in_nav_menus;
         }
