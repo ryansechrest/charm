@@ -321,16 +321,36 @@ class User
     public function to_array(): array
     {
         $data = [];
-        $data['ID'] = $this->id;
-        $data['user_login'] = $this->user_login;
-        $data['user_pass'] = $this->user_pass;
-        $data['user_nicename'] = $this->user_nicename;
-        $data['user_email'] = $this->user_email;
-        $data['user_url'] = $this->user_url;
-        $data['user_registered'] = $this->user_registered;
-        $data['user_activation_key'] = $this->user_activation_key;
-        $data['user_status'] = $this->user_status;
-        $data['display_name'] = $this->display_name;
+        if ($this->id !== 0) {
+            $data['ID'] = $this->id;
+        }
+        if ($this->user_login !== '') {
+            $data['user_login'] = $this->user_login;
+        }
+        if ($this->user_pass !== '') {
+            $data['user_pass'] = $this->user_pass;
+        }
+        if ($this->user_nicename !== '') {
+            $data['user_nicename'] = $this->user_nicename;
+        }
+        if ($this->user_email !== '') {
+            $data['user_email'] = $this->user_email;
+        }
+        if ($this->user_url !== '') {
+            $data['user_url'] = $this->user_url;
+        }
+        if ($this->user_registered !== '') {
+            $data['user_registered'] = $this->user_registered;
+        }
+        if ($this->user_activation_key !== '') {
+            $data['user_activation_key'] = $this->user_activation_key;
+        }
+        if ($this->user_status !== '') {
+            $data['user_status'] = $this->user_status;
+        }
+        if ($this->display_name !== '') {
+            $data['display_name'] = $this->display_name;
+        }
 
         return $data;
     }
