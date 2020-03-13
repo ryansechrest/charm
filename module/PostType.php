@@ -13,31 +13,14 @@ use Charm\WordPress\Module\PostType as WpPostType;
 class PostType extends WpPostType
 {
     /**
-     * Post messages
+     * Post updated messages
      *
      * @var array
      */
-    protected $post_messages = [];
+    protected $post_updated_messages = [];
 
     /************************************************************************************/
     // Default constructor and load method
-
-    /**
-     * PostType constructor
-     *
-     * @param array $data
-     * @param array $methods
-     */
-    public function __construct(array $data, array $methods)
-    {
-        parent::__construct($data);
-        foreach ($methods as $method) {
-            if (!method_exists($this, $method)) {
-                continue;
-            }
-            $this->$method();
-        }
-    }
 
     /**
      * Load instance with data
@@ -46,8 +29,8 @@ class PostType extends WpPostType
      */
     public function load(array $data): void
     {
-        if (isset($data['post_messages'])) {
-            $this->post_messages = $data['post_messages'];
+        if (isset($data['post_updated_messages'])) {
+            $this->post_updated_messages = $data['post_updated_messages'];
         }
         parent::load($data);
     }
@@ -58,7 +41,7 @@ class PostType extends WpPostType
     /**
      * Initialize properties to WordPress defaults
      */
-    public function initialize(): void {
+    public function initialize_properties(): void {
         if ($this->public === null) {
             $this->public = false;
         }
@@ -92,11 +75,14 @@ class PostType extends WpPostType
         if ($this->rest_controller_class === '') {
             $this->rest_controller_class = 'WP_REST_Posts_Controller';
         }
-        if ($this->capability_type === '') {
-            $this->capability_type = 'post';
+        if ($this->menu_icon === '') {
+            $this->menu_icon = 'dashicons-text-page';
+        }
+        if (count($this->capability_type) === 0) {
+            $this->capability_type = ['post', 'posts'];
         }
         if ($this->map_meta_cap === null) {
-            $this->map_meta_cap = false;
+            $this->map_meta_cap = true;
         }
         if (count($this->supports) === 0) {
             $this->supports = ['title', 'editor'];
@@ -121,68 +107,137 @@ class PostType extends WpPostType
         }
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
-     * Autocomplete everything
+     * Autogenerate everything
+     *
+     * @param array $methods
      */
-    public function autocomplete(): void
+    public function autogenerate(array $methods = []): void
     {
-        $this->autocomplete_labels();
-        $this->autocomplete_post_messages();
+        if (count($methods) === 0) {
+            $this->initialize_properties();
+            $this->autogenerate_labels();
+            $this->autogenerate_capabilities();
+            $this->autogenerate_post_updated_messages();
+            return;
+        }
+        foreach ($methods as $method) {
+            $method = 'autogenerate_' . $method;
+            if (!method_exists($this, $method)) {
+                continue;
+            }
+            $this->$method();
+        }
     }
 
     /**
-     * Autocomplete labels
+     * Autogenerate labels
      */
-    public function autocomplete_labels(): void
+    public function autogenerate_labels(): void
     {
-        $singular = ucwords(str_replace('_', ' ', $this->post_type));
-        $plural = $singular . 's';
-        if ($this->label) {
-            $singular = $this->label;
-            $plural = $singular . 's';
-        }
-        if (isset($this->labels['name'])) {
-            $plural = $this->labels['name'];
-        }
-        if (isset($this->labels['singular_name'])) {
-            $singular = $this->labels['singular_name'];
-        }
-        if (!$this->label) {
+        $singular = $this->get_singular_label();
+        $plural = $this->get_plural_label();
+        if ($this->label === '') {
             $this->label = $plural;
         }
         $this->fill_labels($singular, $plural);
     }
 
     /**
-     * Autocomplete post messages
+     * Autogenerate capabilities
      */
-    public function autocomplete_post_messages(): void
+    public function autogenerate_capabilities(): void
     {
-        $singular = $this->get_individual_label('singular_name');
-        $this->fill_post_messages($singular);
+        $singular = $this->post_type;
+        $plural = $singular . 's';
+        if (isset($this->capability_type[0])) {
+            $singular = $this->capability_type[0];
+            $plural = $singular . 's';
+        }
+        if (isset($this->capability_type[1])) {
+            $plural = $this->capability_type[1];
+        }
+        if (count($this->capability_type) === 0) {
+            $this->capability_type = [$singular, $plural];
+        }
+        $this->fill_capabilities($singular, $plural);
     }
+
+    /**
+     * Autogenerate post updated messages
+     */
+    public function autogenerate_post_updated_messages(): void
+    {
+        $this->fill_post_updated_messages($this->get_singular_label());
+    }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Register everything
      */
     public function register(): void
     {
-        $this->register_post_messages();
+        $this->register_post_updated_messages();
         parent::register();
     }
 
     /**
-     * Register post messages
+     * Register post updated messages
      *
      * @see add_filter()
      */
-    public function register_post_messages(): void
+    public function register_post_updated_messages(): void
     {
         add_filter('post_updated_messages', function(array $messages) {
-            $messages[$this->post_type] = $this->post_messages;
+            if (count($this->post_updated_messages) === 0) {
+                return $messages;
+            }
+            foreach ($this->post_updated_messages as $index => $message) {
+                if (isset($messages[$this->post_type][$index])) {
+                    continue;
+                }
+                $messages[$this->post_type][$index] = $message;
+            }
 
             return $messages;
         });
+    }
+
+    /************************************************************************************/
+    // Private label methods
+
+    /**
+     * Get singular label
+     *
+     * @return string
+     */
+    private function get_singular_label()
+    {
+        if (isset($this->labels['singular_name'])) {
+            return $this->labels['singular_name'];
+        }
+
+        return ucwords(str_replace('_', ' ', $this->post_type));
+    }
+
+    /**
+     * Get plural label
+     *
+     * @return string
+     */
+    private function get_plural_label()
+    {
+        if (isset($this->labels['name'])) {
+            return $this->labels['name'];
+        }
+        if ($this->label !== '') {
+            return $this->label;
+        }
+
+        return $this->get_singular_label() . 's';
     }
 
     /************************************************************************************/
@@ -276,7 +331,7 @@ class PostType extends WpPostType
             'item_updated' => '%s updated.',
         ];
         if (!isset($formats[$name])) {
-            return 'No message defined.';
+            return 'Label format not found.';
         }
 
         return $formats[$name];
@@ -285,48 +340,91 @@ class PostType extends WpPostType
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Fill post messages into $this->post_messages
+     * Fill capabilities into $this->capabilities
      *
      * @param string $singular
+     * @param string $plural
      */
-    private function fill_post_messages(string $singular): void
+    public function fill_capabilities(string $singular, string $plural): void
     {
-        $this->fill_post_message(1, $singular);
-        $this->fill_post_message(2, $singular);
-        $this->fill_post_message(3, $singular);
-        $this->fill_post_message(4, $singular);
-        $this->fill_post_message(5, $singular);
-        $this->fill_post_message(6, $singular);
-        $this->fill_post_message(7, $singular);
-        $this->fill_post_message(8, $singular);
-        $this->fill_post_message(9, $singular);
-        $this->fill_post_message(10, $singular);
+        // Meta capabilities
+        $this->fill_capability('edit_post', 'edit_' . $singular);
+        $this->fill_capability('read_post', 'read_' . $singular);
+        $this->fill_capability('delete_post', 'delete_' . $singular);
+        // Primitive capabilities used outside of map_meta_cap()
+        $this->fill_capability('edit_posts', 'edit_' . $plural);
+        $this->fill_capability('edit_others_posts', 'edit_others_' . $plural);
+        $this->fill_capability('publish_posts', 'publish_' . $plural);
+        $this->fill_capability('read_private_posts', 'read_private_' . $plural);
+        // Primitive capabilities used within map_meta_cap()
+        $this->fill_capability('read', 'read');
+        $this->fill_capability('delete_posts', 'delete_' . $plural);
+        $this->fill_capability('delete_private_posts', 'delete_private_' . $plural);
+        $this->fill_capability('delete_published_posts', 'delete_published_' . $plural);
+        $this->fill_capability('delete_others_posts', 'delete_others_' . $plural);
+        $this->fill_capability('edit_private_posts', 'edit_private_' . $plural);
+        $this->fill_capability('edit_published_posts', 'edit_published_' . $plural);
     }
 
     /**
-     * Fill post message (if not already set)
+     * Fill capability (if not already set)
+     *
+     * @param string $key
+     * @param string $capability
+     */
+    public function fill_capability(string $key, string $capability): void
+    {
+        if (isset($this->capabilities[$key])) {
+            return;
+        }
+        $this->add_capability($key, $capability);
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Fill post updated messages into $this->post_updated_messages
+     *
+     * @param string $singular
+     */
+    private function fill_post_updated_messages(string $singular): void
+    {
+        $this->fill_post_updated_message(1, $singular);
+        $this->fill_post_updated_message(2, $singular);
+        $this->fill_post_updated_message(3, $singular);
+        $this->fill_post_updated_message(4, $singular);
+        $this->fill_post_updated_message(5, $singular);
+        $this->fill_post_updated_message(6, $singular);
+        $this->fill_post_updated_message(7, $singular);
+        $this->fill_post_updated_message(8, $singular);
+        $this->fill_post_updated_message(9, $singular);
+        $this->fill_post_updated_message(10, $singular);
+    }
+
+    /**
+     * Fill post updated message (if not already set)
      *
      * @param int $index
      * @param string $noun
      */
-    private function fill_post_message(int $index, string $noun): void
+    private function fill_post_updated_message(int $index, string $noun): void
     {
-        if (isset($this->post_messages[$index])) {
+        if (isset($this->post_updated_messages[$index])) {
             return;
         }
-        $message = sprintf($this->get_message_format($index), $noun);
-        $this->add_post_message(
+        $message = sprintf($this->get_post_updated_message_format($index), $noun);
+        $this->add_post_updated_message(
             $index, _x($message, 'Post Type: ' . $this->post_type, 'charm')
         );
     }
 
     /**
-     * Get message format
+     * Get post updated message format
      *
      * @param int $index
      * @return string
      */
-    private function get_message_format(int $index): string
+    private function get_post_updated_message_format(int $index): string
     {
         $formats = [
             1 => '%s updated.',
@@ -341,43 +439,61 @@ class PostType extends WpPostType
             10 => '%s draft updated.',
         ];
         if (!isset($formats[$index])) {
-            return 'No message defined.';
+            return 'Message format not found.';
         }
 
         return $formats[$index];
     }
 
     /************************************************************************************/
-    // Get and set methods
+    // Cast methods
 
     /**
-     * Get post messages
+     * Cast to array
      *
      * @return array
      */
-    public function get_post_messages(): array
+    public function to_array(): array
     {
-        return $this->post_messages;
+        $data = parent::to_array();
+        if (count($this->post_updated_messages) > 0) {
+            $data['post_updated_messages'] = $this->post_updated_messages;
+        }
+
+        return $data;
     }
 
+    /************************************************************************************/
+    // Get and set methods
+
     /**
-     * Set post messages
+     * Get post updated messages
      *
-     * @param array $post_messages
+     * @return array
      */
-    public function set_post_messages(array $post_messages)
+    public function get_post_updated_messages(): array
     {
-        $this->post_messages = $post_messages;
+        return $this->post_updated_messages;
     }
 
     /**
-     * Add post message
+     * Set post updated messages
+     *
+     * @param array $post_updated_messages
+     */
+    public function set_post_updated_messages(array $post_updated_messages)
+    {
+        $this->post_updated_messages = $post_updated_messages;
+    }
+
+    /**
+     * Add post updated message
      *
      * @param int $key
      * @param string $message
      */
-    public function add_post_message(int $key, string $message)
+    public function add_post_updated_message(int $key, string $message)
     {
-        $this->post_messages[$key] = $message;
+        $this->post_updated_messages[$key] = $message;
     }
 }
