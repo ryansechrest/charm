@@ -198,9 +198,9 @@ class PostType
      * as an array to allow for alternative plurals when using this argument as a base to
      * construct the capabilities, e.g. array('story', 'stories'). Default 'post'.
      *
-     * @var string
+     * @var array
      */
-    protected $capability_type = '';
+    protected $capability_type = [];
 
     /**
      * Capabilities
@@ -522,7 +522,7 @@ class PostType
         if ($this->menu_icon !== '') {
             $data['menu_icon'] = $this->menu_icon;
         }
-        if ($this->capability_type !== '') {
+        if (count($this->capability_type) > 0) {
             $data['capability_type'] = $this->capability_type;
         }
         if (count($this->capabilities) > 0) {
@@ -984,9 +984,9 @@ class PostType
     /**
      * Get capability type
      *
-     * @return string
+     * @return array
      */
-    public function get_capability_type(): string
+    public function get_capability_type(): array
     {
         return $this->capability_type;
     }
@@ -994,9 +994,9 @@ class PostType
     /**
      * Set capability type
      *
-     * @param string $capability_type
+     * @param array $capability_type
      */
-    public function set_capability_type(string $capability_type): void
+    public function set_capability_type(array $capability_type): void
     {
         $this->capability_type = $capability_type;
     }
