@@ -323,11 +323,21 @@ class Meta
     public function to_array(): array
     {
         $data = [];
-        $data['meta_type'] = $this->meta_type;
-        $data['meta_id'] = $this->meta_id;
-        $data['object_id'] = $this->object_id;
-        $data['meta_key'] = $this->meta_key;
-        $data['meta_value'] = $this->meta_value;
+        if ($this->meta_type !== '') {
+            $data['meta_type'] = $this->meta_type;
+        }
+        if ($this->meta_id !== 0) {
+            $data['meta_id'] = $this->meta_id;
+        }
+        if ($this->object_id !== 0) {
+            $data['object_id'] = $this->object_id;
+        }
+        if ($this->meta_key !== '') {
+            $data['meta_key'] = $this->meta_key;
+        }
+        if ($this->meta_value !== null) {
+            $data['meta_value'] = $this->meta_value;
+        }
 
         return $data;
     }
