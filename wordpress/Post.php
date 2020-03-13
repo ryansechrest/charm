@@ -512,29 +512,75 @@ class Post
     public function to_array(): array
     {
         $data = [];
-        $data['ID'] = $this->id;
-        $data['post_author'] = $this->post_author;
-        $data['post_date'] = $this->post_date;
-        $data['post_date_gmt'] = $this->post_date_gmt;
-        $data['post_content'] = $this->post_content;
-        $data['post_title'] = $this->post_title;
-        $data['post_excerpt'] = $this->post_excerpt;
-        $data['post_status'] = $this->post_status;
-        $data['comment_status'] = $this->comment_status;
-        $data['ping_status'] = $this->ping_status;
-        $data['post_password'] = $this->post_password;
-        $data['post_name'] = $this->post_name;
-        $data['to_ping'] = $this->to_ping;
-        $data['pinged'] = $this->pinged;
-        $data['post_modified'] = $this->post_modified;
-        $data['post_modified_gmt'] = $this->post_modified_gmt;
-        $data['post_content_filtered'] = $this->post_content_filtered;
-        $data['post_parent'] = $this->post_parent;
-        $data['guid'] = $this->guid;
-        $data['menu_order'] = $this->menu_order;
-        $data['post_type'] = $this->post_type;
-        $data['post_mime_type'] = $this->post_mime_type;
-        $data['comment_count'] = $this->comment_count;
+        if ($this->id !== 0) {
+            $data['ID'] = $this->id;
+        }
+        if ($this->post_author !== 0) {
+            $data['post_author'] = $this->post_author;
+        }
+        if ($this->post_date !== '') {
+            $data['post_date'] = $this->post_date;
+        }
+        if ($this->post_date_gmt !== '') {
+            $data['post_date_gmt'] = $this->post_date_gmt;
+        }
+        if ($this->post_content !== '') {
+            $data['post_content'] = $this->post_content;
+        }
+        if ($this->post_title !== '') {
+            $data['post_title'] = $this->post_title;
+        }
+        if ($this->post_excerpt !== '') {
+            $data['post_excerpt'] = $this->post_excerpt;
+        }
+        if ($this->post_status !== '') {
+            $data['post_status'] = $this->post_status;
+        }
+        if ($this->comment_status !== '') {
+            $data['comment_status'] = $this->comment_status;
+        }
+        if ($this->ping_status !== '') {
+            $data['ping_status'] = $this->ping_status;
+        }
+        if ($this->post_password !== '') {
+            $data['post_password'] = $this->post_password;
+        }
+        if ($this->post_name !== '') {
+            $data['post_name'] = $this->post_name;
+        }
+        if ($this->to_ping !== '') {
+            $data['to_ping'] = $this->to_ping;
+        }
+        if ($this->pinged !== '') {
+            $data['pinged'] = $this->pinged;
+        }
+        if ($this->post_modified !== '') {
+            $data['post_modified'] = $this->post_modified;
+        }
+        if ($this->post_modified_gmt !== '') {
+            $data['post_modified_gmt'] = $this->post_modified_gmt;
+        }
+        if ($this->post_content_filtered !== '') {
+            $data['post_content_filtered'] = $this->post_content_filtered;
+        }
+        if ($this->post_parent !== 0) {
+            $data['post_parent'] = $this->post_parent;
+        }
+        if ($this->guid !== '') {
+            $data['guid'] = $this->guid;
+        }
+        if ($this->menu_order !== 0) {
+            $data['menu_order'] = $this->menu_order;
+        }
+        if ($this->post_type !== '') {
+            $data['post_type'] = $this->post_type;
+        }
+        if ($this->post_mime_type !== '') {
+            $data['post_mime_type'] = $this->post_mime_type;
+        }
+        if ($this->comment_count !== 0) {
+            $data['comment_count'] = $this->comment_count;
+        }
 
         return $data;
     }
