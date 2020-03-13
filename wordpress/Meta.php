@@ -119,30 +119,48 @@ class Meta
      */
     public static function init($params)
     {
+        // If there is no meta_type or object_id, we don't know where or what to save
         if (!isset($params['meta_type']) || !isset($params['object_id'])) {
             return null;
         }
+
+        // Save meta_type and object_id to vars for easier reading
         $meta_type = $params['meta_type'];
         $object_id = $params['object_id'];
+
+        // Set meta_key to blank, in case all metas are requested
         $meta_key = '';
+
+        // If meta_key is provided, only get meta(s) that match key
         if (isset($params['meta_key'])) {
             $meta_key = $params['meta_key'];
         }
+
+        // Get all metas or only metas that match provided key
         $meta_values = get_metadata($meta_type, $object_id, $meta_key);
+
+        // If no array returned (which is always true), there is nothing to return
         if (!is_array($meta_values) || count($meta_values) === 0) {
             return null;
         }
+
+        // If meta_key was blank, assume we need to load an array of arrays
         if ($meta_key === '') {
             return self::load_all(
                 $meta_type, $object_id, $meta_values
             );
         }
+
+        // If there is only one item in the array for that key, assume that more than
+        // one value could be saved for that key
         if (count($meta_values) > 1) {
             return self::load_multi(
                 $meta_type, $object_id, $meta_key, $meta_values
             );
         }
 
+        // At this point we know it's a single key with a single value
+        // It could still be an array, but that's for the dev to deal with now
         return self::load_single(
             $meta_type, $object_id, $meta_key, $meta_values[0]
         );
