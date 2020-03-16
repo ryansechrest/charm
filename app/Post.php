@@ -15,47 +15,50 @@ class Post extends WpPost
 {
     /**
      * Post type
+     *
+     * @var string
      */
     const POST_TYPE = 'post';
 
     /**
      * User class
+     *
+     * @var string
      */
     const USER = 'Charm\App\User';
 
     /**
      * Post class
+     *
+     * @var string
      */
     const POST = 'Charm\App\Post';
 
     /**
      * Meta class
+     *
+     * @var string
      */
-    const META = 'Charm\App\Meta';
+    const META = 'Charm\App\PostMeta';
 
     /**
      * DateTime class
+     *
+     * @var string
      */
     const DATETIME = 'Charm\App\DataType\DateTime';
 
     /************************************************************************************/
-    // Default constructor and load method
+    // Standard and object properties
 
     /**
-     * Load instance with data
+     * Permalink
      *
-     * @param array $data
+     * @var string
      */
-    public function load(array $data): void
-    {
-        if (!isset($data['post_type'])) {
-            $data['post_type'] = static::POST_TYPE;
-        }
-        parent::load($data);
-    }
+    protected $permalink = '';
 
-    /************************************************************************************/
-    // Object properties
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Post author object
@@ -70,13 +73,6 @@ class Post extends WpPost
      * @var Post|null
      */
     protected $post_parent_obj = null;
-
-    /**
-     * Post metas
-     *
-     * @var array
-     */
-    protected $metas = [];
 
     /**
      * Post date object
@@ -105,6 +101,29 @@ class Post extends WpPost
      * @var DateTime|null
      */
     protected $post_modified_gmt_obj = null;
+
+    /**
+     * Post metas
+     *
+     * @var array
+     */
+    protected $metas = [];
+
+    /************************************************************************************/
+    // Default constructor and load method
+
+    /**
+     * Load instance with data
+     *
+     * @param array $data
+     */
+    public function load(array $data): void
+    {
+        if (!isset($data['post_type'])) {
+            $data['post_type'] = static::POST_TYPE;
+        }
+        parent::load($data);
+    }
 
     /************************************************************************************/
     // Object access methods
@@ -146,118 +165,6 @@ class Post extends WpPost
             static::POST . '::init', $this->post_parent
         );
     }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Get or create meta(s)
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return Meta|Meta[]|null
-     */
-    public function meta($key, $value = null)
-    {
-        if ($value !== null) {
-            $this->save_meta($key, $value);
-        }
-
-        return $this->get_meta($key);
-    }
-
-    /**
-     * Get post meta from Post
-     *
-     * @param string $key
-     * @return Meta|Meta[]
-     */
-    private function get_meta(string $key)
-    {
-        if (count($this->metas) === 0) {
-            $this->metas = $this->get_metas();
-        }
-        if (!isset($this->metas[$key])) {
-            return null;
-        }
-
-        return $this->metas[$key];
-    }
-
-    /**
-     * Get post metas from database
-     *
-     * @return array
-     */
-    private function get_metas(): array
-    {
-        return call_user_func(
-            static::META . '::init', [
-                'meta_type' => 'post',
-                'object_id' => $this->id,
-            ]
-        );
-    }
-
-    /**
-     * Create post meta instance
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return Meta
-     */
-    private function create_meta(string $key, $value)
-    {
-        $meta = static::META;
-
-        return new $meta([
-            'meta_type' => 'post',
-            'meta_key' => $key,
-            'meta_value' => $value,
-        ]);
-    }
-
-    /**
-     * Save post meta in Post
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    private function save_meta(string $key, $value): void
-    {
-        $meta = $this->create_meta($key, $value);
-        if (!isset($this->metas[$key])) {
-            $this->metas[$key] = $meta;
-            return;
-        }
-        if (is_array($this->metas[$key])) {
-            $this->metas[$key][] = $meta;
-            return;
-        }
-        $this->metas[$key] = [$this->metas[$key], $meta];
-    }
-
-    /**
-     * Save post metas in database
-     */
-    private function save_metas(): void
-    {
-        if (count($this->metas) === 0) {
-            return;
-        }
-        foreach ($this->metas as $key => $meta) {
-            if (!is_array($meta)) {
-                $meta->set_object_id($this->id);
-                $meta->save();
-                continue;
-            }
-            foreach ($meta as $single_meta) {
-                $single_meta->set_object_id($this->id);
-                $single_meta->save();
-            }
-        }
-    }
-
-    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post date
@@ -312,6 +219,119 @@ class Post extends WpPost
     }
 
     /************************************************************************************/
+    // Meta methods
+
+    /**
+     * Get or create meta(s)
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return PostMeta|PostMeta[]|null
+     */
+    public function meta($key, $value = null)
+    {
+        if ($value !== null) {
+            $this->save_meta($key, $value);
+        }
+
+        return $this->get_meta($key);
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get post meta from Post
+     *
+     * @param string $key
+     * @return PostMeta|PostMeta[]
+     */
+    private function get_meta(string $key)
+    {
+        if (count($this->metas) === 0) {
+            $this->metas = $this->get_metas();
+        }
+        if (!isset($this->metas[$key])) {
+            return null;
+        }
+
+        return $this->metas[$key];
+    }
+
+    /**
+     * Get post metas from database
+     *
+     * @return array
+     */
+    private function get_metas(): array
+    {
+        return call_user_func(
+            static::META . '::init', [
+                'meta_type' => 'post',
+                'object_id' => $this->id,
+            ]
+        );
+    }
+
+    /**
+     * Create post meta instance
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return PostMeta
+     */
+    private function create_meta(string $key, $value)
+    {
+        $meta = static::META;
+
+        return new $meta([
+            'meta_type' => 'post',
+            'meta_key' => $key,
+            'meta_value' => $value,
+        ]);
+    }
+
+    /**
+     * Save post meta in Post
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    private function save_meta(string $key, $value): void
+    {
+        $meta = $this->create_meta($key, $value);
+        if (!isset($this->metas[$key])) {
+            $this->metas[$key] = $meta;
+            return;
+        }
+        if (is_array($this->metas[$key])) {
+            $this->metas[$key][] = $meta;
+            return;
+        }
+        $this->metas[$key] = [$this->metas[$key], $meta];
+    }
+
+    /**
+     * Save post metas in database
+     */
+    private function save_metas(): void
+    {
+        if (count($this->metas) === 0) {
+            return;
+        }
+        foreach ($this->metas as $key => $meta) {
+            if (!is_array($meta)) {
+                $meta->set_object_id($this->id);
+                $meta->save();
+                continue;
+            }
+            foreach ($meta as $single_meta) {
+                $single_meta->set_object_id($this->id);
+                $single_meta->save();
+            }
+        }
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
@@ -340,5 +360,32 @@ class Post extends WpPost
         $this->save_metas();
 
         return true;
+    }
+
+    /************************************************************************************/
+    // Get and set methods
+
+    /**
+     * Get permalink
+     *
+     * @return string
+     */
+    public function get_permalink(): string
+    {
+        if ($this->permalink === '' && $this->id !== 0) {
+            $this->permalink = get_permalink($this->id);
+        }
+
+        return $this->permalink;
+    }
+
+    /**
+     * Set permalink
+     *
+     * @param string $permalink
+     */
+    public function set_permalink(string $permalink): void
+    {
+        $this->permalink = $permalink;
     }
 }
