@@ -13,6 +13,32 @@ use Charm\WordPress\Meta as WpMeta;
 class Meta extends WpMeta
 {
     /**
+     * Meta type
+     *
+     * @var string
+     */
+    const META_TYPE = '';
+
+    /************************************************************************************/
+    // Default constructor and load method
+
+    /**
+     * Load instance with data
+     *
+     * @param array $data
+     */
+    public function load(array $data): void
+    {
+        if (!isset($data['meta_type'])) {
+            $data['meta_type'] = static::META_TYPE;
+        }
+        parent::load($data);
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
      * Return value as array
      *
      * @see maybe_unserialize()
