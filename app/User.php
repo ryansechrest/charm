@@ -18,7 +18,7 @@ class User extends WpUser
      *
      * @var string
      */
-    const DATETIME = 'Charm\App\DataType\DateTime::init';
+    const DATETIME = 'Charm\App\DataType\DateTime';
 
     /************************************************************************************/
     // Object properties
@@ -41,7 +41,7 @@ class User extends WpUser
     public function user_registered()
     {
         return $this->user_registered_obj = call_user_func(
-            static::DATETIME, $this->user_registered
+            static::DATETIME . '::init', $this->user_registered
         );
     }
 }
