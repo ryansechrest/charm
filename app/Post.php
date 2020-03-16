@@ -119,10 +119,24 @@ class Post extends WpPost
      */
     public function load(array $data): void
     {
-        if (!isset($data['post_type'])) {
-            $data['post_type'] = static::POST_TYPE;
-        }
+        $data['post_type'] = static::POST_TYPE;
         parent::load($data);
+    }
+
+    /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Get posts
+     *
+     * @param array $params
+     * @return static[]
+     */
+    public static function get(array $params): array
+    {
+        $params['post_type'] = static::POST_TYPE;
+
+        return parent::get($params);
     }
 
     /************************************************************************************/
@@ -133,7 +147,7 @@ class Post extends WpPost
      *
      * @return User|null
      */
-    public function post_author(): User
+    public function post_author()
     {
         if ($this->post_author_obj) {
             return $this->post_author_obj;
@@ -152,7 +166,7 @@ class Post extends WpPost
      *
      * @return Post|null
      */
-    public function post_parent(): Post
+    public function post_parent()
     {
         if ($this->post_parent_obj) {
             return $this->post_parent_obj;
@@ -176,7 +190,7 @@ class Post extends WpPost
         $timezone = get_option('timezone_string');
 
         return $this->post_date_obj = call_user_func(
-            static::DATETIME, $this->post_date, $timezone
+            static::DATETIME . '::init', $this->post_date, $timezone
         );
     }
 
@@ -188,7 +202,7 @@ class Post extends WpPost
     public function post_date_gmt(): DateTime
     {
         return $this->post_date_gmt_obj = call_user_func(
-            static::DATETIME, $this->post_date_gmt
+            static::DATETIME . '::init', $this->post_date_gmt
         );
     }
 
@@ -202,7 +216,7 @@ class Post extends WpPost
         $timezone = get_option('timezone_string');
 
         return $this->post_modified_obj = call_user_func(
-            static::DATETIME, $this->post_modified, $timezone
+            static::DATETIME . '::init', $this->post_modified, $timezone
         );
     }
 
@@ -214,7 +228,7 @@ class Post extends WpPost
     public function post_modified_gmt(): DateTime
     {
         return $this->post_modified_gmt_obj = call_user_func(
-            static::DATETIME, $this->post_modified_gmt
+            static::DATETIME . '::init', $this->post_modified_gmt
         );
     }
 
