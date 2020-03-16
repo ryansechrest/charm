@@ -15,6 +15,8 @@ class User extends WpUser
 {
     /**
      * DateTime class
+     *
+     * @var string
      */
     const DATETIME = 'Charm\App\DataType\DateTime::init';
 
