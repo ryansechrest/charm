@@ -718,7 +718,7 @@ class Post
      */
     public function get_post_content(): string
     {
-        return $this->post_content;
+        return apply_filters('the_content', $this->post_content);
     }
 
     /**
