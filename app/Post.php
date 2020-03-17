@@ -3,6 +3,7 @@
 namespace Charm\App;
 
 use Charm\App\DataType\DateTime;
+use Charm\Feature\Meta as MetaFeature;
 use Charm\WordPress\Post as WpPost;
 
 /**
@@ -13,6 +14,8 @@ use Charm\WordPress\Post as WpPost;
  */
 class Post extends WpPost
 {
+    use MetaFeature;
+
     /**
      * Post type
      *
@@ -58,6 +61,13 @@ class Post extends WpPost
      */
     protected $permalink = '';
 
+    /**
+     * Edit post link
+     *
+     * @var string
+     */
+    protected $edit_post_link = '';
+
     /*----------------------------------------------------------------------------------*/
 
     /**
@@ -101,13 +111,6 @@ class Post extends WpPost
      * @var DateTime|null
      */
     protected $post_modified_gmt_obj = null;
-
-    /**
-     * Post metas
-     *
-     * @var array
-     */
-    protected $metas = [];
 
     /************************************************************************************/
     // Default constructor and load method
@@ -233,119 +236,6 @@ class Post extends WpPost
     }
 
     /************************************************************************************/
-    // Meta methods
-
-    /**
-     * Get or create meta(s)
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return PostMeta|PostMeta[]|null
-     */
-    public function meta($key, $value = null)
-    {
-        if ($value !== null) {
-            $this->save_meta($key, $value);
-        }
-
-        return $this->get_meta($key);
-    }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Get post meta from Post
-     *
-     * @param string $key
-     * @return PostMeta|PostMeta[]
-     */
-    private function get_meta(string $key)
-    {
-        if (count($this->metas) === 0) {
-            $this->metas = $this->get_metas();
-        }
-        if (!isset($this->metas[$key])) {
-            return null;
-        }
-
-        return $this->metas[$key];
-    }
-
-    /**
-     * Get post metas from database
-     *
-     * @return array
-     */
-    private function get_metas(): array
-    {
-        return call_user_func(
-            static::META . '::init', [
-                'meta_type' => 'post',
-                'object_id' => $this->id,
-            ]
-        );
-    }
-
-    /**
-     * Create post meta instance
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return PostMeta
-     */
-    private function create_meta(string $key, $value)
-    {
-        $meta = static::META;
-
-        return new $meta([
-            'meta_type' => 'post',
-            'meta_key' => $key,
-            'meta_value' => $value,
-        ]);
-    }
-
-    /**
-     * Save post meta in Post
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    private function save_meta(string $key, $value): void
-    {
-        $meta = $this->create_meta($key, $value);
-        if (!isset($this->metas[$key])) {
-            $this->metas[$key] = $meta;
-            return;
-        }
-        if (is_array($this->metas[$key])) {
-            $this->metas[$key][] = $meta;
-            return;
-        }
-        $this->metas[$key] = [$this->metas[$key], $meta];
-    }
-
-    /**
-     * Save post metas in database
-     */
-    private function save_metas(): void
-    {
-        if (count($this->metas) === 0) {
-            return;
-        }
-        foreach ($this->metas as $key => $meta) {
-            if (!is_array($meta)) {
-                $meta->set_object_id($this->id);
-                $meta->save();
-                continue;
-            }
-            foreach ($meta as $single_meta) {
-                $single_meta->set_object_id($this->id);
-                $single_meta->save();
-            }
-        }
-    }
-
-    /************************************************************************************/
     // Action methods
 
     /**
@@ -382,24 +272,46 @@ class Post extends WpPost
     /**
      * Get permalink
      *
+     * @see get_permalink()
      * @return string
      */
     public function get_permalink(): string
     {
-        if ($this->permalink === '' && $this->id !== 0) {
-            $this->permalink = get_permalink($this->id);
+        if ($this->permalink !== '') {
+            return $this->permalink;
+        }
+        if ($this->id === 0) {
+            return '';
+        }
+        $permalink = get_permalink($this->id);
+        if ($permalink === false) {
+            return '';
         }
 
-        return $this->permalink;
+        return $this->permalink = $permalink;
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
-     * Set permalink
+     * Get permalink
      *
-     * @param string $permalink
+     * @see get_edit_post_link()
+     * @return string
      */
-    public function set_permalink(string $permalink): void
+    public function get_edit_post_link(): string
     {
-        $this->permalink = $permalink;
+        if ($this->edit_post_link !== '') {
+            return $this->edit_post_link;
+        }
+        if ($this->id === 0) {
+            return '';
+        }
+        $edit_post_link = get_edit_post_link($this->id);
+        if ($edit_post_link === null) {
+            return '';
+        }
+
+        return $this->edit_post_link = $edit_post_link;
     }
 }
