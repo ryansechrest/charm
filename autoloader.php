@@ -17,6 +17,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 // Data Types
 require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 
+// Features
+require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
+
 // Modules
 require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 
