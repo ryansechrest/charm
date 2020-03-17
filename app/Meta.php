@@ -29,10 +29,24 @@ class Meta extends WpMeta
      */
     public function load(array $data): void
     {
-        if (!isset($data['meta_type'])) {
-            $data['meta_type'] = static::META_TYPE;
-        }
+        $data['meta_type'] = static::META_TYPE;
         parent::load($data);
+    }
+
+    /************************************************************************************/
+    // Initialization methods
+
+    /**
+     * Initialize meta(s)
+     *
+     * @param array $params
+     * @return array|static|static[]|null
+     */
+    public static function init(array $params)
+    {
+        $params['meta_type'] = static::META_TYPE;
+
+        return parent::init($params);
     }
 
     /************************************************************************************/
