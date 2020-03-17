@@ -117,7 +117,7 @@ class Meta
      * @param array $params
      * @return array|static|static[]|null
      */
-    public static function init($params)
+    public static function init(array $params)
     {
         // If there is no meta_type or object_id, we don't know where or what to save
         if (!isset($params['meta_type']) || !isset($params['object_id'])) {
