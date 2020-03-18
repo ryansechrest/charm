@@ -1,5 +1,7 @@
 # Charm
 
+Charm is still in its very early stages, but it needs a repository for safekeeping. Proceed at your own risk!
+
 ## Getting Started
 
 Open up Terminal and `cd` into your project's directory. It's the one with your `wp-config.php` file.
@@ -27,6 +29,9 @@ Your `mu-plugins` directory should now look something like this:
 |-- mu-plugins
 |   |-- charm
 |   |   |-- app
+|   |   |-- data-type
+|   |   |-- feature
+|   |   |-- module
 |   |   |-- wordpress
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
@@ -40,7 +45,7 @@ Your `mu-plugins` directory should now look something like this:
 Activate Charm by copying `plugin.php` into the root of your `mu-plugins` directory as `_charm.php`, or run:
 
 ```shell
-php charm/run.php activate
+php charm/cli.php activate
 ```
 
 Your `mu-plugins` directory should now look something like this:
@@ -48,6 +53,10 @@ Your `mu-plugins` directory should now look something like this:
 ```
 |-- mu-plugins
 |   |-- charm
+|   |   |-- app
+|   |   |-- data-type
+|   |   |-- feature
+|   |   |-- module
 |   |   |-- wordpress
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
@@ -63,12 +72,14 @@ That allows you to use Charm in your plugin, theme, or even another mu-plugin.
 
 You're all set from here!
 
+---
+
 ### Update Charm
 
 Update Charm by running:
 
 ```shell
-php charm/run.php update
+php charm/cli.php update
 ```
 
 ### Deactivate Charm
@@ -76,7 +87,7 @@ php charm/run.php update
 Temporarily deactivate Charm by removing `_charm.php`, or run:
 
 ```shell
-php charm/run.php deactivate
+php charm/cli.php deactivate
 ```
 
 ### Remove Charm
@@ -87,3 +98,5 @@ Permanently remove Charm by deleting `_charm.php` and the `charm` directory in `
 rm _charm.php
 rm -rf charm
 ```
+
+Please make sure you're not actually using Charm when you do this, otherwise prepare for your error logs to blow up.
