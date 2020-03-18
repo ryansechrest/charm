@@ -29,8 +29,11 @@ trait Meta
      * @param mixed $value
      * @return MetaClass|MetaClass[]|null
      */
-    public function meta($key, $value = null)
+    public function meta(string $key = '', $value = null)
     {
+        if (count($this->metas) === 0) {
+            $this->metas = $this->get_metas();
+        }
         if ($value !== null) {
             $this->save_meta($key, $value);
         }
@@ -47,10 +50,10 @@ trait Meta
      * @param string $key
      * @return MetaClass|MetaClass[]
      */
-    private function get_meta(string $key)
+    private function get_meta(string $key = '')
     {
-        if (count($this->metas) === 0) {
-            $this->metas = $this->get_metas();
+        if ($key === '') {
+            return $this->metas;
         }
         if (!isset($this->metas[$key])) {
             return null;
@@ -60,17 +63,27 @@ trait Meta
     }
 
     /**
-     * Get post metas from database
+     * Save post meta in Post
      *
-     * @return array
+     * @param string $key
+     * @param mixed $value
      */
-    private function get_metas(): array
+    private function save_meta(string $key, $value): void
     {
-        return call_user_func(
-            static::META . '::init', [
-                'object_id' => $this->id,
-            ]
-        );
+        if (isset($this->metas[$key]) && !is_array($this->metas[$key])) {
+            $this->metas[$key]->set_meta_value($value);
+            return;
+        }
+        $meta = $this->create_meta($key, $value);
+        if (!isset($this->metas[$key])) {
+            $this->metas[$key] = $meta;
+            return;
+        }
+        if (is_array($this->metas[$key])) {
+            $this->metas[$key][] = $meta;
+            return;
+        }
+        $this->metas[$key] = [$this->metas[$key], $meta];
     }
 
     /**
@@ -90,24 +103,20 @@ trait Meta
         ]);
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
-     * Save post meta in Post
+     * Get post metas from database
      *
-     * @param string $key
-     * @param mixed $value
+     * @return array
      */
-    private function save_meta(string $key, $value): void
+    private function get_metas(): array
     {
-        $meta = $this->create_meta($key, $value);
-        if (!isset($this->metas[$key])) {
-            $this->metas[$key] = $meta;
-            return;
-        }
-        if (is_array($this->metas[$key])) {
-            $this->metas[$key][] = $meta;
-            return;
-        }
-        $this->metas[$key] = [$this->metas[$key], $meta];
+        return call_user_func(
+            static::META . '::init', [
+                'object_id' => $this->id,
+            ]
+        );
     }
 
     /**
