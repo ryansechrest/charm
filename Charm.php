@@ -2,6 +2,12 @@
 
 namespace Charm;
 
+/**
+ * Class Charm
+ *
+ * @author Ryan Sechrest
+ * @package Charm
+ */
 class Charm
 {
     /**
@@ -9,7 +15,9 @@ class Charm
      *
      * @var string
      */
-    private $version = '';
+    const VERSION = '1.0.0';
+
+    /************************************************************************************/
 
     /**
      * Commands
@@ -32,7 +40,6 @@ class Charm
      */
     public function __construct()
     {
-        $this->version = '1.0.0';
         $this->commands = [
             'a' => 'activate',
             'u' => 'update',
@@ -229,7 +236,7 @@ class Charm
     private function log_header(): void
     {
         $this->log();
-        $this->log($this->yellow('Charm v' . $this->version));
+        $this->log($this->yellow('Charm v' . self::VERSION));
         $this->log('====================================== wpcharm.com Ƹ̵̡Ӝ̵̨̄Ʒ');
         $this->log();
     }
