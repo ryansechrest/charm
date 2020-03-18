@@ -1,6 +1,6 @@
 # Charm
 
-Charm is still in its very early stages, but it needs a repository for safekeeping. Proceed at your own risk!
+Charm is still in its very early stages, but it needs a repository for safekeeping. There is no documentation (yet) on how to use Charm, because it's still ever-evolving. Proceed at your own risk, or just poke around the code to take a look.
 
 ## Getting Started
 
