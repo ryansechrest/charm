@@ -50,6 +50,22 @@ class Meta extends WpMeta
     }
 
     /************************************************************************************/
+    // Action methods
+
+    /**
+     * Add value to array
+     *
+     * @param mixed $value
+     */
+    public function add($value): void
+    {
+        if (!is_array($this->meta_value)) {
+            return;
+        }
+        $this->meta_value[] = $value;
+    }
+
+    /************************************************************************************/
     // Cast methods
 
     /**
@@ -78,14 +94,13 @@ class Meta extends WpMeta
      */
     public function bool(): bool
     {
-        $bool = $this->meta_value;
-        if (is_bool($bool)) {
-            return $bool;
+        if (is_bool($this->meta_value)) {
+            return $this->meta_value;
         }
-        if (is_string($bool) && $bool === 'true') {
+        if (is_string($this->meta_value) && $this->meta_value === 'true') {
             return true;
         }
-        if (is_numeric($bool) && $bool == 1) {
+        if (is_numeric($this->meta_value) && $this->meta_value === 1) {
             return true;
         }
 
