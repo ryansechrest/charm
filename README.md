@@ -91,9 +91,9 @@ php wp-content/mu-plugins/charm/cli.php deactivate
 
 ### Remove Charm
 
-Remove all the submodule references and Charm files.
+Remove all of the submodule references and Charm files.
 
-#### 1. Remove submodule from `.git/config`
+#### 1. Remove submodule from `.git/config` file
 
 Run the following command:
 
@@ -101,7 +101,7 @@ Run the following command:
 git submodule deinit wp-content/mu-plugins/charm
 ```
 
--OR- remove the following lines from `.git/config`:
+-OR- remove the following lines from the `.git/config` file:
 
 ```
 [submodule "wp-content/mu-plugins/charm"]
@@ -109,9 +109,9 @@ git submodule deinit wp-content/mu-plugins/charm
   active = true
 ```
 
-#### 2. Remove submodule from `.gitmodules`
+#### 2. Remove submodule from `.gitmodules` file
 
-Remove the following lines from `.gitmodules`:
+Remove the following lines from the `.gitmodules` file:
 
 ```
 [submodule "wp-content/mu-plugins/charm"]
@@ -119,7 +119,21 @@ Remove the following lines from `.gitmodules`:
   url = https://github.com/ryansechrest/charm.git
 ```
 
-#### 3. Remove Charm files
+#### 3. Remove submodule from `.git/modules` directory:
+
+Run the following command:
+
+```
+rm -rf .git/modules/wp-content/mu-plugins/charm
+```
+
+-OR- if you have no other submodules in the `wp-content` directory:
+
+```
+rm -rf .git/modules/wp-content
+```
+
+#### 4. Remove Charm files
 
 Run the following commands:
 
