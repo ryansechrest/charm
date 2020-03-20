@@ -190,6 +190,9 @@ class Post extends WpPost
      */
     public function post_date(): DateTime
     {
+        if ($this->post_date_obj) {
+            return $this->post_date_obj;
+        }
         $timezone = get_option('timezone_string');
 
         return $this->post_date_obj = call_user_func(
@@ -204,6 +207,10 @@ class Post extends WpPost
      */
     public function post_date_gmt(): DateTime
     {
+        if ($this->post_date_gmt_obj) {
+            return $this->post_date_gmt_obj;
+        }
+
         return $this->post_date_gmt_obj = call_user_func(
             static::DATETIME . '::init', $this->post_date_gmt
         );
@@ -216,6 +223,9 @@ class Post extends WpPost
      */
     public function post_modified(): DateTime
     {
+        if ($this->post_modified_obj) {
+            return $this->post_modified_obj;
+        }
         $timezone = get_option('timezone_string');
 
         return $this->post_modified_obj = call_user_func(
@@ -230,6 +240,10 @@ class Post extends WpPost
      */
     public function post_modified_gmt(): DateTime
     {
+        if ($this->post_modified_gmt_obj) {
+            return $this->post_modified_gmt_obj;
+        }
+
         return $this->post_modified_gmt_obj = call_user_func(
             static::DATETIME . '::init', $this->post_modified_gmt
         );
