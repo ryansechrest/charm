@@ -14,13 +14,12 @@ Create the `mu-plugins` directory (unless it already exists):
 mkdir -p wp-content/mu-plugins
 ```
 
-### 2. Clone Charm into `mu-plugins` directory
+### 2. Add Charm as submodule to `mu-plugins` directory
 
-Clone Charm into the `mu-plugins` directory as `charm`:
+Add Charm as a submodule in the `wp-content/mu-plugins/charm` directory:
 
 ```shell
-cd wp-content/mu-plugins
-git clone https://github.com/ryansechrest/charm.git
+git submodule add https://github.com/ryansechrest/charm.git wp-content/mu-plugins/charm
 ```
 
 Your `mu-plugins` directory should now look something like this:
@@ -45,7 +44,7 @@ Your `mu-plugins` directory should now look something like this:
 Activate Charm by copying `plugin.php` into the root of your `mu-plugins` directory as `_charm.php`, or run:
 
 ```shell
-php charm/cli.php activate
+php wp-content/mu-plugins/charm/cli.php activate
 ```
 
 Your `mu-plugins` directory should now look something like this:
@@ -68,7 +67,7 @@ Your `mu-plugins` directory should now look something like this:
 
 The reason for the underscore is so that Charm loads as early as possible.
 
-That allows you to use Charm in your plugin, theme, or even another mu-plugin.
+This allows you to use Charm in your plugins, themes, or even other mu-plugins.
 
 You're all set from here!
 
@@ -79,7 +78,7 @@ You're all set from here!
 Update Charm by running:
 
 ```shell
-php charm/cli.php update
+php wp-content/mu-plugins/charm/cli.php update
 ```
 
 ### Deactivate Charm
@@ -87,16 +86,44 @@ php charm/cli.php update
 Temporarily deactivate Charm by removing `_charm.php`, or run:
 
 ```shell
-php charm/cli.php deactivate
+php wp-content/mu-plugins/charm/cli.php deactivate
 ```
 
 ### Remove Charm
 
-Permanently remove Charm by deleting `_charm.php` and the `charm` directory in `mu-plugins`:
+Remove all the submodule references and then the Charm files.
 
-```shell
-rm _charm.php
-rm -rf charm
+#### 1. Remove submodule from `.git/config`
+
+Run the following command:
+
+```
+git submodule deinit wp-content/mu-plugins/charm
+```
+
+-OR- manually the following lines:
+
+```
+[submodule "wp-content/mu-plugins/charm"]
+	url = https://github.com/ryansechrest/charm.git
+	active = true
+```
+
+#### 2. Remove submodule from `.gitmodules`
+
+Remove the following lines:
+
+```
+[submodule "wp-content/mu-plugins/charm"]
+	path = wp-content/mu-plugins/charm
+	url = https://github.com/ryansechrest/charm.git
+```
+
+#### 3. Remove Charm files
+
+```
+rm wp-content/mu-plugins/_charm.php
+rm -rf wp-content/mu-plugins/charm
 ```
 
 Please make sure you're not actually using Charm when you do this, otherwise prepare for your error logs to blow up.
