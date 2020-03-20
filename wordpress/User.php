@@ -296,7 +296,7 @@ class User
     }
 
     /**
-     * Update existing user
+     * Delete user
      *
      * @see wp_delete_user()
      * @return bool
