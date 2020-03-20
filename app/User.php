@@ -4,6 +4,7 @@ namespace Charm\App;
 
 use Charm\App\DataType\DateTime;
 use Charm\Feature\Meta as MetaFeature;
+use Charm\Module\Role as Role;
 use Charm\WordPress\User as WpUser;
 
 /**
@@ -30,6 +31,13 @@ class User extends WpUser
      */
     const DATETIME = 'Charm\App\DataType\DateTime';
 
+    /**
+     * Role class
+     *
+     * @var string
+     */
+    const ROLE = 'Charm\Module\Role';
+
     /************************************************************************************/
     // Object properties
 
@@ -39,6 +47,13 @@ class User extends WpUser
      * @var DateTime|null
      */
     protected $user_registered_obj = null;
+
+    /**
+     * Role object
+     *
+     * @var Role|null
+     */
+    protected $role_obj = null;
 
     /************************************************************************************/
     // Object access methods
@@ -50,8 +65,36 @@ class User extends WpUser
      */
     public function user_registered(): DateTime
     {
+        if ($this->user_registered_obj) {
+            return $this->user_registered_obj;
+        }
+
         return $this->user_registered_obj = call_user_func(
             static::DATETIME . '::init', $this->user_registered
+        );
+    }
+
+    /**
+     * Get role
+     *
+     * @return Role|null
+     */
+    public function role()
+    {
+        if ($this->role_obj) {
+            return $this->role_obj;
+        }
+        $wp_capabilities = $this->meta('wp_capabilities')->array();
+        if (!is_array($wp_capabilities)) {
+            return null;
+        }
+        $roles = array_keys($wp_capabilities);
+        if (!isset($roles[0])) {
+            return null;
+        }
+
+        return $this->role_obj = call_user_func(
+            static::ROLE . '::init', $roles[0]
         );
     }
 
