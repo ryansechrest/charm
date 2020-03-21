@@ -292,7 +292,42 @@ class Role
      */
     public function add_capability(string $capability): void
     {
-        $this->capabilities[$capability] = 1;
+        $this->capabilities[$capability] = true;
+    }
+
+    /**
+     * Has capabilities?
+     *
+     * @param array $capabilities
+     * @return bool
+     */
+    public function has_capabilities(array $capabilities): bool
+    {
+        $index = 0;
+        $has_all = true;
+        while($has_all === true && $index < count($capabilities)) {
+            if (!$this->has_capability($capabilities[$index])) {
+                $has_all = false;
+            }
+            $index++;
+        }
+
+        return $has_all;
+    }
+
+    /**
+     * Has capability?
+     *
+     * @param string $capability
+     * @return bool
+     */
+    public function has_capability(string $capability): bool
+    {
+        if (!isset($this->capabilities[$capability])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
