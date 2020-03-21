@@ -83,15 +83,16 @@ class Role
         if (!is_array($roles) || count($roles) === 0) {
             return null;
         }
-        $roles = array_values(array_filter($roles, function (Role $role) use ($key) {
-                return $role->get_role() === $key;
+        $index = 0;
+        $role = null;
+        while ($role === null && $index < count($roles)) {
+            if ($roles[$index]->get_role() === $key) {
+                $role = $roles[$index];
             }
-        ));
-        if (count($roles) === 0 || !isset($roles[0])) {
-            return null;
+            $index++;
         }
 
-        return $roles[0];
+        return $role;
     }
 
     /**
