@@ -298,7 +298,7 @@ class PostType
      * a post type cannot be loaded at ?{query_var}={post_slug}. If specified as a
      * string, the query ?{query_var_string}={post_slug} will be valid.
      *
-     * @var bool|string
+     * @var false|string
      */
     protected $query_var = '';
 
@@ -1106,7 +1106,7 @@ class PostType
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get register meta box cb
+     * Get register meta box callback
      *
      * @return callable
      */
@@ -1116,7 +1116,7 @@ class PostType
     }
 
     /**
-     * Set register meta box cb
+     * Set register meta box callback
      *
      * @param callable $register_meta_box_cb
      */
