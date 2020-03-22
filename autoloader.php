@@ -9,6 +9,7 @@ if (!defined('ABSPATH')) {
 // WordPress Modules
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Role.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Taxonomy.php';
 
 // WordPress Entities
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Meta.php';
@@ -24,6 +25,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 // Modules
 require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
 
 // Application Meta Entities
 require_once WPMU_PLUGIN_DIR . '/charm/app/Meta.php';
