@@ -41,7 +41,8 @@ class PostType extends WpPostType
     /**
      * Initialize properties to WordPress defaults
      */
-    public function initialize_properties(): void {
+    public function initialize_properties(): void
+    {
         if ($this->public === null) {
             $this->public = false;
         }
