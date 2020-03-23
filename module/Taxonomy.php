@@ -12,6 +12,9 @@ use Charm\WordPress\Module\Taxonomy as WpTaxonomy;
  */
 class Taxonomy extends WpTaxonomy
 {
+    /************************************************************************************/
+    // Action methods
+
     /**
      * Initialize properties to WordPress defaults
      */

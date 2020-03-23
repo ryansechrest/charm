@@ -10,6 +10,9 @@ namespace Charm\App;
  */
 class CommentMeta extends Meta
 {
+    /************************************************************************************/
+    // Constants
+
     /**
      * Meta type
      *

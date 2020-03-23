@@ -10,6 +10,9 @@ namespace Charm\App;
  */
 class Page extends Post
 {
+    /************************************************************************************/
+    // Constants
+
     /**
      * Post type
      *

@@ -14,6 +14,9 @@ use Exception;
  */
 class DateTime extends DT
 {
+    /************************************************************************************/
+    // Instantiation methods
+
     /**
      * Initialize DateTime with timezone
      *

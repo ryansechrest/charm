@@ -16,6 +16,9 @@ class Post extends WpPost
 {
     use MetaFeature;
 
+    /************************************************************************************/
+    // Constants
+
     /**
      * Post type
      *
@@ -52,7 +55,7 @@ class Post extends WpPost
     const DATETIME = 'Charm\App\DataType\DateTime';
 
     /************************************************************************************/
-    // Standard and object properties
+    // Properties
 
     /**
      * Permalink
@@ -87,28 +90,28 @@ class Post extends WpPost
     /**
      * Post date object
      *
-     * @var DateTime|null
+     * @var DateTime
      */
     protected $post_date_obj = null;
 
     /**
      * Post date object (GMT)
      *
-     * @var DateTime|null
+     * @var DateTime
      */
     protected $post_date_gmt_obj = null;
 
     /**
      * Post modified object
      *
-     * @var DateTime|null
+     * @var DateTime
      */
     protected $post_modified_obj = null;
 
     /**
      * Post modified object (GMT)
      *
-     * @var DateTime|null
+     * @var DateTime
      */
     protected $post_modified_gmt_obj = null;
 

@@ -10,6 +10,9 @@ namespace Charm\WordPress\Module;
  */
 class Taxonomy
 {
+    /************************************************************************************/
+    // Properties
+
     /**
      * Taxonomy
      *

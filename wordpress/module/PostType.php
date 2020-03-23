@@ -10,6 +10,9 @@ namespace Charm\WordPress\Module;
  */
 class PostType
 {
+    /************************************************************************************/
+    // Properties
+
     /**
      * Post type
      *

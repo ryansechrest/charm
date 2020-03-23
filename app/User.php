@@ -17,6 +17,9 @@ class User extends WpUser
 {
     use MetaFeature;
 
+    /************************************************************************************/
+    // Constants
+
     /**
      * Meta class
      *
@@ -39,12 +42,12 @@ class User extends WpUser
     const ROLE = 'Charm\Module\Role';
 
     /************************************************************************************/
-    // Object properties
+    // Properties
 
     /**
      * User registered object
      *
-     * @var DateTime|null
+     * @var DateTime
      */
     protected $user_registered_obj = null;
 

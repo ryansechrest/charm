@@ -10,6 +10,9 @@ namespace Charm\App;
  */
 class PostMeta extends Meta
 {
+    /************************************************************************************/
+    // Constants
+
     /**
      * Meta type
      *

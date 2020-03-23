@@ -12,6 +12,9 @@ use Charm\WordPress\Module\PostType as WpPostType;
  */
 class PostType extends WpPostType
 {
+    /************************************************************************************/
+    // Properties
+
     /**
      * Post updated messages
      *

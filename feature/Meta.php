@@ -12,6 +12,9 @@ use Charm\App\Meta as MetaClass;
  */
 trait Meta
 {
+    /************************************************************************************/
+    // Properties
+
     /**
      * Post metas
      *
@@ -20,7 +23,7 @@ trait Meta
     protected $metas = [];
 
     /************************************************************************************/
-    // Get and set method
+    // Get and set methods
 
     /**
      * Get or create meta(s)

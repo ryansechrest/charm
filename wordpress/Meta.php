@@ -10,6 +10,9 @@ namespace Charm\WordPress;
  */
 class Meta
 {
+    /************************************************************************************/
+    // Properties
+
     /**
      * Meta type
      *

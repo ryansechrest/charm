@@ -10,6 +10,9 @@ namespace Charm\App;
  */
 class UserMeta extends Meta
 {
+    /************************************************************************************/
+    // Constants
+
     /**
      * Meta type
      *

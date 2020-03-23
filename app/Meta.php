@@ -12,6 +12,9 @@ use Charm\WordPress\Meta as WpMeta;
  */
 class Meta extends WpMeta
 {
+    /************************************************************************************/
+    // Constants
+
     /**
      * Meta type
      *
@@ -34,7 +37,7 @@ class Meta extends WpMeta
     }
 
     /************************************************************************************/
-    // Initialization methods
+    // Instantiation methods
 
     /**
      * Initialize meta(s)
