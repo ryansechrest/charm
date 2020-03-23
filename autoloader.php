@@ -16,6 +16,8 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 
+/****************************************************************************************/
+
 // Data Types
 require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 
@@ -26,6 +28,8 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
+
+/****************************************************************************************/
 
 // Application Meta Entities
 require_once WPMU_PLUGIN_DIR . '/charm/app/Meta.php';
