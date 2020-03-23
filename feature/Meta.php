@@ -30,7 +30,7 @@ trait Meta
      *
      * @param string $key
      * @param mixed $value
-     * @return MetaClass|MetaClass[]|null
+     * @return MetaClass|MetaClass[]
      */
     public function meta(string $key = '', $value = null)
     {
@@ -59,7 +59,7 @@ trait Meta
             return $this->metas;
         }
         if (!isset($this->metas[$key])) {
-            return null;
+            return $this->create_meta($key, null);
         }
 
         return $this->metas[$key];
@@ -115,11 +115,16 @@ trait Meta
      */
     private function get_metas(): array
     {
-        return call_user_func(
+        $metas = call_user_func(
             static::META . '::init', [
                 'object_id' => $this->id,
             ]
         );
+        if ($metas === null) {
+            return [];
+        }
+
+        return $metas;
     }
 
     /**
