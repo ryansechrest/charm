@@ -128,9 +128,7 @@ class Taxonomy extends WpTaxonomy
         if (!is_array($this->capabilities)) {
             return;
         }
-        $singular = $this->taxonomy;
-        $plural = $singular . 's';
-        $this->fill_capabilities($singular, $plural);
+        $this->fill_capabilities($this->taxonomy);
     }
 
     /************************************************************************************/
@@ -255,15 +253,14 @@ class Taxonomy extends WpTaxonomy
     /**
      * Fill capabilities into $this->capabilities
      *
-     * @param string $singular
-     * @param string $plural
+     * @param string $taxonomy
      */
-    public function fill_capabilities(string $singular, string $plural): void
+    public function fill_capabilities(string $taxonomy): void
     {
-        $this->fill_capability('manage_terms', 'manage_' . $plural);
-        $this->fill_capability('edit_terms', 'edit_' . $plural);
-        $this->fill_capability('delete_terms', 'delete_' . $plural);
-        $this->fill_capability('assign_terms', 'assign_' . $plural);
+        $this->fill_capability('manage_terms', 'manage_' . $taxonomy);
+        $this->fill_capability('edit_terms', 'edit_' . $taxonomy);
+        $this->fill_capability('delete_terms', 'delete_' . $taxonomy);
+        $this->fill_capability('assign_terms', 'assign_' . $taxonomy);
     }
 
     /**
