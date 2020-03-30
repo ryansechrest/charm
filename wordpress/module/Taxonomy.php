@@ -2,6 +2,8 @@
 
 namespace Charm\WordPress\Module;
 
+use WP_Taxonomy;
+
 /**
  * Class Taxonomy
  *
@@ -14,7 +16,7 @@ class Taxonomy
     // Properties
 
     /**
-     * Taxonomy
+     * Name
      *
      * The name of the taxonomy. Name should only contain lowercase letters and the
      * underscore character, and not be more than 32 characters long (database structure
@@ -22,7 +24,7 @@ class Taxonomy
      *
      * @var string
      */
-    protected $taxonomy = '';
+    protected $name = '';
 
     /**
      * Object type
@@ -166,6 +168,13 @@ class Taxonomy
     protected $meta_box_cb = null;
 
     /**
+     * Meta box sanitization callback
+     *
+     * @var callable
+     */
+    protected $meta_box_sanitize_cb = null;
+
+    /**
      * Show admin column
      *
      * Whether to allow automatic creation of taxonomy columns on associated post-types
@@ -268,16 +277,6 @@ class Taxonomy
      */
     protected $capabilities = null;
 
-    /**
-     * Sort
-     *
-     * Whether this taxonomy should remember the order in which terms are added
-     * to objects.
-     *
-     * @var bool
-     */
-    protected $sort = null;
-
     /************************************************************************************/
     // Default constructor and load method
 
@@ -286,7 +285,7 @@ class Taxonomy
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         if (!is_array($data)) {
             return;
@@ -301,8 +300,8 @@ class Taxonomy
      */
     public function load(array $data): void
     {
-        if (isset($data['taxonomy'])) {
-            $this->taxonomy = $data['taxonomy'];
+        if (isset($data['name'])) {
+            $this->name = $data['name'];
         }
         if (isset($data['object_type'])) {
             $this->object_type = $data['object_type'];
@@ -346,6 +345,9 @@ class Taxonomy
         if (isset($data['meta_box_cb'])) {
             $this->meta_box_cb = $data['meta_box_cb'];
         }
+        if (isset($data['meta_box_sanitize_cb'])) {
+            $this->meta_box_sanitize_cb = $data['meta_box_sanitize_cb'];
+        }
         if (isset($data['show_admin_column'])) {
             $this->show_admin_column = $data['show_admin_column'];
         }
@@ -362,14 +364,86 @@ class Taxonomy
             $this->query_var = $data['query_var'];
         }
         if (isset($data[' rewrite'])) {
-            $this->rewrite = $data[' rewrite'];
+            $this->rewrite = $data['rewrite'];
         }
         if (isset($data['capabilities'])) {
             $this->capabilities = $data['capabilities'];
         }
-        if (isset($data['sort'])) {
-            $this->sort = $data['sort'];
+    }
+
+    /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Initialize taxonomy
+     *
+     * @see WP_Taxonomy
+     * @param string|WP_Taxonomy $key
+     * @return static|null
+     */
+    public static function init(string $key)
+    {
+        $taxonomy = new static();
+        if (is_string($key)) {
+            $taxonomy->load_from_name($key);
+        } elseif (is_object($key) && get_class($key) === 'WP_Taxonomy') {
+            $taxonomy->load_from_taxonomy($key);
         }
+        if ($taxonomy->get_name() === '') {
+            return null;
+        }
+
+        return $taxonomy;
+    }
+
+    /************************************************************************************/
+    // Private load methods
+
+    /**
+     * Load instance from name
+     *
+     * @see get_taxonomy()
+     * @param string $name
+     */
+    private function load_from_name(string $name): void
+    {
+        if (!$wp_taxonomy = get_taxonomy($name)) {
+            return;
+        }
+        $this->load_from_taxonomy($wp_taxonomy);
+    }
+
+    /**
+     * Load instance from WP_User object
+     *
+     * @see WP_Taxonomy
+     * @param WP_Taxonomy $taxonomy
+     */
+    private function load_from_taxonomy(WP_Taxonomy $taxonomy): void
+    {
+        $this->name = $taxonomy->name;
+        $this->object_type = $taxonomy->object_type;
+        $this->label = $taxonomy->label;
+        $this->labels = (array) $taxonomy->labels;
+        $this->public = $taxonomy->public;
+        $this->publicly_queryable = $taxonomy->publicly_queryable;
+        $this->show_ui = $taxonomy->show_ui;
+        $this->show_in_menu = $taxonomy->show_in_menu;
+        $this->show_in_nav_menus = $taxonomy->show_in_nav_menus;
+        $this->show_in_rest = $taxonomy->show_in_rest;
+        $this->rest_base = $taxonomy->rest_base;
+        $this->rest_controller_class = $taxonomy->rest_controller_class;
+        $this->show_tagcloud = $taxonomy->show_tagcloud;
+        $this->show_in_quick_edit = $taxonomy->show_in_quick_edit;
+        $this->meta_box_cb = $taxonomy->meta_box_cb;
+        $this->meta_box_sanitize_cb = $taxonomy->meta_box_sanitize_cb;
+        $this->show_admin_column = $taxonomy->show_admin_column;
+        $this->description = $taxonomy->description;
+        $this->hierarchical = $taxonomy->hierarchical;
+        $this->update_count_callback = $taxonomy->update_count_callback;
+        $this->query_var = $taxonomy->query_var;
+        $this->rewrite = $taxonomy->rewrite;
+        $this->capabilities = (array) $taxonomy->cap;
     }
 
     /************************************************************************************/
@@ -380,7 +454,7 @@ class Taxonomy
      */
     public function register(): void
     {
-        if ($this->taxonomy === '') {
+        if ($this->name === '') {
             return;
         }
         $this->register_taxonomy();
@@ -395,7 +469,7 @@ class Taxonomy
     public function register_taxonomy(): void
     {
         add_action('init', function() {
-            register_taxonomy($this->taxonomy, $this->object_type, $this->to_array());
+            register_taxonomy($this->name, $this->object_type, $this->to_array());
         });
     }
 
@@ -410,8 +484,8 @@ class Taxonomy
     public function to_array(): array
     {
         $data = [];
-        if ($this->taxonomy !== '') {
-            $data['taxonomy'] = $this->taxonomy;
+        if ($this->name !== '') {
+            $data['name'] = $this->name;
         }
         if ($this->object_type !== '') {
             $data['object_type'] = $this->object_type;
@@ -476,9 +550,6 @@ class Taxonomy
         if ($this->capabilities !== null) {
             $data['capabilities'] = $this->capabilities;
         }
-        if ($this->sort !== null) {
-            $data['sort'] = $this->sort;
-        }
 
         return $data;
     }
@@ -506,23 +577,23 @@ class Taxonomy
     // Get and set methods
 
     /**
-     * Get taxonomy
+     * Get name
      *
      * @return string
      */
-    public function get_taxonomy(): string
+    public function get_name(): string
     {
-        return $this->taxonomy;
+        return $this->name;
     }
 
     /**
-     * Set taxonomy
+     * Set name
      *
-     * @param string $taxonomy
+     * @param string $name
      */
-    public function set_taxonomy(string $taxonomy): void
+    public function set_name(string $name): void
     {
-        $this->taxonomy = $taxonomy;
+        $this->name = $name;
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1035,23 +1106,5 @@ class Taxonomy
         }
 
         return $this->capabilities[$name];
-    }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * @return bool
-     */
-    public function is_sort(): bool
-    {
-        return $this->sort;
-    }
-
-    /**
-     * @param bool $sort
-     */
-    public function set_sort(bool $sort): void
-    {
-        $this->sort = $sort;
     }
 }
