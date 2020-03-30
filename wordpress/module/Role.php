@@ -77,45 +77,47 @@ class Role
     /**
      * Initialize role
      *
+     * @see get_option()
      * @param string $key
      * @return static|null
      */
-    public static function init($key = '')
+    public static function init(string $key)
     {
-        $roles = static::get();
-        if (!is_array($roles) || count($roles) === 0) {
+        if (!$wp_roles = get_option('wp_user_roles')) {
             return null;
         }
-        $index = 0;
-        $role = null;
-        while ($role === null && $index < count($roles)) {
-            if ($roles[$index]->get_role() === $key) {
-                $role = $roles[$index];
-            }
-            $index++;
+        if (!isset($wp_roles[$key])) {
+            return null;
         }
 
-        return $role;
+        return new static([
+            'role' => $key,
+            'display_name' => $wp_roles[$key]['name'],
+            'capabilities' => $wp_roles[$key]['capabilities'],
+        ]);
     }
 
     /**
      * Get roles
      *
-     * @see WP_Role
-     * @see WP_Roles
+     * @see get_option()
      * @return static[]
      */
-    public static function get()
+    public static function get(): array
     {
-        $wp_roles = new WP_Roles();
-
-        return array_map(function(string $display_name, WP_Role $wp_role) {
-            return new static([
-                'role' => $wp_role->name,
-                'display_name' => $display_name,
-                'capabilities' => $wp_role->capabilities,
+        $roles = [];
+        if (!$wp_roles = get_option('wp_user_roles')) {
+            return $roles;
+        }
+        foreach ($wp_roles as $role => $wp_role) {
+            $roles[] = new static([
+                'role' => $role,
+                'display_name' => $wp_role['name'],
+                'capabilities' => $wp_role['capabilities'],
             ]);
-        }, $wp_roles->role_names, $wp_roles->role_objects);
+        }
+
+        return $roles;
     }
 
     /************************************************************************************/
