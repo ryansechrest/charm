@@ -138,7 +138,7 @@ class Post extends WpPost
      * @param array $params
      * @return static[]
      */
-    public static function get(array $params): array
+    public static function get(array $params = []): array
     {
         $params['post_type'] = static::POST_TYPE;
 
