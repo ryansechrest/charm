@@ -17,11 +17,11 @@ class Role
     // Properties
 
     /**
-     * Role
+     * Name
      *
      * @var string
      */
-    protected $role = '';
+    protected $name = '';
 
     /**
      * Display name
@@ -60,8 +60,8 @@ class Role
      */
     public function load(array $data): void
     {
-        if (isset($data['role'])) {
-            $this->role = $data['role'];
+        if (isset($data['name'])) {
+            $this->name = $data['name'];
         }
         if (isset($data['display_name'])) {
             $this->display_name = $data['display_name'];
@@ -78,22 +78,22 @@ class Role
      * Initialize role
      *
      * @see get_option()
-     * @param string $key
+     * @param string $name
      * @return static|null
      */
-    public static function init(string $key)
+    public static function init(string $name)
     {
         if (!$wp_roles = get_option('wp_user_roles')) {
             return null;
         }
-        if (!isset($wp_roles[$key])) {
+        if (!isset($wp_roles[$name])) {
             return null;
         }
 
         return new static([
-            'role' => $key,
-            'display_name' => $wp_roles[$key]['name'],
-            'capabilities' => $wp_roles[$key]['capabilities'],
+            'role' => $name,
+            'display_name' => $wp_roles[$name]['name'],
+            'capabilities' => $wp_roles[$name]['capabilities'],
         ]);
     }
 
@@ -109,9 +109,9 @@ class Role
         if (!$wp_roles = get_option('wp_user_roles')) {
             return $roles;
         }
-        foreach ($wp_roles as $role => $wp_role) {
+        foreach ($wp_roles as $name => $wp_role) {
             $roles[] = new static([
-                'role' => $role,
+                'role' => $name,
                 'display_name' => $wp_role['name'],
                 'capabilities' => $wp_role['capabilities'],
             ]);
@@ -131,7 +131,7 @@ class Role
      */
     public function save(): bool
     {
-        if (!get_role($this->role)) {
+        if (!get_role($this->name)) {
             return $this->create();
         }
 
@@ -146,7 +146,7 @@ class Role
      */
     public function create(): bool
     {
-        if (!add_role($this->role, $this->display_name, $this->capabilities)) {
+        if (!add_role($this->name, $this->display_name, $this->capabilities)) {
             return false;
         }
 
@@ -173,7 +173,7 @@ class Role
      */
     public function delete(): bool
     {
-        remove_role($this->role);
+        remove_role($this->name);
 
         return true;
     }
@@ -189,8 +189,8 @@ class Role
     public function to_array(): array
     {
         $data = [];
-        if ($this->role !== '') {
-            $data['role'] = $this->role;
+        if ($this->name !== '') {
+            $data['name'] = $this->name;
         }
         if ($this->display_name !== '') {
             $data['display_name'] = $this->display_name;
@@ -225,23 +225,23 @@ class Role
     // Get and set methods
 
     /**
-     * Get role
+     * Get name
      *
      * @return string
      */
-    public function get_role(): string
+    public function get_name(): string
     {
-        return $this->role;
+        return $this->name;
     }
 
     /**
-     * Set role
+     * Set name
      *
-     * @param string $role
+     * @param string $name
      */
-    public function set_role(string $role): void
+    public function set_name(string $name): void
     {
-        $this->role = $role;
+        $this->name = $name;
     }
 
     /*----------------------------------------------------------------------------------*/
