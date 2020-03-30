@@ -42,7 +42,7 @@ class Taxonomy extends WpTaxonomy
             $this->show_in_rest = false;
         }
         if ($this->rest_base === '') {
-            $this->rest_base = $this->taxonomy;
+            $this->rest_base = $this->name;
         }
         if ($this->rest_controller_class === '') {
             $this->rest_controller_class = 'WP_REST_Terms_Controller';
@@ -53,6 +53,18 @@ class Taxonomy extends WpTaxonomy
         if ($this->show_in_quick_edit === null) {
             $this->show_in_quick_edit = $this->show_ui;
         }
+        if ($this->meta_box_cb === null) {
+            $this->meta_box_cb = 'post_tags_meta_box';
+            if ($this->hierarchical) {
+                $this->meta_box_cb = 'post_categories_meta_box';
+            }
+        }
+        if ($this->meta_box_sanitize_cb === null) {
+            $this->meta_box_sanitize_cb = 'taxonomy_meta_box_sanitize_cb_input';
+            if ($this->hierarchical) {
+                $this->meta_box_sanitize_cb = 'taxonomy_meta_box_sanitize_cb_checkboxes';
+            }
+        }
         if ($this->show_admin_column === null) {
             $this->show_admin_column = false;
         }
@@ -60,11 +72,11 @@ class Taxonomy extends WpTaxonomy
             $this->hierarchical = false;
         }
         if ($this->query_var === '') {
-            $this->query_var = $this->taxonomy;
+            $this->query_var = $this->name;
         }
         if (count($this->rewrite) === 0) {
             $this->rewrite = [
-                'slug' => $this->taxonomy,
+                'slug' => $this->name,
                 'with_front' => true,
                 'hierarchical' => false,
                 'ep_mask' => EP_NONE,
@@ -77,9 +89,6 @@ class Taxonomy extends WpTaxonomy
                 'delete_terms' => 'manage_categories',
                 'assign_terms' => 'edit_posts',
             ];
-        }
-        if ($this->sort === null) {
-            $this->sort = false;
         }
     }
 
@@ -128,7 +137,7 @@ class Taxonomy extends WpTaxonomy
         if (!is_array($this->capabilities)) {
             return;
         }
-        $this->fill_capabilities($this->taxonomy);
+        $this->fill_capabilities($this->name);
     }
 
     /************************************************************************************/
@@ -145,7 +154,7 @@ class Taxonomy extends WpTaxonomy
             return $this->labels['singular_name'];
         }
 
-        return ucwords(str_replace('_', ' ', $this->taxonomy));
+        return ucwords(str_replace('_', ' ', $this->name));
     }
 
     /**
@@ -178,22 +187,28 @@ class Taxonomy extends WpTaxonomy
     {
         $this->fill_label('name', $plural);
         $this->fill_label('singular_name', $singular);
-        $this->fill_label('menu_name', $plural);
+        $this->fill_label('search_items', $plural);
+        $this->fill_label('popular_items', $plural);
         $this->fill_label('all_items', $plural);
+        $this->fill_label('parent_item', $singular);
+        $this->fill_label('parent_item_colon', $singular);
         $this->fill_label('edit_item', $singular);
         $this->fill_label('view_item', $singular);
         $this->fill_label('update_item', $singular);
         $this->fill_label('add_new_item', $singular);
         $this->fill_label('new_item_name', $singular);
-        $this->fill_label('parent_item', $singular);
-        $this->fill_label('parent_item_colon', $singular);
-        $this->fill_label('search_items', $plural);
-        $this->fill_label('popular_items', $plural);
         $this->fill_label('separate_items_with_commas', strtolower($plural));
         $this->fill_label('add_or_remove_items', strtolower($plural));
         $this->fill_label('choose_from_most_used', strtolower($plural));
         $this->fill_label('not_found', strtolower($plural));
+        $this->fill_label('no_terms', strtolower($plural));
+        $this->fill_label('items_list_navigation', $plural);
+        $this->fill_label('items_list', $plural);
+        $this->fill_label('most_used', $plural);
         $this->fill_label('back_to_items', strtolower($plural));
+        $this->fill_label('menu_name', $plural);
+        $this->fill_label('name_admin_bar', $plural);
+        $this->fill_label('archives', $plural);
     }
 
     /**
@@ -209,7 +224,7 @@ class Taxonomy extends WpTaxonomy
         }
         $label = sprintf($this->get_label_format($key), $noun);
         $this->add_individual_label(
-            $key, _x($label, 'Taxonomy: ' . $this->taxonomy, 'charm')
+            $key, _x($label, 'Taxonomy: ' . $this->name, 'charm')
         );
     }
 
@@ -224,22 +239,28 @@ class Taxonomy extends WpTaxonomy
         $formats = [
             'name' => '%s',
             'singular_name' => '%s',
-            'menu_name' => '%s',
+            'search_items' => 'Search %s',
+            'popular_items' => 'Popular %s',
             'all_items' => 'All %s',
+            'parent_item' => 'Parent %s',
+            'parent_item_colon' => 'Parent %s:',
             'edit_item' => 'Edit %s',
             'view_item' => 'View %s',
             'update_item' => 'Update %s',
             'add_new_item' => 'Add New %s',
             'new_item_name' => 'New %s Name',
-            'parent_item' => 'Parent %s',
-            'parent_item_colon' => 'Parent %s:',
-            'search_items' => 'Search %s',
-            'popular_items' => 'Popular %s',
             'separate_items_with_commas' => 'Separate %s with commas',
             'add_or_remove_items' => 'Add or remove %s',
-            'choose_from_most_used' => 'Choose from the most used %s',
+            'choose_from_most_used' => 'Choose from popular %s',
             'not_found' => 'No %s found.',
+            'no_terms' => 'No %s',
+            'items_list_navigation' => '%s list navigation',
+            'items_list' => '%s list',
+            'most_used' => 'Popular %s',
             'back_to_items' => '← Back to %s',
+            'menu_name' => '%s',
+            'name_admin_bar' => '%s',
+            'archives' => 'All %s',
         ];
         if (!isset($formats[$name])) {
             return 'Label format not found.';
@@ -253,14 +274,14 @@ class Taxonomy extends WpTaxonomy
     /**
      * Fill capabilities into $this->capabilities
      *
-     * @param string $taxonomy
+     * @param string $name
      */
-    public function fill_capabilities(string $taxonomy): void
+    public function fill_capabilities(string $name): void
     {
-        $this->fill_capability('manage_terms', 'manage_' . $taxonomy);
-        $this->fill_capability('edit_terms', 'edit_' . $taxonomy);
-        $this->fill_capability('delete_terms', 'delete_' . $taxonomy);
-        $this->fill_capability('assign_terms', 'assign_' . $taxonomy);
+        $this->fill_capability('manage_terms', 'manage_' . $name);
+        $this->fill_capability('edit_terms', 'edit_' . $name);
+        $this->fill_capability('delete_terms', 'delete_' . $name);
+        $this->fill_capability('assign_terms', 'assign_' . $name);
     }
 
     /**
