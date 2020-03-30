@@ -182,7 +182,10 @@ class User
      */
     private function load_from_id(int $id): void
     {
-        $this->load_from_user(get_user_by('id', $id));
+        if (!$user = get_user_by('id', $id)) {
+            return;
+        }
+        $this->load_from_user($user);
     }
 
     /**
@@ -193,7 +196,10 @@ class User
      */
     private function load_from_login(string $login): void
     {
-        $this->load_from_user(get_user_by('login', $login));
+        if (!$user = get_user_by('login', $login)) {
+            return;
+        }
+        $this->load_from_user($user);
     }
 
     /**
@@ -204,7 +210,10 @@ class User
      */
     private function load_from_email(string $email): void
     {
-        $this->load_from_user(get_user_by('email', $email));
+        if (!$user = get_user_by('email', $email)) {
+            return;
+        }
+        $this->load_from_user($user);
     }
 
     /**
@@ -214,7 +223,10 @@ class User
      */
     private function load_from_global_user(): void
     {
-        $this->load_from_user(wp_get_current_user());
+        if (!$user = wp_get_current_user()) {
+            return;
+        }
+        $this->load_from_user($user);
     }
 
     /**
