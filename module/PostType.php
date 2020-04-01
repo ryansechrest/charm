@@ -32,10 +32,10 @@ class PostType extends WpPostType
      */
     public function load(array $data): void
     {
+        parent::load($data);
         if (isset($data['post_updated_messages'])) {
             $this->post_updated_messages = $data['post_updated_messages'];
         }
-        parent::load($data);
     }
 
     /************************************************************************************/
@@ -74,7 +74,7 @@ class PostType extends WpPostType
             $this->show_in_rest = false;
         }
         if ($this->rest_base === '') {
-            $this->rest_base = $this->post_type;
+            $this->rest_base = $this->name;
         }
         if ($this->rest_controller_class === '') {
             $this->rest_controller_class = 'WP_REST_Posts_Controller';
@@ -96,7 +96,7 @@ class PostType extends WpPostType
         }
         if (count($this->rewrite) === 0) {
             $this->rewrite = [
-                'slug' => $this->post_type,
+                'slug' => $this->name,
                 'with_front' => true,
                 'feeds' => $this->has_archive,
                 'pages' => true,
@@ -104,7 +104,7 @@ class PostType extends WpPostType
             ];
         }
         if ($this->query_var === '') {
-            $this->query_var = $this->post_type;
+            $this->query_var = $this->name;
         }
         if ($this->can_export === null) {
             $this->can_export = true;
@@ -154,7 +154,7 @@ class PostType extends WpPostType
      */
     public function autogenerate_capabilities(): void
     {
-        $singular = $this->post_type;
+        $singular = $this->name;
         $plural = $singular . 's';
         if (isset($this->capability_type[0])) {
             $singular = $this->capability_type[0];
@@ -184,8 +184,9 @@ class PostType extends WpPostType
      */
     public function register(): void
     {
-        $this->register_post_updated_messages();
         parent::register();
+        $this->register_post_updated_messages();
+
     }
 
     /**
@@ -200,10 +201,10 @@ class PostType extends WpPostType
                 return $messages;
             }
             foreach ($this->post_updated_messages as $index => $message) {
-                if (isset($messages[$this->post_type][$index])) {
+                if (isset($messages[$this->name][$index])) {
                     continue;
                 }
-                $messages[$this->post_type][$index] = $message;
+                $messages[$this->name][$index] = $message;
             }
 
             return $messages;
@@ -224,7 +225,7 @@ class PostType extends WpPostType
             return $this->labels['singular_name'];
         }
 
-        return ucwords(str_replace('_', ' ', $this->post_type));
+        return ucwords(str_replace('_', ' ', $this->name));
     }
 
     /**
@@ -295,7 +296,7 @@ class PostType extends WpPostType
         }
         $label = sprintf($this->get_label_format($key), $noun);
         $this->add_individual_label(
-            $key, _x($label, 'Post Type: ' . $this->post_type, 'charm')
+            $key, _x($label, 'Post Type: ' . $this->name, 'charm')
         );
     }
 
@@ -418,7 +419,7 @@ class PostType extends WpPostType
         }
         $message = sprintf($this->get_post_updated_message_format($index), $noun);
         $this->add_post_updated_message(
-            $index, _x($message, 'Post Type: ' . $this->post_type, 'charm')
+            $index, _x($message, 'Post Type: ' . $this->name, 'charm')
         );
     }
 
