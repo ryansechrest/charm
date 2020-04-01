@@ -456,6 +456,17 @@ class Taxonomy
         $this->wp_taxonomy = $taxonomy;
     }
 
+    /**
+     * Reload instance from database
+     */
+    private function reload(): void
+    {
+        if (!$this->name) {
+            return;
+        }
+        $this->load_from_name($this->name);
+    }
+
     /************************************************************************************/
     // Action methods
 
@@ -468,6 +479,7 @@ class Taxonomy
             return;
         }
         $this->register_taxonomy();
+        $this->reload();
     }
 
     /**
