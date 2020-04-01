@@ -2,6 +2,8 @@
 
 namespace Charm\WordPress\Module;
 
+use WP_Post_Type;
+
 /**
  * Class PostType
  *
@@ -14,14 +16,14 @@ class PostType
     // Properties
 
     /**
-     * Post type
+     * Name
      *
      * Post type key. Must not exceed 20 characters and may only contain lowercase
      * alphanumeric characters, dashes, and underscores. See sanitize_key().
      *
      * @var string
      */
-    protected $post_type = '';
+    protected $name = '';
 
     /**
      * Label
@@ -327,6 +329,15 @@ class PostType
      */
     protected $delete_with_user = null;
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * WordPress post type
+     *
+     * @var WP_Post_Type
+     */
+    private $wp_post_type = null;
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -335,9 +346,9 @@ class PostType
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
-        if (!is_array($data)) {
+        if (count($data) === 0) {
             return;
         }
         $this->load($data);
@@ -350,8 +361,8 @@ class PostType
      */
     public function load(array $data): void
     {
-        if (isset($data['post_type'])) {
-            $this->post_type = $data['post_type'];
+        if (isset($data['name'])) {
+            $this->name = $data['name'];
         }
         if (isset($data['label'])) {
             $this->label = $data['label'];
@@ -437,6 +448,86 @@ class PostType
     }
 
     /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Initialize post type
+     *
+     * @see WP_Post_Type
+     * @param string|WP_Post_Type $key
+     * @return static|null
+     */
+    public static function init(string $key)
+    {
+        $post_type = new static();
+        if (is_string($key)) {
+            $post_type->load_from_name($key);
+        } elseif (is_object($key) && get_class($key) === 'WP_Post_Type') {
+            $post_type->load_from_post_type($key);
+        }
+        if ($post_type->get_name() === '') {
+            return null;
+        }
+
+        return $post_type;
+    }
+
+    /************************************************************************************/
+    // Private load methods
+
+    /**
+     * Load instance from name
+     *
+     * @see get_post_type_object()
+     * @param string $name
+     */
+    private function load_from_name(string $name): void
+    {
+        if (!$wp_post_type = get_post_type_object($name)) {
+            return;
+        }
+        $this->load_from_post_type($wp_post_type);
+    }
+
+    /**
+     * Load instance from WP_Post_Type object
+     *
+     * @param WP_Post_Type $post_type
+     */
+    private function load_from_post_type(WP_Post_Type $post_type): void
+    {
+        $this->name = $post_type->name;
+        $this->label = $post_type->label;
+        $this->labels = (array) $post_type->labels;
+        $this->description = $post_type->description;
+        $this->public = $post_type->public;
+        $this->hierarchical = $post_type->hierarchical;
+        $this->exclude_from_search = $post_type->exclude_from_search;
+        $this->publicly_queryable = $post_type->publicly_queryable;
+        $this->show_ui = $post_type->show_ui;
+        $this->show_in_menu = $post_type->show_in_menu;
+        $this->show_in_nav_menus = $post_type->show_in_nav_menus;
+        $this->show_in_admin_bar = $post_type->show_in_admin_bar;
+        $this->show_in_rest = $post_type->show_in_rest;
+        $this->rest_base = $post_type->rest_base;
+        $this->rest_controller_class = $post_type->rest_controller_class;
+        $this->menu_position = $post_type->menu_position;
+        $this->menu_icon = $post_type->menu_icon;
+        $this->capability_type = $post_type->capability_type;
+        $this->capabilities = (array) $post_type->cap;
+        $this->map_meta_cap = $post_type->map_meta_cap;
+        $this->supports = $post_type->supports;
+        $this->register_meta_box_cb = $post_type->register_meta_box_cb;
+        $this->taxonomies = $post_type->taxonomies;
+        $this->has_archive = $post_type->has_archive;
+        $this->rewrite = $post_type->rewrite;
+        $this->query_var = $post_type->query_var;
+        $this->can_export = $post_type->can_export;
+        $this->delete_with_user = $post_type->delete_with_user;
+        $this->wp_post_type = $post_type;
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
@@ -444,7 +535,7 @@ class PostType
      */
     public function register(): void
     {
-        if ($this->post_type === '') {
+        if ($this->name === '') {
             return;
         }
         $this->register_post_type();
@@ -459,7 +550,7 @@ class PostType
     public function register_post_type(): void
     {
         add_action('init', function() {
-            register_post_type($this->post_type, $this->to_array());
+            register_post_type($this->name, $this->to_array());
         });
     }
 
@@ -474,8 +565,8 @@ class PostType
     public function to_array(): array
     {
         $data = [];
-        if ($this->post_type !== '') {
-            $data['post_type'] = $this->post_type;
+        if ($this->name !== '') {
+            $data['name'] = $this->name;
         }
         if ($this->label !== '') {
             $data['label'] = $this->label;
@@ -582,26 +673,43 @@ class PostType
     }
 
     /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get (or set) WordPress post type
+     *
+     * @param WP_Post_Type $post_type
+     * @return WP_Post_Type
+     */
+    protected function wp_post_type(WP_Post_Type $post_type = null)
+    {
+        if ($post_type !== null) {
+            $this->wp_post_type = $post_type;
+        }
+        return $this->wp_post_type;
+    }
+
+    /************************************************************************************/
     // Get and set methods
 
     /**
-     * Get post type
+     * Get name
      *
      * @return string
      */
-    public function get_post_type(): string
+    public function get_name(): string
     {
-        return $this->post_type;
+        return $this->name;
     }
 
     /**
-     * Set post type
+     * Set name
      *
-     * @param string $post_type
+     * @param string $name
      */
-    public function set_post_type(string $post_type): void
+    public function set_name(string $name): void
     {
-        $this->post_type = $post_type;
+        $this->name = $name;
     }
 
     /*----------------------------------------------------------------------------------*/
