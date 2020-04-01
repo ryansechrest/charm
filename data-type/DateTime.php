@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\App\DataType;
+namespace Charm\DataType;
 
 use DateTime as DT;
 use DateTimeZone as DTZ;
@@ -10,7 +10,7 @@ use Exception;
  * Class DateTime
  *
  * @author Ryan Sechrest
- * @package Charm\App\DataType
+ * @package Charm\DataType
  */
 class DateTime extends DT
 {
