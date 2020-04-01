@@ -85,6 +85,15 @@ class User
      */
     protected $display_name = '';
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * WordPress user
+     *
+     * @var WP_User
+     */
+    private $wp_user = null;
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -247,6 +256,7 @@ class User
         $this->user_activation_key = $user->data->user_activation_key;
         $this->user_status = (int) $user->data->user_status;
         $this->display_name = $user->data->display_name;
+        $this->wp_user = $user;
     }
 
     /**
@@ -387,6 +397,23 @@ class User
     public function to_object(): object
     {
         return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get (or set) WordPress user
+     *
+     * @param WP_User $user
+     * @return WP_User
+     */
+    protected function wp_user(WP_User $user = null)
+    {
+        if ($user !== null) {
+            $this->wp_user = $user;
+        }
+        return $this->wp_user;
     }
 
     /************************************************************************************/
