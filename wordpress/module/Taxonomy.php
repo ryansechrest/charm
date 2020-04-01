@@ -296,7 +296,7 @@ class Taxonomy
      */
     public function __construct(array $data = [])
     {
-        if (!is_array($data)) {
+        if (count($data) === 0) {
             return;
         }
         $this->load($data);
