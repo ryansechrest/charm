@@ -177,6 +177,15 @@ class Post
      */
     protected $comment_count = 0;
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * WordPress post
+     *
+     * @var WP_Post
+     */
+    private $wp_post = null;
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -396,6 +405,7 @@ class Post
         $this->post_type = $post->post_type;
         $this->post_mime_type = $post->post_mime_type;
         $this->comment_count = (int) $post->comment_count;
+        $this->wp_post = $post;
     }
 
     /**
@@ -605,6 +615,23 @@ class Post
     public function to_object(): object
     {
         return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get (or set) WordPress post
+     *
+     * @param WP_Post $post
+     * @return WP_Post
+     */
+    protected function wp_post(WP_Post $post = null)
+    {
+        if ($post !== null) {
+            $this->wp_post = $post;
+        }
+        return $this->wp_post;
     }
 
     /************************************************************************************/
