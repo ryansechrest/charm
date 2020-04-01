@@ -277,6 +277,15 @@ class Taxonomy
      */
     protected $capabilities = null;
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * WordPress taxonomy
+     *
+     * @var WP_Taxonomy
+     */
+    private $wp_taxonomy = null;
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -363,7 +372,7 @@ class Taxonomy
         if (isset($data['query_var'])) {
             $this->query_var = $data['query_var'];
         }
-        if (isset($data[' rewrite'])) {
+        if (isset($data['rewrite'])) {
             $this->rewrite = $data['rewrite'];
         }
         if (isset($data['capabilities'])) {
@@ -444,6 +453,7 @@ class Taxonomy
         $this->query_var = $taxonomy->query_var;
         $this->rewrite = $taxonomy->rewrite;
         $this->capabilities = (array) $taxonomy->cap;
+        $this->wp_taxonomy = $taxonomy;
     }
 
     /************************************************************************************/
@@ -571,6 +581,23 @@ class Taxonomy
     public function to_object(): object
     {
         return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get (or set) WordPress taxonomy
+     *
+     * @param WP_Taxonomy $taxonomy
+     * @return WP_Taxonomy
+     */
+    protected function wp_taxonomy(WP_Taxonomy $taxonomy = null)
+    {
+        if ($taxonomy !== null) {
+            $this->wp_taxonomy = $taxonomy;
+        }
+        return $this->wp_taxonomy;
     }
 
     /************************************************************************************/
