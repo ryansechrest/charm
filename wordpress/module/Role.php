@@ -160,6 +160,17 @@ class Role
         $this->wp_role = $role;
     }
 
+    /**
+     * Reload instance from database
+     */
+    private function reload(): void
+    {
+        if (!$this->name) {
+            return;
+        }
+        $this->load_from_name($this->name);
+    }
+
     /************************************************************************************/
     // Action methods
 
@@ -189,6 +200,7 @@ class Role
         if (!add_role($this->name, $this->display_name, $this->capabilities)) {
             return false;
         }
+        $this->reload();
 
         return true;
     }
