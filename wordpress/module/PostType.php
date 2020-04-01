@@ -527,6 +527,17 @@ class PostType
         $this->wp_post_type = $post_type;
     }
 
+    /**
+     * Reload instance from database
+     */
+    private function reload(): void
+    {
+        if (!$this->name) {
+            return;
+        }
+        $this->load_from_name($this->name);
+    }
+
     /************************************************************************************/
     // Action methods
 
@@ -539,6 +550,7 @@ class PostType
             return;
         }
         $this->register_post_type();
+        $this->reload();
     }
 
     /**
