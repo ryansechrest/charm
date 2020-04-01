@@ -2,8 +2,9 @@
 
 namespace Charm\App;
 
-use Charm\App\DataType\DateTime;
+use Charm\DataType\DateTime;
 use Charm\Feature\Meta as MetaFeature;
+use Charm\Module\PostType;
 use Charm\WordPress\Post as WpPost;
 
 /**
@@ -52,7 +53,7 @@ class Post extends WpPost
      *
      * @var string
      */
-    const DATETIME = 'Charm\App\DataType\DateTime';
+    const DATETIME = 'Charm\DataType\DateTime';
 
     /************************************************************************************/
     // Properties
@@ -250,6 +251,18 @@ class Post extends WpPost
         return $this->post_modified_gmt_obj = call_user_func(
             static::DATETIME . '::init', $this->post_modified_gmt
         );
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get post type
+     *
+     * @return PostType
+     */
+    public static function post_type(): PostType
+    {
+        return PostType::init(static::POST_TYPE);
     }
 
     /************************************************************************************/
