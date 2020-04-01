@@ -54,9 +54,9 @@ class Role
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
-        if (!is_array($data)) {
+        if (count($data) === 0) {
             return;
         }
         $this->load($data);
@@ -86,23 +86,20 @@ class Role
     /**
      * Initialize role
      *
-     * @see WP_Roles
-     * @param string $name
+     * @param string|WP_Role $key
      * @return static|null
      */
-    public static function init(string $name)
+    public static function init(string $key)
     {
-        $wp_roles = new WP_Roles();
-        if (!isset($wp_roles->roles[$name])) {
+        $role = new static();
+        if (is_string($key)) {
+            $role->load_from_name($key);
+        } elseif (is_object($key) && get_class($key) === 'WP_Role') {
+            $role->load_from_role($key);
+        }
+        if ($role->get_name() === '') {
             return null;
         }
-        $wp_role = $wp_roles->roles[$name];
-        $role = new static([
-            'name' => $name,
-            'display_name' => $wp_role['name'],
-            'capabilities' => $wp_role['capabilities'],
-        ]);
-        $role->wp_role($wp_roles->role_objects[$name]);
 
         return $role;
     }
@@ -128,6 +125,39 @@ class Role
         }
 
         return $roles;
+    }
+
+    /************************************************************************************/
+    // Private load methods
+
+    /**
+     * Load instance from name
+     *
+     * @see get_role()
+     * @param string $name
+     */
+    private function load_from_name(string $name): void
+    {
+        if (!$wp_role = get_role($name)) {
+            return;
+        }
+        $this->load_from_role($wp_role);
+    }
+
+    /**
+     * Load instance from WP_Role object
+     *
+     * @see WP_Role
+     * @see WP_Roles
+     * @param WP_Role $role
+     */
+    private function load_from_role(WP_Role $role): void
+    {
+        $roles = new WP_Roles();
+        $this->name = $role->name;
+        $this->display_name = $roles->role_names[$role->name];
+        $this->capabilities = $role->capabilities;
+        $this->wp_role = $role;
     }
 
     /************************************************************************************/
