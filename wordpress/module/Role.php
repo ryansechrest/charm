@@ -37,6 +37,15 @@ class Role
      */
     protected $capabilities = [];
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * WordPress role
+     *
+     * @var WP_Role
+     */
+    private $wp_role = null;
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -77,44 +86,45 @@ class Role
     /**
      * Initialize role
      *
-     * @see get_option()
+     * @see WP_Roles
      * @param string $name
      * @return static|null
      */
     public static function init(string $name)
     {
-        if (!$wp_roles = get_option('wp_user_roles')) {
+        $wp_roles = new WP_Roles();
+        if (!isset($wp_roles->roles[$name])) {
             return null;
         }
-        if (!isset($wp_roles[$name])) {
-            return null;
-        }
-
-        return new static([
-            'role' => $name,
-            'display_name' => $wp_roles[$name]['name'],
-            'capabilities' => $wp_roles[$name]['capabilities'],
+        $wp_role = $wp_roles->roles[$name];
+        $role = new static([
+            'name' => $name,
+            'display_name' => $wp_role['name'],
+            'capabilities' => $wp_role['capabilities'],
         ]);
+        $role->wp_role($wp_roles->role_objects[$name]);
+
+        return $role;
     }
 
     /**
      * Get roles
      *
-     * @see get_option()
+     * @see WP_Roles
      * @return static[]
      */
     public static function get(): array
     {
         $roles = [];
-        if (!$wp_roles = get_option('wp_user_roles')) {
-            return $roles;
-        }
-        foreach ($wp_roles as $name => $wp_role) {
-            $roles[] = new static([
-                'role' => $name,
+        $wp_roles = new WP_Roles();
+        foreach ($wp_roles->roles as $name => $wp_role) {
+             $role = new static([
+                'name' => $name,
                 'display_name' => $wp_role['name'],
                 'capabilities' => $wp_role['capabilities'],
-            ]);
+             ]);
+             $role->wp_role($wp_roles->role_objects[$name]);
+             $roles[] = $role;
         }
 
         return $roles;
@@ -219,6 +229,23 @@ class Role
     public function to_object(): object
     {
         return (object) $this->to_array();
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get (or set) WordPress role
+     *
+     * @param WP_Role $role
+     * @return WP_Role
+     */
+    protected function wp_role(WP_Role $role = null)
+    {
+        if ($role !== null) {
+            $this->wp_role = $role;
+        }
+        return $this->wp_role;
     }
 
     /************************************************************************************/
