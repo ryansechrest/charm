@@ -13,32 +13,6 @@ use Charm\WordPress\Module\PostType as WpPostType;
 class PostType extends WpPostType
 {
     /************************************************************************************/
-    // Properties
-
-    /**
-     * Post updated messages
-     *
-     * @var array
-     */
-    protected $post_updated_messages = [];
-
-    /************************************************************************************/
-    // Default constructor and load method
-
-    /**
-     * Load instance with data
-     *
-     * @param array $data
-     */
-    public function load(array $data): void
-    {
-        parent::load($data);
-        if (isset($data['post_updated_messages'])) {
-            $this->post_updated_messages = $data['post_updated_messages'];
-        }
-    }
-
-    /************************************************************************************/
     // Action methods
 
     /**
@@ -175,40 +149,6 @@ class PostType extends WpPostType
     public function autogenerate_post_updated_messages(): void
     {
         $this->fill_post_updated_messages($this->get_singular_label());
-    }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Register everything
-     */
-    public function register(): void
-    {
-        parent::register();
-        $this->register_post_updated_messages();
-
-    }
-
-    /**
-     * Register post updated messages
-     *
-     * @see add_filter()
-     */
-    public function register_post_updated_messages(): void
-    {
-        add_filter('post_updated_messages', function(array $messages) {
-            if (count($this->post_updated_messages) === 0) {
-                return $messages;
-            }
-            foreach ($this->post_updated_messages as $index => $message) {
-                if (isset($messages[$this->name][$index])) {
-                    continue;
-                }
-                $messages[$this->name][$index] = $message;
-            }
-
-            return $messages;
-        });
     }
 
     /************************************************************************************/
@@ -448,57 +388,5 @@ class PostType extends WpPostType
         }
 
         return $formats[$index];
-    }
-
-    /************************************************************************************/
-    // Cast methods
-
-    /**
-     * Cast to array
-     *
-     * @return array
-     */
-    public function to_array(): array
-    {
-        $data = parent::to_array();
-        if (count($this->post_updated_messages) > 0) {
-            $data['post_updated_messages'] = $this->post_updated_messages;
-        }
-
-        return $data;
-    }
-
-    /************************************************************************************/
-    // Get and set methods
-
-    /**
-     * Get post updated messages
-     *
-     * @return array
-     */
-    public function get_post_updated_messages(): array
-    {
-        return $this->post_updated_messages;
-    }
-
-    /**
-     * Set post updated messages
-     *
-     * @param array $post_updated_messages
-     */
-    public function set_post_updated_messages(array $post_updated_messages)
-    {
-        $this->post_updated_messages = $post_updated_messages;
-    }
-
-    /**
-     * Add post updated message
-     *
-     * @param int $key
-     * @param string $message
-     */
-    public function add_post_updated_message(int $key, string $message)
-    {
-        $this->post_updated_messages[$key] = $message;
     }
 }
