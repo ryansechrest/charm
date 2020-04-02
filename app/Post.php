@@ -55,6 +55,13 @@ class Post extends WpPost
      */
     const DATETIME = 'Charm\DataType\DateTime';
 
+    /**
+     * PostType class
+     *
+     * @var string
+     */
+    const POSTTYPE = 'Charm\Module\PostType';
+
     /************************************************************************************/
     // Properties
 
@@ -115,6 +122,15 @@ class Post extends WpPost
      * @var DateTime
      */
     protected $post_modified_gmt_obj = null;
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Post type object
+     *
+     * @var PostType
+     */
+    protected $post_type_obj = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -260,9 +276,15 @@ class Post extends WpPost
      *
      * @return PostType
      */
-    public static function post_type(): PostType
+    public function post_type(): PostType
     {
-        return PostType::init(static::POST_TYPE);
+        if ($this->post_type_obj) {
+            return $this->post_type_obj;
+        }
+
+        return $this->post_modified_gmt_obj = call_user_func(
+            static::POSTTYPE . '::init', static::POST_TYPE
+        );
     }
 
     /************************************************************************************/
