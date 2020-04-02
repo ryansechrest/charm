@@ -329,6 +329,13 @@ class PostType
      */
     protected $delete_with_user = null;
 
+    /**
+     * Post updated messages
+     *
+     * @var array
+     */
+    protected $post_updated_messages = [];
+
     /*----------------------------------------------------------------------------------*/
 
     /**
@@ -445,6 +452,9 @@ class PostType
         if (isset($data['delete_with_user'])) {
             $this->delete_with_user = $data['delete_with_user'];
         }
+        if (isset($data['post_updated_messages'])) {
+            $this->post_updated_messages = $data['post_updated_messages'];
+        }
     }
 
     /************************************************************************************/
@@ -473,7 +483,7 @@ class PostType
     }
 
     /************************************************************************************/
-    // Private load methods
+    // Protected load methods
 
     /**
      * Load instance from name
@@ -481,7 +491,7 @@ class PostType
      * @see get_post_type_object()
      * @param string $name
      */
-    private function load_from_name(string $name): void
+    protected function load_from_name(string $name): void
     {
         if (!$wp_post_type = get_post_type_object($name)) {
             return;
@@ -493,9 +503,10 @@ class PostType
      * Load instance from WP_Post_Type object
      *
      * @see get_all_post_type_supports()
+     * @see get_object_taxonomies()
      * @param WP_Post_Type $post_type
      */
-    private function load_from_post_type(WP_Post_Type $post_type): void
+    protected function load_from_post_type(WP_Post_Type $post_type): void
     {
         $this->name = $post_type->name;
         $this->label = $post_type->label;
@@ -519,19 +530,23 @@ class PostType
         $this->map_meta_cap = $post_type->map_meta_cap;
         $this->supports = array_keys(get_all_post_type_supports($post_type->name));
         $this->register_meta_box_cb = $post_type->register_meta_box_cb;
-        $this->taxonomies = $post_type->taxonomies;
+        $this->taxonomies = get_object_taxonomies($post_type->name);
         $this->has_archive = $post_type->has_archive;
         $this->rewrite = $post_type->rewrite;
         $this->query_var = $post_type->query_var;
         $this->can_export = $post_type->can_export;
         $this->delete_with_user = $post_type->delete_with_user;
+        // Property may only exist if Charm added it, so we need to check
+        if (property_exists($post_type, 'post_updated_messages')) {
+            $this->post_updated_messages = $post_type->post_updated_messages;
+        }
         $this->wp_post_type = $post_type;
     }
 
     /**
      * Reload instance from database
      */
-    private function reload(): void
+    protected function reload(): void
     {
         if (!$this->name) {
             return;
@@ -551,6 +566,7 @@ class PostType
             return;
         }
         $this->register_post_type();
+        $this->register_post_updated_messages();
         $this->reload();
     }
 
@@ -564,6 +580,28 @@ class PostType
     {
         add_action('init', function() {
             register_post_type($this->name, $this->to_array());
+        });
+    }
+
+    /**
+     * Register post updated messages
+     *
+     * @see add_filter()
+     */
+    public function register_post_updated_messages(): void
+    {
+        add_filter('post_updated_messages', function(array $messages) {
+            if (count($this->post_updated_messages) === 0) {
+                return $messages;
+            }
+            foreach ($this->post_updated_messages as $index => $message) {
+                if (isset($messages[$this->name][$index])) {
+                    continue;
+                }
+                $messages[$this->name][$index] = $message;
+            }
+
+            return $messages;
         });
     }
 
@@ -661,6 +699,9 @@ class PostType
         }
         if ($this->delete_with_user !== null) {
             $data['delete_with_user'] = $this->delete_with_user;
+        }
+        if (count($this->post_updated_messages) > 0) {
+            $data['post_updated_messages'] = $this->post_updated_messages;
         }
 
         return $data;
@@ -1389,5 +1430,38 @@ class PostType
     public function set_delete_with_user($delete_with_user): void
     {
         $this->delete_with_user = $delete_with_user;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get post updated messages
+     *
+     * @return array
+     */
+    public function get_post_updated_messages(): array
+    {
+        return $this->post_updated_messages;
+    }
+
+    /**
+     * Set post updated messages
+     *
+     * @param array $post_updated_messages
+     */
+    public function set_post_updated_messages(array $post_updated_messages)
+    {
+        $this->post_updated_messages = $post_updated_messages;
+    }
+
+    /**
+     * Add post updated message
+     *
+     * @param int $key
+     * @param string $message
+     */
+    public function add_post_updated_message(int $key, string $message)
+    {
+        $this->post_updated_messages[$key] = $message;
     }
 }
