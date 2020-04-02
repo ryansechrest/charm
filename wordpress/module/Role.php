@@ -128,7 +128,7 @@ class Role
     }
 
     /************************************************************************************/
-    // Private load methods
+    // Protected load methods
 
     /**
      * Load instance from name
@@ -136,7 +136,7 @@ class Role
      * @see get_role()
      * @param string $name
      */
-    private function load_from_name(string $name): void
+    protected function load_from_name(string $name): void
     {
         if (!$wp_role = get_role($name)) {
             return;
@@ -151,7 +151,7 @@ class Role
      * @see WP_Roles
      * @param WP_Role $role
      */
-    private function load_from_role(WP_Role $role): void
+    protected function load_from_role(WP_Role $role): void
     {
         $roles = new WP_Roles();
         $this->name = $role->name;
@@ -163,7 +163,7 @@ class Role
     /**
      * Reload instance from database
      */
-    private function reload(): void
+    protected function reload(): void
     {
         if (!$this->name) {
             return;

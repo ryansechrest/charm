@@ -406,7 +406,7 @@ class Taxonomy
     }
 
     /************************************************************************************/
-    // Private load methods
+    // Protected load methods
 
     /**
      * Load instance from name
@@ -414,7 +414,7 @@ class Taxonomy
      * @see get_taxonomy()
      * @param string $name
      */
-    private function load_from_name(string $name): void
+    protected function load_from_name(string $name): void
     {
         if (!$wp_taxonomy = get_taxonomy($name)) {
             return;
@@ -428,7 +428,7 @@ class Taxonomy
      * @see WP_Taxonomy
      * @param WP_Taxonomy $taxonomy
      */
-    private function load_from_taxonomy(WP_Taxonomy $taxonomy): void
+    protected function load_from_taxonomy(WP_Taxonomy $taxonomy): void
     {
         $this->name = $taxonomy->name;
         $this->object_type = $taxonomy->object_type;
@@ -459,7 +459,7 @@ class Taxonomy
     /**
      * Reload instance from database
      */
-    private function reload(): void
+    protected function reload(): void
     {
         if (!$this->name) {
             return;
