@@ -2,7 +2,7 @@
 
 namespace Charm\App;
 
-use Charm\App\DataType\DateTime;
+use Charm\DataType\DateTime;
 use Charm\Feature\Meta as MetaFeature;
 use Charm\Module\Role as Role;
 use Charm\WordPress\User as WpUser;
@@ -32,7 +32,7 @@ class User extends WpUser
      *
      * @var string
      */
-    const DATETIME = 'Charm\App\DataType\DateTime';
+    const DATETIME = 'Charm\DataType\DateTime';
 
     /**
      * Role class
@@ -130,6 +130,32 @@ class User extends WpUser
         $this->save_metas();
 
         return true;
+    }
+
+    /**
+     * Can user edit post?
+     *
+     * @param Post $post
+     * @return bool
+     */
+    public function can_edit(Post $post)
+    {
+        $capability = 'edit_' . $post->get_post_type();
+        $id = $post->get_id();
+
+        return $this->can($capability, $id);
+    }
+
+    /**
+     * Can user perform capability on post?
+     *
+     * @param $capability
+     * @param mixed ...$args
+     * @return bool
+     */
+    public function can($capability, ...$args)
+    {
+        return $this->wp_user()->has_cap($capability, ...$args);
     }
 
     /************************************************************************************/
