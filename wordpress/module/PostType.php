@@ -232,7 +232,7 @@ class PostType
      * Core feature(s) the post type supports. Serves as an alias for calling
      * add_post_type_support() directly. Core features include 'title', 'editor',
      * 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'page-attributes',
-     * thumbnail', 'custom-fields', and 'post-formats'. Additionally, the 'revisions'
+     * 'thumbnail', 'custom-fields', and 'post-formats'. Additionally, the 'revisions'
      * feature dictates whether the post type will store revisions, and the 'comments'
      * feature dictates whether the comments count will show on the edit screen.
      * A feature can also be specified as an array of arguments to provide additional
@@ -492,6 +492,7 @@ class PostType
     /**
      * Load instance from WP_Post_Type object
      *
+     * @see get_all_post_type_supports()
      * @param WP_Post_Type $post_type
      */
     private function load_from_post_type(WP_Post_Type $post_type): void
@@ -516,7 +517,7 @@ class PostType
         $this->capability_type = $post_type->capability_type;
         $this->capabilities = (array) $post_type->cap;
         $this->map_meta_cap = $post_type->map_meta_cap;
-        $this->supports = $post_type->supports;
+        $this->supports = array_keys(get_all_post_type_supports($post_type->name));
         $this->register_meta_box_cb = $post_type->register_meta_box_cb;
         $this->taxonomies = $post_type->taxonomies;
         $this->has_archive = $post_type->has_archive;
