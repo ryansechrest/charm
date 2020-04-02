@@ -170,7 +170,7 @@ class Meta
     }
 
     /************************************************************************************/
-    // Private load methods
+    // Protected load methods
 
     /**
      * Load all meta
@@ -180,7 +180,7 @@ class Meta
      * @param array $meta_values
      * @return array
      */
-    private static function load_all(
+    protected static function load_all(
         string $meta_type, int $object_id, array $meta_values
     ): array {
         $all = [];
@@ -211,7 +211,7 @@ class Meta
      * @param array $meta_values
      * @return Meta[]
      */
-    private static function load_multi(
+    protected static function load_multi(
         string $meta_type, int $object_id, string $meta_key, array $meta_values
     ): array {
         $multi = [];
@@ -233,7 +233,7 @@ class Meta
      * @param mixed $meta_value
      * @return static
      */
-    private static function load_single(
+    protected static function load_single(
         string $meta_type, int $object_id, string $meta_key, $meta_value
     ) {
         $data = [

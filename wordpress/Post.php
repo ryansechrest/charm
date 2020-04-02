@@ -331,7 +331,7 @@ class Post
     }
 
     /************************************************************************************/
-    // Private load methods
+    // Protected load methods
 
     /**
      * Load instance from ID
@@ -339,7 +339,7 @@ class Post
      * @see get_post()
      * @param int $id
      */
-    private function load_from_id(int $id): void
+    protected function load_from_id(int $id): void
     {
         if (!$post = get_post($id)) {
             return;
@@ -353,7 +353,7 @@ class Post
      * @see get_page_by_path()
      * @param string $path
      */
-    private function load_from_path(string $path): void
+    protected function load_from_path(string $path): void
     {
         if (!$post = get_page_by_path($path)) {
             return;
@@ -366,7 +366,7 @@ class Post
      *
      * @see get_post()
      */
-    private function load_from_global_post(): void
+    protected function load_from_global_post(): void
     {
         if (!$post = get_post()) {
             return;
@@ -380,7 +380,7 @@ class Post
      * @see WP_Post
      * @param WP_Post $post
      */
-    private function load_from_post(WP_Post $post): void
+    protected function load_from_post(WP_Post $post): void
     {
         $this->id = (int) $post->ID;
         $this->post_author = (int) $post->post_author;
@@ -411,7 +411,7 @@ class Post
     /**
      * Reload instance from database
      */
-    private function reload(): void
+    protected function reload(): void
     {
         if (!$this->id) {
             return;

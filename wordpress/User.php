@@ -181,7 +181,7 @@ class User
     }
 
     /************************************************************************************/
-    // Private load methods
+    // Protected load methods
 
     /**
      * Load instance from ID
@@ -189,7 +189,7 @@ class User
      * @see get_user_by()
      * @param int $id
      */
-    private function load_from_id(int $id): void
+    protected function load_from_id(int $id): void
     {
         if (!$user = get_user_by('id', $id)) {
             return;
@@ -203,7 +203,7 @@ class User
      * @see get_user_by()
      * @param string $login
      */
-    private function load_from_login(string $login): void
+    protected function load_from_login(string $login): void
     {
         if (!$user = get_user_by('login', $login)) {
             return;
@@ -217,7 +217,7 @@ class User
      * @see get_user_by()
      * @param string $email
      */
-    private function load_from_email(string $email): void
+    protected function load_from_email(string $email): void
     {
         if (!$user = get_user_by('email', $email)) {
             return;
@@ -230,7 +230,7 @@ class User
      *
      * @see wp_get_current_user()
      */
-    private function load_from_global_user(): void
+    protected function load_from_global_user(): void
     {
         if (!$user = wp_get_current_user()) {
             return;
@@ -244,7 +244,7 @@ class User
      * @see WP_User
      * @param WP_User $user
      */
-    private function load_from_user(WP_User $user): void
+    protected function load_from_user(WP_User $user): void
     {
         $this->id = (int) $user->data->ID;
         $this->user_login = $user->data->user_login;
@@ -262,7 +262,7 @@ class User
     /**
      * Reload instance from database
      */
-    private function reload(): void
+    protected function reload(): void
     {
         if (!$this->id) {
             return;
