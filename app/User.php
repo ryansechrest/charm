@@ -133,6 +133,18 @@ class User extends WpUser
     }
 
     /**
+     * Can user read post?
+     *
+     * @param Post $post
+     * @param string $meta_key
+     * @return bool
+     */
+    public function can_read(Post $post, string $meta_key = '')
+    {
+        return $this->can_do('read', $post);
+    }
+
+    /**
      * Can user edit post?
      *
      * @param Post $post
@@ -140,10 +152,32 @@ class User extends WpUser
      */
     public function can_edit(Post $post)
     {
-        $capability = 'edit_' . $post->get_post_type();
-        $id = $post->get_id();
+        return $this->can_do('edit', $post);
+    }
 
-        return $this->can($capability, $id);
+    /**
+     * Can user delete post?
+     *
+     * @param Post $post
+     * @return bool
+     */
+    public function can_delete(Post $post)
+    {
+        return $this->can_do('delete', $post);
+    }
+
+    /**
+     * Can user do action?
+     *
+     * @param string $action
+     * @param Post $post
+     * @return bool
+     */
+    public function can_do(string $action, Post $post)
+    {
+        $capability = $action . '_' . $post->get_post_type();
+
+        return $this->can($capability, $post->get_id());
     }
 
     /**
