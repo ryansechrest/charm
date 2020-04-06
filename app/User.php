@@ -136,10 +136,9 @@ class User extends WpUser
      * Can user read post?
      *
      * @param Post $post
-     * @param string $meta_key
      * @return bool
      */
-    public function can_read(Post $post, string $meta_key = '')
+    public function can_read(Post $post)
     {
         return $this->can_do('read', $post);
     }
