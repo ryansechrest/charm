@@ -24,7 +24,7 @@ class DateTime extends DT
      * @param string $timezone
      * @return DateTime
      */
-    public static function init(string $datetime, string $timezone = 'UTC'): DateTime
+    public static function init(string $datetime = 'now', string $timezone = 'UTC'): DateTime
     {
         try {
             $datetime = new DateTime($datetime, new DTZ($timezone));
@@ -46,5 +46,19 @@ class DateTime extends DT
     public function format_db(): string
     {
         return $this->format('Y-m-d H:i:s');
+    }
+
+    /************************************************************************************/
+    // Chainable set methods
+
+    /**
+     * Set timezone
+     *
+     * @param string $timezone
+     * @return DateTime
+     */
+    public function timezone(string $timezone)
+    {
+        return $this->setTimezone(new DTZ($timezone));
     }
 }
