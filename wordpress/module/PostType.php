@@ -467,7 +467,7 @@ class PostType
      * @param string|WP_Post_Type $key
      * @return static|null
      */
-    public static function init(string $key)
+    public static function init($key)
     {
         $post_type = new static();
         if (is_string($key)) {
