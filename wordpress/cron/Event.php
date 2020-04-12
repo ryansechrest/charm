@@ -25,7 +25,7 @@ class Event
      *
      * @var int
      */
-    protected $timestamp = 0;
+    protected $timestamp = null;
 
     /**
      * Schedule
@@ -59,7 +59,7 @@ class Event
     // Default constructor and load method
 
     /**
-     * CronSchedule constructor
+     * Event constructor
      *
      * @param array $data
      */
@@ -104,30 +104,24 @@ class Event
     /**
      * Initialize cron event
      *
-     * @see wp_get_scheduled_event()
-     * @param string $hook
+     * @param object|string $key
      * @param array $args
      * @param int $timestamp
      * @return static|null
      */
-    public static function init(string $hook, array $args = [], $timestamp = null)
+    public static function init($key, array $args = [], int $timestamp = null)
     {
-        $wp_event = wp_get_scheduled_event($hook, $args, $timestamp);
-        if ($wp_event === false) {
+        $event = new static();
+        if (is_string($key)) {
+            $event->load_from_params($key, $args, $timestamp);
+        } elseif (is_object($key)) {
+            $event->load_from_event($key);
+        }
+        if ($event->get_hook() === '') {
             return null;
         }
-        $data = [
-            'hook' => $wp_event->hook,
-            'timestamp' => $wp_event->timestamp,
-            'schedule' => $wp_event->schedule,
-            'args' => $wp_event->args,
-            'key' => md5(serialize($wp_event->args)),
-        ];
-        if (property_exists($wp_event, 'interval')) {
-            $data['interval'] = $wp_event->interval;
-        }
 
-        return new static($data);
+        return $event;
     }
 
     /**
@@ -143,15 +137,17 @@ class Event
         foreach ($timestamps as $timestamp => $wp_crons) {
             foreach ($wp_crons as $hook => $wp_events) {
                 foreach ($wp_events as $key => $wp_event) {
-                    $event = new static([
+                    $data = [
                         'hook' => $hook,
                         'timestamp' => $timestamp,
                         'schedule' => $wp_event['schedule'],
-                        'interval' => $wp_event['interval'],
                         'args' => $wp_event['args'],
                         'key' => $key,
-                    ]);
-                    $events[] = $event;
+                    ];
+                    if (isset($wp_event['interval'])) {
+                        $data['interval'] = $wp_event['interval'];
+                    }
+                    $events[] = new static($data);
                 }
             }
         }
@@ -160,26 +156,92 @@ class Event
     }
 
     /************************************************************************************/
+    // Protected load methods
+
+    /**
+     * Load from params
+     *
+     * @see wp_get_scheduled_event()
+     * @param string $hook
+     * @param array $args
+     * @param int $timestamp
+     */
+    protected function load_from_params(string $hook, array $args = [], $timestamp = null): void
+    {
+        if (!$wp_event = wp_get_scheduled_event($hook, $args, $timestamp)) {
+            return;
+        }
+        $this->load_from_event($wp_event);
+    }
+
+    /**
+     * Load instance from event object
+     *
+     * @param object $event
+     */
+    protected function load_from_event(object $event)
+    {
+        $this->hook = $event->hook;
+        $this->timestamp = $event->timestamp;
+        $this->schedule = $event->schedule;
+        $this->args = $event->args;
+        $this->key = md5(serialize($event->args));
+        if (property_exists($event, 'interval')) {
+            $this->interval = $event->interval;
+        }
+    }
+
+    /**
+     * Reload instance from database
+     */
+    protected function reload()
+    {
+        if (!$this->hook) {
+            return;
+        }
+        $this->load_from_params($this->hook, $this->args, $this->timestamp);
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
-     * Schedule cron event
+     * Schedule cron event (if not already scheduled)
      *
+     * @see wp_next_scheduled()
      * @see wp_schedule_event()
      * @see wp_schedule_single_event()
      * @return bool
      */
     public function schedule(): bool
     {
-        if ($this->schedule === '') {
-            return wp_schedule_single_event(
-                $this->timestamp, $this->hook, $this->args
-            );
+        if (wp_next_scheduled($this->hook, $this->args) !== false) {
+            return false;
         }
 
-        return wp_schedule_event(
-            $this->timestamp, $this->schedule, $this->hook, $this->args
-        );
+        return $this->force_schedule();
+    }
+    /**
+     * Force schedule cron event
+     *
+     * @see wp_schedule_event()
+     * @see wp_schedule_single_event()
+     * @return bool
+     */
+    public function force_schedule(): bool
+    {
+        if ($this->schedule === '') {
+            $result = wp_schedule_single_event(
+                $this->timestamp, $this->hook, $this->args
+            );
+        } else {
+            $result = wp_schedule_event(
+                $this->timestamp, $this->schedule, $this->hook, $this->args
+            );
+        }
+        $this->reload();
+
+        return $result;
     }
 
     /**
@@ -190,9 +252,12 @@ class Event
      */
     public function reschedule(): bool
     {
-        return wp_reschedule_event(
+        $result = wp_reschedule_event(
             $this->timestamp, $this->schedule, $this->hook, $this->args
         );
+        $this->reload();
+
+        return $result;
     }
 
     /**
@@ -333,7 +398,7 @@ class Event
 
     /**
      * Set key
-     * 
+     *
      * @param string $key
      */
     public function set_key(string $key): void
