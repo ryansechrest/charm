@@ -38,7 +38,7 @@ class Schedule
     // Default constructor and load method
 
     /**
-     * CronSchedule constructor
+     * Schedule constructor
      *
      * @param array $data
      */
@@ -110,6 +110,9 @@ class Schedule
             ]);
             $schedules[] = $schedule;
         }
+        usort($schedules, function(Schedule $a, Schedule $b) {
+            return $a->get_interval() > $b->get_interval();
+        });
 
         return $schedules;
     }
