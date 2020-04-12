@@ -6,6 +6,10 @@ if (!defined('ABSPATH')) {
     die('Whatcha doin? Ƹ̵̡Ӝ̵̨̄Ʒ');
 }
 
+// WordPress Cron
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Event.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Schedule.php';
+
 // WordPress Modules
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Role.php';
@@ -24,6 +28,11 @@ require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 // Features
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 
+// Cron
+require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
+require_once WPMU_PLUGIN_DIR . '/charm/cron/Schedule.php';
+require_once WPMU_PLUGIN_DIR . '/charm/cron/Cron.php';
+
 // Modules
 require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
@@ -41,3 +50,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/app/UserMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/app/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/app/Page.php';
 require_once WPMU_PLUGIN_DIR . '/charm/app/User.php';
+
+/****************************************************************************************/
+
+require_once WPMU_PLUGIN_DIR . '/charm/Charm.php';
