@@ -20,3 +20,17 @@ if (!defined('ABSPATH')) {
  */
 
 require_once WPMU_PLUGIN_DIR . '/charm/autoloader.php';
+
+/****************************************************************************************/
+
+Charm::init([
+
+    /**
+     * View cron events and schedules in WordPress admin under Tools > Cron Viewer
+     *
+     * true  | Enable cron viewer
+     * false | Disable cron viewer (default)
+     */
+    'cron_viewer' => false,
+
+]);
