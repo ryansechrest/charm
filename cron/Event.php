@@ -63,7 +63,11 @@ class Event extends WpEvent
             $format = static::FORMAT;
         }
         $now = DateTime::init('now', $timezone);
-        $output = '<p>' . _x('Current date and time:', 'Tools: Cron Viewer', 'charm') . ' <b>' . $now->format($format) . '</b> (' . $now->getTimestamp() . ')</p>';
+        $output = '<p>' . sprintf(
+            _x('It\'s %s in %s timezone. You can change your date/time format and timezone in the <a href="' . admin_url('options-general.php') . '">general settings</a>.', 'Tools: Cron Viewer', 'charm'),
+            '<b>' . $now->format($format) . '</b> (' . $now->getTimestamp() . ')',
+            '<b>' . $timezone . '</b>'
+        ) . '</p>';
         $output .= '<table>';
         $output .= '<thead>';
         $output .= '<tr>';
