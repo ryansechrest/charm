@@ -35,6 +35,40 @@ class DateTime extends DT
         return $datetime;
     }
 
+    /**
+     * Get duration between start and end
+     *
+     * @param int $start
+     * @param int $end
+     * @return string
+     */
+    public static function duration(int $start, int $end): string
+    {
+        $duration = [];
+        try {
+            $start_dt = new DateTime("@" . $start);
+            $end_dt = new DateTime("@" . $end);
+            $diff = $start_dt->diff($end_dt);
+
+            if ($diff->format('%d') > 0) {
+                $duration[] = $diff->format('%dd');
+            }
+            if ($diff->format('%h') > 0) {
+                $duration[] = $diff->format('%hh');
+            }
+            if ($diff->format('%i') > 0) {
+                $duration[] = $diff->format('%im');
+            }
+            if ($diff->format('%s') > 0) {
+                $duration[] = $diff->format('%ss');
+            }
+        } catch (Exception $e) {
+            // Quiet please.
+        }
+
+        return implode(' ', $duration);
+    }
+
     /************************************************************************************/
     // Format methods
 
@@ -46,6 +80,18 @@ class DateTime extends DT
     public function format_db(): string
     {
         return $this->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Format to display time elapsed
+     *
+     * @return string
+     */
+    public function elapsed(): string
+    {
+        $format = 's';
+
+        return $this->format($format);
     }
 
     /************************************************************************************/
