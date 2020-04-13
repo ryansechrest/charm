@@ -56,7 +56,12 @@ class Charm
     /************************************************************************************/
     // Instantiation methods
 
-    public static function init($config)
+    /**
+     * Initialize Charm
+     *
+     * @param array $config
+     */
+    public static function init(array $config)
     {
         $charm = new static($config);
         $charm->register();
@@ -65,12 +70,18 @@ class Charm
     /************************************************************************************/
     // Action methods
 
-    public function register()
+    /**
+     * Register everything
+     */
+    public function register(): void
     {
         $this->register_tools();
     }
 
-    public function register_tools()
+    /**
+     * Register tools
+     */
+    public function register_tools(): void
     {
         $tools = [
             'cron_viewer'
@@ -87,31 +98,52 @@ class Charm
         }
     }
 
-    public function register_cron_viewer()
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Register cron viewer
+     */
+    public function register_cron_viewer(): void
     {
-        add_action('admin_menu', function() {
-            add_management_page(
-                'Cron Viewer',
-                'Cron Viewer',
-                'manage_options',
-                'charm-cron-viewer',
-                [$this, 'render_cron_viewer_page']
-            );
-        });
+        add_action('admin_menu', [$this, 'add_cron_viewer_page']);
     }
 
-    public function render_cron_viewer_page()
+    /**
+     * Add cron viewer page
+     */
+    public function add_cron_viewer_page(): void
+    {
+        add_management_page(
+            'Cron Viewer',
+            'Cron Viewer',
+            'manage_options',
+            'charm-cron-viewer',
+            [$this, 'render_cron_viewer_page']
+        );
+    }
+
+    /**
+     * Render cron viewer page
+     */
+    public function render_cron_viewer_page(): void
     {
         $output = '<div class="wrap">';
-        $output .= '<h1>' . esc_html(get_admin_page_title()) . ' <small>by Charm</small></h1>';
+        $output .= '<h1>' . esc_html(get_admin_page_title()) . ' <small>by <a href="https://wpcharm.com/" target="_blank">Charm</a></small></h1>';
         $output .= Cron::to_html();
+        $output .= '</div>';
         echo $output;
     }
 
     /************************************************************************************/
     // Check methods
 
-    public function is_enabled($key)
+    /**
+     * Check if feature is enabled
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function is_enabled(string $key): bool
     {
         if (!isset($this->config[$key])) {
             return false;
