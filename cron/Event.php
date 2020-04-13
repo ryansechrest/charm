@@ -81,6 +81,13 @@ class Event extends WpEvent
      */
     protected $run_in = '';
 
+    /**
+     * Run every
+     *
+     * @var string
+     */
+    protected $run_every = '';
+
     /*----------------------------------------------------------------------------------*/
 
     /**
@@ -108,7 +115,7 @@ class Event extends WpEvent
         $output .= '<th>' . _x('Run In', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '<th>' . _x('Timestamp', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '<th>' . _x('Schedule', 'Tools: Cron Viewer', 'charm') .'</th>';
-        $output .= '<th>' . _x('Recurrence', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Run Every', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Args', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Key', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '</tr>';
@@ -121,12 +128,12 @@ class Event extends WpEvent
             $output .= '<td>' . $event->get_run_in() . '</td>';
             $output .= '<td>' . $event->get_timestamp() . '</td>';
             $output .= '<td>' . $event->get_schedule() . '</td>';
-            $output .= '<td>' . $event->get_recurrence() . '</td>';
+            $output .= '<td>' . $event->get_run_every() . '</td>';
             $output .= '<td>';
             if (count($event->get_args()) !== 0) {
                 $output .= '<pre>' . print_r($event->get_args(), true) . '</pre>';
             } else {
-                $output .= '';
+                $output .= '&mdash;';
             }
             $output .= '</td>';
             $output .= '<td>' . $event->get_key() . '</td>';
@@ -134,7 +141,7 @@ class Event extends WpEvent
         }
         $output .= '</tbody>';
         $output .= '</table>';
-        $output .= '<p>' . _x('<b>Color Legend</b> | <span class="green"><b>Green Time</b></span> → Hours until event runs. | <span class="red"><b>Red Time</b></span> → Hours event is late.', 'Tools: Cron Viewer', 'charm') . '</p>';
+        $output .= '<p>' . _x('<b>Color Legend</b> | <span class="green"><b>Green Time</b></span> → Event is on schedule. | <span class="red"><b>Red Time</b></span> → Event is late.', 'Tools: Cron Viewer', 'charm') . '</p>';
 
         return $output;
     }
@@ -239,7 +246,9 @@ class Event extends WpEvent
             return $this->run_on;
         }
 
-        return $this->run_on = $this->timestamp()->format($this->get_date_time_format());
+        return $this->run_on = $this->timestamp()
+            ->timezone($this->get_timezone())
+            ->format($this->get_date_time_format());
     }
 
     /**
@@ -247,13 +256,13 @@ class Event extends WpEvent
      *
      * @return string
      */
-    public function get_run_in()
+    public function get_run_in(): string
     {
         if ($this->run_in !== '') {
             return $this->run_in;
         }
         $now = DateTime::init();
-        $timestamp = $this->timestamp()->timezone($this->get_timezone());
+        $timestamp = $this->timestamp();
         $difference = $timestamp->diff($now);
         $color = 'green';
         if ($difference->invert === 0) {
@@ -268,12 +277,16 @@ class Event extends WpEvent
     }
 
     /**
-     * Get recurrence
+     * Get run every
      *
      * @return string
      */
-    public function get_recurrence()
+    public function get_run_every()
     {
-        return DateTime::duration(0, $this->get_interval());
+        if ($this->run_every !== '') {
+            return $this->run_every;
+        }
+
+        return $this->run_every = DateTime::duration(0, $this->get_interval());
     }
 }
