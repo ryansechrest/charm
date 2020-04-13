@@ -128,6 +128,9 @@ class CLI
     private function update(): bool
     {
         $this->log_subheader('Update');
+        if (!$this->run_git_pull()) {
+            return false;
+        }
         if (!$this->copy_plugin_file()) {
             return false;
         }
@@ -163,6 +166,33 @@ class CLI
     }
 
     /************************************************************************************/
+
+    /**
+     * Run git pull
+     *
+     * @return bool
+     */
+    private function run_git_pull(): bool
+    {
+        $this->log_action(
+            'Move into ' . $this->mark('wp-content/mu-plugins/charm') . ' directory'
+        );
+        if (!chdir(dirname(__FILE__))) {
+            $this->log_error('Directory does not exist.');
+            return false;
+        }
+        $this->log_action(
+            'Run ' . $this->mark('git pull') . ' to get latest version'
+        );
+        $result = shell_exec('git pull');
+        if (strpos($result, 'Already up to date.') !== false) {
+            $this->log_info('Charm is up to date.');
+            return false;
+        }
+        $this->log_success('Charm updated.');
+
+        return true;
+    }
 
     /**
      * Copy plugin file
@@ -289,6 +319,17 @@ class CLI
     private function log_action(string $text): void
     {
         $this->log('🔸️️️️ ' . $text . '...');
+    }
+
+    /**
+     * Log line of info
+     *
+     * @param string $text
+     */
+    private function log_info(string $text): void
+    {
+        $this->log('   ' . $this->yellow('Info: ' . $text));
+        $this->log();
     }
 
     /**
