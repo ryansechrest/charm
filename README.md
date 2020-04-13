@@ -28,15 +28,13 @@ Your `mu-plugins` directory should now look something like this:
 |-- mu-plugins
 |   |-- charm
 |   |   |-- app
-|   |   |-- data-type
-|   |   |-- feature
-|   |   |-- module
+|   |   |-- ...
 |   |   |-- wordpress
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
+|   |   |-- cli.php
 |   |   |-- plugin.php
 |   |   |-- README.md
-|   |   |-- run.php
 ```
 
 ### 3. Activate Charm
@@ -53,15 +51,13 @@ Your `mu-plugins` directory should now look something like this:
 |-- mu-plugins
 |   |-- charm
 |   |   |-- app
-|   |   |-- data-type
-|   |   |-- feature
-|   |   |-- module
+|   |   |-- ...
 |   |   |-- wordpress
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
+|   |   |-- cli.php
 |   |   |-- plugin.php
 |   |   |-- README.md
-|   |   |-- run.php
 |   |-- _charm.php
 ```
 
@@ -72,6 +68,26 @@ This allows you to use Charm in your plugins, themes, or even other mu-plugins.
 You're all set from here!
 
 ---
+
+### Configure Charm
+
+Charm offers features that can be enabled by editing your `_charm.php` file:
+
+```php
+Charm::init([
+
+    /**
+     * View cron events and schedules in WordPress admin
+     * 
+     * Navigate to: Tools > Cron Viewer
+     *
+     * true  | Enable cron viewer
+     * false | Disable cron viewer (default)
+     */
+    'cron_viewer' => false,
+
+]);
+```
 
 ### Update Charm
 
