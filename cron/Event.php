@@ -26,16 +26,62 @@ class Event extends WpEvent
     const TIMEZONE = '';
 
     /**
-     * DateTime format
+     * Date format
      *
-     * Example: n/j/Y g:i:sa
+     * Example: n/j/Y
      *
      * @var string
      */
-    const FORMAT = '';
+    const DATE_FORMAT = '';
+
+    /**
+     * Time format
+     *
+     * Example: g:i:sa
+     *
+     * @var string
+     */
+    const TIME_FORMAT = '';
 
     /************************************************************************************/
     // Properties
+
+    /**
+     * Timezone
+     *
+     * @var string
+     */
+    protected $timezone = '';
+
+    /**
+     * Date format
+     *
+     * @var string
+     */
+    protected $date_format = '';
+
+    /**
+     * Time format
+     *
+     * @var string
+     */
+    protected $time_format = '';
+
+    /**
+     * Run on
+     *
+     * @var string
+     */
+    protected $run_on = '';
+
+    /**
+     * Run in
+     *
+     * @var string
+     */
+    protected $run_in = '';
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Timestamp object
@@ -54,21 +100,7 @@ class Event extends WpEvent
      */
     public static function to_html(): string
     {
-        $timezone = get_option('timezone_string');
-        if (static::TIMEZONE !== '') {
-            $timezone = static::TIMEZONE;
-        }
-        $format = get_option('date_format') . ' ' . get_option('time_format');
-        if (static::FORMAT !== '') {
-            $format = static::FORMAT;
-        }
-        $now = DateTime::init('now', $timezone);
-        $output = '<p>' . sprintf(
-            _x('It\'s %s in %s timezone. You can change your date/time format and timezone in the <a href="' . admin_url('options-general.php') . '">general settings</a>.', 'Tools: Cron Viewer', 'charm'),
-            '<b>' . $now->format($format) . '</b> (' . $now->getTimestamp() . ')',
-            '<b>' . $timezone . '</b>'
-        ) . '</p>';
-        $output .= '<table>';
+        $output = '<table>';
         $output .= '<thead>';
         $output .= '<tr>';
         $output .= '<th>' . _x('Hook', 'Tools: Cron Viewer', 'charm') .'</th>';
@@ -76,30 +108,20 @@ class Event extends WpEvent
         $output .= '<th>' . _x('Run In', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '<th>' . _x('Timestamp', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '<th>' . _x('Schedule', 'Tools: Cron Viewer', 'charm') .'</th>';
-        $output .= '<th>' . _x('Interval', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Recurrence', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Args', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Key', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '</tr>';
         $output .= '</thead>';
         $output .= '<tbody>';
         foreach (Event::get() as $event) {
-            $timestamp = $event->timestamp()->timezone($timezone);
-            $difference = $timestamp->diff($now);
             $output .= '<tr>';
             $output .= '<td>' . $event->get_hook() . '</td>';
-            $output .= '<td>' . $timestamp->format($format) . '</td>';
-            $color = 'green';
-            if ($difference->invert === 0) {
-                $color = 'red';
-            }
-            $run_in_format = '%hh %im %ss';
-            if ($difference->days > 0) {
-                $run_in_format = '%dd ' . $run_in_format;
-            }
-            $output .= '<td class="' . $color . '">' . $difference->format($run_in_format) . '</td>';
+            $output .= '<td>' . $event->get_run_on() . '</td>';
+            $output .= '<td>' . $event->get_run_in() . '</td>';
             $output .= '<td>' . $event->get_timestamp() . '</td>';
             $output .= '<td>' . $event->get_schedule() . '</td>';
-            $output .= '<td>' . $event->get_interval() . '</td>';
+            $output .= '<td>' . $event->get_recurrence() . '</td>';
             $output .= '<td>';
             if (count($event->get_args()) !== 0) {
                 $output .= '<pre>' . print_r($event->get_args(), true) . '</pre>';
@@ -112,6 +134,7 @@ class Event extends WpEvent
         }
         $output .= '</tbody>';
         $output .= '</table>';
+        $output .= '<p>' . _x('<b>Color Legend</b> | <span class="green"><b>Green Time</b></span> → Hours until event runs. | <span class="red"><b>Red Time</b></span> → Hours event is late.', 'Tools: Cron Viewer', 'charm') . '</p>';
 
         return $output;
     }
@@ -136,5 +159,121 @@ class Event extends WpEvent
         $timestamp->setTimestamp($this->timestamp);
 
         return $this->timestamp_obj = $timestamp;
+    }
+
+    /************************************************************************************/
+    // Get methods
+
+    /**
+     * Get timezone from WordPress or constant
+     *
+     * @return string
+     */
+    public function get_timezone(): string
+    {
+        if ($this->timezone !== '') {
+            return $this->timezone;
+        }
+        $this->timezone = get_option('timezone_string');
+        if (static::TIMEZONE !== '') {
+            $this->timezone = static::TIMEZONE;
+        }
+
+        return $this->timezone;
+    }
+
+    /**
+     * Get date format from WordPress or constant
+     *
+     * @return string
+     */
+    public function get_date_format(): string
+    {
+        if ($this->date_format !== '') {
+            return $this->date_format;
+        }
+        $this->date_format = get_option('date_format');
+        if (static::DATE_FORMAT !== '') {
+            $this->date_format = static::DATE_FORMAT;
+        }
+
+        return $this->date_format;
+    }
+
+    /**
+     * Get time format from WordPress or constant
+     *
+     * @return string
+     */
+    public function get_time_format(): string
+    {
+        if ($this->time_format !== '') {
+            return $this->time_format;
+        }
+        $this->time_format = get_option('time_format');
+        if (static::TIME_FORMAT !== '') {
+            $this->time_format = static::TIME_FORMAT;
+        }
+
+        return $this->time_format;
+    }
+
+    /**
+     * Get date and time format combined
+     *
+     * @return string
+     */
+    public function get_date_time_format(): string
+    {
+        return $this->get_date_format() . ' ' . $this->get_time_format();
+    }
+
+    /**
+     * Get run on
+     *
+     * @return string
+     */
+    public function get_run_on(): string
+    {
+        if ($this->run_on !== '') {
+            return $this->run_on;
+        }
+
+        return $this->run_on = $this->timestamp()->format($this->get_date_time_format());
+    }
+
+    /**
+     * Get run in
+     *
+     * @return string
+     */
+    public function get_run_in()
+    {
+        if ($this->run_in !== '') {
+            return $this->run_in;
+        }
+        $now = DateTime::init();
+        $timestamp = $this->timestamp()->timezone($this->get_timezone());
+        $difference = $timestamp->diff($now);
+        $color = 'green';
+        if ($difference->invert === 0) {
+            $color = 'red';
+        }
+        $format = '%hh %im %ss';
+        if ($difference->days > 0) {
+            $format = '%dd ' . $format;
+        }
+
+        return $this->run_in = '<span class="' . $color . '">' . $difference->format($format) . '</span>';
+    }
+
+    /**
+     * Get recurrence
+     *
+     * @return string
+     */
+    public function get_recurrence()
+    {
+        return DateTime::duration(0, $this->get_interval());
     }
 }
