@@ -121,12 +121,12 @@ class Schedule
     // Action methods
 
     /**
-     * Save cron schedule
+     * Add cron schedule
      *
      * @see add_filter()
      * @return bool
      */
-    public function save(): bool
+    public function add(): bool
     {
         add_filter('cron_schedules', function($schedules) {
             $schedules[$this->name] = [
@@ -141,12 +141,12 @@ class Schedule
     }
 
     /**
-     * Delete cron schedule
+     * Remove cron schedule
      *
      * @see add_filter()
      * @return bool
      */
-    public function delete(): bool
+    public function remove(): bool
     {
         add_filter('cron_schedules', function($schedules) {
             unset($schedules[$this->name]);
