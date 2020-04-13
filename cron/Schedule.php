@@ -28,7 +28,7 @@ class Schedule extends WpSchedule
         $output .= '<tr>';
         $output .= '<th>' . _x('Display Name', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Name', 'Tools: Cron Viewer', 'charm') .'</th>';
-        $output .= '<th>' . _x('Recurrence', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Repeat Every', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Interval', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '</tr>';
         $output .= '</thead>';
@@ -37,7 +37,7 @@ class Schedule extends WpSchedule
             $output .= '<tr>';
             $output .= '<td>' . $schedule->get_display_name() . '</td>';
             $output .= '<td>' . $schedule->get_name() . '</td>';
-            $output .= '<td>' . $schedule->get_recurrence() . '</td>';
+            $output .= '<td>' . $schedule->get_repeat_every() . '</td>';
             $output .= '<td>' . $schedule->get_interval() . '</td>';
             $output .= '</tr>';
         }
@@ -51,11 +51,11 @@ class Schedule extends WpSchedule
     // Get methods
 
     /**
-     * Get recurrence
+     * Get repeat every
      *
      * @return string
      */
-    public function get_recurrence()
+    public function get_repeat_every()
     {
         return DateTime::duration(0, $this->get_interval());
     }
