@@ -184,7 +184,7 @@ class CLI
         $this->log_action(
             'Run ' . $this->mark('git pull origin master') . ' to get latest version'
         );
-        $result = shell_exec('git pull');
+        $result = shell_exec('git pull origin master');
         if (strpos($result, 'Already up to date.') !== false) {
             $this->log_info('Charm is up to date.');
             return false;
