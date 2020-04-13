@@ -234,7 +234,10 @@ class Cron
 </style>
 STYLE;
         $output .= '<div class="charm">';
+        $output .= '<p>' . _x('You can change your date/time format and timezone in the <a href="' . admin_url('options-general.php') . '">general settings</a>.', 'Tools: Cron Viewer', 'charm') . '</p>';
+        $output .= '<h2>' . _x('Events', 'Tools: Cron Viewer', 'charm') . '</h2>';
         $output .= call_user_func(static::EVENT . '::to_html');
+        $output .= '<h2>' . _x('Schedules', 'Tools: Cron Viewer', 'charm') . '</h2>';
         $output .= call_user_func(static::SCHEDULE . '::to_html');
         $output .= '</div>';
 
