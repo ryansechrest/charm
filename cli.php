@@ -182,7 +182,7 @@ class CLI
             return false;
         }
         $this->log_action(
-            'Run ' . $this->mark('git pull') . ' to get latest version'
+            'Run ' . $this->mark('git pull origin master') . ' to get latest version'
         );
         $result = shell_exec('git pull');
         if (strpos($result, 'Already up to date.') !== false) {
