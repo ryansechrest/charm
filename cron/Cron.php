@@ -28,25 +28,32 @@ class Cron
     // Properties
 
     /**
-     * Name
+     * Name of event
      *
      * @var string
      */
     protected $name = '';
 
     /**
-     * Callback
+     * Function or method to call
      *
      * @var callable
      */
-    protected $callback = null;
+    protected $action = null;
 
     /**
-     * Repeat (date modifier)
+     * Pass args to function or method
      *
-     * @var string
+     * @var array
      */
-    protected $repeat = '';
+    protected $args = [];
+
+    /**
+     * Repeat run in specified interval
+     *
+     * @var array
+     */
+    protected $repeat = [];
 
     /*----------------------------------------------------------------------------------*/
 
@@ -90,74 +97,93 @@ class Cron
         if (isset($data['name'])) {
             $this->name = $data['name'];
         }
-        if (isset($data['callback'])) {
-            $this->callback = $data['callback'];
+        if (isset($data['action'])) {
+            $this->action = $data['action'];
+        }
+        if (isset($data['args'])) {
+            $this->args = $data['args'];
         }
         if (isset($data['repeat'])) {
-            $this->repeat = $data['interval'];
+            $this->repeat = $data['repeat'];
         }
-        if (!isset($data['schedule'])) {
-            $data['schedule'] = '';
+        if (count($this->repeat) > 0) {
+            $this->load_schedule();
         }
-        $this->load_schedule($data['schedule']);
-        if (!isset($data['event'])) {
-            $data['event'] = $this->name;
+        if ($this->name !== '') {
+            $this->load_event();
         }
-        $this->load_event($data['event']);
     }
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * Load instance with schedule
-     *
-     * @param array|string $data
      */
-    protected function load_schedule($data): void
+    protected function load_schedule(): void
     {
-        if (is_string($data) && $data !== '') {
-            $this->schedule = call_user_func(
-                static::SCHEDULE . '::init', $data
-            );
+        $data = $this->prepare_schedule();
+        $schedule = call_user_func(
+            static::SCHEDULE . '::init', $data['name']
+        );
+        if ($schedule !== null) {
+            $this->schedule = $schedule;
             return;
         }
-        if (!is_array($data)) {
-            return;
+        $schedule = static::SCHEDULE;
+        $this->schedule = new $schedule($data);
+    }
+
+    /**
+     * Prepare schedule
+     *
+     * @return array
+     */
+    protected function prepare_schedule(): array
+    {
+        $schedule = [
+            'name' => 'charm_repeat_',
+            'display_name' => 'Every ',
+            'interval' => 0,
+        ];
+        $components = [];
+        $repeat = [
+            'd' => 86400,
+            'h' => 3600,
+            'm' => 60,
+            's' => 1
+        ];
+        foreach ($repeat as $key => $value) {
+            if (!isset($this->repeat[$key])) {
+                unset($repeat[$key]);
+                continue;
+            }
+            if ($this->repeat[$key] <= 0) {
+                unset($repeat[$key]);
+                continue;
+            }
+            $components[] = $this->repeat[$key] . $key;
+            $schedule['interval'] += $this->repeat[$key] * $value;
         }
-        if (isset($data['name']) && !isset($data['display_name'])) {
-            $data['display_name'] = ucwords(str_replace('_', ' ', $data['name']));
-        }
-        if (is_array($data)) {
-            $schedule = static::SCHEDULE;
-            $this->schedule = new $schedule($data);
-        }
+        $schedule['name'] .= implode('_', $components);
+        $schedule['display_name'] .= implode(' ', $components);
+
+        return $schedule;
     }
 
     /**
      * Load instance with event
-     *
-     * @param array|string $data
      */
-    protected function load_event($data): void
+    protected function load_event(): void
     {
-        if (is_string($data)) {
-            $data = ['hook' => $data];
-        }
-        if (!isset($data['hook'])) {
-            $data['hook'] = $this->name;
-        }
-        if (!isset($data['timestamp'])) {
-            $data['timestamp'] = time();
-        }
+        $data = [
+            'hook' => $this->name,
+            'timestamp' => time(),
+            'args' => $this->args,
+            'key' => md5(serialize($this->args))
+        ];
         if ($this->schedule !== null) {
             $data['schedule'] = $this->schedule->get_name();
             $data['interval'] = $this->schedule->get_interval();
-        }
-        if (!isset($data['args'])) {
-            $data['args'] = [];
-        }
-        if (!isset($data['key'])) {
-            $data['key'] = md5(serialize($data['args']));
         }
         $event = static::EVENT;
         $this->event = new $event($data);
@@ -205,6 +231,9 @@ class Cron
    .charm .red {
         color: #dc3545;
    }
+   .charm pre {
+        margin: 0;
+   }
    .charm table {
         background-color: #fff;
         border: 1px solid #dee2e6;
@@ -251,25 +280,32 @@ STYLE;
      * Save cron (with schedule and event)
      *
      * @see add_action()
+     * @return bool
      */
-    public function save()
+    public function save(): bool
     {
-        if ($this->name === '') {
-            return;
-        }
-        add_action($this->name, $this->callback);
+
+        add_action($this->name, $this->action);
         if ($this->schedule()) {
-            $this->schedule->save();
+            $this->schedule->add();
         }
-        $this->event->schedule();
+
+        return $this->event->schedule();
     }
 
     /**
      * Delete cron (with schedule and event)
+     *
+     * @see wp_clear_scheduled_hook()
+     * * @return bool
      */
-    public function delete()
+    public function delete(): bool
     {
+        remove_action($this->name, $this->action);
 
+        return call_user_func(
+            static::EVENT, '::clear', $this->name, $this->args
+        );
     }
 
     /************************************************************************************/
@@ -286,6 +322,7 @@ STYLE;
         if ($event !== null) {
             $this->event = $event;
         }
+
         return $this->event;
     }
 
@@ -300,6 +337,7 @@ STYLE;
         if ($schedule !== null) {
             $this->schedule = $schedule;
         }
+
         return $this->schedule;
     }
 
@@ -329,22 +367,66 @@ STYLE;
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get callback
+     * Get action
      *
      * @return callable
      */
-    public function get_callback(): callable
+    public function get_action(): callable
     {
-        return $this->callback;
+        return $this->action;
     }
 
     /**
-     * Set callback
+     * Set action
      *
-     * @param callable $callback
+     * @param callable $action
      */
-    public function set_callback(callable $callback): void
+    public function set_action(callable $action): void
     {
-        $this->callback = $callback;
+        $this->action = $action;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get args
+     *
+     * @return array
+     */
+    public function get_args(): array
+    {
+        return $this->args;
+    }
+
+    /**
+     * Set args
+     *
+     * @param array $args
+     */
+    public function set_args(array $args): void
+    {
+        $this->args = $args;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get repeat
+     *
+     * @return array
+     */
+    public function get_repeat(): array
+    {
+        return $this->repeat;
+    }
+
+    /**
+     * Set repeat
+     *
+     * @param array $repeat
+     */
+    public function set_repeat(array $repeat): void
+    {
+        $this->repeat = $repeat;
     }
 }
