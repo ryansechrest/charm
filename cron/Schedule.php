@@ -2,6 +2,7 @@
 
 namespace Charm\Cron;
 
+use Charm\DataType\DateTime;
 use Charm\WordPress\Cron\Schedule as WpSchedule;
 
 /**
@@ -27,6 +28,7 @@ class Schedule extends WpSchedule
         $output .= '<tr>';
         $output .= '<th>' . _x('Display Name', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Name', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Recurrence', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Interval', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '</tr>';
         $output .= '</thead>';
@@ -35,6 +37,7 @@ class Schedule extends WpSchedule
             $output .= '<tr>';
             $output .= '<td>' . $schedule->get_display_name() . '</td>';
             $output .= '<td>' . $schedule->get_name() . '</td>';
+            $output .= '<td>' . $schedule->get_recurrence() . '</td>';
             $output .= '<td>' . $schedule->get_interval() . '</td>';
             $output .= '</tr>';
         }
@@ -42,5 +45,18 @@ class Schedule extends WpSchedule
         $output .= '</table>';
 
         return $output;
+    }
+
+    /************************************************************************************/
+    // Get methods
+
+    /**
+     * Get recurrence
+     *
+     * @return string
+     */
+    public function get_recurrence()
+    {
+        return DateTime::duration(0, $this->get_interval());
     }
 }
