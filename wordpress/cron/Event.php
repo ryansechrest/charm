@@ -125,6 +125,29 @@ class Event
     }
 
     /**
+     * Clear all cron events (and optionally matching args)
+     *
+     * @see wp_clear_scheduled_hook()
+     * @see wp_unschedule_hook()
+     * @param string $hook
+     * @param array $args
+     * @return bool
+     */
+    public static function clear(string $hook, array $args = []): bool
+    {
+        if (count($args) > 0) {
+            $result = wp_clear_scheduled_hook($hook, $args);
+        } else {
+            $result = wp_unschedule_hook($hook);
+        }
+        if ($result === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get cron events
      *
      * @see _get_cron_array()
