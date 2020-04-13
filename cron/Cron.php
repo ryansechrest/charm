@@ -284,7 +284,6 @@ STYLE;
      */
     public function save(): bool
     {
-
         add_action($this->name, $this->action);
         if ($this->schedule()) {
             $this->schedule->add();
