@@ -111,37 +111,45 @@ class Event extends WpEvent
         $output .= '<thead>';
         $output .= '<tr>';
         $output .= '<th>' . _x('Hook', 'Tools: Cron Viewer', 'charm') .'</th>';
-        $output .= '<th>' . _x('Run On', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
-        $output .= '<th>' . _x('Run In', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
         $output .= '<th>' . _x('Timestamp', 'Tools: Cron Viewer', 'charm') .' ↓</th>';
-        $output .= '<th>' . _x('Schedule', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Run On', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Run In', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Run Every', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Schedule', 'Tools: Cron Viewer', 'charm') .'</th>';
+        $output .= '<th>' . _x('Actions', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '<th>' . _x('Args', 'Tools: Cron Viewer', 'charm') .'</th>';
-        $output .= '<th>' . _x('Key', 'Tools: Cron Viewer', 'charm') .'</th>';
+        //$output .= '<th>' . _x('Key', 'Tools: Cron Viewer', 'charm') .'</th>';
         $output .= '</tr>';
         $output .= '</thead>';
         $output .= '<tbody>';
         foreach (Event::get() as $event) {
             $output .= '<tr>';
             $output .= '<td>' . $event->get_hook() . '</td>';
+            $output .= '<td>' . $event->get_timestamp() . '</td>';
             $output .= '<td>' . $event->get_run_on() . '</td>';
             $output .= '<td>' . $event->get_run_in() . '</td>';
-            $output .= '<td>' . $event->get_timestamp() . '</td>';
-            $output .= '<td>' . $event->get_schedule() . '</td>';
             $output .= '<td>' . $event->get_run_every() . '</td>';
+            $output .= '<td>' . $event->get_schedule() . '</td>';
+            $output .= '<td>';
+            if (count($event->get_actions()) !== 0) {
+                $output .= '<pre>' . implode('<br />', $event->get_actions()) . '</pre>';
+            } else {
+                $output .= '<i>' . _x('Unknown', 'Tools: Cron Viewer', 'charm') . '</i>';
+            }
+            $output .= '</td>';
             $output .= '<td>';
             if (count($event->get_args()) !== 0) {
                 $output .= '<pre>' . print_r($event->get_args(), true) . '</pre>';
             } else {
-                $output .= '&mdash;';
+                $output .= '<i>' . _x('None', 'Tools: Cron Viewer', 'charm') . '</i>';
             }
             $output .= '</td>';
-            $output .= '<td>' . $event->get_key() . '</td>';
+            //$output .= '<td>' . $event->get_key() . '</td>';
             $output .= '</tr>';
         }
         $output .= '</tbody>';
         $output .= '</table>';
-        $output .= '<p>' . _x('<b>Color Legend</b> | <span class="green"><b>Green Time</b></span> → Event is on schedule. | <span class="red"><b>Red Time</b></span> → Event is late.', 'Tools: Cron Viewer', 'charm') . '</p>';
+        $output .= '<p>' . _x('<span class="green"><b>Green Time</b></span> → Event is on schedule. | <span class="red"><b>Red Time</b></span> → Event is late.', 'Tools: Cron Viewer', 'charm') . '</p>';
 
         return $output;
     }
@@ -276,12 +284,58 @@ class Event extends WpEvent
      *
      * @return string
      */
-    public function get_run_every()
+    public function get_run_every(): string
     {
         if ($this->run_every !== '') {
             return $this->run_every;
         }
 
         return $this->run_every = DateTime::duration(0, $this->get_interval());
+    }
+
+    /**
+     * Get actions
+     *
+     * @return array
+     */
+    public function get_actions(): array
+    {
+        global $wp_filter;
+
+        $actions = [];
+        if (!isset($wp_filter[$this->hook])) {
+            return $actions;
+        }
+        foreach ($wp_filter[$this->hook] as $priority => $callbacks) {
+            foreach ($callbacks as $callback) {
+                if (!isset($callback['function'])) {
+                    continue;
+                }
+                if (!$action = $this->format_action($callback['function'])) {
+                    continue;
+                }
+                $actions[] = $action;
+            }
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Format action
+     *
+     * @param array|string $function
+     * @return string
+     */
+    public function format_action($function): string
+    {
+        if (is_string($function)) {
+            return $function . '()';
+        }
+        if (is_array($function)) {
+            return get_class($function[0]) . '->' . $function[1] . '()';
+        }
+
+        return '';
     }
 }
