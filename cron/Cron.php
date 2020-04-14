@@ -177,7 +177,7 @@ class Cron
     {
         $data = [
             'hook' => $this->name,
-            'timestamp' => time(),
+            'timestamp' => 0,
             'args' => $this->args,
             'key' => md5(serialize($this->args))
         ];
@@ -189,6 +189,32 @@ class Cron
         $this->event = new $event($data);
     }
 
+    /**
+     * Reload instance from Event
+     */
+    /*protected function reload(): void
+    {
+        if ($this->event === null) {
+            return;
+        }
+        $this->name = $this->event->get_hook();
+        $actions = $this->event->get_actions();
+        if (isset($actions[0])) {
+            $this->action = $actions[0];
+        }
+        $this->args = $this->event->get_args();
+        if ($this->schedule === null) {
+            return;
+        }
+        $repeat = [];
+        $repeat_every = $this->schedule->get_repeat_every();
+        foreach (explode(' ', $repeat_every) as $value) {
+            $key = substr($value, -1);
+            $repeat[$key] = str_replace($key, '', $value);
+        }
+        $this->repeat = $repeat;
+    }*/
+
     /************************************************************************************/
     // Instantiation methods
 
@@ -198,8 +224,16 @@ class Cron
      * @param string $name
      * @return static|null
      */
-    public static function init(string $name)
+    /*public static function init(string $name)
     {
+        if (!$event = Event::init($name)) {
+            return null;
+        }
+        $cron = new static([]);
+        $cron->event($event);
+        $cron->reload();;
+
+        return $cron;
         $data = [
             'name' => $name,
             'event' => Event::init($name),
@@ -211,7 +245,7 @@ class Cron
         }
 
         return new static($data);
-    }
+    }*/
 
     /**
      * Get all schedules and events as HTML table
