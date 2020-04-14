@@ -261,19 +261,14 @@ class Event extends WpEvent
         if ($this->run_in !== '') {
             return $this->run_in;
         }
-        $now = DateTime::init();
-        $timestamp = $this->timestamp();
-        $difference = $timestamp->diff($now);
+        $now = time();
+        $duration = DateTime::duration($now, $this->get_timestamp());
         $color = 'green';
-        if ($difference->invert === 0) {
+        if ($now > $this->get_timestamp()) {
             $color = 'red';
         }
-        $format = '%hh %im %ss';
-        if ($difference->days > 0) {
-            $format = '%dd ' . $format;
-        }
 
-        return $this->run_in = '<span class="' . $color . '">' . $difference->format($format) . '</span>';
+        return $this->run_in = '<span class="' . $color . '">' . $duration . '</span>';
     }
 
     /**
