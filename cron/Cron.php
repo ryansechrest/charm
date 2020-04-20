@@ -42,6 +42,13 @@ class Cron
     protected $action = null;
 
     /**
+     * Timestamp
+     *
+     * @var int
+     */
+    protected $timestamp = 0;
+
+    /**
      * Pass args to function or method
      *
      * @var array
@@ -99,6 +106,9 @@ class Cron
         }
         if (isset($data['action'])) {
             $this->action = $data['action'];
+        }
+        if (isset($data['timestamp'])) {
+            $this->timestamp = $data['timestamp'];
         }
         if (isset($data['args'])) {
             $this->args = $data['args'];
@@ -177,10 +187,12 @@ class Cron
     {
         $data = [
             'hook' => $this->name,
-            'timestamp' => 0,
             'args' => $this->args,
             'key' => md5(serialize($this->args))
         ];
+        if ($this->timestamp === 0) {
+            $data['timestamp'] = time();
+        }
         if ($this->schedule !== null) {
             $data['schedule'] = $this->schedule->get_name();
             $data['interval'] = $this->schedule->get_interval();
