@@ -25,7 +25,7 @@ class Event
      *
      * @var int
      */
-    protected $timestamp = null;
+    protected $timestamp = 0;
 
     /**
      * Schedule
@@ -109,7 +109,7 @@ class Event
      * @param int $timestamp
      * @return static|null
      */
-    public static function init($key, array $args = [], int $timestamp = null)
+    public static function init($key, array $args = [], int $timestamp = 0)
     {
         $event = new static();
         if (is_string($key)) {
@@ -189,7 +189,7 @@ class Event
      * @param array $args
      * @param int $timestamp
      */
-    protected function load_from_params(string $hook, array $args = [], $timestamp = null): void
+    protected function load_from_params(string $hook, array $args = [], $timestamp = 0): void
     {
         if (!$wp_event = wp_get_scheduled_event($hook, $args, $timestamp)) {
             return;
