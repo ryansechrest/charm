@@ -271,12 +271,14 @@ class Event extends WpEvent
         }
         $now = time();
         $duration = DateTime::duration($now, $this->get_timestamp());
+        $sign = '';
         $color = 'green';
         if ($now > $this->get_timestamp()) {
+            $sign = '-';
             $color = 'red';
         }
 
-        return $this->run_in = '<span class="' . $color . '">' . $duration . '</span>';
+        return $this->run_in = '<span class="' . $color . '">' . $sign . $duration . '</span>';
     }
 
     /**
