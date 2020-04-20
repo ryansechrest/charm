@@ -472,12 +472,12 @@ class Post
     /**
      * Move post to trash
      *
-     * @see wp_delete_post()
+     * @see wp_trash_post()
      * @return bool
      */
     public function trash(): bool
     {
-        if (!wp_delete_post($this->id)) {
+        if (!wp_trash_post($this->id)) {
             return false;
         }
 
