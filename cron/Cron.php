@@ -202,9 +202,9 @@ class Cron
     }
 
     /**
-     * Reload instance from Event
+     * Backfill instance from Event and Schedule
      */
-    /*protected function reload(): void
+    protected function backfill(): void
     {
         if ($this->event === null) {
             return;
@@ -214,6 +214,7 @@ class Cron
         if (isset($actions[0])) {
             $this->action = $actions[0];
         }
+        $this->timestamp = $this->event->get_timestamp();
         $this->args = $this->event->get_args();
         if ($this->schedule === null) {
             return;
@@ -225,7 +226,7 @@ class Cron
             $repeat[$key] = str_replace($key, '', $value);
         }
         $this->repeat = $repeat;
-    }*/
+    }
 
     /************************************************************************************/
     // Instantiation methods
@@ -236,28 +237,22 @@ class Cron
      * @param string $name
      * @return static|null
      */
-    /*public static function init(string $name)
+    public static function init(string $name)
     {
-        if (!$event = Event::init($name)) {
+        if (!$event = call_user_func(static::EVENT . '::init', $name)) {
             return null;
         }
         $cron = new static([]);
         $cron->event($event);
-        $cron->reload();;
+        if ($schedule = $event->get_schedule()) {
+            $cron->schedule(call_user_func(
+                static::SCHEDULE . '::init', $schedule
+            ));
+        }
+        $cron->backfill();;
 
         return $cron;
-        $data = [
-            'name' => $name,
-            'event' => Event::init($name),
-        ];
-        if ($data['event'] !== null && $data['event']->get_schedule()) {
-            $data['schedule'] = call_user_func(
-                static::SCHEDULE . '::init', $data['event']->get_schedule()
-            );
-        }
-
-        return new static($data);
-    }*/
+    }
 
     /**
      * Get all schedules and events as HTML table
