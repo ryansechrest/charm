@@ -28,7 +28,7 @@ class Post
      *
      * @var int
      */
-    protected $post_author = 0;
+    protected $post_author = null;
 
     /**
      * Post date
@@ -528,7 +528,7 @@ class Post
         if ($this->id !== 0) {
             $data['ID'] = $this->id;
         }
-        if ($this->post_author !== 0) {
+        if ($this->post_author !== null) {
             $data['post_author'] = $this->post_author;
         }
         if ($this->post_date !== '') {
