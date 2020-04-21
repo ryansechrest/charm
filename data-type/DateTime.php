@@ -103,7 +103,7 @@ class DateTime extends DT
      * @param string $timezone
      * @return DateTime
      */
-    public function timezone(string $timezone)
+    public function timezone(string $timezone): DateTime
     {
         return $this->setTimezone(new DTZ($timezone));
     }

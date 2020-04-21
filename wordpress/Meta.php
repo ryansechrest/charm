@@ -235,17 +235,15 @@ class Meta
      */
     protected static function load_single(
         string $meta_type, int $object_id, string $meta_key, $meta_value
-    ) {
-        $data = [
+    ): Meta {
+        return new static([
             'meta_type' => $meta_type,
             'object_id' => $object_id,
             'meta_key' => $meta_key,
             'meta_value' => $meta_value,
             'prev_value' => $meta_value,
             'from_db' => true,
-        ];
-
-        return new static($data);
+        ]);
     }
 
     /************************************************************************************/

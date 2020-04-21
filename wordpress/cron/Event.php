@@ -109,7 +109,7 @@ class Event
      * @param int $timestamp
      * @return static|null
      */
-    public static function init($key, array $args = [], int $timestamp = 0)
+    public static function init($key, array $args = [], int $timestamp = 0): ?Event
     {
         $event = new static();
         if (is_string($key)) {
@@ -202,7 +202,7 @@ class Event
      *
      * @param object $event
      */
-    protected function load_from_event(object $event)
+    protected function load_from_event(object $event): void
     {
         $this->hook = $event->hook;
         $this->timestamp = $event->timestamp;
@@ -217,7 +217,7 @@ class Event
     /**
      * Reload instance from database
      */
-    protected function reload()
+    protected function reload(): void
     {
         if (!$this->hook) {
             return;

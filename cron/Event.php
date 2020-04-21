@@ -169,7 +169,7 @@ class Event extends WpEvent
      *
      * @return DateTime|null
      */
-    public function timestamp()
+    public function timestamp(): ?DateTime
     {
         if ($this->timestamp_obj) {
             return $this->timestamp_obj;
@@ -334,7 +334,7 @@ class Event extends WpEvent
      *
      * @return array
      */
-    public function get_actions_for_display()
+    public function get_actions_for_display(): array
     {
         return array_map(function($action) {
             if (is_string($action)) {

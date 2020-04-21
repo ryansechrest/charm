@@ -89,7 +89,7 @@ class Role
      * @param string|WP_Role $key
      * @return static|null
      */
-    public static function init(string $key)
+    public static function init(string $key): ?Role
     {
         $role = new static();
         if (is_string($key)) {
@@ -282,7 +282,7 @@ class Role
      * @param WP_Role $role
      * @return WP_Role
      */
-    protected function wp_role(WP_Role $role = null)
+    protected function wp_role(WP_Role $role = null): WP_Role
     {
         if ($role !== null) {
             $this->wp_role = $role;

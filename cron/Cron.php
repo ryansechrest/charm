@@ -237,7 +237,7 @@ class Cron
      * @param string $name
      * @return static|null
      */
-    public static function init(string $name)
+    public static function init(string $name): ?Cron
     {
         if (!$event = call_user_func(static::EVENT . '::init', $name)) {
             return null;
@@ -357,7 +357,7 @@ STYLE;
      * @param Event $event
      * @return Event
      */
-    protected function event(Event $event = null)
+    protected function event(Event $event = null): Event
     {
         if ($event !== null) {
             $this->event = $event;
@@ -372,7 +372,7 @@ STYLE;
      * @param Schedule $schedule
      * @return Schedule
      */
-    protected function schedule(Schedule $schedule = null)
+    protected function schedule(Schedule $schedule = null): Schedule
     {
         if ($schedule !== null) {
             $this->schedule = $schedule;

@@ -467,7 +467,7 @@ class PostType
      * @param string|WP_Post_Type $key
      * @return static|null
      */
-    public static function init($key)
+    public static function init($key): ?PostType
     {
         $post_type = new static();
         if (is_string($key)) {
@@ -735,7 +735,7 @@ class PostType
      * @param WP_Post_Type $post_type
      * @return WP_Post_Type
      */
-    protected function wp_post_type(WP_Post_Type $post_type = null)
+    protected function wp_post_type(WP_Post_Type $post_type = null): WP_Post_Type
     {
         if ($post_type !== null) {
             $this->wp_post_type = $post_type;

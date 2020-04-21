@@ -96,7 +96,7 @@ trait Meta
      * @param mixed $value
      * @return MetaClass
      */
-    private function create_meta(string $key, $value)
+    private function create_meta(string $key, $value): MetaClass
     {
         $meta = static::META;
 

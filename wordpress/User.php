@@ -159,7 +159,7 @@ class User
      * @param int|string|WP_User|null $key
      * @return static|null
      */
-    public static function init($key = null)
+    public static function init($key = null): ?User
     {
         $user = new static();
         if (is_int($key) || is_numeric($key)) {
@@ -408,11 +408,12 @@ class User
      * @param WP_User $user
      * @return WP_User
      */
-    protected function wp_user(WP_User $user = null)
+    protected function wp_user(WP_User $user = null): WP_User
     {
         if ($user !== null) {
             $this->wp_user = $user;
         }
+
         return $this->wp_user;
     }
 

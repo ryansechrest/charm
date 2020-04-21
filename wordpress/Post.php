@@ -290,7 +290,7 @@ class Post
      * @param int|string|WP_Post|null $key
      * @return static|null
      */
-    public static function init($key = null)
+    public static function init($key = null): ?Post
     {
         $post = new static();
         if (is_int($key) || ctype_digit($key)) {
@@ -626,7 +626,7 @@ class Post
      * @param WP_Post $post
      * @return WP_Post
      */
-    protected function wp_post(WP_Post $post = null)
+    protected function wp_post(WP_Post $post = null): WP_Post
     {
         if ($post !== null) {
             $this->wp_post = $post;

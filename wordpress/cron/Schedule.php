@@ -78,7 +78,7 @@ class Schedule
      * @param string $name
      * @return static|null
      */
-    public static function init(string $name)
+    public static function init(string $name): ?Schedule
     {
         $wp_schedules = wp_get_schedules();
         if (!isset($wp_schedules[$name])) {

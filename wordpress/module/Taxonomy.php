@@ -390,7 +390,7 @@ class Taxonomy
      * @param string|WP_Taxonomy $key
      * @return static|null
      */
-    public static function init(string $key)
+    public static function init(string $key): ?Taxonomy
     {
         $taxonomy = new static();
         if (is_string($key)) {
@@ -604,7 +604,7 @@ class Taxonomy
      * @param WP_Taxonomy $taxonomy
      * @return WP_Taxonomy
      */
-    protected function wp_taxonomy(WP_Taxonomy $taxonomy = null)
+    protected function wp_taxonomy(WP_Taxonomy $taxonomy = null): WP_Taxonomy
     {
         if ($taxonomy !== null) {
             $this->wp_taxonomy = $taxonomy;
@@ -707,7 +707,7 @@ class Taxonomy
      * @param string $name
      * @param string $value
      */
-    public function add_individual_label(string $name, string $value)
+    public function add_individual_label(string $name, string $value): void
     {
         $this->labels[$name] = $value;
     }

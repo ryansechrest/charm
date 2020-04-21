@@ -55,7 +55,7 @@ class Schedule extends WpSchedule
      *
      * @return string
      */
-    public function get_repeat_every()
+    public function get_repeat_every(): string
     {
         return DateTime::duration(0, $this->get_interval());
     }

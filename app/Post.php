@@ -170,7 +170,7 @@ class Post extends WpPost
      *
      * @return User|null
      */
-    public function post_author()
+    public function post_author(): ?User
     {
         if ($this->post_author_obj) {
             return $this->post_author_obj;
@@ -189,7 +189,7 @@ class Post extends WpPost
      *
      * @return Post|null
      */
-    public function post_parent()
+    public function post_parent(): ?Post
     {
         if ($this->post_parent_obj) {
             return $this->post_parent_obj;

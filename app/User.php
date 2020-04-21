@@ -82,7 +82,7 @@ class User extends WpUser
      *
      * @return Role|null
      */
-    public function role()
+    public function role(): ?Role
     {
         if ($this->role_obj) {
             return $this->role_obj;
@@ -138,7 +138,7 @@ class User extends WpUser
      * @param Post $post
      * @return bool
      */
-    public function can_read(Post $post)
+    public function can_read(Post $post): bool
     {
         return $this->can_do('read', $post);
     }
@@ -149,7 +149,7 @@ class User extends WpUser
      * @param Post $post
      * @return bool
      */
-    public function can_edit(Post $post)
+    public function can_edit(Post $post): bool
     {
         return $this->can_do('edit', $post);
     }
@@ -160,7 +160,7 @@ class User extends WpUser
      * @param Post $post
      * @return bool
      */
-    public function can_delete(Post $post)
+    public function can_delete(Post $post): bool
     {
         return $this->can_do('delete', $post);
     }
@@ -172,7 +172,7 @@ class User extends WpUser
      * @param Post $post
      * @return bool
      */
-    public function can_do(string $action, Post $post)
+    public function can_do(string $action, Post $post): bool
     {
         $capability = $action . '_' . $post->get_post_type();
 
@@ -186,7 +186,7 @@ class User extends WpUser
      * @param mixed ...$args
      * @return bool
      */
-    public function can($capability, ...$args)
+    public function can($capability, ...$args): bool
     {
         return $this->wp_user()->has_cap($capability, ...$args);
     }

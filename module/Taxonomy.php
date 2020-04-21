@@ -148,7 +148,7 @@ class Taxonomy extends WpTaxonomy
      *
      * @return string
      */
-    private function get_singular_label()
+    private function get_singular_label(): string
     {
         if (isset($this->labels['singular_name'])) {
             return $this->labels['singular_name'];
@@ -162,7 +162,7 @@ class Taxonomy extends WpTaxonomy
      *
      * @return string
      */
-    private function get_plural_label()
+    private function get_plural_label(): string
     {
         if (isset($this->labels['name'])) {
             return $this->labels['name'];
