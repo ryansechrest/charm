@@ -88,6 +88,13 @@ class Event extends WpEvent
      */
     protected $run_every = '';
 
+    /**
+     * Actions
+     *
+     * @var array
+     */
+    protected $actions = [];
+
     /*----------------------------------------------------------------------------------*/
 
     /**
@@ -132,7 +139,7 @@ class Event extends WpEvent
             $output .= '<td>' . $event->get_schedule() . '</td>';
             $output .= '<td>';
             if (count($event->get_actions()) !== 0) {
-                $output .= '<pre>' . implode('<br />', $event->get_actions()) . '</pre>';
+                $output .= '<pre>' . implode('<br />', $event->get_actions_for_display()) . '</pre>';
             } else {
                 $output .= '<i>' . _x('Unknown', 'Tools: Cron Viewer', 'charm') . '</i>';
             }
@@ -304,40 +311,40 @@ class Event extends WpEvent
     {
         global $wp_filter;
 
-        $actions = [];
+        if (count($this->actions) !== 0) {
+            return $this->actions;
+        }
         if (!isset($wp_filter[$this->hook])) {
-            return $actions;
+            return $this->actions;
         }
         foreach ($wp_filter[$this->hook] as $priority => $callbacks) {
             foreach ($callbacks as $callback) {
                 if (!isset($callback['function'])) {
                     continue;
                 }
-                if (!$action = $this->format_action($callback['function'])) {
-                    continue;
-                }
-                $actions[] = $action;
+                $this->actions[] = $callback['function'];
             }
         }
 
-        return $actions;
+        return $this->actions;
     }
 
     /**
-     * Format action
+     * Get actions for display
      *
-     * @param array|string $function
-     * @return string
+     * @return array
      */
-    public function format_action($function): string
+    public function get_actions_for_display()
     {
-        if (is_string($function)) {
-            return $function . '()';
-        }
-        if (is_array($function)) {
-            return get_class($function[0]) . '->' . $function[1] . '()';
-        }
+        return array_map(function($action) {
+            if (is_string($action)) {
+                return $action . '()';
+            }
+            if (is_array($action)) {
+                return get_class($action[0]) . '->' . $action[1] . '()';
+            }
 
-        return '';
+            return '';
+        }, $this->get_actions());
     }
 }
