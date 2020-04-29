@@ -86,7 +86,7 @@ class Cron
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         if (count($data) === 0) {
             return;
@@ -242,7 +242,7 @@ class Cron
         if (!$event = call_user_func(static::EVENT . '::init', $name)) {
             return null;
         }
-        $cron = new static([]);
+        $cron = new static();
         $cron->event($event);
         if ($schedule = $event->get_schedule()) {
             $cron->schedule(call_user_func(
