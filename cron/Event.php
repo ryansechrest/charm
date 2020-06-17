@@ -187,7 +187,7 @@ class Event extends WpEvent
     // Get methods
 
     /**
-     * Get timezone from WordPress or constant
+     * Get timezone from constant, or WordPress, or default to 'UTC'
      *
      * @return string
      */
@@ -196,16 +196,18 @@ class Event extends WpEvent
         if ($this->timezone !== '') {
             return $this->timezone;
         }
-        $this->timezone = get_option('timezone_string');
         if (static::TIMEZONE !== '') {
-            $this->timezone = static::TIMEZONE;
+            return $this->timezone = static::TIMEZONE;
+        }
+        if ($timezone_string = get_option('timezone_string')) {
+            return $this->timezone = $timezone_string;
         }
 
-        return $this->timezone;
+        return $this->timezone = 'UTC';
     }
 
     /**
-     * Get date format from WordPress or constant
+     * Get date format constant, or WordPress, or default to 'n/j/Y'
      *
      * @return string
      */
@@ -214,16 +216,18 @@ class Event extends WpEvent
         if ($this->date_format !== '') {
             return $this->date_format;
         }
-        $this->date_format = get_option('date_format');
         if (static::DATE_FORMAT !== '') {
-            $this->date_format = static::DATE_FORMAT;
+            return $this->date_format = static::DATE_FORMAT;
+        }
+        if ($date_format = get_option('date_format')) {
+            return $this->date_format = $date_format;
         }
 
-        return $this->date_format;
+        return $this->date_format = 'n/j/Y';
     }
 
     /**
-     * Get time format from WordPress or constant
+     * Get time format constant, or WordPress, or default to 'g:i:sa'
      *
      * @return string
      */
@@ -232,12 +236,14 @@ class Event extends WpEvent
         if ($this->time_format !== '') {
             return $this->time_format;
         }
-        $this->time_format = get_option('time_format');
         if (static::TIME_FORMAT !== '') {
-            $this->time_format = static::TIME_FORMAT;
+            return $this->time_format = static::TIME_FORMAT;
+        }
+        if ($time_format = get_option('time_format')) {
+            return $this->time_format = $time_format;
         }
 
-        return $this->time_format;
+        return $this->time_format = 'g:i:sa';
     }
 
     /**
