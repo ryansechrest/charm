@@ -207,7 +207,7 @@ class Event extends WpEvent
     }
 
     /**
-     * Get date format constant, or WordPress, or default to 'n/j/Y'
+     * Get date format from constant, or WordPress, or default to 'n/j/Y'
      *
      * @return string
      */
@@ -227,7 +227,7 @@ class Event extends WpEvent
     }
 
     /**
-     * Get time format constant, or WordPress, or default to 'g:i:sa'
+     * Get time format from constant, or WordPress, or default to 'g:i:sa'
      *
      * @return string
      */
