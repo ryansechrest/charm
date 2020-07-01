@@ -27,7 +27,7 @@ Your `mu-plugins` directory should now look something like this:
 ```
 |-- mu-plugins
 |   |-- charm
-|   |   |-- app
+|   |   |-- cron
 |   |   |-- ...
 |   |   |-- wordpress
 |   |   |-- autoloader.php
@@ -50,7 +50,7 @@ Your `mu-plugins` directory should now look something like this:
 ```
 |-- mu-plugins
 |   |-- charm
-|   |   |-- app
+|   |   |-- cron
 |   |   |-- ...
 |   |   |-- wordpress
 |   |   |-- autoloader.php
