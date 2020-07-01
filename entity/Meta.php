@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\App;
+namespace Charm\Entity;
 
 use Charm\WordPress\Meta as WpMeta;
 

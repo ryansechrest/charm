@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\App;
+namespace Charm\Entity;
 
 use Charm\DataType\DateTime;
 use Charm\Feature\Meta as MetaFeature;
@@ -11,7 +11,7 @@ use Charm\WordPress\User as WpUser;
  * Class User
  *
  * @author Ryan Sechrest
- * @package Charm\App
+ * @package Charm\Entity
  */
 class User extends WpUser
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\App;
+namespace Charm\Entity;
 
 /**
  * Class PostMeta
  *
  * @author Ryan Sechrest
- * @package Charm\App
+ * @package Charm\Entity
  */
 class PostMeta extends Meta
 {

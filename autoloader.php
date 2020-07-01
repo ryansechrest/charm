@@ -41,15 +41,15 @@ require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
 /****************************************************************************************/
 
 // Application Meta Entities
-require_once WPMU_PLUGIN_DIR . '/charm/app/Meta.php';
-require_once WPMU_PLUGIN_DIR . '/charm/app/CommentMeta.php';
-require_once WPMU_PLUGIN_DIR . '/charm/app/PostMeta.php';
-require_once WPMU_PLUGIN_DIR . '/charm/app/UserMeta.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Meta.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/CommentMeta.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/PostMeta.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
 
 // Application Entities
-require_once WPMU_PLUGIN_DIR . '/charm/app/Post.php';
-require_once WPMU_PLUGIN_DIR . '/charm/app/Page.php';
-require_once WPMU_PLUGIN_DIR . '/charm/app/User.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/User.php';
 
 /****************************************************************************************/
 

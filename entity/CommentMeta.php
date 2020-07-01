@@ -1,14 +1,14 @@
 <?php
 
-namespace Charm\App;
+namespace Charm\Entity;
 
 /**
- * Class UserMeta
+ * Class CommentMeta
  *
  * @author Ryan Sechrest
- * @package Charm\App
+ * @package Charm\Entity
  */
-class UserMeta extends Meta
+class CommentMeta extends Meta
 {
     /************************************************************************************/
     // Constants
@@ -18,5 +18,5 @@ class UserMeta extends Meta
      *
      * @var string
      */
-    const META_TYPE = 'user';
+    const META_TYPE = 'comment';
 }

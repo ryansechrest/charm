@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\App;
+namespace Charm\Entity;
 
 use Charm\DataType\DateTime;
 use Charm\Feature\Meta as MetaFeature;
@@ -11,7 +11,7 @@ use Charm\WordPress\Post as WpPost;
  * Class Post
  *
  * @author Ryan Sechrest
- * @package Charm\App
+ * @package Charm\Entity
  */
 class Post extends WpPost
 {

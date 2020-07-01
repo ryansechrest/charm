@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\App;
+namespace Charm\Entity;
 
 /**
  * Class Page
  *
  * @author Ryan Sechrest
- * @package Charm\App
+ * @package Charm\Entity
  */
 class Page extends Post
 {
