@@ -2,10 +2,10 @@
 
 namespace Charm\Feature;
 
-use Charm\App\Meta as MetaClass;
+use Charm\Entity\Meta as MetaClass;
 
 /**
- * Trait MetaMethods
+ * Trait Meta
  *
  * @author Ryan Sechrest
  * @package Charm\Feature
