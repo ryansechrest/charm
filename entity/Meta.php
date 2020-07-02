@@ -2,13 +2,14 @@
 
 namespace Charm\Entity;
 
+use Charm\Helper\Converter;
 use Charm\WordPress\Meta as WpMeta;
 
 /**
  * Class Meta
  *
  * @author Ryan Sechrest
- * @package Charm\App
+ * @package Charm\Entity
  */
 class Meta extends WpMeta
 {
@@ -72,7 +73,7 @@ class Meta extends WpMeta
     // Cast methods
 
     /**
-     * Return value as array
+     * Cast value to array
      *
      * @see maybe_unserialize()
      * @return array
@@ -91,7 +92,7 @@ class Meta extends WpMeta
     }
 
     /**
-     * Return value as bool
+     * Cast value to bool
      *
      * @return bool
      */
@@ -111,7 +112,7 @@ class Meta extends WpMeta
     }
 
     /**
-     * Return value as integer
+     * Cast value to integer
      *
      * @return int
      */
@@ -125,7 +126,7 @@ class Meta extends WpMeta
     }
 
     /**
-     * Return value as text
+     * Cast value to text
      *
      * @return string
      */
@@ -136,5 +137,17 @@ class Meta extends WpMeta
         }
 
         return $string;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Pass value to converter
+     *
+     * @return Converter
+     */
+    public function convert()
+    {
+        return Converter::init($this->meta_value);
     }
 }

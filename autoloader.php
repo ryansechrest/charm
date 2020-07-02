@@ -28,6 +28,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 // Features
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 
+// Helpers
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Converter.php';
+
 // Cron
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Schedule.php';
