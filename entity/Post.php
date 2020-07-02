@@ -6,6 +6,7 @@ use Charm\DataType\DateTime;
 use Charm\Feature\Meta as MetaFeature;
 use Charm\Module\PostType;
 use Charm\WordPress\Post as WpPost;
+use WP_Query;
 
 /**
  * Class Post
@@ -157,9 +158,20 @@ class Post extends WpPost
      */
     public static function get(array $params = []): array
     {
+        return self::query($params)->posts;
+    }
+
+    /**
+     * Query using WP_Query
+     *
+     * @param array $params
+     * @return WP_Query
+     */
+    public static function query(array $params = []): WP_Query
+    {
         $params['post_type'] = static::POST_TYPE;
 
-        return parent::get($params);
+        return parent::query($params);
     }
 
     /************************************************************************************/

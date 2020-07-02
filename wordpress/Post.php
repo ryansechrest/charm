@@ -319,15 +319,32 @@ class Post
      */
     public static function get(array $params): array
     {
-        $posts = [];
-        $query = new WP_Query($params);
+        $query = self::query($params);
         if (!$query->found_posts) {
-            return $posts;
+            return [];
         }
 
-        return array_map(function(WP_Post $post) {
-            return static::init($post);
-        }, $query->posts);
+        return $query->posts;
+    }
+
+    /**
+     * Query using WP_Query
+     *
+     * @see WP_Post
+     * @see WP_Query
+     * @param array $params
+     * @return WP_Query
+     */
+    public static function query(array $params): WP_Query
+    {
+        $query = new WP_Query($params);
+        if ($query->found_posts) {
+            $query->posts = array_map(function(WP_Post $post) {
+                return static::init($post);
+            }, $query->posts);
+        }
+
+        return $query;
     }
 
     /************************************************************************************/
