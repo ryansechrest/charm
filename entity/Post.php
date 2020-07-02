@@ -32,21 +32,21 @@ class Post extends WpPost
      *
      * @var string
      */
-    const USER = 'Charm\App\User';
+    const USER = 'Charm\Entity\User';
 
     /**
      * Post class
      *
      * @var string
      */
-    const POST = 'Charm\App\Post';
+    const POST = 'Charm\Entity\Post';
 
     /**
      * Meta class
      *
      * @var string
      */
-    const META = 'Charm\App\PostMeta';
+    const META = 'Charm\Entity\PostMeta';
 
     /**
      * DateTime class

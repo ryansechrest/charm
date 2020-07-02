@@ -25,7 +25,7 @@ class User extends WpUser
      *
      * @var string
      */
-    const META = 'Charm\App\UserMeta';
+    const META = 'Charm\Entity\UserMeta';
 
     /**
      * DateTime class
