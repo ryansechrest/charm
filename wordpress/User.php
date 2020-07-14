@@ -235,6 +235,9 @@ class User
         if (!$user = wp_get_current_user()) {
             return;
         }
+        if ($user->ID === 0) {
+            return;
+        }
         $this->load_from_user($user);
     }
 
