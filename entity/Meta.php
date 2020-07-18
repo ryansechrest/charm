@@ -53,6 +53,34 @@ class Meta extends WpMeta
         return parent::init($params);
     }
 
+    /**
+     * Get meta values
+     *
+     * @param string $meta_key
+     * @param array $where
+     * @return array
+     */
+    public static function get(string $meta_key, array $where = [])
+    {
+        global $wpdb;
+
+        $args = [$meta_key];
+        $meta_table = static::META_TYPE . 'meta';
+        $entity_table = static::META_TYPE . 's';
+        $query = 'SELECT DISTINCT m.meta_value ';
+        $query .= 'FROM ' . $wpdb->$meta_table . ' m ';
+        $query .= 'LEFT JOIN ' . $wpdb->$entity_table . ' e on e.ID = m.' . static::META_TYPE . '_id ';
+        $query .= 'WHERE m.meta_key = %s ';
+        $query .= 'AND m.meta_value != "" ';
+        foreach ($where as $key => $value) {
+            $args[] = $value;
+            $query .= 'AND e.' . $key . ' = %s ';
+        }
+        $query .= 'ORDER BY m.meta_value ASC';
+
+        return $wpdb->get_col($wpdb->prepare($query, $args));
+    }
+
     /************************************************************************************/
     // Action methods
 
