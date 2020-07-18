@@ -90,11 +90,14 @@ class Converter
      */
     public function ta2a($row_delimiter = "\n", $column_delimiter = ''): self
     {
+        if ($this->value === '') {
+            $this->value = [];
+            return $this;
+        }
         $this->value = array_map('trim', explode($row_delimiter, $this->value));
         if ($column_delimiter === '') {
             return $this;
         }
-
         $this->value = array_map(function($row) use ($column_delimiter) {
             return array_map('trim', explode($column_delimiter, $row));
         }, $this->value);
@@ -109,6 +112,10 @@ class Converter
      */
     public function a2da()
     {
+        if (count($this->value) === 0) {
+            $this->value = '';
+            return $this;
+        }
         $attributes = [];
         foreach ($this->value as $item) {
             if (!is_array($item)) {
