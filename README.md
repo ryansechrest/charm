@@ -1,6 +1,6 @@
 # Charm
 
-Charm is still in its early stages and continously evolving, so there is no documentsation yet. Poke around the code if you're interested or take it for a spin in a development environment.
+Charm is still in its early stages and continously evolving. Poke around the code if you're interested or take it for a spin in a development environment.
 
 ## Getting Started
 
@@ -89,6 +89,8 @@ Charm::init([
 ]);
 ```
 
+---
+
 ### Update Charm
 
 Update Charm by running:
@@ -97,6 +99,8 @@ Update Charm by running:
 php wp-content/mu-plugins/charm/cli.php update
 ```
 
+---
+
 ### Deactivate Charm
 
 Temporarily deactivate Charm by removing `_charm.php`, or run:
@@ -104,6 +108,8 @@ Temporarily deactivate Charm by removing `_charm.php`, or run:
 ```shell
 php wp-content/mu-plugins/charm/cli.php deactivate
 ```
+
+---
 
 ### Remove Charm
 
@@ -157,6 +163,8 @@ Run the following commands:
 rm wp-content/mu-plugins/_charm.php
 rm -rf wp-content/mu-plugins/charm
 ```
+
+---
 
 Thanks for checking out Charm, and if you have any feedback, <a href="https://ryansechrest.com/contact/">I'd love to hear it</a>!
 
