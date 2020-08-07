@@ -263,9 +263,6 @@ class Cron
     {
         $output = <<<STYLE
 <style type="text/css">
-   .charm {
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-   }
    .charm .green {
         color: #28a745;
    }
@@ -304,7 +301,7 @@ class Cron
 </style>
 STYLE;
         $output .= '<div class="charm">';
-        $output .= '<p>' . _x('You can change your date/time format and timezone in the <a href="' . admin_url('options-general.php') . '">general settings</a>.', 'Tools: Cron Viewer', 'charm') . '</p>';
+        $output .= '<p>' . _x('The date/time format and timezone configuration is inherited from <a href="' . admin_url('options-general.php') . '">general settings</a>.', 'Tools: Cron Viewer', 'charm') . '</p>';
         $output .= '<h2>' . _x('Events', 'Tools: Cron Viewer', 'charm') . '</h2>';
         $output .= call_user_func(static::EVENT . '::to_html');
         $output .= '<h2>' . _x('Schedules', 'Tools: Cron Viewer', 'charm') . '</h2>';
