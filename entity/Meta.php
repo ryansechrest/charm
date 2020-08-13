@@ -154,11 +154,11 @@ class Meta extends WpMeta
     }
 
     /**
-     * Cast value to text
+     * Cast value to string
      *
      * @return string
      */
-    public function text(): string
+    public function string(): string
     {
         if (!$string = (string) $this->meta_value) {
             return '';
