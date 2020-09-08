@@ -390,7 +390,7 @@ class Taxonomy
      * @param string|WP_Taxonomy $key
      * @return static|null
      */
-    public static function init(string $key): ?Taxonomy
+    public static function init($key): ?Taxonomy
     {
         $taxonomy = new static();
         if (is_string($key)) {
@@ -403,6 +403,41 @@ class Taxonomy
         }
 
         return $taxonomy;
+    }
+
+    /**
+     * Get taxonomies
+     *
+     * @see get_taxonomies()
+     * @param array $params
+     * @return static[]
+     */
+    public static function get($params = []): array
+    {
+        $taxonomies = [];
+        $wp_taxonomies = get_taxonomies([], 'objects');
+        if (!isset($params['_builtin'])) {
+            $params['_builtin'] = false;
+        }
+        foreach ($wp_taxonomies as $name => $wp_taxonomy) {
+            $tax_matches_query = true;
+            foreach ($params as $key => $value) {
+                if (!property_exists($wp_taxonomy, $key)) {
+                    continue;
+                }
+                if ($wp_taxonomy->$key !== $value) {
+                    $tax_matches_query = false;
+                    break;
+                }
+            }
+            if ($tax_matches_query) {
+                $taxonomy = static::init($wp_taxonomy);
+                $taxonomy->wp_taxonomy($wp_taxonomy);
+                $taxonomies[] = $taxonomy;
+            }
+        }
+
+        return $taxonomies;
     }
 
     /************************************************************************************/
@@ -601,7 +636,7 @@ class Taxonomy
     /**
      * Get (or set) WordPress taxonomy
      *
-     * @param WP_Taxonomy $taxonomy
+     * @param WP_Taxonomy|null $taxonomy
      * @return WP_Taxonomy
      */
     protected function wp_taxonomy(WP_Taxonomy $taxonomy = null): WP_Taxonomy
