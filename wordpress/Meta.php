@@ -227,6 +227,7 @@ class Meta
     /**
      * Load meta with single key and value
      *
+     * @see maybe_unserialize()
      * @param string $meta_type
      * @param int $object_id
      * @param string $meta_key
@@ -240,8 +241,8 @@ class Meta
             'meta_type' => $meta_type,
             'object_id' => $object_id,
             'meta_key' => $meta_key,
-            'meta_value' => $meta_value,
-            'prev_value' => $meta_value,
+            'meta_value' => maybe_unserialize($meta_value),
+            'prev_value' => maybe_unserialize($meta_value),
             'from_db' => true,
         ]);
     }
