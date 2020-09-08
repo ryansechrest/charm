@@ -732,7 +732,7 @@ class PostType
     /**
      * Get (or set) WordPress post type
      *
-     * @param WP_Post_Type $post_type
+     * @param WP_Post_Type|null $post_type
      * @return WP_Post_Type
      */
     protected function wp_post_type(WP_Post_Type $post_type = null): WP_Post_Type

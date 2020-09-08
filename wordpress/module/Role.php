@@ -279,7 +279,7 @@ class Role
     /**
      * Get (or set) WordPress role
      *
-     * @param WP_Role $role
+     * @param WP_Role|null $role
      * @return WP_Role
      */
     protected function wp_role(WP_Role $role = null): WP_Role
