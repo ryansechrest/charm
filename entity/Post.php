@@ -3,6 +3,7 @@
 namespace Charm\Entity;
 
 use Charm\DataType\DateTime;
+use Charm\Entity\PostMeta as CharmPostMeta;
 use Charm\Feature\Meta as MetaFeature;
 use Charm\Module\PostType;
 use Charm\WordPress\Post as WpPost;
@@ -328,6 +329,24 @@ class Post extends WpPost
         $this->save_metas();
 
         return true;
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast instance to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        return array_merge(
+            parent::to_array(),
+            ['metas' => array_map(function(CharmPostMeta $meta) {
+                return $meta->get_meta_value();
+            }, $this->meta())]
+        );
     }
 
     /************************************************************************************/
