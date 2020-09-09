@@ -13,6 +13,50 @@ use Charm\WordPress\Module\PostType as WpPostType;
 class PostType extends WpPostType
 {
     /************************************************************************************/
+    // Constants
+
+    /**
+     * Meta class
+     *
+     * @var string
+     */
+    const TAXONOMY = 'Charm\Module\Taxonomy';
+
+    /************************************************************************************/
+    // Properties
+
+    /**
+     * Taxonomies
+     *
+     * @var array
+     */
+    protected $taxonomy_objs = [];
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get taxonomies
+     *
+     * @return Taxonomy[]
+     */
+    public function taxonomies(): array
+    {
+        if (count($this->taxonomy_objs) > 0) {
+            return $this->taxonomy_objs;
+        }
+        if (count($this->taxonomies) === 0) {
+            return [];
+        }
+
+        return $this->taxonomy_objs = array_map(function($taxonomy) {
+            return call_user_func(
+                static::TAXONOMY . '::init', $taxonomy
+            );
+        }, $this->taxonomies);
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
