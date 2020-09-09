@@ -41,6 +41,11 @@ require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
 
+// Skeletons
+require_once WPMU_PLUGIN_DIR . '/charm/skeleton/PostType.php';
+require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Role.php';
+require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Taxonomy.php';
+
 /****************************************************************************************/
 
 // Application Meta Entities
