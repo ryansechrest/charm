@@ -192,13 +192,15 @@ class Post
     /**
      * Post constructor
      *
+     * Not doing an if (count($data)) check here like in other load methods so that
+     * when a child class is instantiated, it will always call the overridden
+     * load method of that child class, which sets the post type. The post type is
+     * needed for the load_from_path method.
+     *
      * @param array $data
      */
     public function __construct(array $data = [])
     {
-        if (count($data) === 0) {
-            return;
-        }
         $this->load($data);
     }
 
@@ -372,7 +374,7 @@ class Post
      */
     protected function load_from_path(string $path): void
     {
-        if (!$post = get_page_by_path($path)) {
+        if (!$post = get_page_by_path($path, OBJECT, $this->post_type)) {
             return;
         }
         $this->load_from_post($post);
@@ -640,7 +642,7 @@ class Post
     /**
      * Get (or set) WordPress post
      *
-     * @param WP_Post $post
+     * @param WP_Post|null $post
      * @return WP_Post
      */
     protected function wp_post(WP_Post $post = null): WP_Post
@@ -648,6 +650,7 @@ class Post
         if ($post !== null) {
             $this->wp_post = $post;
         }
+
         return $this->wp_post;
     }
 
@@ -660,7 +663,7 @@ class Post
      * @param string $status
      * @return $this
      */
-    public function status($status)
+    public function status(string $status): ?Post
     {
         $this->post_status = $status;
 
