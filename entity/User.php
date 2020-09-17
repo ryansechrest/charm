@@ -201,7 +201,7 @@ class User extends WpUser
      */
     public function get_nickname(): string
     {
-        return $this->meta('nickname')->text();
+        return $this->meta('nickname')->string();
     }
 
     /**
@@ -223,7 +223,7 @@ class User extends WpUser
      */
     public function get_first_name(): string
     {
-        return $this->meta('first_name')->text();
+        return $this->meta('first_name')->string();
     }
 
     /**
@@ -245,7 +245,7 @@ class User extends WpUser
      */
     public function get_last_name(): string
     {
-        return $this->meta('last_name')->text();
+        return $this->meta('last_name')->string();
     }
 
     /**
@@ -267,7 +267,7 @@ class User extends WpUser
      */
     public function get_description(): string
     {
-        return $this->meta('description')->text();
+        return $this->meta('description')->string();
     }
 
     /**
@@ -355,7 +355,7 @@ class User extends WpUser
      */
     public function get_admin_color(): string
     {
-        return $this->meta('admin_color')->text();
+        return $this->meta('admin_color')->string();
     }
 
     /**
@@ -421,7 +421,7 @@ class User extends WpUser
      */
     public function get_locale(): string
     {
-        return $this->meta('locale')->text();
+        return $this->meta('locale')->string();
     }
 
     /**
