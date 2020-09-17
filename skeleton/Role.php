@@ -35,4 +35,16 @@ abstract class Role
      * @return RoleModule|null
      */
     abstract public static function role(): ?RoleModule;
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public static function name(): string
+    {
+        return static::role()->get_name();
+    }
 }
