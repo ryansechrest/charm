@@ -363,6 +363,9 @@ class Post
         if (!$post = get_post($id)) {
             return;
         }
+        if ($post->post_type !== $this->post_type) {
+            return;
+        }
         $this->load_from_post($post);
     }
 
