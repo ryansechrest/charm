@@ -3,7 +3,6 @@
 namespace Charm\WordPress;
 
 use WP_Term;
-use WP_Term_Query;
 
 /**
  * Class Term
@@ -185,7 +184,7 @@ class Term
      * @param array $params
      * @return static[]
      */
-    public static function get(array $params): array
+    public static function get(array $params = []): array
     {
         $terms = get_terms($params);
         if (!is_array($terms)) {
@@ -222,7 +221,7 @@ class Term
      * @param string $name
      * @param string $taxonomy
      */
-    protected function load_from_name_or_slug(string $name, string $taxonomy = ''): void
+    protected function load_from_name_or_slug(string $name, string $taxonomy): void
     {
         $result = term_exists($name, $taxonomy);
         if ($result === null || $result === 0) {
