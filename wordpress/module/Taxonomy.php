@@ -644,6 +644,7 @@ class Taxonomy
         if ($taxonomy !== null) {
             $this->wp_taxonomy = $taxonomy;
         }
+
         return $this->wp_taxonomy;
     }
 
