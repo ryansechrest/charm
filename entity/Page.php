@@ -11,12 +11,15 @@ namespace Charm\Entity;
 class Page extends Post
 {
     /************************************************************************************/
-    // Constants
+    // Object access methods
 
     /**
-     * Post type
+     * Get post type
      *
-     * @var string
+     * @return string
      */
-    const POST_TYPE = 'page';
+    public static function post_type(): string
+    {
+        return 'page';
+    }
 }
