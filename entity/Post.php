@@ -23,13 +23,6 @@ class Post extends WpPost
     // Constants
 
     /**
-     * Post type
-     *
-     * @var string
-     */
-    const POST_TYPE = 'post';
-
-    /**
      * User class
      *
      * @var string
@@ -51,18 +44,18 @@ class Post extends WpPost
     const META = 'Charm\Entity\PostMeta';
 
     /**
+     * Taxonomy class
+     *
+     * @var string
+     */
+    const TAXONOMY = 'Charm\Entity\Taxonomy';
+
+    /**
      * DateTime class
      *
      * @var string
      */
-    const DATETIME = 'Charm\DataType\DateTime';
-
-    /**
-     * PostType class
-     *
-     * @var string
-     */
-    const POSTTYPE = 'Charm\Module\PostType';
+    const DATE_TIME = 'Charm\DataType\DateTime';
 
     /************************************************************************************/
     // Properties
@@ -128,6 +121,13 @@ class Post extends WpPost
     /*----------------------------------------------------------------------------------*/
 
     /**
+     * Taxonomy objects
+     *
+     * @var array
+     */
+    protected $taxonomy_objs = [];
+
+    /**
      * Post type object
      *
      * @var PostType
@@ -144,7 +144,7 @@ class Post extends WpPost
      */
     public function load(array $data): void
     {
-        $data['post_type'] = static::POST_TYPE;
+        $data['post_type'] = static::post_type();
         parent::load($data);
     }
 
@@ -170,13 +170,25 @@ class Post extends WpPost
      */
     public static function query(array $params = []): WP_Query
     {
-        $params['post_type'] = static::POST_TYPE;
+        $params['post_type'] = static::post_type();
 
         return parent::query($params);
     }
 
     /************************************************************************************/
     // Object access methods
+
+    /**
+     * Get post type
+     *
+     * @return string
+     */
+    public static function post_type(): string
+    {
+        return 'post';
+    }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get post author
@@ -229,7 +241,7 @@ class Post extends WpPost
         $timezone = get_option('timezone_string');
 
         return $this->post_date_obj = call_user_func(
-            static::DATETIME . '::init', $this->post_date, $timezone
+            static::DATE_TIME . '::init', $this->post_date, $timezone
         );
     }
 
@@ -245,7 +257,7 @@ class Post extends WpPost
         }
 
         return $this->post_date_gmt_obj = call_user_func(
-            static::DATETIME . '::init', $this->post_date_gmt
+            static::DATE_TIME . '::init', $this->post_date_gmt
         );
     }
 
@@ -262,7 +274,7 @@ class Post extends WpPost
         $timezone = get_option('timezone_string');
 
         return $this->post_modified_obj = call_user_func(
-            static::DATETIME . '::init', $this->post_modified, $timezone
+            static::DATE_TIME . '::init', $this->post_modified, $timezone
         );
     }
 
@@ -278,26 +290,29 @@ class Post extends WpPost
         }
 
         return $this->post_modified_gmt_obj = call_user_func(
-            static::DATETIME . '::init', $this->post_modified_gmt
+            static::DATE_TIME . '::init', $this->post_modified_gmt
         );
     }
 
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get post type
+     * Get taxonomy
      *
-     * @return PostType
+     * @param string $name
+     * @return Taxonomy|null
      */
-    public function post_type(): PostType
+    public function taxonomy(string $name): ?Taxonomy
     {
-        if ($this->post_type_obj) {
-            return $this->post_type_obj;
+        if (isset($this->taxonomy_objs[$name])) {
+            return $this->taxonomy_objs[$name];
         }
+        if (!$taxonomy = Taxonomy::init($name)) {
+            return null;
+        }
+        $taxonomy->set_object_id($this->id);
 
-        return $this->post_modified_gmt_obj = call_user_func(
-            static::POSTTYPE . '::init', static::POST_TYPE
-        );
+        return $this->taxonomy_objs[$name] = $taxonomy;
     }
 
     /************************************************************************************/
