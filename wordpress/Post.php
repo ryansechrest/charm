@@ -669,7 +669,7 @@ class Post
      * @param string $status
      * @return $this
      */
-    public function status(string $status): ?Post
+    public function status(string $status): Post
     {
         $this->post_status = $status;
 
