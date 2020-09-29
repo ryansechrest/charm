@@ -5,6 +5,7 @@ namespace Charm\Entity;
 use Charm\DataType\DateTime;
 use Charm\Entity\PostMeta as CharmPostMeta;
 use Charm\Feature\Meta as MetaFeature;
+use Charm\Feature\Taxonomy as TaxonomyFeature;
 use Charm\Module\PostType;
 use Charm\WordPress\Post as WpPost;
 use WP_Query;
@@ -18,6 +19,7 @@ use WP_Query;
 class Post extends WpPost
 {
     use MetaFeature;
+    use TaxonomyFeature;
 
     /************************************************************************************/
     // Constants
@@ -30,25 +32,11 @@ class Post extends WpPost
     const USER = 'Charm\Entity\User';
 
     /**
-     * Post class
-     *
-     * @var string
-     */
-    const POST = 'Charm\Entity\Post';
-
-    /**
      * Meta class
      *
      * @var string
      */
     const META = 'Charm\Entity\PostMeta';
-
-    /**
-     * Taxonomy class
-     *
-     * @var string
-     */
-    const TAXONOMY = 'Charm\Entity\Taxonomy';
 
     /**
      * DateTime class
@@ -61,71 +49,64 @@ class Post extends WpPost
     // Properties
 
     /**
-     * Permalink
+     * URL
      *
      * @var string
      */
-    protected $permalink = '';
+    protected $url = '';
 
     /**
-     * Edit post link
+     * Edit URL
      *
      * @var string
      */
-    protected $edit_post_link = '';
+    protected $edit_url = '';
 
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Post author object
+     * Author object
      *
      * @var User|null
      */
-    protected $post_author_obj = null;
+    protected $author_obj = null;
 
     /**
-     * Post parent object
+     * Parent object
      *
      * @var Post|null
      */
-    protected $post_parent_obj = null;
+    protected $parent_obj = null;
 
     /**
-     * Post date object
+     * Created date object
      *
      * @var DateTime
      */
-    protected $post_date_obj = null;
+    protected $created_date_obj = null;
 
     /**
-     * Post date object (GMT)
+     * Created date object (GMT)
      *
      * @var DateTime
      */
-    protected $post_date_gmt_obj = null;
+    protected $created_date_gmt_obj = null;
 
     /**
-     * Post modified object
+     * Updated date object
      *
      * @var DateTime
      */
-    protected $post_modified_obj = null;
+    protected $updated_date_obj = null;
 
     /**
-     * Post modified object (GMT)
+     * Update date object (GMT)
      *
      * @var DateTime
      */
-    protected $post_modified_gmt_obj = null;
+    protected $updated_date_gmt_obj = null;
 
     /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Taxonomy objects
-     *
-     * @var array
-     */
-    protected $taxonomy_objs = [];
 
     /**
      * Post type object
@@ -191,128 +172,105 @@ class Post extends WpPost
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get post author
+     * Get author
      *
      * @return User|null
      */
-    public function post_author(): ?User
+    public function author(): ?User
     {
-        if ($this->post_author_obj) {
-            return $this->post_author_obj;
+        if ($this->author_obj) {
+            return $this->author_obj;
         }
         if (!$this->post_author) {
             return null;
         }
 
-        return $this->post_author_obj = call_user_func(
+        return $this->author_obj = call_user_func(
             static::USER . '::init', $this->post_author
         );
     }
 
     /**
-     * Get post parent
+     * Get parent
      *
      * @return Post|null
      */
-    public function post_parent(): ?Post
+    public function parent(): ?Post
     {
-        if ($this->post_parent_obj) {
-            return $this->post_parent_obj;
+        if ($this->parent_obj) {
+            return $this->parent_obj;
         }
         if (!$this->post_parent) {
             return null;
         }
 
-        return $this->post_parent_obj = call_user_func(
-            static::POST . '::init', $this->post_parent
-        );
+        return $this->parent_obj = static::init($this->post_parent);
     }
 
     /**
-     * Get post date
+     * Get created date
      *
      * @return DateTime
      */
-    public function post_date(): DateTime
+    public function created_date(): DateTime
     {
-        if ($this->post_date_obj) {
-            return $this->post_date_obj;
+        if ($this->created_date_obj) {
+            return $this->created_date_obj;
         }
         $timezone = get_option('timezone_string');
 
-        return $this->post_date_obj = call_user_func(
+        return $this->created_date_obj = call_user_func(
             static::DATE_TIME . '::init', $this->post_date, $timezone
         );
     }
 
     /**
-     * Get post date (GMT)
+     * Get created date (GMT)
      *
      * @return DateTime
      */
-    public function post_date_gmt(): DateTime
+    public function created_date_gmt(): DateTime
     {
-        if ($this->post_date_gmt_obj) {
-            return $this->post_date_gmt_obj;
+        if ($this->created_date_gmt_obj) {
+            return $this->created_date_gmt_obj;
         }
 
-        return $this->post_date_gmt_obj = call_user_func(
+        return $this->created_date_gmt_obj = call_user_func(
             static::DATE_TIME . '::init', $this->post_date_gmt
         );
     }
 
     /**
-     * Get post modified
+     * Get updated date
      *
      * @return DateTime
      */
-    public function post_modified(): DateTime
+    public function updated_date(): DateTime
     {
-        if ($this->post_modified_obj) {
-            return $this->post_modified_obj;
+        if ($this->updated_date_obj) {
+            return $this->updated_date_obj;
         }
         $timezone = get_option('timezone_string');
 
-        return $this->post_modified_obj = call_user_func(
+        return $this->updated_date_obj = call_user_func(
             static::DATE_TIME . '::init', $this->post_modified, $timezone
         );
     }
 
     /**
-     * Get post modified (GMT)
+     * Get updated date (GMT)
      *
      * @return DateTime
      */
-    public function post_modified_gmt(): DateTime
+    public function updated_date_gmt(): DateTime
     {
-        if ($this->post_modified_gmt_obj) {
-            return $this->post_modified_gmt_obj;
+        if ($this->updated_date_gmt_obj) {
+            return $this->updated_date_gmt_obj;
         }
 
-        return $this->post_modified_gmt_obj = call_user_func(
+        return $this->updated_date_gmt_obj = call_user_func(
             static::DATE_TIME . '::init', $this->post_modified_gmt
         );
-    }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Get taxonomy
-     *
-     * @param string $name
-     * @return Taxonomy|null
-     */
-    public function taxonomy(string $name): ?Taxonomy
-    {
-        if (isset($this->taxonomy_objs[$name])) {
-            return $this->taxonomy_objs[$name];
-        }
-        if (!$taxonomy = Taxonomy::init($name)) {
-            return null;
-        }
-        $taxonomy->set_object_id($this->id);
-
-        return $this->taxonomy_objs[$name] = $taxonomy;
     }
 
     /************************************************************************************/
@@ -368,48 +326,48 @@ class Post extends WpPost
     // Get and set methods
 
     /**
-     * Get permalink
+     * Get URL
      *
      * @see get_permalink()
      * @return string
      */
-    public function get_permalink(): string
+    public function get_url(): string
     {
-        if ($this->permalink !== '') {
-            return $this->permalink;
+        if ($this->url !== '') {
+            return $this->url;
         }
         if ($this->id === 0) {
             return '';
         }
-        $permalink = get_permalink($this->id);
-        if ($permalink === false) {
+        $url = get_permalink($this->id);
+        if ($url === false) {
             return '';
         }
 
-        return $this->permalink = $permalink;
+        return $this->url = $url;
     }
 
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get permalink
+     * Get edit URL
      *
      * @see get_edit_post_link()
      * @return string
      */
-    public function get_edit_post_link(): string
+    public function get_edit_url(): string
     {
-        if ($this->edit_post_link !== '') {
-            return $this->edit_post_link;
+        if ($this->edit_url !== '') {
+            return $this->edit_url;
         }
         if ($this->id === 0) {
             return '';
         }
-        $edit_post_link = get_edit_post_link($this->id);
-        if ($edit_post_link === null) {
+        $edit_url = get_edit_post_link($this->id);
+        if ($edit_url === null) {
             return '';
         }
 
-        return $this->edit_post_link = $edit_post_link;
+        return $this->edit_url = $edit_url;
     }
 }
