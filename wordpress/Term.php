@@ -100,13 +100,14 @@ class Term
     /**
      * Term constructor
      *
+     * Not doing an if (count($data)) check here like in other load methods so that
+     * when a child class is instantiated, it will always call the overridden
+     * load method of that child class, which sets the taxonomy.
+     *
      * @param array $data
      */
     public function __construct(array $data = [])
     {
-        if (count($data) === 0) {
-            return;
-        }
         $this->load($data);
     }
 
