@@ -13,6 +13,16 @@ use Charm\Module\Taxonomy as TaxonomyModule;
 abstract class Taxonomy
 {
     /************************************************************************************/
+    // Constants
+
+    /**
+     * Term class
+     *
+     * @var string
+     */
+    const TERM = 'Charm\Entity\Term';
+
+    /************************************************************************************/
     // Action methods
 
     /**
