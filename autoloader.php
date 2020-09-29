@@ -6,6 +6,9 @@ if (!defined('ABSPATH')) {
     die('Whatcha doin? Ƹ̵̡Ӝ̵̨̄Ʒ');
 }
 
+// WordPress Conductors
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/conductor/ObjectTaxonomy.php';
+
 // WordPress Cron
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Event.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Schedule.php';
@@ -17,7 +20,6 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Taxonomy.php';
 
 // WordPress Entities
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Meta.php';
-require_once WPMU_PLUGIN_DIR . '/charm/wordpress/ObjectTaxonomy.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Term.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
@@ -33,6 +35,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Converter.php';
+
+// Conductor
+require_once WPMU_PLUGIN_DIR . '/charm/conductor/ObjectTaxonomy.php';
 
 // Cron
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
@@ -59,7 +64,6 @@ require_once WPMU_PLUGIN_DIR . '/charm/entity/TermMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
 
 // Application Entities
-require_once WPMU_PLUGIN_DIR . '/charm/entity/ObjectTaxonomy.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Term.php';

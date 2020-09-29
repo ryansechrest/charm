@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\WordPress;
+namespace Charm\WordPress\Conductor;
 
 /**
  * Class ObjectTaxonomy
  *
  * @author Ryan Sechrest
- * @package Charm\WordPress
+ * @package Charm\WordPress\Conductor
  */
 class ObjectTaxonomy
 {

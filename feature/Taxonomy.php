@@ -2,7 +2,7 @@
 
 namespace Charm\Feature;
 
-use Charm\Entity\ObjectTaxonomy;
+use Charm\Conductor\ObjectTaxonomy;
 use Charm\Skeleton\Taxonomy as TaxonomySkeleton;
 
 /**

@@ -1,14 +1,14 @@
 <?php
 
-namespace Charm\Entity;
+namespace Charm\Conductor;
 
-use Charm\WordPress\ObjectTaxonomy as WpObjectTaxonomy;
+use Charm\WordPress\Conductor\ObjectTaxonomy as WpObjectTaxonomy;
 
 /**
  * Class ObjectTaxonomy
  *
  * @author Ryan Sechrest
- * @package Charm\Entity
+ * @package Charm\Conductor
  */
 class ObjectTaxonomy extends WpObjectTaxonomy
 {
