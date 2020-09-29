@@ -45,11 +45,11 @@ class User extends WpUser
     // Properties
 
     /**
-     * User registered object
+     * Registration date object
      *
      * @var DateTime
      */
-    protected $user_registered_obj = null;
+    protected $registration_date_obj = null;
 
     /**
      * Role object
@@ -66,13 +66,13 @@ class User extends WpUser
      *
      * @return DateTime
      */
-    public function user_registered(): DateTime
+    public function registration_date(): DateTime
     {
-        if ($this->user_registered_obj) {
-            return $this->user_registered_obj;
+        if ($this->registration_date_obj) {
+            return $this->registration_date_obj;
         }
 
-        return $this->user_registered_obj = call_user_func(
+        return $this->registration_date_obj = call_user_func(
             static::DATETIME . '::init', $this->user_registered
         );
     }
