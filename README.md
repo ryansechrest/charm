@@ -1,6 +1,6 @@
 # Charm
 
-Charm is still in its early stages and continously evolving. Poke around the code if you're interested or take it for a spin in a development environment.
+Charm started on Feb 29, 2020, but is still in its early stages and continuously evolving. If you're curious about how Charm works under the hood, have a look around the code or take it for a spin in a development environment.
 
 ## Getting Started
 
