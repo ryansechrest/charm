@@ -98,7 +98,7 @@ class Term
     // Default constructor and load method
 
     /**
-     * Post constructor
+     * Term constructor
      *
      * @param array $data
      */
