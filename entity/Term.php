@@ -52,7 +52,49 @@ class Term extends WpTerm
     protected $child_objs = [];
 
     /************************************************************************************/
+    // Default constructor and load method
+
+    /**
+     * Load instance with data
+     *
+     * @param array $data
+     */
+    public function load(array $data): void
+    {
+        $data['taxonomy'] = static::taxonomy();
+        parent::load($data);
+    }
+
+    /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Get terms
+     *
+     * @param array $params
+     * @return static[]
+     */
+    public static function get(array $params = []): array
+    {
+        $params['taxonomy'] = static::taxonomy();
+
+        return parent::get($params);
+    }
+
+    /************************************************************************************/
     // Object access methods
+
+    /**
+     * Get taxonomy
+     *
+     * @return string
+     */
+    public static function taxonomy(): string
+    {
+        return '';
+    }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get parent
