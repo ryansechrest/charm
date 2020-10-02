@@ -2,6 +2,7 @@
 
 namespace Charm\Conductor;
 
+use Charm\Entity\Term;
 use Charm\WordPress\Conductor\ObjectTaxonomy as WpObjectTaxonomy;
 
 /**
