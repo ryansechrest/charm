@@ -26,6 +26,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 
 /****************************************************************************************/
 
+// Conductor
+require_once WPMU_PLUGIN_DIR . '/charm/conductor/ObjectTaxonomy.php';
+
 // Data Types
 require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 
@@ -35,9 +38,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Converter.php';
-
-// Conductor
-require_once WPMU_PLUGIN_DIR . '/charm/conductor/ObjectTaxonomy.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Database.php';
 
 // Cron
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
