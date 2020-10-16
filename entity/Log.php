@@ -204,9 +204,9 @@ class Log
     // Setup methods
 
     /**
-     * Setup database table
+     * Create logs table
      */
-    public static function setup()
+    public static function create_table()
     {
         $db = Database::init();
         if (!$db->table_exists(static::TABLE)) {
