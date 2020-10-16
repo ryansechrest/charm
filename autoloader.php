@@ -65,6 +65,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/entity/TermMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
 
 // Application Entities
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Log.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Term.php';
