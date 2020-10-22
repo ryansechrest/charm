@@ -148,10 +148,9 @@ class Database
      */
     public function select_where_id(string $table, int $id): ?object
     {
-        $records = $this->select_where($table, [
-            'id = ' . $id,
-            'LIMIT 1',
-        ]);
+        $records = $this->select_where(
+            [], [$table], ['id' => $id], 1
+        );
         if (count($records) === 1) {
             return $records[0];
         }
@@ -162,32 +161,26 @@ class Database
     /**
      * Select from table where
      *
-     * @param string $table
-     * @param array $conditions
-     * @return array
-     */
-    public function select_where(string $table, array $conditions): array
-    {
-        return $this->select([], [
-            $this->sql_from([$table]),
-            $this->sql_where($conditions),
-        ]);
-    }
-
-    /**
-     * Select from table
-     *
      * @param array $fields
-     * @param array $lines
+     * @param array $table
+     * @param array $conditions
+     * @param int $limit
      * @return array
      */
-    public function select(array $fields, array $lines): array
+    public function select_where(array $fields, array $table, array $conditions, int $limit = 0): array
     {
-        $sql = $this->sql_spaces([
+        $query = [
             $this->sql_select($fields),
-            $this->sql_spaces($lines),
-        ]);
-        if ($this->query($sql) > 0) {
+            $this->sql_from($table),
+            $this->sql_where($this->sql_types($conditions)),
+        ];
+        $params = array_values($conditions);
+        if ($limit > 0) {
+            $query[] = 'LIMIT %d';
+            $params[] = $limit;
+        }
+        $sql = $this->sql_spaces($query) . ';';
+        if ($this->query($sql, $params) > 0) {
             return $this->wpdb->last_result;
         };
 
@@ -208,13 +201,9 @@ class Database
         $sql = 'INSERT INTO ' . $this->prefix($table) . ' (';
         $sql .= $this->sql_commas(array_keys($columns));
         $sql .= ') VALUES (';
-        $sql .= $this->sql_commas(
-            array_map(function($value) {
-                return '"' . $value . '"';
-            }, array_values($columns))
-        );
+        $sql .= $this->sql_commas($this->sql_types($columns));
         $sql .= ');';
-        if ($this->query($sql) > 0) {
+        if ($this->query($sql, $columns) > 0) {
             return $this->wpdb->insert_id;
         }
 
@@ -247,13 +236,13 @@ class Database
     public function update(string $table, array $columns, array $conditions): bool
     {
         $sql = 'UPDATE ' . $this->prefix($table) . ' SET ';
-        $sets = [];
-        foreach ($columns as $key => $value) {
-            $sets[] = $key . ' = ' . '"' . $value . '"';
-        }
-        $sql .= $this->sql_commas($sets) . ' ';
-        $sql .= $this->sql_where($conditions);
-        if ($this->query($sql) > 0) {
+        $sql .= $this->sql_commas($this->sql_equal($this->sql_types($columns))) . ' ';
+        $sql .= $this->sql_where($this->sql_types($conditions));
+        $sql .= ';';
+        $params = array_merge(
+            array_values($columns), array_values($conditions)
+        );
+        if ($this->query($sql, $params) > 0) {
             return true;
         }
 
@@ -286,9 +275,9 @@ class Database
         $sql = $this->sql_spaces([
             'DELETE',
             $this->sql_from([$table]),
-            $this->sql_where($conditions)
+            $this->sql_where($this->sql_types($conditions))
         ]) . ';';
-        if ($this->query($sql) > 0) {
+        if ($this->query($sql, $conditions) > 0) {
             return true;
         }
 
@@ -301,10 +290,17 @@ class Database
      * Query WordPress database
      *
      * @param string $sql
+     * @param array $data
      * @return bool|int
      */
-    public function query(string $sql)
+    public function query(string $sql, array $data = [])
     {
+        echo '<pre>B: ' . print_r($sql, true) . '</pre>';
+        if (count($data) > 0) {
+            $sql = $this->wpdb->prepare($sql, $data);
+        }
+        echo '<pre>A: ' . print_r($sql, true) . '</pre>';
+
         return $this->wpdb->query($sql);
     }
 
@@ -319,7 +315,7 @@ class Database
     protected function sql_select(array $fields = []): string
     {
         if (count($fields) !== 0) {
-            $sql = implode(', ', $fields);
+            $sql = $this->sql_commas($fields);
         } else {
             $sql = '*';
         }
@@ -358,7 +354,7 @@ class Database
         $where = [];
         foreach ($conditions as $key => $condition) {
             if (!is_int($key)) {
-                $where[] = $key . ' = "' . $condition . '"';
+                $where[] = $key . ' = ' . $condition;
             } else {
                 $where[] = $condition;
             }
@@ -368,7 +364,45 @@ class Database
     }
 
     /**
+     * Replace values with types for preparing statement
+     *   ['id' => 12345, 'name' => 'Hello World'] => ['id' => '%d', 'name' => '%s']
+     *
+     * @param array $lines
+     * @return array
+     */
+    protected function sql_types(array $lines): array
+    {
+        return array_map(function($line) {
+            if (is_int($line)) {
+                return '%d';
+            } elseif (is_float($line)) {
+                return '%f';
+            }
+
+            return '%s';
+        }, $lines);
+    }
+
+    /**
+     * Combine keys and values with equal sign
+     *   ['hello' => 'world', 'foo' = 'bar'] => ['hello = world', 'foo = bar']
+     *
+     * @param array $lines
+     * @return array
+     */
+    protected function sql_equal(array $lines): array
+    {
+        $new_lines = [];
+        foreach ($lines as $key => $value) {
+            $new_lines[] = $key . ' = ' . $value;
+        }
+
+        return $new_lines;
+    }
+
+    /**
      * Combine lines with commas
+     *   ['hello', 'world'] => 'hello, world'
      *
      * @param array $lines
      * @return string
@@ -380,6 +414,7 @@ class Database
 
     /**
      * Combine lines with spaces
+     *   ['hello', 'world'] => 'hello world'
      *
      * @param array $lines
      * @return string
