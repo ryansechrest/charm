@@ -295,11 +295,9 @@ class Database
      */
     public function query(string $sql, array $data = [])
     {
-        echo '<pre>B: ' . print_r($sql, true) . '</pre>';
         if (count($data) > 0) {
             $sql = $this->wpdb->prepare($sql, $data);
         }
-        echo '<pre>A: ' . print_r($sql, true) . '</pre>';
 
         return $this->wpdb->query($sql);
     }
