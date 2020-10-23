@@ -70,13 +70,15 @@ class Meta
     /**
      * Meta constructor
      *
+     * Not doing an if (count($data)) check here like in other load methods so that
+     * when a child class is instantiated, it will always call the overridden
+     * load method of that child class, which sets the meta type. The meta type is
+     * needed to get data from the correct table.
+     *
      * @param array $data
      */
     public function __construct(array $data = [])
     {
-        if (count($data) === 0) {
-            return;
-        }
         $this->load($data);
     }
 
@@ -114,17 +116,50 @@ class Meta
     // Instantiation methods
 
     /**
-     * Initialize meta(s)
+     * Initialize meta
+     *
+     * @param int $id
+     * @return static|null
+     */
+    public static function init(int $id): ?Meta
+    {
+        $meta = new static();
+        $meta->load_from_id($id);
+        if ($meta->get_meta_key() === '') {
+            return null;
+        }
+
+        return $meta;
+    }
+
+    /**
+     * Get single meta
+     *
+     * @param array $params
+     * @return static|null
+     */
+    public static function single(array $params): ?Meta
+    {
+        $metas = static::get($params);
+        if (count($metas) === 0) {
+            return null;
+        }
+
+        return $metas[0];
+    }
+
+    /**
+     * Get metas
      *
      * @see get_metadata()
      * @param array $params
-     * @return array|static|static[]|null
+     * @return static[]
      */
-    public static function init(array $params)
+    public static function get(array $params): array
     {
         // If there is no meta_type or object_id, we don't know where or what to save
         if (!isset($params['meta_type']) || !isset($params['object_id'])) {
-            return null;
+            return [];
         }
 
         // Save meta_type and object_id to vars for easier reading
@@ -144,7 +179,7 @@ class Meta
 
         // If no array returned (which is always true), there is nothing to return
         if (!is_array($meta_values) || count($meta_values) === 0) {
-            return null;
+            return [];
         }
 
         // If meta_key was blank, assume we need to load an array of arrays
@@ -154,23 +189,38 @@ class Meta
             );
         }
 
-        // If there is only one item in the array for that key, assume that more than
-        // one value could be saved for that key
-        if (count($meta_values) > 1) {
-            return self::load_multi(
-                $meta_type, $object_id, $meta_key, $meta_values
-            );
-        }
-
-        // At this point we know it's a single key with a single value
-        // It could still be an array, but that's for the dev to deal with now
-        return self::load_single(
-            $meta_type, $object_id, $meta_key, $meta_values[0]
+        // Assume that more than one value could be saved for that key
+        return self::load_multi(
+            $meta_type, $object_id, $meta_key, $meta_values
         );
     }
 
     /************************************************************************************/
     // Protected load methods
+
+    /**
+     * Load instance from ID
+     *
+     * @see get_metadata_by_mid()
+     * @param int $id
+     */
+    protected function load_from_id(int $id)
+    {
+        if (!$object = get_metadata_by_mid($this->meta_type, $id)) {
+            return;
+        }
+        $this->set_meta_id($id);
+        $object_id = $this->get_meta_type() . '_id';
+        if (property_exists($object, $object_id)) {
+            $this->set_object_id($object->$object_id);
+        }
+        $this->set_meta_key($object->meta_key);
+        $this->set_prev_value($object->meta_value);
+        $this->set_meta_value($object->meta_value);
+        $this->set_from_db(true);
+    }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Load all meta
@@ -232,13 +282,23 @@ class Meta
      * @param int $object_id
      * @param string $meta_key
      * @param mixed $meta_value
-     * @return static
+     * @return Meta
      */
     protected static function load_single(
         string $meta_type, int $object_id, string $meta_key, $meta_value
     ): Meta {
+        global $wpdb;
+        $id_col = $meta_type !== 'user' ? 'meta_id' : 'umeta_id';
+        $meta_table = $meta_type . 'meta';
+        $query = 'SELECT ' . $id_col . ' ';
+        $query .= 'FROM ' . $wpdb->$meta_table . ' ';
+        $query .= 'WHERE ' . $meta_type . '_id = %d AND meta_key = %s AND meta_value = %s';
+        $meta_id = $wpdb->get_var(
+            $wpdb->prepare($query, [$object_id, $meta_key, $meta_value])
+        );
         return new static([
             'meta_type' => $meta_type,
+            'meta_id' => $meta_id,
             'object_id' => $object_id,
             'meta_key' => $meta_key,
             'meta_value' => maybe_unserialize($meta_value),
@@ -354,6 +414,9 @@ class Meta
         }
         if ($this->meta_key !== '') {
             $data['meta_key'] = $this->meta_key;
+        }
+        if ($this->prev_value !== null) {
+            $data['prev_value'] = $this->prev_value;
         }
         if ($this->meta_value !== null) {
             $data['meta_value'] = $this->meta_value;
