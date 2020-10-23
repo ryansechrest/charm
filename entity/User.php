@@ -195,6 +195,47 @@ class User extends WpUser
     // Get and set methods
 
     /**
+     * Get best name
+     *
+     * @return string
+     */
+    public function get_best_name(): string
+    {
+        if ($this->get_full_name() !== '') {
+            return $this->get_full_name();
+        }
+        if ($this->get_nickname() !== '') {
+            return $this->get_nickname();
+        }
+        if ($this->get_display_name() !== '') {
+            return $this->get_display_name();
+        }
+
+        return $this->get_user_login();
+    }
+
+    /**
+     * Get full name
+     *   i.e. first and last name separated by space
+     *
+     * @return string
+     */
+    public function get_full_name(): string
+    {
+        $name = [];
+        if ($this->get_first_name() !== '') {
+            $name[] = $this->get_first_name();
+        }
+        if ($this->get_last_name() !== '') {
+            $name[] = $this->get_last_name();
+        }
+
+        return implode(' ', $name);
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
      * Get nickname
      *
      * @return string
