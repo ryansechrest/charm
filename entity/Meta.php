@@ -41,16 +41,16 @@ class Meta extends WpMeta
     // Instantiation methods
 
     /**
-     * Initialize meta(s)
+     * Get meta values
      *
      * @param array $params
-     * @return array|static|static[]|null
+     * @return static[]
      */
-    public static function init(array $params)
+    public static function get(array $params): array
     {
         $params['meta_type'] = static::META_TYPE;
 
-        return parent::init($params);
+        return parent::get($params);
     }
 
     /**
@@ -60,7 +60,7 @@ class Meta extends WpMeta
      * @param array $where
      * @return array
      */
-    public static function get(string $meta_key, array $where = [])
+    public static function get_values(string $meta_key, array $where = [])
     {
         global $wpdb;
 
