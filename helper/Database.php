@@ -164,17 +164,26 @@ class Database
      * @param array $fields
      * @param array $table
      * @param array $conditions
+     * @param string $order_by
      * @param int $limit
      * @return array
      */
-    public function select_where(array $fields, array $table, array $conditions, int $limit = 0): array
+    public function select_where(
+        array $fields, array $table, array $conditions = [], $order_by = '', int $limit = 0
+    ): array
     {
         $query = [
             $this->sql_select($fields),
             $this->sql_from($table),
-            $this->sql_where($this->sql_types($conditions)),
         ];
-        $params = array_values($conditions);
+        $params = [];
+        if (count($conditions) > 0) {
+            $query[] = $this->sql_where($this->sql_types($conditions));
+            $params = array_values($conditions);
+        }
+        if ($order_by !== '') {
+            $query[] = 'ORDER BY ' . $order_by;
+        }
         if ($limit > 0) {
             $query[] = 'LIMIT %d';
             $params[] = $limit;
@@ -332,7 +341,7 @@ class Database
         $from = [];
         foreach ($tables as $key => $table) {
             if (!is_int($key)) {
-                $from[] = $this->prefix($key) . ' AS ' . $table;
+                $from[] = $this->prefix($key) . ' ' . $table;
             } else {
                 $from[] = $this->prefix($table);
             }
