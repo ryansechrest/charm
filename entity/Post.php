@@ -316,8 +316,13 @@ class Post extends WpPost
     {
         return array_merge(
             parent::to_array(),
-            ['metas' => array_map(function(CharmPostMeta $meta) {
-                return $meta->get_meta_value();
+            ['metas' => array_map(function($meta) {
+                if (!is_array($meta)) {
+                    return $meta->get_meta_value();
+                }
+                return array_map(function($meta) {
+                    return $meta->get_meta_value();
+                }, $meta);
             }, $this->meta())]
         );
     }
