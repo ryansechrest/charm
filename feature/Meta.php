@@ -16,7 +16,7 @@ trait Meta
     // Properties
 
     /**
-     * Post metas
+     * Metas
      *
      * @var array
      */
@@ -48,7 +48,7 @@ trait Meta
     // Private get and set methods
 
     /**
-     * Get post meta from Post
+     * Get meta from object
      *
      * @param string $key
      * @return MetaClass|MetaClass[]
@@ -66,7 +66,7 @@ trait Meta
     }
 
     /**
-     * Save post meta in Post
+     * Save meta in object
      *
      * @param string $key
      * @param mixed $value
@@ -90,7 +90,7 @@ trait Meta
     }
 
     /**
-     * Create post meta instance
+     * Create meta instance
      *
      * @param string $key
      * @param mixed $value
@@ -109,14 +109,14 @@ trait Meta
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get post metas from database
+     * Get metas from database
      *
      * @return array
      */
     private function get_metas(): array
     {
         $metas = call_user_func(
-            static::META . '::init', [
+            static::META . '::get', [
                 'object_id' => $this->id,
             ]
         );
@@ -128,7 +128,7 @@ trait Meta
     }
 
     /**
-     * Save post metas in database
+     * Save metas in database
      */
     private function save_metas(): void
     {
