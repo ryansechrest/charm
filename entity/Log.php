@@ -89,6 +89,34 @@ class Log
     protected $object_name = '';
 
     /**
+     * Sub action
+     *
+     * @var string
+     */
+    protected $sub_action = '';
+
+    /**
+     * Sub object ID
+     *
+     * @var int
+     */
+    protected $sub_object_id = 0;
+
+    /**
+     * Sub object type
+     *
+     * @var string
+     */
+    protected $sub_object_type = '';
+
+    /**
+     * Sub object name
+     *
+     * @var string
+     */
+    protected $sub_object_name = '';
+
+    /**
      * Success
      *
      * @var string
@@ -105,9 +133,9 @@ class Log
     /**
      * Detail
      *
-     * @var string
+     * @var null
      */
-    protected $detail = '';
+    protected $detail = null;
 
     /**
      * Date
@@ -181,10 +209,22 @@ class Log
             $this->object_id = (int) $data['object_id'];
         }
         if (isset($data['object_type'])) {
-            $this->object_type = (int) $data['object_type'];
+            $this->object_type = $data['object_type'];
         }
         if (isset($data['object_name'])) {
             $this->object_name = $data['object_name'];
+        }
+        if (isset($data['sub_action'])) {
+            $this->sub_action = $data['sub_action'];
+        }
+        if (isset($data['sub_object_id'])) {
+            $this->sub_object_id = (int) $data['sub_object_id'];
+        }
+        if (isset($data['sub_object_type'])) {
+            $this->sub_object_type = $data['sub_object_type'];
+        }
+        if (isset($data['sub_object_name'])) {
+            $this->sub_object_name = $data['sub_object_name'];
         }
         if (isset($data['success'])) {
             $this->success = (int) $data['success'];
@@ -218,6 +258,10 @@ class Log
                 'object_id bigint(20) UNSIGNED NOT NULL',
                 'object_type varchar(100) NOT NULL',
                 'object_name varchar(255) NOT NULL',
+                'sub_action varchar(100)',
+                'sub_object_id bigint(20) UNSIGNED',
+                'sub_object_type varchar(100)',
+                'sub_object_name varchar(255)',
                 'success int(1) UNSIGNED NOT NULL',
                 'message varchar(255) NOT NULL',
                 'detail text',
@@ -226,6 +270,273 @@ class Log
                 'FOREIGN KEY (user_id) REFERENCES ' . $db->prefix('users') . '(id)',
             ]);
         }
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Log everything
+     */
+    public static function everything()
+    {
+        static::when_post_saved();
+        static::when_post_deleted();
+        static::when_post_meta_updated();
+        static::when_post_meta_deleted();
+        static::when_user_meta_updated();
+        static::when_user_meta_deleted();
+    }
+
+    /**
+     * Get class name
+     *
+     * @param string $key
+     * @return string
+     */
+    public static function get_class_name(string $key): string
+    {
+        $class_names = static::get_class_names();
+        if (!isset($class_names[$key])) {
+            return '';
+        }
+
+        return $class_names[$key];
+    }
+
+    /**
+     * Get class names
+     *
+     * @return string[]
+     */
+    public static function get_class_names(): array
+    {
+        return [
+            'comment_meta' => CommentMeta::class,
+            'page' => Page::class,
+            'post' => Post::class,
+            'post_meta' => PostMeta::class,
+            'term' => Term::class,
+            'term_meta' => TermMeta::class,
+            'user' => User::class,
+            'user_meta' => UserMeta::class,
+        ];
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Log when post is created or updated
+     */
+    public static function when_post_saved()
+    {
+        add_action('save_post', function($post_id, $post, $update) {
+            if (in_array($post->post_type, static::ignore_post_types())) {
+                return;
+            }
+            if (wp_is_post_revision($post_id)) {
+                return;
+            }
+            $post = call_user_func(
+                static::get_class_name($post->post_type) . '::init', $post_id
+            );
+            static::new([
+                'action' => $update === true ? 'update' : 'create',
+                'object_id' => $post->get_id(),
+                'object_type' => $post->get_post_type(),
+                'object_name' => $post->get_post_title(),
+                'success' => 1,
+                'detail' => $post->to_json(),
+            ]);
+        }, 10, 3);
+    }
+
+    /**
+     * Log when post is deleted
+     */
+    public static function when_post_deleted()
+    {
+        add_action('delete_post', function($post_id, $post) {
+            if (in_array($post->post_type, static::ignore_post_types())) {
+                return;
+            }
+            $post = call_user_func(
+                static::get_class_name($post->post_type) . '::init', $post_id
+            );
+            static::new([
+                'action' => 'delete',
+                'object_id' => $post->get_id(),
+                'object_type' => $post->get_post_type(),
+                'object_name' => $post->get_post_title(),
+                'success' => 1,
+                'detail' => $post->to_json(),
+            ]);
+        }, 10, 2);
+    }
+
+    /**
+     * Ignore specified post types from being logged
+     *
+     * @return array
+     */
+    public static function ignore_post_types(): array
+    {
+        return [];
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Log when post meta is updated
+     */
+    public static function when_post_meta_updated()
+    {
+        add_action('update_post_meta', function($meta_id, $object_id, $meta_key, $meta_value) {
+            if (in_array($meta_key, static::ignore_post_metas())) {
+                return;
+            }
+            $post = call_user_func(
+                static::get_class_name(get_post_type($object_id)) . '::init', $object_id
+            );
+            $post_meta = call_user_func(
+                static::get_class_name('post_meta') . '::init',
+                $meta_id
+            );
+            $post_meta->set_meta_value($meta_value);
+            static::new([
+                'action' => 'update',
+                'object_id' => $post->get_id(),
+                'object_type' => $post->get_post_type(),
+                'object_name' => $post->get_post_title(),
+                'sub_action' => 'update',
+                'sub_object_id' => $post_meta->get_meta_id(),
+                'sub_object_type' => $post_meta->get_meta_type() . '_meta',
+                'sub_object_name' => $post_meta->get_meta_key(),
+                'success' => 1,
+                'detail' => $post_meta->to_json(),
+            ]);
+        }, 10, 4);
+    }
+
+    /**
+     * Log when post meta is deleted
+     */
+    public static function when_post_meta_deleted()
+    {
+        add_action('delete_post_meta', function($meta_ids, $object_id, $meta_key, $meta_value) {
+            if (in_array($meta_key, static::ignore_post_metas())) {
+                return;
+            }
+            $post = call_user_func(
+                static::get_class_name(get_post_type($object_id)) . '::init', $object_id
+            );
+            foreach ($meta_ids as $meta_id) {
+                $post_meta = call_user_func(
+                    static::get_class_name('post_meta') . '::init',
+                    $meta_id
+                );
+                $post_meta->set_meta_value($meta_value);
+                static::new([
+                    'action' => 'update',
+                    'object_id' => $post->get_id(),
+                    'object_type' => $post->get_post_type(),
+                    'object_name' => $post->get_post_title(),
+                    'sub_action' => 'delete',
+                    'sub_object_id' => $post_meta->get_meta_id(),
+                    'sub_object_type' => $post_meta->get_meta_type() . '_meta',
+                    'sub_object_name' => $post_meta->get_meta_key(),
+                    'success' => 1,
+                    'detail' => $post_meta->to_json(),
+                ]);
+            }
+        }, 10, 4);
+    }
+
+    /**
+     * Ignore specified post metas from being logged
+     *
+     * @return array
+     */
+    public static function ignore_post_metas(): array
+    {
+        return ['_edit_last', '_edit_lock', '_encloseme'];
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Log when user meta is updated
+     */
+    public static function when_user_meta_updated()
+    {
+        add_action('update_user_meta', function($meta_id, $object_id, $meta_key, $meta_value) {
+            if (in_array($meta_key, static::ignore_user_metas())) {
+                return;
+            }
+            $user = call_user_func(
+                static::get_class_name('user') . '::init', $object_id
+            );
+            $user_meta = call_user_func(
+                static::get_class_name('user_meta') . '::init',
+                $meta_id
+            );
+            $user_meta->set_meta_value($meta_value);
+            static::new([
+                'action' => 'update',
+                'object_id' => $user->get_id(),
+                'object_type' => 'user',
+                'object_name' => $user->get_best_name(),
+                'sub_action' => 'update',
+                'sub_object_id' => $user_meta->get_meta_id(),
+                'sub_object_type' => $user_meta->get_meta_type() . '_meta',
+                'sub_object_name' => $user_meta->get_meta_key(),
+                'success' => 1,
+                'detail' => $user_meta->to_json(),
+            ]);
+        }, 10, 4);
+    }
+
+    /**
+     * Log when user meta deleted
+     */
+    public static function when_user_meta_deleted()
+    {
+        add_action('delete_user_meta', function($meta_ids, $object_id, $meta_key, $meta_value) {
+            if (in_array($meta_key, static::ignore_user_metas())) {
+                return;
+            }
+            $user = call_user_func(
+                static::get_class_name('user') . '::init', $object_id
+            );
+            foreach ($meta_ids as $meta_id) {
+                $user_meta = call_user_func(
+                    static::get_class_name('user_meta') . '::init',
+                    $meta_id
+                );
+                $user_meta->set_meta_value($meta_value);
+                static::new([
+                    'action' => 'update',
+                    'object_id' => $user->get_id(),
+                    'object_type' => 'user',
+                    'object_name' => $user->get_best_name(),
+                    'sub_action' => 'delete',
+                    'sub_object_id' => $user_meta->get_meta_id(),
+                    'sub_object_type' => $user_meta->get_meta_type() . '_meta',
+                    'sub_object_name' => $user_meta->get_meta_key(),
+                    'success' => 1,
+                    'detail' => $user_meta->to_json(),
+                ]);
+            }
+        }, 10, 4);
+    }
+
+    /**
+     * Ignore specified user metas from being logged
+     *
+     * @return array
+     */
+    public static function ignore_user_metas(): array
+    {
+        return ['use_ssl'];
     }
 
     /************************************************************************************/
@@ -256,12 +567,13 @@ class Log
      * Get logs
      *
      * @param array $conditions
+     * @param string $order_by
      * @return static[]
      */
-    public static function get(array $conditions = []): array
+    public static function get(array $conditions = [], $order_by = 'id DESC'): array
     {
         $db = Database::init();
-        $logs = $db->select_where(static::TABLE, $conditions);
+        $logs = $db->select_where([], [static::TABLE], $conditions, $order_by);
         if (!is_array($logs)) {
             return [];
         }
@@ -288,17 +600,7 @@ class Log
             $user = call_user_func(
                 static::USER . '::init', $log->get_user_id()
             );
-            $user_name = '';
-            if ($user->get_first_name() !== '' && $user->get_last_name() !== '') {
-                $user_name = $user->get_first_name() . ' ' . $user->get_last_name();
-            } elseif ($user->get_display_name() !== '') {
-                $user_name = $user->get_display_name();
-            } elseif ($user->get_nickname() !== '') {
-                $user_name = $user->get_nickname();
-            } else {
-                $user_name = $user->get_user_login();
-            }
-            $log->set_user_name($user_name);
+            $log->set_user_name($user->get_best_name());
         }
         if ($log->create() === true) {
             return $log;
@@ -337,6 +639,10 @@ class Log
         $this->object_id = (int) $object->object_id;
         $this->object_type = $object->object_type;
         $this->object_name = $object->object_name;
+        $this->sub_action = $object->sub_action;
+        $this->sub_object_id = (int) $object->sub_object_id;
+        $this->sub_object_type = $object->sub_object_type;
+        $this->sub_object_name = $object->sub_object_name;
         $this->success = (int) $object->success;
         $this->message = $object->message;
         $this->detail = $object->detail;
@@ -446,13 +752,25 @@ class Log
         if ($this->object_name !== '') {
             $data['object_name'] = $this->object_name;
         }
+        if ($this->sub_action !== '') {
+            $data['sub_action'] = $this->sub_action;
+        }
+        if ($this->sub_object_id !== 0) {
+            $data['sub_object_id'] = $this->sub_object_id;
+        }
+        if ($this->sub_object_type !== '') {
+            $data['sub_object_type'] = $this->sub_object_type;
+        }
+        if ($this->sub_object_name !== '') {
+            $data['sub_object_name'] = $this->sub_object_name;
+        }
         if ($this->success !== 0) {
             $data['success'] = $this->success;
         }
         if ($this->message !== '') {
             $data['message'] = $this->message;
         }
-        if ($this->detail !== '') {
+        if ($this->detail !== null) {
             $data['detail'] = $this->detail;
         }
         if ($this->date !== '') {
@@ -695,6 +1013,94 @@ class Log
     /*----------------------------------------------------------------------------------*/
 
     /**
+     * Get sub action
+     *
+     * @return string
+     */
+    public function get_sub_action(): string
+    {
+        return $this->sub_action;
+    }
+
+    /**
+     * Set sub action
+     *
+     * @param string $sub_action
+     */
+    public function set_sub_action(string $sub_action): void
+    {
+        $this->sub_action = $sub_action;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get sub object ID
+     *
+     * @return int
+     */
+    public function get_sub_object_id(): int
+    {
+        return $this->sub_object_id;
+    }
+
+    /**
+     * Set sub object ID
+     *
+     * @param int $sub_object_id
+     */
+    public function set_sub_object_id(int $sub_object_id): void
+    {
+        $this->sub_object_id = $sub_object_id;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get sub object type
+     *
+     * @return string
+     */
+    public function get_sub_object_type(): string
+    {
+        return $this->sub_object_type;
+    }
+
+    /**
+     * Set sub object type
+     *
+     * @param string $object_type
+     */
+    public function set_sub_object_type(string $sub_object_type): void
+    {
+        $this->sub_object_type = $sub_object_type;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get sub object name
+     *
+     * @return string
+     */
+    public function get_sub_object_name(): string
+    {
+        return $this->sub_object_name;
+    }
+
+    /**
+     * Set sub object name
+     *
+     * @param string $sub_object_name
+     */
+    public function set_sub_object_name(string $sub_object_name): void
+    {
+        $this->sub_object_name = $sub_object_name;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
      * Get success
      *
      * @return string
@@ -741,9 +1147,9 @@ class Log
     /**
      * Get detail
      *
-     * @return string
+     * @return mixed
      */
-    public function get_detail(): string
+    public function get_detail()
     {
         return $this->detail;
     }
@@ -751,9 +1157,9 @@ class Log
     /**
      * Set detail
      *
-     * @param string $detail
+     * @param mixed $detail
      */
-    public function set_detail(string $detail): void
+    public function set_detail($detail): void
     {
         $this->detail = $detail;
     }
