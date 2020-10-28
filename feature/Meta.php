@@ -117,7 +117,7 @@ trait Meta
     {
         $metas = call_user_func(
             static::META . '::get', [
-                'object_id' => $this->id,
+                'object_id' => $this->id(),
             ]
         );
         if ($metas === null) {
@@ -137,12 +137,12 @@ trait Meta
         }
         foreach ($this->metas as $key => $meta) {
             if (!is_array($meta)) {
-                $meta->set_object_id($this->id);
+                $meta->set_object_id($this->id());
                 $meta->save();
                 continue;
             }
             foreach ($meta as $single_meta) {
-                $single_meta->set_object_id($this->id);
+                $single_meta->set_object_id($this->id());
                 $single_meta->save();
             }
         }
