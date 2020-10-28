@@ -3,7 +3,6 @@
 namespace Charm\Entity;
 
 use Charm\DataType\DateTime;
-use Charm\Entity\PostMeta as CharmPostMeta;
 use Charm\Feature\Meta as MetaFeature;
 use Charm\Feature\Taxonomy as TaxonomyFeature;
 use Charm\Module\PostType;
@@ -170,6 +169,16 @@ class Post extends WpPost
     }
 
     /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get post ID
+     *
+     * @return int
+     */
+    public function id(): int
+    {
+        return $this->id;
+    }
 
     /**
      * Get author
