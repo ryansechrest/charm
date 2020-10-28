@@ -62,6 +62,16 @@ class User extends WpUser
     // Object access methods
 
     /**
+     * Get user ID
+     *
+     * @return int
+     */
+    public function id(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * Get registration date
      *
      * @return DateTime
@@ -189,6 +199,29 @@ class User extends WpUser
     public function can($capability, ...$args): bool
     {
         return $this->wp_user()->has_cap($capability, ...$args);
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast instance to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        return array_merge(
+            parent::to_array(),
+            ['metas' => array_map(function($meta) {
+                if (!is_array($meta)) {
+                    return $meta->get_meta_value();
+                }
+                return array_map(function($meta) {
+                    return $meta->get_meta_value();
+                }, $meta);
+            }, $this->meta())]
+        );
     }
 
     /************************************************************************************/
