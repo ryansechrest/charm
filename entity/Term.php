@@ -97,6 +97,18 @@ class Term extends WpTerm
     /*----------------------------------------------------------------------------------*/
 
     /**
+     * Get term ID
+     *
+     * @return int
+     */
+    public function id(): int
+    {
+        return $this->term_id;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
      * Get parent
      *
      * @return Term|null
@@ -131,6 +143,29 @@ class Term extends WpTerm
         return $this->child_objs = array_map(function($term_id) {
             return static::init($term_id);
         }, $children);
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast instance to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        return array_merge(
+            parent::to_array(),
+            ['metas' => array_map(function($meta) {
+                if (!is_array($meta)) {
+                    return $meta->get_meta_value();
+                }
+                return array_map(function($meta) {
+                    return $meta->get_meta_value();
+                }, $meta);
+            }, $this->meta())]
+        );
     }
 
     /************************************************************************************/
