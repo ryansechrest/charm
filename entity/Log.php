@@ -610,7 +610,7 @@ class Log
      */
     public static function when_term_deleted()
     {
-        add_action('delete_term', function($term_id, $tt_id, $taxonomy, $deleted_term, $object_ids) {
+        add_action('pre_delete_term', function($term_id, $taxonomy) {
             /** @var Taxonomy $taxonomy */
             $taxonomy = call_user_func(
                 static::get_class_name('taxonomy') . '::init',
@@ -633,7 +633,7 @@ class Log
                 'success' => 1,
                 'detail' => $term->to_json(),
             ]);
-        }, 10, 5);
+        }, 10, 2);
     }
 
     /**
