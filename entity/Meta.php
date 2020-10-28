@@ -82,6 +82,19 @@ class Meta extends WpMeta
     }
 
     /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get meta ID
+     *
+     * @return int
+     */
+    public function id(): int
+    {
+        return $this->meta_id;
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
