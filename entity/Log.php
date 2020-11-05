@@ -303,6 +303,8 @@ class Log
 
         // Users
         static::when_user_registered();
+        static::when_user_logged_in();
+        static::when_user_logged_out();
         static::when_user_updated();
         static::when_user_deleted();
 
@@ -538,7 +540,14 @@ class Log
      */
     public static function ignore_post_metas(): array
     {
-        return ['_edit_last', '_edit_lock', '_encloseme'];
+        return [
+            '_edit_last',
+            '_edit_lock',
+            '_encloseme',
+            '_wp_desired_post_slug',
+            '_wp_trash_meta_time',
+            '_wp_trash_meta_status'
+        ];
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -848,6 +857,50 @@ class Log
     }
 
     /**
+     * Log when user logged in
+     */
+    public static function when_user_logged_in(): void
+    {
+        add_action('wp_login', function($user_login, $wp_user) {
+            /** @var User $user */
+            $user = call_user_func(
+                static::get_class_name('user') . '::init',
+                $wp_user
+            );
+            static::new([
+                'action' => 'login',
+                'object_id' => $user->get_id(),
+                'object_type' => 'user',
+                'object_name' => $user->get_best_name(),
+                'success' => 1,
+                'detail' => $user->to_json(),
+            ]);
+        }, 10, 2);
+    }
+
+    /**
+     * Log when user logged out
+     */
+    public static function when_user_logged_out(): void
+    {
+        add_action('wp_logout', function($user_id) {
+            /** @var User $user */
+            $user = call_user_func(
+                static::get_class_name('user') . '::init',
+                $user_id
+            );
+            static::new([
+                'action' => 'logout',
+                'object_id' => $user->get_id(),
+                'object_type' => 'user',
+                'object_name' => $user->get_best_name(),
+                'success' => 1,
+                'detail' => $user->to_json(),
+            ]);
+        }, 10, 1);
+    }
+
+    /**
      * Log when user is updated
      */
     public static function when_user_updated(): void
@@ -1005,7 +1058,10 @@ class Log
      */
     public static function ignore_user_metas(): array
     {
-        return ['use_ssl'];
+        return [
+            'use_ssl',
+            'session_tokens'
+        ];
     }
 
     /************************************************************************************/
