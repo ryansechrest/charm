@@ -355,6 +355,9 @@ class Meta
      */
     public function update(): bool
     {
+        if ($this->prev_value === $this->meta_value) {
+            return false;
+        }
         $success = update_metadata(
             $this->meta_type,
             $this->object_id,
