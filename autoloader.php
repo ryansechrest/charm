@@ -14,6 +14,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Event.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Schedule.php';
 
 // WordPress Modules
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/MenuLocation.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Taxonomy.php';
@@ -46,11 +47,13 @@ require_once WPMU_PLUGIN_DIR . '/charm/cron/Schedule.php';
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Cron.php';
 
 // Modules
+require_once WPMU_PLUGIN_DIR . '/charm/module/MenuLocation.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
 
 // Skeletons
+require_once WPMU_PLUGIN_DIR . '/charm/skeleton/MenuLocation.php';
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Taxonomy.php';
