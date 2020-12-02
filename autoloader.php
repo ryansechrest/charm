@@ -28,6 +28,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 /****************************************************************************************/
 
 // Conductor
+require_once WPMU_PLUGIN_DIR . '/charm/conductor/Menu.php';
 require_once WPMU_PLUGIN_DIR . '/charm/conductor/ObjectTaxonomy.php';
 
 // Data Types
@@ -70,8 +71,10 @@ require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
 // Application Entities
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Log.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenuItem.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Term.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenu.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/User.php';
 
 /****************************************************************************************/
