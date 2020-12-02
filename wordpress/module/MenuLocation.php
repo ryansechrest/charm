@@ -63,6 +63,25 @@ class MenuLocation
     }
 
     /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Get menu locations
+     *
+     * @see get_nav_menu_locations()
+     * @return static[]
+     */
+    public static function get(): array
+    {
+        $menu_locations = [];
+        foreach (get_nav_menu_locations() as $location => $term_id) {
+            $menu_locations[] = new static(['location' => $location]);
+        }
+
+        return $menu_locations;
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
