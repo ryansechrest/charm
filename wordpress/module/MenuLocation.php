@@ -66,16 +66,38 @@ class MenuLocation
     // Instantiation methods
 
     /**
+     * Initialize menu location
+     *
+     * @see has_nav_menu()
+     * @param string $location
+     * @return static|null
+     */
+    public static function init(string $location)
+    {
+        $menu_locations = static::get();
+        foreach ($menu_locations as $menu_location) {
+            if ($menu_location->get_location() === $location) {
+                return $menu_location;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get menu locations
      *
-     * @see get_nav_menu_locations()
+     * @see get_registered_nav_menus()
      * @return static[]
      */
     public static function get(): array
     {
         $menu_locations = [];
-        foreach (get_nav_menu_locations() as $location => $term_id) {
-            $menu_locations[] = new static(['location' => $location]);
+        foreach (get_registered_nav_menus() as $location => $description) {
+            $menu_locations[] = new static([
+                'location' => $location,
+                'description' => $description,
+            ]);
         }
 
         return $menu_locations;
