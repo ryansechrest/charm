@@ -157,7 +157,7 @@ class Term
      * Initialize term
      *
      * @see WP_Term
-     * @param int|WP_Term $key
+     * @param int|string|WP_Term $key
      * @param string $taxonomy
      * @return static|null
      */
