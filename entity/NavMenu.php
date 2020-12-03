@@ -2,24 +2,26 @@
 
 namespace Charm\Entity;
 
+use Charm\WordPress\NavMenu as WpNavMenu;
+
 /**
  * Class NavMenu
  *
  * @author Ryan Sechrest
  * @package Charm\Entity
  */
-class NavMenu extends Term
+class NavMenu extends WpNavMenu
 {
     /************************************************************************************/
     // Object access methods
 
     /**
-     * Get taxonomy
+     * Get nav menu ID
      *
-     * @return string
+     * @return int
      */
-    public static function taxonomy(): string
+    public function id(): int
     {
-        return 'nav_menu';
+        return $this->term_id;
     }
 }
