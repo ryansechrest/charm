@@ -13,6 +13,16 @@ use WP_Term;
 class NavMenu extends Term
 {
     /************************************************************************************/
+    // Constants
+
+    /**
+     * NavMenuItem class
+     *
+     * @var string
+     */
+    const ITEM = 'Charm\Entity\NavMenuItem';
+
+    /************************************************************************************/
     // Instantiation methods
 
     /**
@@ -26,10 +36,15 @@ class NavMenu extends Term
     public static function init($key, $taxonomy = 'nav_menu'): ?Term
     {
         $nav_menu = wp_get_nav_menu_object($key);
-        if ($nav_menu === false) {
-            return null;
+        if ($nav_menu !== false) {
+            return parent::init($nav_menu, $taxonomy);
         }
-        return parent::init($nav_menu, $taxonomy);
+        $menu_locations = get_nav_menu_locations();
+        if (isset($menu_locations[$key])) {
+            return parent::init($menu_locations[$key], $taxonomy);
+        }
+
+        return null;
     }
 
     /**
@@ -103,5 +118,23 @@ class NavMenu extends Term
         }
 
         return true;
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get nav menu items
+     *
+     * @param array $params
+     * @return NavMenuItem[]
+     */
+    public function get_items($params = []): array
+    {
+        $params['menu_id'] = $this->term_id;
+
+        return call_user_func(
+            static::ITEM . '::get', $params
+        );
     }
 }
