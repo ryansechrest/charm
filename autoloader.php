@@ -22,6 +22,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Taxonomy.php';
 // WordPress Entities
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Post.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenuItem.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Term.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenu.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
