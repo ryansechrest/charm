@@ -14,6 +14,13 @@ use ReflectionException;
  */
 class NavMenu extends WpNavMenu
 {
+    /**
+     * Nav menu items
+     *
+     * @var NavMenuItem[]
+     */
+    protected $items = [];
+
     /************************************************************************************/
     // Constants
 
@@ -23,7 +30,7 @@ class NavMenu extends WpNavMenu
      * @var string
      */
     const ITEM = 'Charm\Entity\NavMenuItem';
-    
+
     /************************************************************************************/
     // Object access methods
 
@@ -37,7 +44,8 @@ class NavMenu extends WpNavMenu
         return $this->term_id;
     }
 
-    /*----------------------------------------------------------------------------------*/
+    /************************************************************************************/
+    // Get and set methods
 
     /**
      * Create new nav menu item
@@ -52,6 +60,7 @@ class NavMenu extends WpNavMenu
         try {
             $reflection = new ReflectionClass(static::ITEM);
             $nav_menu_item = $reflection->newInstanceArgs([$params]);
+            $this->items = [];
             return $nav_menu_item->create();
         } catch (ReflectionException $e) {
             return false;
@@ -66,10 +75,23 @@ class NavMenu extends WpNavMenu
      */
     public function get_items($params = []): array
     {
+        if (count($this->items) > 0) {
+            return $this->items;
+        }
         $params['menu_id'] = $this->term_id;
 
-        return call_user_func(
+        return $this->items = call_user_func(
             static::ITEM . '::get', $params
         );
+    }
+
+    /**
+     * Set nav menu items
+     *
+     * @param array $items
+     */
+    public function set_items(array $items): void
+    {
+        $this->items = $items;
     }
 }
