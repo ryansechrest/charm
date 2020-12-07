@@ -3,7 +3,6 @@
 namespace Charm\WordPress;
 
 use WP_Post;
-use WP_Term;
 
 /**
  * Class NavMenuItem
@@ -11,7 +10,7 @@ use WP_Term;
  * @author Ryan Sechrest
  * @package Charm\WordPress
  */
-class NavMenuItem extends Post
+class NavMenuItem
 {
     /************************************************************************************/
     // Properties
@@ -56,7 +55,7 @@ class NavMenuItem extends Post
      *
      * @var string
      */
-    protected $type = '';
+    protected $type = 'custom';
 
     /**
      * Type label
@@ -114,8 +113,44 @@ class NavMenuItem extends Post
      */
     protected $xfn = '';
 
+    /**
+     * Position
+     *
+     * @var int
+     */
+    protected $position = 0;
+
+    /**
+     * Status
+     *
+     * @var string
+     */
+    protected $status = '';
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * WordPress post
+     *
+     * @var WP_Post
+     */
+    private $wp_post = null;
+
     /************************************************************************************/
     // Default constructor and load method
+
+    /**
+     * NavMenuItem constructor
+     *
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        if (count($data) ==- 0) {
+            return;
+        }
+        $this->load($data);
+    }
 
     /**
      * Load instance with data
@@ -124,7 +159,6 @@ class NavMenuItem extends Post
      */
     public function load(array $data): void
     {
-        parent::load($data);
         if (isset($data['menu_id'])) {
             $this->menu_id = (int) $data['menu_id'];
         }
@@ -167,6 +201,12 @@ class NavMenuItem extends Post
         if (isset($data['xfn'])) {
             $this->xfn = $data['xfn'];
         }
+        if (isset($data['position'])) {
+            $this->position = (int) $data['position'];
+        }
+        if (isset($data['status'])) {
+            $this->status = $data['status'];
+        }
     }
 
     /************************************************************************************/
@@ -176,19 +216,28 @@ class NavMenuItem extends Post
      * Initialize post
      *
      * @see wp_setup_nav_menu_item()
-     * @param int|string|WP_Post|null $key
+     * @param int|WP_Post $key
      * @return static|null
      */
-    public static function init($key = null): ?Post
+    public static function init($key): ?NavMenuItem
     {
-        $post = parent::init($key);
-        if ($post === null) {
+        $nav_menu_item = new static();
+        if (is_int($key) || ctype_digit($key)) {
+            $nav_menu_item->load_from_id($key);
+        } elseif (
+            is_object($key)
+            && get_class($key) === 'WP_Post'
+            && property_exists($key, 'db_id')
+        ) {
+            $nav_menu_item->load_from_nav_menu_item($key);
+        } elseif (is_object($key) && get_class($key) === 'WP_Post') {
+            $nav_menu_item->load_from_post($key);
+        }
+        if ($nav_menu_item->get_db_id() === 0) {
             return null;
         }
-        $nav_menu_item = wp_setup_nav_menu_item($post->wp_post());
-        $post->load_from_nav_menu_item($nav_menu_item);
 
-        return $post;
+        return $nav_menu_item;
     }
 
     /**
@@ -199,58 +248,77 @@ class NavMenuItem extends Post
      */
     public static function get(array $params = []): array
     {
-        if (isset($params['menu'])) {
-            return static::get_by_menu($params['menu'], $params);
+        if (isset($params['menu_name'])) {
+            return static::get_by_menu_name($params['menu_name'], $params);
         }
-        if (isset($params['location'])) {
-            return static::get_by_location($params['location'], $params);
+        if (isset($params['menu_location'])) {
+            return static::get_by_menu_location($params['menu_location'], $params);
+        }
+        if (isset($params['menu_id'])) {
+            return static::get_by_menu_id($params['menu_id'], $params);
         }
 
         return [];
     }
 
+    /*----------------------------------------------------------------------------------*/
+
     /**
-     * Get nav menu items by menu
+     * Get nav menu items by menu name
      *
-     * @see wp_get_nav_menu_items()
-     * @param int|string|WP_Term $menu
+     * @see wp_get_nav_menu_object()
+     * @param string $menu_name
      * @param array $params
      * @return static[]
      */
-    public static function get_by_menu($menu, $params = []): array
+    protected static function get_by_menu_name(string $menu_name, $params = []): array
     {
-        $nav_menu = NavMenu::init($menu);
-        if ($nav_menu === null) {
+        $nav_menu_object = wp_get_nav_menu_object($menu_name);
+
+        return static::get_by_menu_id($nav_menu_object->term_id, $params);
+    }
+
+    /**
+     * Get nav menu items by menu location
+     *
+     * @see get_nav_menu_locations()
+     * @param string $menu_location
+     * @param array $params
+     * @return static[]
+     */
+    protected static function get_by_menu_location(
+        string $menu_location, $params = []
+    ): array
+    {
+        $menu_locations = get_nav_menu_locations();
+        if (!isset($menu_locations[$menu_location])) {
             return [];
         }
-        $nav_menu_items = wp_get_nav_menu_items($nav_menu->get_term_id(), $params);
+        $menu_id = $menu_locations[$menu_location];
+
+        return static::get_by_menu_id($menu_id, $params);
+    }
+
+    /**
+     * Get nav menu items by menu ID
+     *
+     * @see wp_get_nav_menu_items()
+     * @param int $menu_id
+     * @param array $params
+     * @return static[]
+     */
+    protected static function get_by_menu_id(int $menu_id, $params = []): array
+    {
+        $nav_menu_items = wp_get_nav_menu_items($menu_id, $params);
         if ($nav_menu_items === false) {
             return [];
         }
 
-        return array_map(function($nav_menu_item) use ($nav_menu) {
+        return array_map(function($nav_menu_item) use ($menu_id) {
             $item = static::init($nav_menu_item);
-            $item->set_menu_id($nav_menu->get_term_id());
+            $item->set_menu_id($menu_id);
             return $item;
         }, $nav_menu_items);
-    }
-
-    /**
-     * Get nav menu items by location
-     *
-     * @see get_nav_menu_locations()
-     * @param string $location
-     * @param array $params
-     * @return static[]
-     */
-    public static function get_by_location(string $location, $params = []): array
-    {
-        $locations = get_nav_menu_locations();
-        if (!isset($locations[$location])) {
-            return [];
-        }
-
-        return static::get_by_menu($locations[$location], $params);
     }
 
     /************************************************************************************/
@@ -267,21 +335,23 @@ class NavMenuItem extends Post
         if (!$post = get_post($id)) {
             return;
         }
+        if ($post->post_type !== 'nav_menu_item') {
+            return;
+        }
         $this->load_from_post($post);
     }
 
     /**
-     * Load instance from path
+     * Load instance from WP_Post object
      *
-     * @see get_page_by_path()
-     * @param string $path
+     * @see WP_Post
+     * @param WP_Post $post
      */
-    protected function load_from_path(string $path): void
+    protected function load_from_post(WP_Post $post): void
     {
-        if (!$post = get_page_by_path($path, OBJECT, 'nav_menu_item')) {
-            return;
-        }
-        $this->load_from_post($post);
+        /** @var WP_Post $wp_post */
+        $wp_post = wp_setup_nav_menu_item($post);
+        $this->load_from_nav_menu_item($wp_post);
     }
 
     /**
@@ -292,11 +362,10 @@ class NavMenuItem extends Post
      */
     protected function load_from_nav_menu_item(WP_Post $nav_menu_item): void
     {
-        $this->load_from_post($nav_menu_item);
         // WordPress adds the following properties dynamically to WP_Post
-        $this->db_id = $nav_menu_item->db_id;
-        $this->menu_item_parent = $nav_menu_item->menu_item_parent;
-        $this->object_id = $nav_menu_item->object_id;
+        $this->db_id = (int) $nav_menu_item->db_id;
+        $this->menu_item_parent = (int) $nav_menu_item->menu_item_parent;
+        $this->object_id = (int) $nav_menu_item->object_id;
         $this->object = $nav_menu_item->object;
         $this->type = $nav_menu_item->type;
         $this->type_label = $nav_menu_item->type_label;
@@ -307,20 +376,69 @@ class NavMenuItem extends Post
         $this->description = $nav_menu_item->description;
         $this->classes = $nav_menu_item->classes;
         $this->xfn = $nav_menu_item->xfn;
+        $this->position = (int) $nav_menu_item->menu_order;
+        $this->status = $nav_menu_item->post_status;
+        $this->wp_post = $nav_menu_item;
+    }
+
+    /**
+     * Reload instance from database
+     */
+    protected function reload(): void
+    {
+        if (!$this->db_id) {
+            return;
+        }
+        $this->load_from_id($this->db_id);
     }
 
     /************************************************************************************/
     // Action methods
 
     /**
+     * Save nav menu item
+     *
+     * @return bool
+     */
+    public function save(): bool
+    {
+        if (!$this->db_id) {
+            return $this->create();
+        }
+
+        return $this->update();
+    }
+
+    /**
      * Create new nav menu item
      *
-     * @see
+     * @see wp_update_nav_menu_item()
      * @return bool
      */
     public function create(): bool
     {
+        $id = wp_update_nav_menu_item($this->menu_id, 0, [
+            'menu-item-object-id' => $this->object_id,
+            'menu-item-object' => $this->object,
+            'menu-item-parent-id' => $this->menu_item_parent,
+            'menu-item-position' => $this->position,
+            'menu-item-type' => $this->type,
+            'menu-item-title' => $this->title,
+            'menu-item-url' => $this->url,
+            'menu-item-description' => $this->description,
+            'menu-item-attr-title' => $this->attr_title,
+            'menu-item-target' => $this->target,
+            'menu-item-classes' => implode(' ', $this->classes),
+            'menu-item-xfn' => $this->xfn,
+            'menu-item-status' => $this->status,
+        ]);
+        if (!is_int($id)) {
+            return false;
+        }
+        $this->db_id = $id;
+        $this->reload();
 
+        return true;
     }
 
     /**
@@ -331,18 +449,41 @@ class NavMenuItem extends Post
      */
     public function update(): bool
     {
-
+        $id = wp_update_nav_menu_item($this->menu_id, $this->db_id, [
+            'menu-item-object-id' => $this->object_id,
+            'menu-item-object' => $this->object,
+            'menu-item-parent-id' => $this->menu_item_parent,
+            'menu-item-position' => $this->position,
+            'menu-item-type' => $this->type,
+            'menu-item-title' => $this->title,
+            'menu-item-url' => $this->url,
+            'menu-item-description' => $this->description,
+            'menu-item-attr-title' => $this->attr_title,
+            'menu-item-target' => $this->target,
+            'menu-item-classes' => implode(' ', $this->classes),
+            'menu-item-xfn' => $this->xfn,
+            'menu-item-status' => $this->status,
+        ]);
+        if (!is_int($id)) {
+            return false;
+        }
+        $this->db_id = $id;
+        $this->reload();
     }
 
     /**
      * Delete nav menu item
      *
-     * @see
+     * @see wp_delete_post()
      * @return bool
      */
     public function delete(): bool
     {
+        if (!wp_delete_post($this->db_id, true)) {
+            return false;
+        }
 
+        return true;
     }
 
     /************************************************************************************/
@@ -355,7 +496,7 @@ class NavMenuItem extends Post
      */
     public function to_array(): array
     {
-        $data = parent::to_array();
+        $data = [];
         if ($this->menu_id !== 0) {
             $data['menu_id'] = $this->menu_id;
         }
@@ -398,8 +539,33 @@ class NavMenuItem extends Post
         if ($this->xfn !== '') {
             $data['xfn'] = $this->xfn;
         }
+        if ($this->position !== 0) {
+            $data['position'] = $this->position;
+        }
+        if ($this->status !== '') {
+            $data['status'] = $this->status;
+        }
 
         return $data;
+    }
+
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
     }
 
     /************************************************************************************/
@@ -709,5 +875,49 @@ class NavMenuItem extends Post
     public function set_xfn(string $xfn): void
     {
         $this->xfn = $xfn;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get position
+     *
+     * @return int
+     */
+    public function get_position(): int
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set position
+     *
+     * @param int $position
+     */
+    public function set_position(int $position): void
+    {
+        $this->position = $position;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function get_status(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     */
+    public function set_status(string $status): void
+    {
+        $this->status = $status;
     }
 }
