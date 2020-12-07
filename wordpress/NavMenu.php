@@ -50,20 +50,6 @@ class NavMenu extends Term
     // Action methods
 
     /**
-     * Save nav menu
-     *
-     * @return bool
-     */
-    public function save(): bool
-    {
-        if (!$this->term_id) {
-            return $this->create();
-        }
-
-        return $this->update();
-    }
-
-    /**
      * Create nav menu
      *
      * @see wp_create_nav_menu()
