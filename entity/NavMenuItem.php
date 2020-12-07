@@ -26,6 +26,18 @@ class NavMenuItem extends WpNavMenuItem
     // Object access methods
 
     /**
+     * Get nav menu ID
+     *
+     * @return int
+     */
+    public function id(): int
+    {
+        return $this->db_id;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
      * Get menu item parent
      *
      * @return NavMenuItem|null
