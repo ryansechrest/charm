@@ -3,6 +3,8 @@
 namespace Charm\Entity;
 
 use Charm\WordPress\NavMenuItem as WpNavMenuItem;
+use WP_Post;
+use WP_Query;
 
 /**
  * Class NavMenuItem
@@ -14,6 +16,13 @@ class NavMenuItem extends WpNavMenuItem
 {
     /************************************************************************************/
     // Properties
+
+    /**
+     * Sub nav menu items
+     *
+     * @var NavMenuItem[]
+     */
+    protected $sub_items = [];
 
     /**
      * Menu item parent object
@@ -52,5 +61,46 @@ class NavMenuItem extends WpNavMenuItem
         }
 
         return $this->menu_item_parent_obj = static::init($this->menu_item_parent);
+    }
+
+    /************************************************************************************/
+    // Get and set methods
+
+    /**
+     * Get sub nav menu items
+     *
+     * @see WP_Query
+     * @return NavMenuItem[]
+     */
+    public function get_sub_items(): array
+    {
+        if (count($this->sub_items) > 0) {
+            return $this->sub_items;
+        }
+        $query = new WP_Query([
+            'post_type' => 'nav_menu_item',
+            'order' => 'ASC',
+            'orderby' => 'menu_order',
+            'meta_key' => '_menu_item_menu_item_parent',
+            'meta_value' => $this->db_id,
+            'nopaging' => true,
+        ]);
+        if (!$query->found_posts) {
+            return [];
+        }
+
+        return $this->sub_items = array_map(function(WP_Post $post) {
+            return static::init($post);
+        }, $query->posts);
+    }
+
+    /**
+     * Set sub items
+     *
+     * @param NavMenuItem[] $sub_items
+     */
+    public function set_sub_items(array $sub_items): void
+    {
+        $this->sub_items = $sub_items;
     }
 }
