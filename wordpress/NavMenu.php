@@ -29,6 +29,7 @@ class NavMenu extends Term
      * Initialize nav menu
      *
      * @see wp_get_nav_menu_object()
+     * @see get_nav_menu_locations()
      * @param int|string|WP_Term $key
      * @param string $taxonomy
      * @return static|null
