@@ -71,6 +71,20 @@ class NavMenu extends WpNavMenu
     /*----------------------------------------------------------------------------------*/
 
     /**
+     * Get nav menu items
+     *
+     * @return NavMenuItem[] array
+     */
+    public static function items(): array
+    {
+        if (!$menu = static::init()) {
+            return [];
+        }
+
+        return $menu->get_items();
+    }
+
+    /**
      * Get menu location
      *
      * @return string
