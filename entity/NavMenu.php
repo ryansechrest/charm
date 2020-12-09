@@ -80,9 +80,32 @@ class NavMenu extends WpNavMenu
         }
         $params['menu_id'] = $this->term_id;
 
-        return $this->items = call_user_func(
+        return $this->items = $this->build_tree(call_user_func(
             static::ITEM . '::get', $params
-        );
+        ));
+    }
+
+    /**
+     * Build nav menu item tree
+     *
+     * @param NavMenuItem[] $items
+     * @param int $parent_id
+     * @return array
+     */
+    private function build_tree(array $items, int $parent_id = 0): array
+    {
+        $branch = [];
+        foreach ($items as $item) {
+            if ($item->get_menu_item_parent() == $parent_id) {
+                $sub_items = $this->build_tree($items, $item->get_db_id());
+                if (count($sub_items) > 0) {
+                    $item->set_sub_items($sub_items);
+                }
+                $branch[] = $item;
+            }
+        }
+
+        return $branch;
     }
 
     /**
