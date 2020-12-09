@@ -3,8 +3,10 @@
 namespace Charm\Entity;
 
 use Charm\WordPress\NavMenu as WpNavMenu;
+use Charm\WordPress\Term;
 use ReflectionClass;
 use ReflectionException;
+use WP_Term;
 
 /**
  * Class NavMenu
@@ -14,13 +16,6 @@ use ReflectionException;
  */
 class NavMenu extends WpNavMenu
 {
-    /**
-     * Nav menu items
-     *
-     * @var NavMenuItem[]
-     */
-    protected $items = [];
-
     /************************************************************************************/
     // Constants
 
@@ -30,6 +25,35 @@ class NavMenu extends WpNavMenu
      * @var string
      */
     const ITEM = 'Charm\Entity\NavMenuItem';
+
+    /************************************************************************************/
+    // Properties
+
+    /**
+     * Nav menu items
+     *
+     * @var NavMenuItem[]
+     */
+    protected $items = [];
+
+    /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Initialize nav menu
+     *
+     * @param int|string|WP_Term $key
+     * @param string $taxonomy
+     * @return static|null
+     */
+    public static function init($key = null, $taxonomy = 'nav_menu'): ?Term
+    {
+        if ($key === null && static::menu_location() !== '') {
+            return parent::init(static::menu_location());
+        }
+
+        return parent::init($key, $taxonomy);
+    }
 
     /************************************************************************************/
     // Object access methods
@@ -42,6 +66,18 @@ class NavMenu extends WpNavMenu
     public function id(): int
     {
         return $this->term_id;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get menu location
+     *
+     * @return string
+     */
+    public static function menu_location(): string
+    {
+        return '';
     }
 
     /************************************************************************************/
