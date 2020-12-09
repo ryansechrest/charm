@@ -64,6 +64,24 @@ class NavMenuItem extends WpNavMenuItem
     }
 
     /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast instance to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        return array_merge(
+            parent::to_array(),
+            ['sub_items' => array_map(function($item) {
+                return $item->to_array();
+            }, $this->get_sub_items())]
+        );
+    }
+
+    /************************************************************************************/
     // Get and set methods
 
     /**
