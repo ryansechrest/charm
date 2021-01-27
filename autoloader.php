@@ -42,6 +42,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Converter.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Database.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Path.php';
 
 // Cron
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
