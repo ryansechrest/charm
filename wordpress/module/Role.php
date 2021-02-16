@@ -19,6 +19,8 @@ class Role
     /**
      * Name
      *
+     * Role name.
+     *
      * @var string
      */
     protected $name = '';
@@ -26,12 +28,17 @@ class Role
     /**
      * Display name
      *
+     * Display name for role.
+     *
      * @var string
      */
     protected $display_name = '';
 
     /**
      * Capabilities
+     *
+     * List of capabilities keyed by the capability name,
+     * e.g. array('edit_posts' => true, 'delete_posts' => false).
      *
      * @var array
      */
