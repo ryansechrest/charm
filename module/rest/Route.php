@@ -48,8 +48,10 @@ class Route extends WpRestRoute
     {
         $this->args = array_map(function(Endpoint $endpoint) {
             $ep = $endpoint->to_array();
-            $ep['args'] = $ep['params'];
-            unset($ep['params']);
+            if (isset($ep['params'])) {
+                $ep['args'] = $ep['params'];
+                unset($ep['params']);
+            }
             return $ep;
         }, $this->endpoints);
         parent::register();
