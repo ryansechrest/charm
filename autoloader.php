@@ -16,6 +16,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/cron/Schedule.php';
 // WordPress Modules
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/MenuLocation.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/PostType.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/RestRoute.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Taxonomy.php';
 
@@ -55,9 +56,22 @@ require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
 
+// Modules: REST
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Param.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/ArrayParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/BooleanParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/IntegerParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/NullParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/NumberParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/ObjectParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/StringParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Endpoint.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Route.php';
+
 // Skeletons
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/MenuLocation.php';
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/PostType.php';
+require_once WPMU_PLUGIN_DIR . '/charm/skeleton/RestRoute.php';
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Taxonomy.php';
 
