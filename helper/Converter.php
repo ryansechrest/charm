@@ -83,6 +83,8 @@ class Converter
 
     /**
      * Convert (t)ext (a)rea value to (a)rray
+     *  e.g. "hello" -> ["hello", "world"]
+     *       "world"
      *
      * @param string $row_delimiter
      * @param string $column_delimiter
@@ -107,6 +109,7 @@ class Converter
 
     /**
      * Convert (a)rray value to (d)ata (a)ttribute
+     *  e.g. ["hello", "world"] -> "["hello", "world"]"
      *
      * @return self
      */
@@ -135,8 +138,7 @@ class Converter
 
     /**
      * Convert (t)ext to (s)lug
-     *
-     * e.g. "Hello World" -> "hello-world"
+     *  e.g. "Hello World" -> "hello-world"
      *
      * @return self
      */
@@ -150,8 +152,7 @@ class Converter
 
     /**
      * Convert (t)ext to (k)ey
-     *
-     * e.g. "Hello World" -> "hello_world"
+     *  e.g. "Hello World" -> "hello_world"
      *
      * @return self
      */
