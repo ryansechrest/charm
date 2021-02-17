@@ -134,6 +134,36 @@ class Converter
     }
 
     /**
+     * Convert (t)ext to (s)lug
+     *
+     * e.g. "Hello World" -> "hello-world"
+     *
+     * @return self
+     */
+    public function t2s()
+    {
+        $this->value = strtolower($this->value);
+        $this->value = str_replace(' ', '-', $this->value);
+
+        return $this;
+    }
+
+    /**
+     * Convert (t)ext to (k)ey
+     *
+     * e.g. "Hello World" -> "hello_world"
+     *
+     * @return self
+     */
+    public function t2k()
+    {
+        $this->value = strtolower($this->value);
+        $this->value = str_replace(' ', '_', $this->value);
+
+        return $this;
+    }
+
+    /**
      * Return value in current state
      *
      * @return mixed
