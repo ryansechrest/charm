@@ -100,7 +100,7 @@ class ArrayParam extends Param
         if ($this->min_items !== 0) {
             $data['min_items'] = $this->min_items;
         }
-        if ($this->max_items !== '') {
+        if ($this->max_items !== 0) {
             $data['max_items'] = $this->max_items;
         }
 
@@ -127,7 +127,7 @@ class ArrayParam extends Param
         if ($this->min_items !== 0) {
             $data['minItems'] = $this->min_items;
         }
-        if ($this->max_items !== '') {
+        if ($this->max_items !== 0) {
             $data['maxItems'] = $this->max_items;
         }
 
