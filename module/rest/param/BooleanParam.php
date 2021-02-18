@@ -1,14 +1,14 @@
 <?php
 
-namespace Charm\Module\Rest;
+namespace Charm\Module\Rest\Param;
 
 /**
- * Class NullParam
+ * Class BooleanParam
  *
  * @author Ryan Sechrest
- * @package Charm\Module\Rest
+ * @package Charm\Module\Rest\Param
  */
-class NullParam extends Param
+class BooleanParam extends Param
 {
     /************************************************************************************/
     // Default constructor and load method
@@ -21,6 +21,6 @@ class NullParam extends Param
     public function load(array $data): void
     {
         parent::load($data);
-        $this->type = 'null';
+        $this->type = 'boolean';
     }
 }

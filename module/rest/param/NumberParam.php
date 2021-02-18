@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\Module\Rest;
+namespace Charm\Module\Rest\Param;
 
 /**
  * Class NumberParam
  *
  * @author Ryan Sechrest
- * @package Charm\Module\Rest
+ * @package Charm\Module\Rest\Param
  */
 class NumberParam extends Param
 {

@@ -57,14 +57,14 @@ require_once WPMU_PLUGIN_DIR . '/charm/module/Role.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/Taxonomy.php';
 
 // Modules: REST
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Param.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/ArrayParam.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/BooleanParam.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/IntegerParam.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/NullParam.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/NumberParam.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/ObjectParam.php';
-require_once WPMU_PLUGIN_DIR . '/charm/module/rest/StringParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/Param.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/ArrayParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/BooleanParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/IntegerParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/NullParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/NumberParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/ObjectParam.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/StringParam.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Endpoint.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Route.php';
 
