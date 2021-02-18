@@ -47,7 +47,7 @@ class Route extends WpRestRoute
     public function register(): void
     {
         $this->args = array_map(function(Endpoint $endpoint) {
-            $ep = $endpoint->to_array();
+            $ep = $endpoint->to_array_for_wp();
             if (isset($ep['params'])) {
                 $ep['args'] = $ep['params'];
                 unset($ep['params']);
@@ -71,6 +71,23 @@ class Route extends WpRestRoute
         if (count($this->endpoints) > 0) {
             $data['endpoints'] = array_map(function(Endpoint $endpoint) {
                 return $endpoint->to_array();
+            }, $this->endpoints);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Cast properties to array for WordPress
+     *
+     * @return array
+     */
+    public function to_array_for_wp(): array
+    {
+        $data = parent::to_array();
+        if (count($this->endpoints) > 0) {
+            $data['endpoints'] = array_map(function(Endpoint $endpoint) {
+                return $endpoint->to_array_for_wp();
             }, $this->endpoints);
         }
 
