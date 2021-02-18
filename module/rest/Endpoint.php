@@ -123,13 +123,41 @@ class Endpoint
         if (count($this->methods) > 0) {
             $data['methods'] = $this->methods;
         }
-        foreach ($this->params as $param) {
-            $key = $param->get_name();
-            if (method_exists($param, 'to_array_for_wp')) {
-                $data['params'][$key] = $param->to_array_for_wp();
-                continue;
+        if (count($this->params) > 0) {
+            foreach ($this->params as $param) {
+                $data['params'][] = $param->to_array();
             }
-            $data['params'][$key] = $param->to_array();
+        }
+        if ($this->callback !== null) {
+            $data['callback'] = $this->callback;
+        }
+        if ($this->permission_callback !== null) {
+            $data['permission_callback'] = $this->permission_callback;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Cast properties to array for WordPress
+     *
+     * @return array
+     */
+    public function to_array_for_wp(): array
+    {
+        $data = [];
+        if (count($this->methods) > 0) {
+            $data['methods'] = $this->methods;
+        }
+        if (count($this->params) > 0) {
+            foreach ($this->params as $param) {
+                $key = $param->get_name();
+                if (method_exists($param, 'to_array_for_wp')) {
+                    $data['params'][$key] = $param->to_array_for_wp();
+                    continue;
+                }
+                $data['params'][$key] = $param->to_array();
+            }
         }
         if ($this->callback !== null) {
             $data['callback'] = $this->callback;
