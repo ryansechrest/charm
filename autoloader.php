@@ -66,6 +66,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/NumberParam.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/ObjectParam.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/rest/param/StringParam.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Endpoint.php';
+require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Response.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/rest/Route.php';
 
 // Skeletons
