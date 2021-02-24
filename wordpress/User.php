@@ -3,6 +3,7 @@
 namespace Charm\WordPress;
 
 use WP_User;
+use WP_User_Query;
 
 /**
  * Class User
@@ -178,6 +179,35 @@ class User
         }
 
         return $user;
+    }
+
+    /**
+     * Get users
+     *
+     * @param array $params
+     * @return static[]
+     */
+    public static function get(array $params): array
+    {
+        $query = static::query($params);
+        if ($query->get_total() === 0) {
+            return [];
+        }
+
+        return array_map(function(WP_User $user) {
+            return static::init($user);
+        }, $query->get_results());
+    }
+
+    /**
+     * Query using WP_User_Query
+     *
+     * @param array $params
+     * @return WP_User_Query
+     */
+    public static function query(array $params): WP_User_Query
+    {
+        return new WP_User_Query($params);
     }
 
     /************************************************************************************/
