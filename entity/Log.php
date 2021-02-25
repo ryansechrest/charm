@@ -398,7 +398,7 @@ class Log
             /** @var Post $post */
             $post = call_user_func($post_class . '::init', $post_id);
             static::new([
-                'action' => $update === true ? 'update' : 'create',
+                'action' => $update === true ? $post->get_post_status() : 'create',
                 'object_id' => $post->get_id(),
                 'object_type' => $post->get_post_type(),
                 'object_name' => $post->get_post_title(),
