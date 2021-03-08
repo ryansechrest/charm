@@ -97,7 +97,7 @@ class User extends WpUser
         if ($this->role_obj) {
             return $this->role_obj;
         }
-        $wp_capabilities = $this->meta('wp_capabilities')->array();
+        $wp_capabilities = $this->meta('wp_capabilities')->cast()->array();
         if (!is_array($wp_capabilities)) {
             return null;
         }
@@ -275,7 +275,7 @@ class User extends WpUser
      */
     public function get_nickname(): string
     {
-        return $this->meta('nickname')->string();
+        return $this->meta('nickname')->cast()->string();
     }
 
     /**
@@ -297,7 +297,7 @@ class User extends WpUser
      */
     public function get_first_name(): string
     {
-        return $this->meta('first_name')->string();
+        return $this->meta('first_name')->cast()->string();
     }
 
     /**
@@ -319,7 +319,7 @@ class User extends WpUser
      */
     public function get_last_name(): string
     {
-        return $this->meta('last_name')->string();
+        return $this->meta('last_name')->cast()->string();
     }
 
     /**
@@ -341,7 +341,7 @@ class User extends WpUser
      */
     public function get_description(): string
     {
-        return $this->meta('description')->string();
+        return $this->meta('description')->cast()->string();
     }
 
     /**
@@ -363,7 +363,7 @@ class User extends WpUser
      */
     public function get_rich_editing(): bool
     {
-        return $this->meta('rich_editing')->bool();
+        return $this->meta('rich_editing')->cast()->bool();
     }
 
     /**
@@ -385,7 +385,7 @@ class User extends WpUser
      */
     public function get_syntax_highlighting(): bool
     {
-        return $this->meta('syntax_highlighting')->bool();
+        return $this->meta('syntax_highlighting')->cast()->bool();
     }
 
     /**
@@ -407,7 +407,7 @@ class User extends WpUser
      */
     public function get_comment_shortcuts(): bool
     {
-        return $this->meta('comment_shortcuts')->bool();
+        return $this->meta('comment_shortcuts')->cast()->bool();
     }
 
     /**
@@ -429,7 +429,7 @@ class User extends WpUser
      */
     public function get_admin_color(): string
     {
-        return $this->meta('admin_color')->string();
+        return $this->meta('admin_color')->cast()->string();
     }
 
     /**
@@ -451,7 +451,7 @@ class User extends WpUser
      */
     public function get_use_ssl(): bool
     {
-        return $this->meta('use_ssl')->bool();
+        return $this->meta('use_ssl')->cast()->bool();
     }
 
     /**
@@ -473,7 +473,7 @@ class User extends WpUser
      */
     public function get_show_admin_bar_front(): bool
     {
-        return $this->meta('show_admin_bar_front')->bool();
+        return $this->meta('show_admin_bar_front')->cast()->bool();
     }
 
     /**
@@ -495,7 +495,7 @@ class User extends WpUser
      */
     public function get_locale(): string
     {
-        return $this->meta('locale')->string();
+        return $this->meta('locale')->cast()->string();
     }
 
     /**
@@ -517,7 +517,7 @@ class User extends WpUser
      */
     public function get_wp_capabilities(): array
     {
-        return $this->meta('wp_capabilities')->array();
+        return $this->meta('wp_capabilities')->cast()->array();
     }
 
     /**
@@ -549,7 +549,7 @@ class User extends WpUser
      */
     public function get_wp_user_level(): int
     {
-        return $this->meta('wp_user_level')->int();
+        return $this->meta('wp_user_level')->cast()->int();
     }
 
     /**
