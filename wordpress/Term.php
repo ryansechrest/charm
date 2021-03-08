@@ -209,7 +209,8 @@ class Term
      */
     protected function load_from_id(int $term_id, string $taxonomy = ''): void
     {
-        if (!$term = get_term($term_id, $taxonomy)) {
+        $term = get_term($term_id, $taxonomy);
+        if (get_class($term) !== 'WP_Term') {
             return;
         }
         $this->load_from_term($term);
