@@ -1415,10 +1415,12 @@ class Log
         if ($this->date_obj) {
             return $this->date_obj;
         }
-        $timezone = get_option('timezone_string');
+        $option = Option::init('timezone_string');
 
         return $this->date_obj = call_user_func(
-            static::DATE_TIME . '::init', $this->date, $timezone
+            static::DATE_TIME . '::init',
+            $this->date,
+            $option->cast()->string()
         );
     }
 
