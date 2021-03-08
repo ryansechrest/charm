@@ -2,6 +2,7 @@
 
 namespace Charm\Entity;
 
+use Charm\Helper\Caster;
 use Charm\Helper\Converter;
 use Charm\WordPress\Meta as WpMeta;
 
@@ -111,83 +112,24 @@ class Meta extends WpMeta
     }
 
     /************************************************************************************/
-    // Cast methods
+    // Helper methods
 
     /**
-     * Cast value to array
+     * Pass value to caster
      *
-     * @see maybe_unserialize()
-     * @return array
+     * @return Caster
      */
-    public function array(): array
+    public function cast(): Caster
     {
-        $array = maybe_unserialize($this->meta_value);
-        if ($array === null) {
-            return [];
-        }
-        if (!is_array($array)) {
-            return [$array];
-        }
-
-        return $array;
+        return Caster::init($this->meta_value);
     }
-
-    /**
-     * Cast value to bool
-     *
-     * @return bool
-     */
-    public function bool(): bool
-    {
-        if (is_bool($this->meta_value)) {
-            return $this->meta_value;
-        }
-        if (is_string($this->meta_value) && $this->meta_value === 'true') {
-            return true;
-        }
-        if (is_numeric($this->meta_value) && $this->meta_value === 1) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Cast value to integer
-     *
-     * @return int
-     */
-    public function int(): int
-    {
-        if (!is_numeric($this->meta_value)) {
-            return 0;
-        }
-
-        return (int) $this->meta_value;
-    }
-
-    /**
-     * Cast value to string
-     *
-     * @return string
-     */
-    public function string(): string
-    {
-        if (!$string = (string) $this->meta_value) {
-            return '';
-        }
-
-        return $string;
-    }
-
-    /*----------------------------------------------------------------------------------*/
 
     /**
      * Pass value to converter
      *
      * @return Converter
      */
-    public function convert()
+    public function convert(): Converter
     {
         return Converter::init($this->meta_value);
     }
