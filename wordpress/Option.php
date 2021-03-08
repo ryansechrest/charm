@@ -88,21 +88,23 @@ class Option
      *
      * @see get_option()
      * @param string $name
-     * @return static|null
+     * @return static
      */
-    public static function init(string $name): ?Option
+    public static function init(string $name): Option
     {
+        $option = new static([
+            'name' => $name,
+        ]);
         $value = get_option($name);
-        if ($value === false) {
-            return null;
+        if ($value !== false) {
+            $option->load([
+                'value' => $value,
+                'prev_value' => $value,
+                'from_db' => true,
+            ]);
         }
 
-        return new static([
-            'name' => $name,
-            'value' => $value,
-            'prev_value' => $value,
-            'from_db' => true,
-        ]);
+        return $option;
     }
 
     /************************************************************************************/
@@ -315,12 +317,22 @@ class Option
      *
      * @return bool
      */
-    public function has_changed(): bool
+    public function changed(): bool
     {
         if ($this->value !== $this->prev_value) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Does value exist?
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->value !== null;
     }
 }
