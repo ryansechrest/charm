@@ -226,10 +226,12 @@ class Post extends WpPost
         if ($this->created_date_obj) {
             return $this->created_date_obj;
         }
-        $timezone = get_option('timezone_string');
+        $option = Option::init('timezone_string');
 
         return $this->created_date_obj = call_user_func(
-            static::DATE_TIME . '::init', $this->post_date, $timezone
+            static::DATE_TIME . '::init',
+            $this->post_date,
+            $option->cast()->string()
         );
     }
 
@@ -259,10 +261,12 @@ class Post extends WpPost
         if ($this->updated_date_obj) {
             return $this->updated_date_obj;
         }
-        $timezone = get_option('timezone_string');
+        $option = Option::init('timezone_string');
 
         return $this->updated_date_obj = call_user_func(
-            static::DATE_TIME . '::init', $this->post_modified, $timezone
+            static::DATE_TIME . '::init',
+            $this->post_modified,
+            $option->cast()->string()
         );
     }
 

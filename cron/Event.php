@@ -3,6 +3,7 @@
 namespace Charm\Cron;
 
 use Charm\DataType\DateTime;
+use Charm\Entity\Option;
 use Charm\WordPress\Cron\Event as WpEvent;
 
 /**
@@ -199,8 +200,9 @@ class Event extends WpEvent
         if (static::TIMEZONE !== '') {
             return $this->timezone = static::TIMEZONE;
         }
-        if ($timezone_string = get_option('timezone_string')) {
-            return $this->timezone = $timezone_string;
+        $option = Option::init('timezone_string');
+        if ($option->exists()) {
+            return $this->timezone = $option->cast()->string();
         }
 
         return $this->timezone = 'UTC';
@@ -219,8 +221,9 @@ class Event extends WpEvent
         if (static::DATE_FORMAT !== '') {
             return $this->date_format = static::DATE_FORMAT;
         }
-        if ($date_format = get_option('date_format')) {
-            return $this->date_format = $date_format;
+        $option = Option::init('date_format');
+        if ($option->exists()) {
+            return $this->date_format = $option->cast()->string();
         }
 
         return $this->date_format = 'n/j/Y';
@@ -239,8 +242,9 @@ class Event extends WpEvent
         if (static::TIME_FORMAT !== '') {
             return $this->time_format = static::TIME_FORMAT;
         }
-        if ($time_format = get_option('time_format')) {
-            return $this->time_format = $time_format;
+        $option = Option::init('time_format');
+        if ($option->exists()) {
+            return $this->time_format = $option->cast()->string();
         }
 
         return $this->time_format = 'g:i:sa';
