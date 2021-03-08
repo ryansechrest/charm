@@ -69,13 +69,10 @@ class Converter
      */
     public static function init($value): self
     {
-        $converter = new static();
-        $converter->load([
+        return new static([
             'value' => $value,
             'original_value' => $value,
         ]);
-
-        return $converter;
     }
 
     /************************************************************************************/
