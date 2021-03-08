@@ -609,7 +609,7 @@ class Meta
      *
      * @return bool
      */
-    public function has_changed(): bool
+    public function changed(): bool
     {
         if ($this->meta_value !== $this->prev_value) {
             return true;
