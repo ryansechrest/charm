@@ -210,6 +210,19 @@ class User
         return new WP_User_Query($params);
     }
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Is user logged in?
+     *
+     * @see is_user_logged_in()
+     * @return bool
+     */
+    public static function is_logged_in(): bool
+    {
+        return is_user_logged_in();
+    }
+
     /************************************************************************************/
     // Protected load methods
 
@@ -438,7 +451,7 @@ class User
     /**
      * Get (or set) WordPress user
      *
-     * @param WP_User $user
+     * @param null|WP_User $user
      * @return WP_User
      */
     protected function wp_user(WP_User $user = null): WP_User
