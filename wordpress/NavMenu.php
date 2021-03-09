@@ -31,7 +31,7 @@ class NavMenu extends Term
             return parent::init($nav_menu, $taxonomy);
         }
         $menu_locations = get_nav_menu_locations();
-        if (isset($menu_locations[$key])) {
+        if (isset($menu_locations[$key]) && $menu_locations[$key] !== 0) {
             return parent::init($menu_locations[$key], $taxonomy);
         }
 
