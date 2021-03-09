@@ -3,12 +3,12 @@
 namespace Charm\Helper;
 
 /**
- * Class Converter
+ * Class Convert
  *
  * @author Ryan Sechrest
  * @package Charm\Helper
  */
-class Converter
+class Convert
 {
     /************************************************************************************/
     // Properties
