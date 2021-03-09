@@ -2,8 +2,8 @@
 
 namespace Charm\Entity;
 
-use Charm\Helper\Caster;
-use Charm\Helper\Converter;
+use Charm\Helper\Cast;
+use Charm\Helper\Convert;
 use Charm\WordPress\Meta as WpMeta;
 
 /**
@@ -115,22 +115,22 @@ class Meta extends WpMeta
     // Helper methods
 
     /**
-     * Pass value to caster
+     * Pass value to cast
      *
-     * @return Caster
+     * @return Cast
      */
-    public function cast(): Caster
+    public function cast(): Cast
     {
-        return Caster::init($this->meta_value);
+        return Cast::init($this->meta_value);
     }
 
     /**
-     * Pass value to converter
+     * Pass value to convert
      *
-     * @return Converter
+     * @return Convert
      */
-    public function convert(): Converter
+    public function convert(): Convert
     {
-        return Converter::init($this->meta_value);
+        return Convert::init($this->meta_value);
     }
 }
