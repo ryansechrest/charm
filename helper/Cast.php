@@ -3,12 +3,12 @@
 namespace Charm\Helper;
 
 /**
- * Class Caster
+ * Class Cast
  *
  * @author Ryan Sechrest
  * @package Charm\Helper
  */
-class Caster
+class Cast
 {
     /************************************************************************************/
     // Properties
