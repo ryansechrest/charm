@@ -2,7 +2,7 @@
 
 namespace Charm\Entity;
 
-use Charm\Helper\Caster;
+use Charm\Helper\Cast;
 use Charm\WordPress\Option as WpOption;
 
 /**
@@ -17,12 +17,12 @@ class Option extends WpOption
     // Helper methods
 
     /**
-     * Pass value to caster
+     * Pass value to cast
      *
-     * @return Caster
+     * @return Cast
      */
-    public function cast(): Caster
+    public function cast(): Cast
     {
-        return Caster::init($this->value);
+        return Cast::init($this->value);
     }
 }
