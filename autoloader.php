@@ -42,10 +42,10 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Helpers
-require_once WPMU_PLUGIN_DIR . '/charm/helper/Caster.php';
-require_once WPMU_PLUGIN_DIR . '/charm/helper/Converter.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Convert.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Database.php';
-require_once WPMU_PLUGIN_DIR . '/charm/helper/Path.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Location.php';
 
 // Cron
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
