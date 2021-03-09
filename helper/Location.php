@@ -3,12 +3,12 @@
 namespace Charm\Helper;
 
 /**
- * Class Path
+ * Class Location
  *
  * @author Ryan Sechrest
  * @package Charm\Helper
  */
-class Path
+class Location
 {
     /**
      * URL to login
