@@ -1095,11 +1095,17 @@ class Log
     /**
      * Ignore specified user metas from being logged
      *
+     * We have to exclude _application_passwords, otherwise it causes an infinite
+     * loop when it tries to authenticate user via app password, which attempts to log
+     * this meta field, which attempts to get current user, which attempts to then
+     * authenticate user again.
+     *
      * @return array
      */
     public static function ignore_user_metas(): array
     {
         return [
+            '_application_passwords',
             'use_ssl',
             'session_tokens'
         ];
