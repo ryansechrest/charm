@@ -46,6 +46,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Convert.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Database.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Location.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Redirect.php';
 
 // Cron
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
