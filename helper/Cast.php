@@ -31,7 +31,7 @@ class Cast
     // Default constructor and load method
 
     /**
-     * Post constructor
+     * Cast constructor
      *
      * @param array $data
      */
@@ -62,7 +62,7 @@ class Cast
     // Instantiation methods
 
     /**
-     * Initialize converter
+     * Initialize cast
      *
      * @param mixed $value
      * @return self

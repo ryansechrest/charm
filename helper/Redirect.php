@@ -49,7 +49,7 @@ class Redirect
     // Default constructor and load method
 
     /**
-     * Redirecter constructor
+     * Redirect constructor
      *
      * @param array $data
      */

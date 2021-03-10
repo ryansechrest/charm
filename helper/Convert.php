@@ -31,7 +31,7 @@ class Convert
     // Default constructor and load method
 
     /**
-     * Post constructor
+     * Convert constructor
      *
      * @param array $data
      */
@@ -62,7 +62,7 @@ class Convert
     // Instantiation methods
 
     /**
-     * Initialize converter
+     * Initialize convert
      *
      * @param mixed $value
      * @return self
