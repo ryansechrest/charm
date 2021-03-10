@@ -15,7 +15,8 @@ class Redirect
 
     /**
      * URL
-     *  Where to send user
+     *
+     * Where to send user.
      *
      * @var string
      */
@@ -23,7 +24,8 @@ class Redirect
 
     /**
      * Status
-     *  Which status code to send with redirect
+     *
+     * Which status code to send with redirect.
      *
      * @var int
      */
@@ -31,7 +33,8 @@ class Redirect
 
     /**
      * Source
-     *  Name of application performing redirect
+     *
+     * Name of application performing redirect.
      *
      * @var string
      */
@@ -39,7 +42,8 @@ class Redirect
 
     /**
      * Local
-     *  Whether URL is a local or remote URL
+     *
+     * Whether URL is a local or remote URL.
      *
      * @var bool
      */
