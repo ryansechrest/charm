@@ -110,7 +110,7 @@ class Convert
      *
      * @return self
      */
-    public function a2da()
+    public function a2da(): self
     {
         if (count($this->value) === 0) {
             $this->value = '';
@@ -139,7 +139,7 @@ class Convert
      *
      * @return self
      */
-    public function t2s()
+    public function t2s(): self
     {
         $this->value = strtolower($this->value);
         $this->value = str_replace(' ', '-', $this->value);
@@ -153,7 +153,7 @@ class Convert
      *
      * @return self
      */
-    public function t2k()
+    public function t2k(): self
     {
         $this->value = strtolower($this->value);
         $this->value = str_replace(' ', '_', $this->value);
