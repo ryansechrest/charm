@@ -309,30 +309,4 @@ class Option
     {
         $this->from_db = $from_db;
     }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Has value changed?
-     *
-     * @return bool
-     */
-    public function changed(): bool
-    {
-        if ($this->value !== $this->prev_value) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Does value exist?
-     *
-     * @return bool
-     */
-    public function exists(): bool
-    {
-        return $this->value !== null;
-    }
 }
