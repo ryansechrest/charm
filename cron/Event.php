@@ -201,7 +201,7 @@ class Event extends WpEvent
             return $this->timezone = static::TIMEZONE;
         }
         $option = Option::init('timezone_string');
-        if ($option->exists()) {
+        if ($option->is_blank() === false) {
             return $this->timezone = $option->cast()->string();
         }
 
@@ -222,7 +222,7 @@ class Event extends WpEvent
             return $this->date_format = static::DATE_FORMAT;
         }
         $option = Option::init('date_format');
-        if ($option->exists()) {
+        if ($option->is_blank() === false) {
             return $this->date_format = $option->cast()->string();
         }
 
@@ -243,7 +243,7 @@ class Event extends WpEvent
             return $this->time_format = static::TIME_FORMAT;
         }
         $option = Option::init('time_format');
-        if ($option->exists()) {
+        if ($option->is_blank() === false) {
             return $this->time_format = $option->cast()->string();
         }
 
