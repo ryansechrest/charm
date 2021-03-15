@@ -334,7 +334,7 @@ STYLE;
      * Delete cron (with schedule and event)
      *
      * @see wp_clear_scheduled_hook()
-     * * @return bool
+     * @return bool
      */
     public function delete(): bool
     {
@@ -351,7 +351,7 @@ STYLE;
     /**
      * Get (or set) Charm event
      *
-     * @param Event $event
+     * @param ?Event $event
      * @return Event
      */
     protected function event(Event $event = null): Event
@@ -366,7 +366,7 @@ STYLE;
     /**
      * Get (or set) Charm schedule
      *
-     * @param Schedule $schedule
+     * @param ?Schedule $schedule
      * @return Schedule
      */
     protected function schedule(Schedule $schedule = null): Schedule
