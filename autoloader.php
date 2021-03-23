@@ -26,7 +26,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenuItem.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Option.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Term.php';
-require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenu.php'; // Needs Term
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenu.php'; // Relies on Term
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 
 /****************************************************************************************/
@@ -91,9 +91,10 @@ require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
 // Application Entities
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Log.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/BlogPost.php';  // Relies on Post
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php'; // Relies on Post
 require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenuItem.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Option.php';
-require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Term.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenu.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/User.php';
