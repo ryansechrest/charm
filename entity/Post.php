@@ -161,11 +161,13 @@ class Post extends WpPost
     /**
      * Get post type
      *
+     * Blank to accommodate instantiating any entity regardless of post type.
+     *
      * @return string
      */
     public static function post_type(): string
     {
-        return 'post';
+        return '';
     }
 
     /*----------------------------------------------------------------------------------*/
