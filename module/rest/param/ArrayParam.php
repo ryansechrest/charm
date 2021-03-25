@@ -28,13 +28,6 @@ class ArrayParam extends Param
     protected $unique_items = [];
 
     /**
-     * Enum
-     *
-     * @var array
-     */
-    protected $enum = [];
-
-    /**
      * Min items
      *
      * @var int
@@ -66,9 +59,6 @@ class ArrayParam extends Param
         if (isset($data['unique_items'])) {
             $this->unique_items = $data['unique_items'];
         }
-        if (isset($data['enum'])) {
-            $this->enum = $data['enum'];
-        }
         if (isset($data['min_items'])) {
             $this->min_items = $data['min_items'];
         }
@@ -94,9 +84,6 @@ class ArrayParam extends Param
         if (count($this->unique_items) > 0) {
             $data['unique_items'] = $this->unique_items;
         }
-        if (count($this->enum) > 0) {
-            $data['enum'] = $this->enum;
-        }
         if ($this->min_items !== 0) {
             $data['min_items'] = $this->min_items;
         }
@@ -120,9 +107,6 @@ class ArrayParam extends Param
         }
         if (count($this->unique_items) > 0) {
             $data['uniqueItems'] = $this->unique_items;
-        }
-        if (count($this->enum) > 0) {
-            $data['enum'] = $this->enum;
         }
         if ($this->min_items !== 0) {
             $data['minItems'] = $this->min_items;
@@ -177,28 +161,6 @@ class ArrayParam extends Param
     public function set_unique_items(array $unique_items): void
     {
         $this->unique_items = $unique_items;
-    }
-
-    /*----------------------------------------------------------------------------------*/
-
-    /**
-     * Get enum
-     *
-     * @return array
-     */
-    public function get_enum(): array
-    {
-        return $this->enum;
-    }
-
-    /**
-     * Set enum
-     *
-     * @param array $enum
-     */
-    public function set_enum(array $enum): void
-    {
-        $this->enum = $enum;
     }
 
     /*----------------------------------------------------------------------------------*/
