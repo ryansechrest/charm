@@ -48,6 +48,13 @@ class Param
     protected $type = '';
 
     /**
+     * Enum
+     *
+     * @var array
+     */
+    protected $enum = [];
+
+    /**
      * Default
      *
      * Used as the default value for the argument, if none is supplied.
@@ -122,6 +129,9 @@ class Param
         if (isset($data['type'])) {
             $this->type = $data['type'];
         }
+        if (isset($data['enum'])) {
+            $this->enum = $data['enum'];
+        }
         if (isset($data['default'])) {
             $this->default = $data['default'];
         }
@@ -158,6 +168,9 @@ class Param
         }
         if ($this->type !== '') {
             $data['type'] = $this->type;
+        }
+        if (count($this->enum) > 0) {
+            $data['enum'] = $this->enum;
         }
         if ($this->default !== '') {
             $data['default'] = $this->default;
@@ -281,6 +294,28 @@ class Param
     public function set_type(string $type): void
     {
         $this->type = $type;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get enum
+     *
+     * @return array
+     */
+    public function get_enum(): string
+    {
+        return $this->enum;
+    }
+
+    /**
+     * Set enum
+     *
+     * @param array $enum
+     */
+    public function set_enum(array $enum): void
+    {
+        $this->enum = $enum;
     }
 
     /*----------------------------------------------------------------------------------*/
