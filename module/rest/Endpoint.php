@@ -2,6 +2,8 @@
 
 namespace Charm\Module\Rest;
 
+use Charm\Module\Rest\Param\Param;
+
 /**
  * Class Endpoint
  *
