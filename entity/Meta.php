@@ -61,7 +61,7 @@ class Meta extends WpMeta
      * @param array $where
      * @return array
      */
-    public static function get_values(string $meta_key, array $where = [])
+    public static function get_values(string $meta_key, array $where = []): array
     {
         global $wpdb;
 
