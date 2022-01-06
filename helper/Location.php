@@ -11,7 +11,7 @@ namespace Charm\Helper;
 class Location
 {
     /**
-     * URL to login
+     * URL to WordPress user account login
      *  e.g. https://wpcharm.com/wp-login.php?redirect_to=<path>
      *
      * @param string $path
@@ -23,7 +23,7 @@ class Location
     }
 
     /**
-     * URL to register
+     * URL to WordPress user account registration
      *  e.g. https://wpcharm.com/wp-login.php?action=register
      *
      * @return string
@@ -34,7 +34,7 @@ class Location
     }
 
     /**
-     * URL to site
+     * URL to WordPress site
      *  e.g. https://wpcharm.com/<path>
      *
      * @param string $path
@@ -46,7 +46,7 @@ class Location
     }
 
     /**
-     * Path to site
+     * Path to WordPress site
      *  e.g. /var/www/domains/wpcharm.com/<path>
      *
      * @param string $path
@@ -58,7 +58,7 @@ class Location
     }
 
     /**
-     * URL to theme
+     * URL to WordPress theme
      *  e.g. https://wpcharm.com/wp-content/themes/charm/<path>
      *
      * @param string $path
@@ -70,7 +70,7 @@ class Location
     }
 
     /**
-     * Path to theme
+     * Path to WordPress theme
      *  e.g. /var/www/domains/wpcharm.com/wp-content/themes/charm/<path>
      *
      * @param string $path
