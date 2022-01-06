@@ -3,8 +3,6 @@
 namespace Charm;
 
 use Charm\Cron\Cron;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 /**
  * Class Charm
@@ -67,29 +65,6 @@ class Charm
     {
         $charm = new static($config);
         $charm->register();
-    }
-
-    /************************************************************************************/
-    // Helper methods
-
-    /**
-     * Require all files in directory and any subdirectories
-     *
-     * @param string $path
-     */
-    public static function require(string $path): void
-    {
-        $rdi = new RecursiveDirectoryIterator($path);
-        $rii = new RecursiveIteratorIterator($rdi);
-        foreach ($rii as $file) {
-            if ($file->getFilename() == '.') {
-                continue;
-            }
-            if ($file->getFilename() == '..') {
-                continue;
-            }
-            require_once $file->getPathname();
-        }
     }
 
     /************************************************************************************/
