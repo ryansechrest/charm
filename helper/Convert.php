@@ -18,14 +18,14 @@ class Convert
      *
      * @var mixed
      */
-    protected $value = null;
+    protected mixed $value = null;
 
     /**
      * Original value
      *
      * @var mixed
      */
-    protected $original_value = null;
+    protected mixed $original_value = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -67,7 +67,7 @@ class Convert
      * @param mixed $value
      * @return self
      */
-    public static function init($value): self
+    public static function init(mixed $value): self
     {
         return new static([
             'value' => $value,
@@ -87,7 +87,7 @@ class Convert
      * @param string $column_delimiter
      * @return self
      */
-    public function ta2a($row_delimiter = "\n", $column_delimiter = ''): self
+    public function ta2a(string $row_delimiter = "\n", string $column_delimiter = ''): self
     {
         if ($this->value === '') {
             $this->value = [];
@@ -166,7 +166,7 @@ class Convert
      *
      * @return mixed
      */
-    public function value()
+    public function value(): mixed
     {
         return $this->value;
     }
@@ -179,7 +179,7 @@ class Convert
      *
      * @return mixed
      */
-    public function get_value()
+    public function get_value(): mixed
     {
         return $this->value;
     }
@@ -189,7 +189,7 @@ class Convert
      *
      * @param mixed $value
      */
-    public function set_value($value)
+    public function set_value(mixed $value)
     {
         $this->value = $value;
     }
@@ -201,7 +201,7 @@ class Convert
      *
      * @return mixed
      */
-    public function get_original_value()
+    public function get_original_value(): mixed
     {
         return $this->original_value;
     }
@@ -211,7 +211,7 @@ class Convert
      *
      * @param mixed $value
      */
-    public function set_original_value($value)
+    public function set_original_value(mixed $value)
     {
         $this->original_value = $value;
     }
