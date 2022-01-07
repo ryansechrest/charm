@@ -20,79 +20,79 @@ class Term
      *
      * @var int
      */
-    protected $term_id = 0;
+    protected int $term_id = 0;
 
     /**
      * Name
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Slug
      *
      * @var string
      */
-    protected $slug = '';
+    protected string $slug = '';
 
     /**
      * Term group
      *
      * @var int
      */
-    protected $term_group = 0;
+    protected int $term_group = 0;
 
     /**
      * Term taxonomy ID
      *
      * @var int
      */
-    protected $term_taxonomy_id = 0;
+    protected int $term_taxonomy_id = 0;
 
     /**
      * Taxonomy
      *
      * @var string
      */
-    protected $taxonomy = '';
+    protected string $taxonomy = '';
 
     /**
      * Description
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Parent
      *
      * @var int
      */
-    protected $parent = 0;
+    protected int $parent = 0;
 
     /**
      * Count
      *
      * @var int
      */
-    protected $count = 0;
+    protected int $count = 0;
 
     /**
      * Filter
      *
      * @var string
      */
-    protected $filter = '';
+    protected string $filter = '';
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * WordPress term
      *
-     * @var WP_Term
+     * @var WP_Term|null
      */
-    private $wp_term = null;
+    private ?WP_Term $wp_term = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -157,11 +157,11 @@ class Term
      * Initialize term
      *
      * @see WP_Term
-     * @param int|string|WP_Term $key
+     * @param WP_Term|int|string $key
      * @param string $taxonomy
      * @return static|null
      */
-    public static function init($key, $taxonomy = ''): ?Term
+    public static function init(WP_Term|int|string $key, string $taxonomy = ''): ?Term
     {
         $term = new static();
         if (is_int($key) || ctype_digit($key)) {
