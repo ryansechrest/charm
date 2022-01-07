@@ -18,21 +18,21 @@ class Schedule
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Display name
      *
      * @var string
      */
-    protected $display_name = '';
+    protected string $display_name = '';
 
     /**
      * Interval (seconds)
      *
      * @var int
      */
-    protected $interval = 0;
+    protected int $interval = 0;
 
     /************************************************************************************/
     // Default constructor and load method
