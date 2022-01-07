@@ -20,7 +20,7 @@ class Route extends WpRestRoute
      *
      * @var Endpoint[]
      */
-    protected $endpoints = [];
+    protected array $endpoints = [];
 
     /************************************************************************************/
     // Default constructor and load method
