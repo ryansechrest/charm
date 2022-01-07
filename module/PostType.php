@@ -30,7 +30,7 @@ class PostType extends WpPostType
      *
      * @var array
      */
-    protected $taxonomy_objs = [];
+    protected array $taxonomy_objs = [];
 
     /************************************************************************************/
     // Object access methods
