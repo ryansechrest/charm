@@ -20,7 +20,7 @@ class RestRoute
      *
      * @var string
      */
-    protected $namespace = '';
+    protected string $namespace = '';
 
     /**
      * Route
@@ -29,7 +29,7 @@ class RestRoute
      *
      * @var string
      */
-    protected $route = '';
+    protected string $route = '';
 
     /**
      * Args
@@ -39,7 +39,7 @@ class RestRoute
      *
      * @var array
      */
-    protected $args = [];
+    protected array $args = [];
 
     /**
      * Override
@@ -49,7 +49,7 @@ class RestRoute
      *
      * @var bool
      */
-    protected $override = false;
+    protected bool $override = false;
 
     /************************************************************************************/
     // Default constructor and load method
