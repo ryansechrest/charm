@@ -21,70 +21,70 @@ class User
      *
      * @var int
      */
-    protected $id = 0;
+    protected int $id = 0;
 
     /**
      * User login
      *
      * @var string
      */
-    protected $user_login = '';
+    protected string $user_login = '';
 
     /**
      * User pass
      *
      * @var string
      */
-    protected $user_pass = '';
+    protected string $user_pass = '';
 
     /**
      * User nice name
      *
      * @var string
      */
-    protected $user_nicename = '';
+    protected string $user_nicename = '';
 
     /**
      * User email
      *
      * @var string
      */
-    protected $user_email = '';
+    protected string $user_email = '';
 
     /**
      * User URL
      *
      * @var string
      */
-    protected $user_url = '';
+    protected string $user_url = '';
 
     /**
      * User registered
      *
      * @var string
      */
-    protected $user_registered = '';
+    protected string $user_registered = '';
 
     /**
      * User activation key
      *
      * @var string
      */
-    protected $user_activation_key = '';
+    protected string $user_activation_key = '';
 
     /**
      * User status
      *
      * @var string
      */
-    protected $user_status = '';
+    protected string $user_status = '';
 
     /**
      * User display name
      *
      * @var string
      */
-    protected $display_name = '';
+    protected string $display_name = '';
 
     /*----------------------------------------------------------------------------------*/
 
@@ -93,7 +93,7 @@ class User
      *
      * @var WP_User
      */
-    private $wp_user = null;
+    private ?WP_User $wp_user = null;
 
     /************************************************************************************/
     // Default constructor and load method
