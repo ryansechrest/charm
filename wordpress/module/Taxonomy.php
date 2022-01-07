@@ -24,7 +24,7 @@ class Taxonomy
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Object type
@@ -40,7 +40,7 @@ class Taxonomy
      *
      * @var array|string|null
      */
-    protected $object_type = '';
+    protected string|array|null $object_type = '';
 
     /**
      * Label
@@ -49,7 +49,7 @@ class Taxonomy
      *
      * @var string
      */
-    protected $label = '';
+    protected string $label = '';
 
     /**
      * Labels
@@ -59,7 +59,7 @@ class Taxonomy
      *
      * @var array
      */
-    protected $labels = [];
+    protected array $labels = [];
 
     /**
      * Public
@@ -70,7 +70,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $public = null;
+    protected ?bool $public = null;
 
     /**
      * Publicly queryable
@@ -79,7 +79,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $publicly_queryable = null;
+    protected ?bool $publicly_queryable = null;
 
     /**
      * Show UI
@@ -88,7 +88,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_ui = null;
+    protected ?bool $show_ui = null;
 
     /**
      * Show in menu
@@ -97,7 +97,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_in_menu = null;
+    protected ?bool $show_in_menu = null;
 
     /**
      * Show in nav menus
@@ -106,7 +106,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_in_nav_menus = null;
+    protected ?bool $show_in_nav_menus = null;
 
     /**
      * Show in REST
@@ -116,7 +116,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_in_rest = null;
+    protected ?bool $show_in_rest = null;
 
     /**
      * REST base
@@ -125,7 +125,7 @@ class Taxonomy
      *
      * @var string
      */
-    protected $rest_base = '';
+    protected string $rest_base = '';
 
     /**
      * REST controller class
@@ -134,7 +134,7 @@ class Taxonomy
      *
      * @var string
      */
-    protected $rest_controller_class = '';
+    protected string $rest_controller_class = '';
 
     /**
      * Show tag cloud
@@ -143,7 +143,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_tagcloud = null;
+    protected ?bool $show_tagcloud = null;
 
     /**
      * Show in quick edit
@@ -152,7 +152,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_in_quick_edit = null;
+    protected ?bool $show_in_quick_edit = null;
 
     /**
      * Meta box callback
@@ -182,7 +182,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $show_admin_column = null;
+    protected ?bool $show_admin_column = null;
 
     /**
      * Description
@@ -191,7 +191,7 @@ class Taxonomy
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Hierarchical
@@ -206,7 +206,7 @@ class Taxonomy
      *
      * @var bool
      */
-    protected $hierarchical = null;
+    protected ?bool $hierarchical = null;
 
     /**
      * Update count callback
@@ -240,7 +240,7 @@ class Taxonomy
      *
      * @var false|string
      */
-    protected $query_var = '';
+    protected string|false $query_var = '';
 
     /**
      * Rewrite
@@ -266,7 +266,7 @@ class Taxonomy
      *
      * @var array
      */
-    protected $rewrite = [];
+    protected array $rewrite = [];
 
     /**
      * Capabilities
@@ -275,16 +275,16 @@ class Taxonomy
      *
      * @var array
      */
-    protected $capabilities = null;
+    protected ?array $capabilities = null;
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * WordPress taxonomy
      *
-     * @var WP_Taxonomy
+     * @var WP_Taxonomy|null
      */
-    private $wp_taxonomy = null;
+    private ?WP_Taxonomy $wp_taxonomy = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -387,10 +387,10 @@ class Taxonomy
      * Initialize taxonomy
      *
      * @see WP_Taxonomy
-     * @param string|WP_Taxonomy $key
+     * @param WP_Taxonomy|string $key
      * @return static|null
      */
-    public static function init($key): ?Taxonomy
+    public static function init(WP_Taxonomy|string $key): ?Taxonomy
     {
         $taxonomy = new static();
         if (is_string($key)) {
@@ -412,7 +412,7 @@ class Taxonomy
      * @param array $params
      * @return static[]
      */
-    public static function get($params = []): array
+    public static function get(array $params = []): array
     {
         $taxonomies = [];
         $wp_taxonomies = get_taxonomies([], 'objects');
@@ -678,7 +678,7 @@ class Taxonomy
      *
      * @return array|string|null
      */
-    public function get_object_type()
+    public function get_object_type(): array|string|null
     {
         return $this->object_type;
     }
@@ -688,7 +688,7 @@ class Taxonomy
      *
      * @param array|string|null $object_type
      */
-    public function set_object_type($object_type): void
+    public function set_object_type(array|string|null $object_type): void
     {
         $this->object_type = $object_type;
     }
