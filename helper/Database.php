@@ -18,9 +18,9 @@ class Database
     /**
      * WordPress database
      *
-     * @var wpdb
+     * @var wpdb|null
      */
-    private $wpdb = null;
+    private ?wpdb $wpdb = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -169,7 +169,7 @@ class Database
      * @return array
      */
     public function select_where(
-        array $fields, array $table, array $conditions = [], $order_by = '', int $limit = 0
+        array $fields, array $table, array $conditions = [], string $order_by = '', int $limit = 0
     ): array
     {
         $query = [
@@ -229,7 +229,7 @@ class Database
      * @param int $id
      * @return bool
      */
-    public function update_where_id(string $table, array $columns, int $id)
+    public function update_where_id(string $table, array $columns, int $id): bool
     {
         return $this->update($table, $columns, ['id' => $id]);
     }
@@ -302,7 +302,7 @@ class Database
      * @param array $data
      * @return bool|int
      */
-    public function query(string $sql, array $data = [])
+    public function query(string $sql, array $data = []): bool|int
     {
         if (count($data) > 0) {
             $sql = $this->wpdb->prepare($sql, $data);
