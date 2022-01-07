@@ -20,7 +20,7 @@ class MenuLocation
      *
      * @var string
      */
-    protected $location = '';
+    protected string $location = '';
 
     /**
      * Description
@@ -29,7 +29,7 @@ class MenuLocation
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /************************************************************************************/
     // Default constructor and load method
@@ -72,7 +72,7 @@ class MenuLocation
      * @param string $location
      * @return static|null
      */
-    public static function init(string $location)
+    public static function init(string $location): ?static
     {
         $menu_locations = static::get();
         foreach ($menu_locations as $menu_location) {
