@@ -23,7 +23,7 @@ class PostType
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Label
@@ -33,7 +33,7 @@ class PostType
      *
      * @var string
      */
-    protected $label = '';
+    protected string $label = '';
 
     /**
      * Labels
@@ -44,7 +44,7 @@ class PostType
      *
      * @var array
      */
-    protected $labels = [];
+    protected array $labels = [];
 
     /**
      * Description
@@ -53,7 +53,7 @@ class PostType
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Public
@@ -66,7 +66,7 @@ class PostType
      *
      * @var bool
      */
-    protected $public = null;
+    protected ?bool $public = null;
 
     /**
      * Hierarchical
@@ -75,7 +75,7 @@ class PostType
      *
      * @var bool
      */
-    protected $hierarchical = null;
+    protected ?bool $hierarchical = null;
 
     /**
      * Exclude from search
@@ -85,7 +85,7 @@ class PostType
      *
      * @var bool
      */
-    protected $exclude_from_search = null;
+    protected ?bool $exclude_from_search = null;
 
     /**
      * Publicly queryable
@@ -99,7 +99,7 @@ class PostType
      *
      * @var bool
      */
-    protected $publicly_queryable = null;
+    protected ?bool $publicly_queryable = null;
 
     /**
      * Show UI
@@ -109,7 +109,7 @@ class PostType
      *
      * @var bool
      */
-    protected $show_ui = null;
+    protected ?bool $show_ui = null;
 
     /**
      * Show in menu
@@ -122,7 +122,7 @@ class PostType
      *
      * @var bool|string
      */
-    protected $show_in_menu = '';
+    protected string|bool $show_in_menu = '';
 
     /**
      * Show in nav menus
@@ -132,7 +132,7 @@ class PostType
      *
      * @var bool
      */
-    protected $show_in_nav_menus = null;
+    protected ?bool $show_in_nav_menus = null;
 
     /**
      * Show in admin bar
@@ -142,7 +142,7 @@ class PostType
      *
      * @var bool
      */
-    protected $show_in_admin_bar = null;
+    protected ?bool $show_in_admin_bar = null;
 
     /**
      * Show in REST
@@ -152,7 +152,7 @@ class PostType
      *
      * @var bool
      */
-    protected $show_in_rest = null;
+    protected ?bool $show_in_rest = null;
 
     /**
      * Rest base
@@ -161,7 +161,7 @@ class PostType
      *
      * @var string
      */
-    protected $rest_base = '';
+    protected string $rest_base = '';
 
     /**
      * REST controller class
@@ -170,7 +170,7 @@ class PostType
      *
      * @var string
      */
-    protected $rest_controller_class = '';
+    protected string $rest_controller_class = '';
 
     /**
      * Menu position
@@ -178,9 +178,9 @@ class PostType
      * The position in the menu order the post type should appear. To work, $show_in_menu
      * must be true. Default null (at the bottom).
      *
-     * @var int
+     * @var int|null
      */
-    protected $menu_position = null;
+    protected ?int $menu_position = null;
 
     /**
      * Menu icon
@@ -194,7 +194,7 @@ class PostType
      *
      * @var string
      */
-    protected $menu_icon = '';
+    protected string $menu_icon = '';
 
     /**
      * Capability type
@@ -203,9 +203,9 @@ class PostType
      * as an array to allow for alternative plurals when using this argument as a base to
      * construct the capabilities, e.g. array('story', 'stories'). Default 'post'.
      *
-     * @var array
+     * @var array|string
      */
-    protected $capability_type = [];
+    protected array|string $capability_type = [];
 
     /**
      * Capabilities
@@ -215,7 +215,7 @@ class PostType
      *
      * @var array
      */
-    protected $capabilities = [];
+    protected array $capabilities = [];
 
     /**
      * Map meta cap
@@ -224,7 +224,7 @@ class PostType
      *
      * @var bool
      */
-    protected $map_meta_cap = null;
+    protected ?bool $map_meta_cap = null;
 
     /**
      * Supports
@@ -242,7 +242,7 @@ class PostType
      *
      * @var array
      */
-    protected $supports = [];
+    protected array $supports = [];
 
     /**
      * Register meta box cb
@@ -263,7 +263,7 @@ class PostType
      *
      * @var array
      */
-    protected $taxonomies = [];
+    protected array $taxonomies = [];
 
     /**
      * Has archive
@@ -273,7 +273,7 @@ class PostType
      *
      * @var bool|string
      */
-    protected $has_archive = '';
+    protected string|bool $has_archive = '';
 
     /**
      * Rewrite
@@ -294,7 +294,7 @@ class PostType
      *
      * @var array
      */
-    protected $rewrite = [];
+    protected array $rewrite = [];
 
     /**
      * Query var
@@ -305,7 +305,7 @@ class PostType
      *
      * @var false|string
      */
-    protected $query_var = '';
+    protected string|false $query_var = '';
 
     /**
      * Can export
@@ -314,7 +314,7 @@ class PostType
      *
      * @var bool
      */
-    protected $can_export = null;
+    protected ?bool $can_export = null;
 
     /**
      * Delete with user
@@ -327,23 +327,23 @@ class PostType
      *
      * @var bool
      */
-    protected $delete_with_user = null;
+    protected ?bool $delete_with_user = null;
 
     /**
      * Post updated messages
      *
      * @var array
      */
-    protected $post_updated_messages = [];
+    protected array $post_updated_messages = [];
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * WordPress post type
      *
-     * @var WP_Post_Type
+     * @var WP_Post_Type|null
      */
-    private $wp_post_type = null;
+    private ?WP_Post_Type $wp_post_type = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -464,10 +464,10 @@ class PostType
      * Initialize post type
      *
      * @see WP_Post_Type
-     * @param string|WP_Post_Type $key
+     * @param WP_Post_Type|string $key
      * @return static|null
      */
-    public static function init($key): ?PostType
+    public static function init(WP_Post_Type|string $key): ?PostType
     {
         $post_type = new static();
         if (is_string($key)) {
@@ -975,7 +975,7 @@ class PostType
      *
      * @return bool|string
      */
-    public function get_show_in_menu()
+    public function get_show_in_menu(): bool|string
     {
         return $this->show_in_menu;
     }
@@ -985,7 +985,7 @@ class PostType
      *
      * @param bool|string $show_in_menu
      */
-    public function set_show_in_menu($show_in_menu): void
+    public function set_show_in_menu(bool|string $show_in_menu): void
     {
         $this->show_in_menu = $show_in_menu;
     }
@@ -1261,7 +1261,7 @@ class PostType
     /**
      * Add support
      *
-     * @param array|string $name
+     * @param string $name
      */
     public function add_support(string $name)
     {
@@ -1329,7 +1329,7 @@ class PostType
      *
      * @return bool|string
      */
-    public function get_has_archive()
+    public function get_has_archive(): bool|string
     {
         return $this->has_archive;
     }
@@ -1339,7 +1339,7 @@ class PostType
      *
      * @param bool|string $has_archive
      */
-    public function set_has_archive($has_archive): void
+    public function set_has_archive(bool|string $has_archive): void
     {
         $this->has_archive = $has_archive;
     }
@@ -1373,7 +1373,7 @@ class PostType
      *
      * @return bool|string
      */
-    public function get_query_var()
+    public function get_query_var(): bool|string
     {
         return $this->query_var;
     }
@@ -1383,7 +1383,7 @@ class PostType
      *
      * @param bool|string $query_var
      */
-    public function set_query_var($query_var): void
+    public function set_query_var(bool|string $query_var): void
     {
         $this->query_var = $query_var;
     }
@@ -1417,7 +1417,7 @@ class PostType
      *
      * @return bool
      */
-    public function is_delete_with_user()
+    public function is_delete_with_user(): ?bool
     {
         return $this->delete_with_user;
     }
@@ -1427,7 +1427,7 @@ class PostType
      *
      * @param bool $delete_with_user
      */
-    public function set_delete_with_user($delete_with_user): void
+    public function set_delete_with_user(bool $delete_with_user): void
     {
         $this->delete_with_user = $delete_with_user;
     }
