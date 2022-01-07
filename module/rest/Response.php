@@ -66,7 +66,7 @@ class Response
      *
      * @var string
      */
-    protected $status = '';
+    protected string $status = '';
 
     /**
      * Code
@@ -74,14 +74,15 @@ class Response
      *
      * @var int
      */
-    protected $code = 0;
+    protected int $code = 0;
 
     /**
      * Label
      *  e.g. 'OK', 'BAD REQUEST'
+     *
      * @var string
      */
-    protected $label = '';
+    protected string $label = '';
 
     /**
      * Message
@@ -89,14 +90,14 @@ class Response
      *
      * @var string
      */
-    protected $message = '';
+    protected string $message = '';
 
     /**
      * Data
      *
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /************************************************************************************/
     // Default constructor and load method
