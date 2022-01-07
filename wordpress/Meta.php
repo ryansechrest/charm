@@ -18,35 +18,35 @@ class Meta
      *
      * @var string
      */
-    protected $meta_type = '';
+    protected string $meta_type = '';
 
     /**
      * Meta ID
      *
      * @var int
      */
-    protected $meta_id = 0;
+    protected int $meta_id = 0;
 
     /**
      * Object ID
      *
      * @var int
      */
-    protected $object_id = 0;
+    protected int $object_id = 0;
 
     /**
      * Meta key
      *
      * @var string
      */
-    protected $meta_key = '';
+    protected string $meta_key = '';
 
     /**
      * Meta value
      *
      * @var mixed
      */
-    protected $meta_value = null;
+    protected mixed $meta_value = null;
 
     /*----------------------------------------------------------------------------------*/
 
@@ -55,14 +55,14 @@ class Meta
      *
      * @var mixed
      */
-    protected $prev_value = null;
+    protected mixed $prev_value = null;
 
     /**
      * Loaded from database?
      *
      * @var bool
      */
-    protected $from_db = false;
+    protected bool $from_db = false;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -285,7 +285,7 @@ class Meta
      * @return Meta
      */
     protected static function load_single(
-        string $meta_type, int $object_id, string $meta_key, $meta_value
+        string $meta_type, int $object_id, string $meta_key, mixed $meta_value
     ): Meta {
         global $wpdb;
         $id_col = $meta_type !== 'user' ? 'meta_id' : 'umeta_id';
@@ -543,7 +543,7 @@ class Meta
      *
      * @return mixed
      */
-    public function get_meta_value()
+    public function get_meta_value(): mixed
     {
         return $this->meta_value;
     }
@@ -553,7 +553,7 @@ class Meta
      *
      * @param mixed $meta_value
      */
-    public function set_meta_value($meta_value): void
+    public function set_meta_value(mixed $meta_value): void
     {
         $this->meta_value = $meta_value;
     }
@@ -565,7 +565,7 @@ class Meta
      *
      * @return mixed
      */
-    public function get_prev_value()
+    public function get_prev_value(): mixed
     {
         return $this->prev_value;
     }
@@ -575,7 +575,7 @@ class Meta
      *
      * @param mixed $prev_value
      */
-    public function set_prev_value($prev_value): void
+    public function set_prev_value(mixed $prev_value): void
     {
         $this->prev_value = $prev_value;
     }
