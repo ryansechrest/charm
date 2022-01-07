@@ -29,14 +29,22 @@ class File
      * Get path of all files within target path
      *
      * @param string $path
+     * @param array $extensions
      * @return array
      */
-    public static function get_file_paths(string $path): array
+    public static function get_file_paths(string $path, array $extensions = ['php']): array
     {
         $rdi = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
         $rii = new RecursiveIteratorIterator($rdi);
-        $file_infos = array_filter(iterator_to_array($rii), function($file_info) {
+        $file_infos = array_filter(iterator_to_array($rii), function($file_info) use ($extensions) {
             if (!file_exists($file_info->getPathname())) {
+                return false;
+            }
+            if (count($extensions) === 0) {
+                return true;
+            }
+            $arr = explode('.', strrev($file_info->getPathname()), 2);
+            if (!in_array(strrev($arr[0]), $extensions)) {
                 return false;
             }
             return true;
