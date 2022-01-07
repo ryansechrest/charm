@@ -18,14 +18,14 @@ class ObjectTaxonomy
      *
      * @var int
      */
-    protected $object_id = 0;
+    protected int $object_id = 0;
 
     /**
      * Taxonomy
      *
      * @var string
      */
-    protected $taxonomy = '';
+    protected string $taxonomy = '';
 
     /************************************************************************************/
     // Default constructor and load method
@@ -66,7 +66,7 @@ class ObjectTaxonomy
      *
      * @param int $object_id
      * @param string $taxonomy
-     * @return static
+     * @return ObjectTaxonomy|null
      */
     public static function init(int $object_id, string $taxonomy): ?ObjectTaxonomy
     {
@@ -86,7 +86,7 @@ class ObjectTaxonomy
      * @param array $args
      * @return array
      */
-    public function get($args = []): array
+    public function get(array $args = []): array
     {
         $terms = wp_get_object_terms($this->object_id, $this->taxonomy, $args);
         if (!is_array($terms)) {
