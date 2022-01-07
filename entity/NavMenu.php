@@ -34,7 +34,7 @@ class NavMenu extends WpNavMenu
      *
      * @var NavMenuItem[]
      */
-    protected $items = [];
+    protected array $items = [];
 
     /************************************************************************************/
     // Instantiation methods
@@ -42,11 +42,11 @@ class NavMenu extends WpNavMenu
     /**
      * Initialize nav menu
      *
-     * @param int|string|WP_Term $key
+     * @param WP_Term|int|string $key
      * @param string $taxonomy
      * @return static|null
      */
-    public static function init($key = null, $taxonomy = 'nav_menu'): ?Term
+    public static function init(WP_Term|int|string $key, string $taxonomy = 'nav_menu'): ?Term
     {
         if ($key === null && static::menu_location() !== '') {
             return parent::init(static::menu_location());
@@ -103,7 +103,7 @@ class NavMenu extends WpNavMenu
      * @param array $params
      * @return bool
      */
-    public function new_item($params = []): bool
+    public function new_item(array $params = []): bool
     {
         $params['menu_id'] = $this->term_id;
 
@@ -123,7 +123,7 @@ class NavMenu extends WpNavMenu
      * @param array $params
      * @return NavMenuItem[]
      */
-    public function get_items($params = []): array
+    public function get_items(array $params = []): array
     {
         if (count($this->items) > 0) {
             return $this->items;
