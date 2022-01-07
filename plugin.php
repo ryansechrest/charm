@@ -11,8 +11,8 @@ if (!defined('ABSPATH')) {
  * Plugin URI: https://wpcharm.com/
  * Description: An object-oriented WordPress framework for developers to build entities and relationships.
  * Version: 1.0.0
- * Requires at least: 5.3.2
- * Requires PHP: 7.3
+ * Requires at least: 5.8
+ * Requires PHP: 8.0
  * Author: Ryan Sechrest
  * Author URI: https://ryansechrest.com/
  * Text Domain: charm
