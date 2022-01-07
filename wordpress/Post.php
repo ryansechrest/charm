@@ -21,170 +21,170 @@ class Post
      *
      * @var int
      */
-    protected $id = 0;
+    protected int $id = 0;
 
     /**
      * Post author
      *
      * @var int
      */
-    protected $post_author = null;
+    protected ?int $post_author = null;
 
     /**
      * Post date
      *
      * @var string
      */
-    protected $post_date = '';
+    protected string $post_date = '';
 
     /**
      * Post date (GMT)
      *
      * @var string
      */
-    protected $post_date_gmt = '';
+    protected string $post_date_gmt = '';
 
     /**
      * Post content
      *
      * @var string
      */
-    protected $post_content = '';
+    protected string $post_content = '';
 
     /**
      * Post title
      *
      * @var string
      */
-    protected $post_title = '';
+    protected string $post_title = '';
 
     /**
      * Post excerpt
      *
      * @var string
      */
-    protected $post_excerpt = '';
+    protected string $post_excerpt = '';
 
     /**
      * Post status
      *
      * @var string
      */
-    protected $post_status = '';
+    protected string $post_status = '';
 
     /**
      * Comment status
      *
      * @var string
      */
-    protected $comment_status = '';
+    protected string $comment_status = '';
 
     /**
      * Ping status
      *
      * @var string
      */
-    protected $ping_status = '';
+    protected string $ping_status = '';
 
     /**
      * Post password
      *
      * @var string
      */
-    protected $post_password = '';
+    protected string $post_password = '';
 
     /**
      * Post name
      *
      * @var string
      */
-    protected $post_name = '';
+    protected string $post_name = '';
 
     /**
      * URLs to ping
      *
      * @var string
      */
-    protected $to_ping = '';
+    protected string $to_ping = '';
 
     /**
      * URLs pinged
      *
      * @var string
      */
-    protected $pinged = '';
+    protected string $pinged = '';
 
     /**
      * Post modified
      *
      * @var string
      */
-    protected $post_modified = '';
+    protected string $post_modified = '';
 
     /**
      * Post modified (GMT)
      *
      * @var string
      */
-    protected $post_modified_gmt = '';
+    protected string $post_modified_gmt = '';
 
     /**
      * Filtered post content
      *
      * @var string
      */
-    protected $post_content_filtered = '';
+    protected string $post_content_filtered = '';
 
     /**
      * Post parent
      *
      * @var int
      */
-    protected $post_parent = 0;
+    protected int $post_parent = 0;
 
     /**
      * GUID
      *
      * @var string
      */
-    protected $guid = '';
+    protected string $guid = '';
 
     /**
      * Menu order
      *
      * @var int
      */
-    protected $menu_order = 0;
+    protected int $menu_order = 0;
 
     /**
      * Post type
      *
      * @var string
      */
-    protected $post_type = '';
+    protected string $post_type = '';
 
     /**
      * Post mime type
      *
      * @var string
      */
-    protected $post_mime_type = '';
+    protected string $post_mime_type = '';
 
     /**
      * Comment count
      *
      * @var int
      */
-    protected $comment_count = 0;
+    protected int $comment_count = 0;
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * WordPress post
      *
-     * @var WP_Post
+     * @var WP_Post|null
      */
-    private $wp_post = null;
+    private ?WP_Post $wp_post = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -292,7 +292,7 @@ class Post
      * @param int|string|WP_Post|null $key
      * @return static|null
      */
-    public static function init($key = null): ?Post
+    public static function init(int|string|WP_Post $key = null): ?Post
     {
         $post = new static();
         if (is_int($key) || ctype_digit($key)) {
