@@ -18,35 +18,35 @@ class ObjectParam extends Param
      *
      * @var array
      */
-    protected $properties = [];
+    protected array $properties = [];
 
     /**
      * Additional properties
      *
      * @var array
      */
-    protected $additional_properties = [];
+    protected array $additional_properties = [];
 
     /**
      * Pattern properties
      *
      * @var array
      */
-    protected $pattern_properties = [];
+    protected array $pattern_properties = [];
 
     /**
      * Min properties
      *
      * @var int
      */
-    protected $min_properties = 0;
+    protected int $min_properties = 0;
 
     /**
      * Max properties
      *
      * @var int
      */
-    protected $max_properties = 0;
+    protected int $max_properties = 0;
 
     /************************************************************************************/
     // Default constructor and load method
