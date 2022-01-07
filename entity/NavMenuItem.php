@@ -22,14 +22,14 @@ class NavMenuItem extends WpNavMenuItem
      *
      * @var NavMenuItem[]
      */
-    protected $sub_items = [];
+    protected array $sub_items = [];
 
     /**
      * Menu item parent object
      *
      * @var NavMenuItem|null
      */
-    protected $menu_item_parent_obj = null;
+    protected ?NavMenuItem $menu_item_parent_obj = null;
 
     /************************************************************************************/
     // Object access methods
