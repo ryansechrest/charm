@@ -33,7 +33,7 @@ class Term extends WpTerm
      *
      * @var string
      */
-    protected $archive_url = '';
+    protected string $archive_url = '';
 
     /*----------------------------------------------------------------------------------*/
 
@@ -42,14 +42,14 @@ class Term extends WpTerm
      *
      * @var Term|null
      */
-    protected $parent_obj = null;
+    protected ?Term $parent_obj = null;
 
     /**
      * Child objects
      *
      * @var Term[]
      */
-    protected $child_objs = [];
+    protected array $child_objs = [];
 
     /************************************************************************************/
     // Default constructor and load method
