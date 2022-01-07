@@ -20,11 +20,11 @@ class NavMenu extends Term
      *
      * @see wp_get_nav_menu_object()
      * @see get_nav_menu_locations()
-     * @param int|string|WP_Term $key
+     * @param WP_Term|int|string $key
      * @param string $taxonomy
      * @return static|null
      */
-    public static function init($key, $taxonomy = 'nav_menu'): ?Term
+    public static function init(WP_Term|int|string $key, string $taxonomy = 'nav_menu'): ?Term
     {
         $nav_menu = wp_get_nav_menu_object($key);
         if ($nav_menu !== false) {
