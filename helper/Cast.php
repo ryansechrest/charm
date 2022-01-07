@@ -18,14 +18,14 @@ class Cast
      *
      * @var mixed
      */
-    protected $value = null;
+    protected mixed $value = null;
 
     /**
      * Original value
      *
      * @var mixed
      */
-    protected $original_value = null;
+    protected mixed $original_value = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -67,7 +67,7 @@ class Cast
      * @param mixed $value
      * @return self
      */
-    public static function init($value): self
+    public static function init(mixed $value): self
     {
        return new static([
            'value' => $value,
@@ -107,10 +107,10 @@ class Cast
         if (is_bool($this->value)) {
             return $this->value;
         }
-        if (is_string($this->value) && $this->value === 'true') {
+        if ($this->value === 'true') {
             return $this->value = true;
         }
-        if (is_numeric($this->value) && $this->value === 1) {
+        if ($this->value === 1) {
             return $this->value = true;
         }
 
@@ -150,7 +150,7 @@ class Cast
      *
      * @return mixed
      */
-    public function value()
+    public function value(): mixed
     {
         return $this->value;
     }
@@ -163,7 +163,7 @@ class Cast
      *
      * @return mixed
      */
-    public function get_value()
+    public function get_value(): mixed
     {
         return $this->value;
     }
@@ -173,7 +173,7 @@ class Cast
      *
      * @param mixed $value
      */
-    public function set_value($value)
+    public function set_value(mixed $value)
     {
         $this->value = $value;
     }
@@ -185,7 +185,7 @@ class Cast
      *
      * @return mixed
      */
-    public function get_original_value()
+    public function get_original_value(): mixed
     {
         return $this->original_value;
     }
@@ -195,7 +195,7 @@ class Cast
      *
      * @param mixed $value
      */
-    public function set_original_value($value)
+    public function set_original_value(mixed $value)
     {
         $this->original_value = $value;
     }
