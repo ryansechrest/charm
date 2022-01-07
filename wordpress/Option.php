@@ -18,14 +18,14 @@ class Option
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Value
      *
      * @var mixed
      */
-    protected $value = null;
+    protected mixed $value = null;
 
     /*----------------------------------------------------------------------------------*/
 
@@ -34,14 +34,14 @@ class Option
      *
      * @var mixed
      */
-    protected $prev_value = null;
+    protected mixed $prev_value = null;
 
     /**
      * Loaded from database?
      *
      * @var bool
      */
-    protected $from_db = false;
+    protected bool $from_db = false;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -251,7 +251,7 @@ class Option
      *
      * @return mixed
      */
-    public function get_value()
+    public function get_value(): mixed
     {
         return $this->value;
     }
@@ -261,7 +261,7 @@ class Option
      *
      * @param mixed $value
      */
-    public function set_value($value): void
+    public function set_value(mixed $value): void
     {
         $this->value = $value;
     }
@@ -273,7 +273,7 @@ class Option
      *
      * @return mixed
      */
-    public function get_prev_value()
+    public function get_prev_value(): mixed
     {
         return $this->prev_value;
     }
@@ -283,7 +283,7 @@ class Option
      *
      * @param mixed $prev_value
      */
-    public function set_prev_value($prev_value): void
+    public function set_prev_value(mixed $prev_value): void
     {
         $this->prev_value = $prev_value;
     }
