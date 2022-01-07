@@ -20,121 +20,121 @@ class NavMenuItem
      *
      * @var int
      */
-    protected $menu_id = 0;
+    protected int $menu_id = 0;
 
     /**
      * Database ID
      *
      * @var int
      */
-    protected $db_id = 0;
+    protected int $db_id = 0;
 
     /**
      * Menu item parent
      *
      * @var int
      */
-    protected $menu_item_parent = 0;
+    protected int $menu_item_parent = 0;
 
     /**
      * Object ID
      *
      * @var int
      */
-    protected $object_id = 0;
+    protected int $object_id = 0;
 
     /**
      * Object
      *
      * @var string
      */
-    protected $object = '';
+    protected string $object = '';
 
     /**
      * Type
      *
      * @var string
      */
-    protected $type = 'custom';
+    protected string $type = 'custom';
 
     /**
      * Type label
      *
      * @var string
      */
-    protected $type_label = '';
+    protected string $type_label = '';
 
     /**
      * URL
      *
      * @var string
      */
-    protected $url = '';
+    protected string $url = '';
 
     /**
      * Title
      *
      * @var string
      */
-    protected $title = '';
+    protected string $title = '';
 
     /**
      * Target
      *
      * @var string
      */
-    protected $target = '';
+    protected string $target = '';
 
     /**
      * Attribute title
      *
      * @var string
      */
-    protected $attr_title = '';
+    protected string $attr_title = '';
 
     /**
      * Description
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Classes
      *
      * @var array
      */
-    protected $classes = [];
+    protected array $classes = [];
 
     /**
      * XFN
      *
      * @var string
      */
-    protected $xfn = '';
+    protected string $xfn = '';
 
     /**
      * Position
      *
      * @var int
      */
-    protected $position = 0;
+    protected int $position = 0;
 
     /**
      * Status
      *
      * @var string
      */
-    protected $status = '';
+    protected string $status = '';
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * WordPress post
      *
-     * @var WP_Post
+     * @var WP_Post|null
      */
-    private $wp_post = null;
+    private ?WP_Post $wp_post = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -215,11 +215,10 @@ class NavMenuItem
     /**
      * Initialize post
      *
-     * @see wp_setup_nav_menu_item()
      * @param int|WP_Post $key
      * @return static|null
      */
-    public static function init($key): ?NavMenuItem
+    public static function init(int|WP_Post $key): ?NavMenuItem
     {
         $nav_menu_item = new static();
         if (is_int($key) || ctype_digit($key)) {
@@ -271,7 +270,7 @@ class NavMenuItem
      * @param array $params
      * @return static[]
      */
-    protected static function get_by_menu_name(string $menu_name, $params = []): array
+    protected static function get_by_menu_name(string $menu_name, array $params = []): array
     {
         $nav_menu_object = wp_get_nav_menu_object($menu_name);
 
@@ -285,9 +284,10 @@ class NavMenuItem
      * @param string $menu_location
      * @param array $params
      * @return static[]
+     *
      */
     protected static function get_by_menu_location(
-        string $menu_location, $params = []
+        string $menu_location, array $params = []
     ): array
     {
         $menu_locations = get_nav_menu_locations();
@@ -307,7 +307,7 @@ class NavMenuItem
      * @param array $params
      * @return static[]
      */
-    protected static function get_by_menu_id(int $menu_id, $params = []): array
+    protected static function get_by_menu_id(int $menu_id, array $params = []): array
     {
         $nav_menu_items = wp_get_nav_menu_items($menu_id, $params);
         if ($nav_menu_items === false) {
@@ -469,6 +469,8 @@ class NavMenuItem
         }
         $this->db_id = $id;
         $this->reload();
+
+        return true;
     }
 
     /**
