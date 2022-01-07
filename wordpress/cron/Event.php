@@ -18,42 +18,42 @@ class Event
      *
      * @var string
      */
-    protected $hook = '';
+    protected string $hook = '';
 
     /**
      * Timestamp
      *
      * @var int
      */
-    protected $timestamp = 0;
+    protected int $timestamp = 0;
 
     /**
      * Schedule
      *
      * @var string
      */
-    protected $schedule = '';
+    protected string $schedule = '';
 
     /**
      * Interval
      *
      * @var int
      */
-    protected $interval = 0;
+    protected int $interval = 0;
 
     /**
      * Arguments
      *
      * @var array
      */
-    protected $args = [];
+    protected array $args = [];
 
     /**
      * Key
      *
      * @var string
      */
-    protected $key = '';
+    protected string $key = '';
 
     /************************************************************************************/
     // Default constructor and load method
@@ -109,7 +109,7 @@ class Event
      * @param int $timestamp
      * @return static|null
      */
-    public static function init($key, array $args = [], int $timestamp = 0): ?Event
+    public static function init(object|string $key, array $args = [], int $timestamp = 0): ?Event
     {
         $event = new static();
         if (is_string($key)) {
@@ -189,7 +189,7 @@ class Event
      * @param array $args
      * @param int $timestamp
      */
-    protected function load_from_params(string $hook, array $args = [], $timestamp = 0): void
+    protected function load_from_params(string $hook, array $args = [], int $timestamp = 0): void
     {
         if (!$wp_event = wp_get_scheduled_event($hook, $args, $timestamp)) {
             return;
