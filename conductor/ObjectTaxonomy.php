@@ -21,7 +21,7 @@ class ObjectTaxonomy extends WpObjectTaxonomy
      *
      * @var string
      */
-    protected $term_class = '';
+    protected string $term_class = '';
 
     /************************************************************************************/
     // Default constructor and load method
@@ -48,7 +48,7 @@ class ObjectTaxonomy extends WpObjectTaxonomy
      * @param array $args
      * @return Term[]
      */
-    public function get($args = []): array
+    public function get(array $args = []): array
     {
         return array_map(function($term) {
             return call_user_func(
