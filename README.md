@@ -2,6 +2,10 @@
 
 Charm started on Feb 29, 2020, but is still in its early stages and continuously evolving. If you're curious about how Charm works under the hood, have a look around or take it for a spin in a development environment.
 
+## Prerequisites
+
+- PHP 8.0 or higher
+
 ## Getting Started
 
 Open up Terminal and `cd` into your project's directory. It's the one with your `wp-config.php` file.
