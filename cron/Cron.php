@@ -32,7 +32,7 @@ class Cron
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Function or method to call
@@ -46,37 +46,37 @@ class Cron
      *
      * @var int
      */
-    protected $timestamp = 0;
+    protected int $timestamp = 0;
 
     /**
      * Pass args to function or method
      *
      * @var array
      */
-    protected $args = [];
+    protected array $args = [];
 
     /**
      * Repeat run in specified interval
      *
      * @var array
      */
-    protected $repeat = [];
+    protected array $repeat = [];
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * Cron event
      *
-     * @var Event
+     * @var Event|null
      */
-    private $event = null;
+    private ?Event $event = null;
 
     /**
      * Cron schedule
      *
-     * @var Schedule
+     * @var Schedule|null
      */
-    private $schedule = null;
+    private ?Schedule $schedule = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -249,7 +249,7 @@ class Cron
                 static::SCHEDULE . '::init', $schedule
             ));
         }
-        $cron->backfill();;
+        $cron->backfill();
 
         return $cron;
     }
@@ -262,7 +262,7 @@ class Cron
     public static function to_html(): string
     {
         $output = <<<STYLE
-<style type="text/css">
+<style>
    .charm .green {
         color: #28a745;
    }
