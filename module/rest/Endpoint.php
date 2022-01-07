@@ -20,7 +20,7 @@ class Endpoint
      *
      * @var array
      */
-    protected $methods = [];
+    protected array $methods = [];
 
     /**
      * Params
@@ -35,7 +35,7 @@ class Endpoint
      *
      * @var Param[]
      */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * Callback
@@ -250,7 +250,7 @@ class Endpoint
     /**
      * Get callback
      *
-     * @return callable
+     * @return callable|null
      */
     public function get_callback(): ?callable
     {
@@ -272,7 +272,7 @@ class Endpoint
     /**
      * Get permission callback
      *
-     * @return callable
+     * @return callable|null
      */
     public function get_permission_callback(): ?callable
     {
