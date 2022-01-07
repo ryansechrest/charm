@@ -46,104 +46,104 @@ class Log
      *
      * @var int
      */
-    protected $id = 0;
+    protected int $id = 0;
 
     /**
      * User ID
      * @var int
      */
-    protected $user_id = 0;
+    protected int $user_id = 0;
 
     /**
      * User name
      *
      * @var string
      */
-    protected $user_name = '';
+    protected string $user_name = '';
 
     /**
      * Action
      *
      * @var string
      */
-    protected $action = '';
+    protected string $action = '';
 
     /**
      * Object type
      *
      * @var string
      */
-    protected $object_type = '';
+    protected string $object_type = '';
 
     /**
      * Object ID
      *
      * @var int
      */
-    protected $object_id = 0;
+    protected int $object_id = 0;
 
     /**
      * Object name
      *
      * @var string
      */
-    protected $object_name = '';
+    protected string $object_name = '';
 
     /**
      * Sub action
      *
      * @var string
      */
-    protected $sub_action = '';
+    protected string $sub_action = '';
 
     /**
      * Sub object type
      *
      * @var string
      */
-    protected $sub_object_type = '';
+    protected string $sub_object_type = '';
 
     /**
      * Sub object ID
      *
      * @var int
      */
-    protected $sub_object_id = 0;
+    protected int $sub_object_id = 0;
 
     /**
      * Sub object name
      *
      * @var string
      */
-    protected $sub_object_name = '';
+    protected string $sub_object_name = '';
 
     /**
      * Success
      *
-     * @var string
+     * @var int
      */
-    protected $success = 0;
+    protected int $success = 0;
 
     /**
      * Message
      *
      * @var string
      */
-    protected $message = '';
+    protected string $message = '';
 
     /**
      * Detail
      *
-     * @var null
+     * @var mixed
      */
-    protected $detail = null;
+    protected mixed $detail = null;
 
     /**
      * Date
      *
      * @var string
      */
-    protected $date = '';
+    protected string $date = '';
 
     /*----------------------------------------------------------------------------------*/
 
@@ -152,23 +152,23 @@ class Log
      *
      * @var User|null
      */
-    protected $user_obj = null;
+    protected ?User $user_obj = null;
 
     /**
      * Date object
      *
      * @var DateTime|null
      */
-    protected $date_obj = null;
+    protected ?DateTime $date_obj = null;
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * Database
      *
-     * @var Database
+     * @var Database|null
      */
-    private $db = null;
+    private ?Database $db = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -1117,10 +1117,10 @@ class Log
     /**
      * Initialize log
      *
-     * @param int|object $key
+     * @param object|int $key
      * @return static|null
      */
-    public static function init($key): ?Log
+    public static function init(object|int $key): ?Log
     {
         $log = new static();
         if (is_int($key) || ctype_digit($key)) {
@@ -1142,7 +1142,7 @@ class Log
      * @param string $order_by
      * @return static[]
      */
-    public static function get(array $conditions = [], $order_by = 'id DESC'): array
+    public static function get(array $conditions = [], string $order_by = 'id DESC'): array
     {
         $db = Database::init();
         $logs = $db->select_where([], [static::TABLE], $conditions, $order_by);
@@ -1724,7 +1724,7 @@ class Log
      *
      * @return mixed
      */
-    public function get_detail()
+    public function get_detail(): mixed
     {
         return $this->detail;
     }
@@ -1734,7 +1734,7 @@ class Log
      *
      * @param mixed $detail
      */
-    public function set_detail($detail): void
+    public function set_detail(mixed $detail): void
     {
         $this->detail = $detail;
     }
