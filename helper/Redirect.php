@@ -20,7 +20,7 @@ class Redirect
      *
      * @var string
      */
-    protected $url = '';
+    protected string $url = '';
 
     /**
      * Status
@@ -29,7 +29,7 @@ class Redirect
      *
      * @var int
      */
-    protected $status = 302;
+    protected int $status = 302;
 
     /**
      * Source
@@ -38,7 +38,7 @@ class Redirect
      *
      * @var string
      */
-    protected $source = 'WordPress';
+    protected string $source = 'WordPress';
 
     /**
      * Local
@@ -47,7 +47,7 @@ class Redirect
      *
      * @var bool
      */
-    protected $local = true;
+    protected bool $local = true;
 
     /************************************************************************************/
     // Default constructor and load method
