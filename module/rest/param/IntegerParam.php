@@ -18,35 +18,35 @@ class IntegerParam extends Param
      *
      * @var int
      */
-    protected $minimum = 0;
+    protected int $minimum = 0;
 
     /**
      * Maximum
      *
      * @var int
      */
-    protected $maximum = 0;
+    protected int $maximum = 0;
 
     /**
      * Exclusive minimum
      *
      * @var bool
      */
-    protected $exclusive_minimum = true;
+    protected bool $exclusive_minimum = true;
 
     /**
      * Exclusive maximum
      *
      * @var bool
      */
-    protected $exclusive_maximum = true;
+    protected bool $exclusive_maximum = true;
 
     /**
      * Multiple of
      *
      * @var float
      */
-    protected $multiple_of = 0.0;
+    protected float $multiple_of = 0.0;
 
     /************************************************************************************/
     // Default constructor and load method
