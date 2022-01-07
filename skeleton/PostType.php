@@ -52,7 +52,7 @@ abstract class PostType
      * @param array $target_capabilities
      * @return array
      */
-    public static function capabilities($target_capabilities = []): array
+    public static function capabilities(array $target_capabilities = []): array
     {
         $all_capabilities = static::post_type()->get_capabilities();
         if (count($target_capabilities) === 0) {
