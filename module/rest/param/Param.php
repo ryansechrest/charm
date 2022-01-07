@@ -20,7 +20,7 @@ class Param
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Title
@@ -29,14 +29,14 @@ class Param
      *
      * @var string
      */
-    protected $title = '';
+    protected string $title = '';
 
     /**
      * Description
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Type
@@ -45,14 +45,14 @@ class Param
      *
      * @var string
      */
-    protected $type = '';
+    protected string $type = '';
 
     /**
      * Enum
      *
      * @var array
      */
-    protected $enum = [];
+    protected array $enum = [];
 
     /**
      * Default
@@ -61,7 +61,7 @@ class Param
      *
      * @var string
      */
-    protected $default = '';
+    protected string $default = '';
 
     /**
      * Required
@@ -72,7 +72,7 @@ class Param
      *
      * @var bool
      */
-    protected $required = false;
+    protected bool $required = false;
 
     /**
      * Validate callback
@@ -367,7 +367,7 @@ class Param
     /**
      * Get validate callback
      *
-     * @return callable
+     * @return callable|null
      */
     public function get_validate_callback(): ?callable
     {
@@ -389,9 +389,9 @@ class Param
     /**
      * Get sanitize callback
      *
-     * @return callable
+     * @return callable|null
      */
-    public function get_sanitize_callback(): callable
+    public function get_sanitize_callback(): ?callable
     {
         return $this->sanitize_callback;
     }
