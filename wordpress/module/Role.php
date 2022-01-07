@@ -23,7 +23,7 @@ class Role
      *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Display name
@@ -32,7 +32,7 @@ class Role
      *
      * @var string
      */
-    protected $display_name = '';
+    protected string $display_name = '';
 
     /**
      * Capabilities
@@ -42,16 +42,16 @@ class Role
      *
      * @var array
      */
-    protected $capabilities = [];
+    protected array $capabilities = [];
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * WordPress role
      *
-     * @var WP_Role
+     * @var WP_Role|null
      */
-    private $wp_role = null;
+    private ?WP_Role $wp_role = null;
 
     /************************************************************************************/
     // Default constructor and load method
@@ -93,10 +93,10 @@ class Role
     /**
      * Initialize role
      *
-     * @param string|WP_Role $key
+     * @param WP_Role|string $key
      * @return static|null
      */
-    public static function init(string $key): ?Role
+    public static function init(WP_Role|string $key): ?Role
     {
         $role = new static();
         if (is_string($key)) {
@@ -254,7 +254,7 @@ class Role
         if ($this->display_name !== '') {
             $data['display_name'] = $this->display_name;
         }
-        if ($this->capabilities !== '') {
+        if (count($this->capabilities) > 0) {
             $data['capabilities'] = $this->capabilities;
         }
 
