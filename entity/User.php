@@ -47,16 +47,16 @@ class User extends WpUser
     /**
      * Registration date object
      *
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected $registration_date_obj = null;
+    protected ?DateTime $registration_date_obj = null;
 
     /**
      * Role object
      *
      * @var Role|null
      */
-    protected $role_obj = null;
+    protected ?Role $role_obj = null;
 
     /************************************************************************************/
     // Object access methods
