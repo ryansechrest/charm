@@ -52,58 +52,58 @@ class Event extends WpEvent
      *
      * @var string
      */
-    protected $timezone = '';
+    protected string $timezone = '';
 
     /**
      * Date format
      *
      * @var string
      */
-    protected $date_format = '';
+    protected string $date_format = '';
 
     /**
      * Time format
      *
      * @var string
      */
-    protected $time_format = '';
+    protected string $time_format = '';
 
     /**
      * Run on
      *
      * @var string
      */
-    protected $run_on = '';
+    protected string $run_on = '';
 
     /**
      * Run in
      *
      * @var string
      */
-    protected $run_in = '';
+    protected string $run_in = '';
 
     /**
      * Run every
      *
      * @var string
      */
-    protected $run_every = '';
+    protected string $run_every = '';
 
     /**
      * Actions
      *
      * @var array
      */
-    protected $actions = [];
+    protected array $actions = [];
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * Timestamp object
      *
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected $timestamp_obj = null;
+    protected ?DateTime $timestamp_obj = null;
 
     /************************************************************************************/
     // Cast methods
