@@ -21,7 +21,7 @@ trait Taxonomy
      *
      * @var array
      */
-    protected $taxonomies = [];
+    protected array $taxonomies = [];
 
     /************************************************************************************/
     // Object access methods
