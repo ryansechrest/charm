@@ -18,28 +18,28 @@ class ArrayParam extends Param
      *
      * @var array
      */
-    protected $items = [];
+    protected array $items = [];
 
     /**
      * Unique items
      *
      * @var array
      */
-    protected $unique_items = [];
+    protected array $unique_items = [];
 
     /**
      * Min items
      *
      * @var int
      */
-    protected $min_items = 0;
+    protected int $min_items = 0;
 
     /**
      * Max items
      *
      * @var int
      */
-    protected $max_items = 0;
+    protected int $max_items = 0;
 
     /************************************************************************************/
     // Default constructor and load method
