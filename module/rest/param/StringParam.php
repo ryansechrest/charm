@@ -20,28 +20,28 @@ class StringParam extends Param
      *
      * @var string
      */
-    protected $format = '';
+    protected string $format = '';
 
     /**
      * Pattern
      *
      * @var string
      */
-    protected $pattern = '';
+    protected string $pattern = '';
 
     /**
      * Min length
      *
      * @var int
      */
-    protected $min_length = 0;
+    protected int $min_length = 0;
 
     /**
      * Max length
      *
      * @var int
      */
-    protected $max_length = 0;
+    protected int $max_length = 0;
 
     /************************************************************************************/
     // Default constructor and load method
