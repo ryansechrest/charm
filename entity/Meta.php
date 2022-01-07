@@ -103,7 +103,7 @@ class Meta extends WpMeta
      *
      * @param mixed $value
      */
-    public function add($value): void
+    public function add(mixed $value): void
     {
         if (!is_array($this->meta_value)) {
             return;
