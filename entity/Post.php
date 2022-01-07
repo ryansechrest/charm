@@ -52,14 +52,14 @@ class Post extends WpPost
      *
      * @var string
      */
-    protected $url = '';
+    protected string $url = '';
 
     /**
      * Edit URL
      *
      * @var string
      */
-    protected $edit_url = '';
+    protected string $edit_url = '';
 
     /*----------------------------------------------------------------------------------*/
 
@@ -68,51 +68,51 @@ class Post extends WpPost
      *
      * @var User|null
      */
-    protected $author_obj = null;
+    protected ?User $author_obj = null;
 
     /**
      * Parent object
      *
      * @var Post|null
      */
-    protected $parent_obj = null;
+    protected ?Post $parent_obj = null;
 
     /**
      * Created date object
      *
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected $created_date_obj = null;
+    protected ?DateTime $created_date_obj = null;
 
     /**
      * Created date object (GMT)
      *
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected $created_date_gmt_obj = null;
+    protected ?DateTime $created_date_gmt_obj = null;
 
     /**
      * Updated date object
      *
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected $updated_date_obj = null;
+    protected ?DateTime $updated_date_obj = null;
 
     /**
      * Update date object (GMT)
      *
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected $updated_date_gmt_obj = null;
+    protected ?DateTime $updated_date_gmt_obj = null;
 
     /*----------------------------------------------------------------------------------*/
 
     /**
      * Post type object
      *
-     * @var PostType
+     * @var PostType|null
      */
-    protected $post_type_obj = null;
+    protected ?PostType $post_type_obj = null;
 
     /************************************************************************************/
     // Default constructor and load method
