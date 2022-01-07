@@ -28,14 +28,14 @@ class CLI
      *
      * @var array
      */
-    private $commands = [];
+    private array $commands = [];
 
     /**
      * Logs
      *
      * @var array
      */
-    private $logs = [];
+    private array $logs = [];
 
     /************************************************************************************/
 
@@ -185,7 +185,7 @@ class CLI
             'Run ' . $this->mark('git pull origin master') . ' to get latest version'
         );
         $result = shell_exec('git pull origin master 2>&1');
-        if (strpos($result, 'Already up to date.') !== false) {
+        if (str_contains($result, 'Already up to date.')) {
             $this->log_info('Charm is up to date.');
             return false;
         }
@@ -202,7 +202,7 @@ class CLI
     private function copy_plugin_file(): bool
     {
         $source_file = dirname(__FILE__) . '/plugin.php';
-        $destination_file = dirname(dirname(__FILE__)) . '/_charm.php';
+        $destination_file = dirname(__FILE__, 2) . '/_charm.php';
         $this->log_action(
             'Copy ' . $this->mark('charm/plugin.php') . ' to ' . $this->mark('mu-plugins/_charm.php')
         );
@@ -226,7 +226,7 @@ class CLI
      */
     private function remove_plugin_file(): bool
     {
-        $file = dirname(dirname(__FILE__)) . '/_charm.php';
+        $file = dirname(__FILE__, 2) . '/_charm.php';
         $this->log_action(
             'Remove ' . $this->mark('mu-plugins/_charm.php')
         );
