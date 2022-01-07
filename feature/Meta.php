@@ -20,7 +20,7 @@ trait Meta
      *
      * @var array
      */
-    protected $metas = [];
+    protected array $metas = [];
 
     /************************************************************************************/
     // Get and set methods
@@ -32,7 +32,7 @@ trait Meta
      * @param mixed $value
      * @return MetaClass|MetaClass[]
      */
-    public function meta(string $key = '', $value = null)
+    public function meta(string $key = '', mixed $value = null): array|MetaClass
     {
         if (count($this->metas) === 0) {
             $this->metas = $this->get_metas();
@@ -53,7 +53,7 @@ trait Meta
      * @param string $key
      * @return MetaClass|MetaClass[]
      */
-    private function get_meta(string $key = '')
+    private function get_meta(string $key = ''): array|MetaClass
     {
         if ($key === '') {
             return $this->metas;
@@ -71,7 +71,7 @@ trait Meta
      * @param string $key
      * @param mixed $value
      */
-    private function save_meta(string $key, $value): void
+    private function save_meta(string $key, mixed $value): void
     {
         if (isset($this->metas[$key]) && !is_array($this->metas[$key])) {
             $this->metas[$key]->set_meta_value($value);
@@ -96,7 +96,7 @@ trait Meta
      * @param mixed $value
      * @return MetaClass
      */
-    private function create_meta(string $key, $value): MetaClass
+    private function create_meta(string $key, mixed $value): MetaClass
     {
         $meta = static::META;
 
