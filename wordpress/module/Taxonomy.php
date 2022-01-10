@@ -273,7 +273,7 @@ class Taxonomy
      *
      * An array of the capabilities for this taxonomy.
      *
-     * @var array
+     * @var array|null
      */
     protected ?array $capabilities = null;
 
