@@ -2,6 +2,7 @@
 
 namespace Charm\Entity;
 
+use Charm\Helper\Location;
 use Charm\WordPress\NavMenuItem as WpNavMenuItem;
 use WP_Post;
 use WP_Query;
@@ -83,6 +84,53 @@ class NavMenuItem extends WpNavMenuItem
 
     /************************************************************************************/
     // Get and set methods
+
+    /**
+     * Does current page match nav menu item?
+     *
+     * @return bool
+     */
+    public function is_current(): bool
+    {
+        if ($this->is_current_via_id()) {
+            return true;
+        }
+        if ($this->is_current_via_url()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Does current page ID match nav menu item ID?
+     *
+     * @see get_queried_object_id()
+     * @return bool
+     */
+    public function is_current_via_id(): bool
+    {
+        if (get_queried_object_id() === $this->get_object_id()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Does current page URL match nav menu item URL?
+     *
+     * @return bool
+     */
+    public function is_current_via_url(): bool
+    {
+        $current_url = Location::current_url();
+        if ($current_url === $this->get_url()) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Get sub nav menu items
