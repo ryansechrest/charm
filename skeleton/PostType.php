@@ -30,9 +30,12 @@ abstract class PostType
     /**
      * Get post type
      *
-     * @return PostTypeModule
+     * @return PostTypeModule|null
      */
-    abstract public static function post_type(): PostTypeModule;
+    public static function post_type(): ?PostTypeModule
+    {
+        return null;
+    }
 
     /*----------------------------------------------------------------------------------*/
 

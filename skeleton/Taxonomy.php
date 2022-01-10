@@ -39,9 +39,12 @@ abstract class Taxonomy
     /**
      * Taxonomy
      *
-     * @return TaxonomyModule
+     * @return TaxonomyModule|null
      */
-    abstract public static function taxonomy(): TaxonomyModule;
+    public static function taxonomy(): ?TaxonomyModule
+    {
+        return null;
+    }
 
     /*----------------------------------------------------------------------------------*/
 

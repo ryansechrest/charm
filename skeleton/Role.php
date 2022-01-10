@@ -34,7 +34,10 @@ abstract class Role
      *
      * @return RoleModule|null
      */
-    abstract public static function role(): ?RoleModule;
+    public static function role(): ?RoleModule
+    {
+        return null;
+    }
 
     /*----------------------------------------------------------------------------------*/
 

@@ -31,7 +31,10 @@ abstract class MenuLocation
      *
      * @return MenuLocationModule|null
      */
-    abstract public static function menu_location(): ?MenuLocationModule;
+    public static function menu_location(): ?MenuLocationModule
+    {
+        return null;
+    }
 
     /*----------------------------------------------------------------------------------*/
 

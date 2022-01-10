@@ -33,5 +33,8 @@ abstract class RestRoute
      *
      * @return RestRouteModule[]
      */
-    abstract public static function rest_routes(): array;
+    public static function rest_routes(): array
+    {
+        return [];
+    }
 }
