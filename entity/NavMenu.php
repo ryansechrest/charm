@@ -42,11 +42,11 @@ class NavMenu extends WpNavMenu
     /**
      * Initialize nav menu
      *
-     * @param WP_Term|int|string $key
+     * @param WP_Term|int|string|null $key
      * @param string $taxonomy
      * @return static|null
      */
-    public static function init(WP_Term|int|string $key, string $taxonomy = 'nav_menu'): ?Term
+    public static function init(WP_Term|int|string $key = null, string $taxonomy = 'nav_menu'): ?Term
     {
         if ($key === null && static::menu_location() !== '') {
             return parent::init(static::menu_location());
