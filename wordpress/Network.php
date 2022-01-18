@@ -6,7 +6,7 @@ use WP_Network;
 use WP_Network_Query;
 
 /**
- * Class Network
+ * Class Network (from wp_sites)
  *
  * @author Ryan Sechrest
  * @package Charm\WordPress
