@@ -6,7 +6,7 @@ use Charm\Feature\Meta as MetaFeature;
 use Charm\WordPress\Network as WpNetwork;
 
 /**
- * Class Network
+ * Class Network (from wp_sites)
  *
  * @author Ryan Sechrest
  * @package Charm\Entity
