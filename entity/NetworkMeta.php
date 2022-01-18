@@ -3,7 +3,7 @@
 namespace Charm\Entity;
 
 /**
- * Class NetworkMeta
+ * Class NetworkMeta (from wp_sitemeta)
  *
  * @author Ryan Sechrest
  * @package Charm\Entity
