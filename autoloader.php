@@ -57,6 +57,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/cron/Event.php';
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Schedule.php';
 require_once WPMU_PLUGIN_DIR . '/charm/cron/Cron.php';
 
+// Integrations
+require_once WPMU_PLUGIN_DIR . '/charm/integration/WPML.php';
+
 // Modules
 require_once WPMU_PLUGIN_DIR . '/charm/module/MenuLocation.php';
 require_once WPMU_PLUGIN_DIR . '/charm/module/PostType.php';
