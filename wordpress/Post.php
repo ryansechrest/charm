@@ -26,7 +26,7 @@ class Post
     /**
      * Post author
      *
-     * @var int
+     * @var int|null
      */
     protected ?int $post_author = null;
 
