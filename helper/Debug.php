@@ -23,10 +23,14 @@ class Debug
     /**
      * Print value on screen using print_r
      *
+     * @param string $label
      * @param mixed $value
      */
-    public static function print(mixed $value): void
+    public static function print(mixed $value, string $label = ''): void
     {
-        echo '<pre>' . print_r($value, true) . '</pre>';
+        if ($label !== '') {
+            $label .= ': ';
+        }
+        echo '<pre>' . $label . print_r($value, true) . '</pre>';
     }
 }
