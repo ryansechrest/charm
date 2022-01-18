@@ -23,8 +23,10 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/module/Taxonomy.php';
 // WordPress Entities
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenuItem.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Network.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Option.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Post.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Site.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/Term.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/NavMenu.php'; // Relies on Term
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
@@ -86,6 +88,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/skeleton/Taxonomy.php';
 // Application Meta Entities
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/CommentMeta.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/NetworkMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/PostMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/TermMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
@@ -96,7 +99,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/BlogPost.php';  // Relies on Post
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php'; // Relies on Post
 require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenuItem.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Network.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Option.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Site.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Term.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenu.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/User.php';
