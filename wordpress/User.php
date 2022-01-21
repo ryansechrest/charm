@@ -91,7 +91,7 @@ class User
     /**
      * WordPress user
      *
-     * @var WP_User
+     * @var WP_User|null
      */
     private ?WP_User $wp_user = null;
 
@@ -156,11 +156,10 @@ class User
     /**
      * Initialize user
      *
-     * @see WP_User
      * @param int|string|WP_User|null $key
      * @return static|null
      */
-    public static function init($key = null): ?User
+    public static function init(int|string|WP_User $key = null): ?User
     {
         $user = new static();
         if (is_int($key) || is_numeric($key)) {
@@ -229,26 +228,25 @@ class User
     /**
      * Load instance from ID
      *
-     * @see get_user_by()
      * @param int $id
      */
     protected function load_from_id(int $id): void
     {
-        if (!$user = get_user_by('id', $id)) {
+        if (!$user = static::get_by('id', $id)) {
             return;
         }
+
         $this->load_from_user($user);
     }
 
     /**
      * Load instance from login
      *
-     * @see get_user_by()
      * @param string $login
      */
     protected function load_from_login(string $login): void
     {
-        if (!$user = get_user_by('login', $login)) {
+        if (!$user = static::get_by('login', $login)) {
             return;
         }
         $this->load_from_user($user);
@@ -257,12 +255,11 @@ class User
     /**
      * Load instance from email
      *
-     * @see get_user_by()
      * @param string $email
      */
     protected function load_from_email(string $email): void
     {
-        if (!$user = get_user_by('email', $email)) {
+        if (!$user = static::get_by('email', $email)) {
             return;
         }
         $this->load_from_user($user);
@@ -303,6 +300,25 @@ class User
         $this->user_status = (int) $user->data->user_status;
         $this->display_name = $user->data->display_name;
         $this->wp_user = $user;
+    }
+
+    /**
+     * Get WP_User by field
+     *
+     * @param string $field
+     * @param int|string $value
+     * @return WP_User|null
+     */
+    private function get_by(string $field, int|string $value): ?WP_User
+    {
+        $data = WP_User::get_data_by($field, $value);
+        if ($data === false) {
+            return null;
+        }
+        $user = new WP_User();
+        $user->init($data);
+
+        return $user;
     }
 
     /**
