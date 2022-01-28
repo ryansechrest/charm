@@ -145,10 +145,10 @@ class User extends WpUser
     /**
      * Can user read post?
      *
-     * @param Post $post
+     * @param BasePost $post
      * @return bool
      */
-    public function can_read(Post $post): bool
+    public function can_read(BasePost $post): bool
     {
         return $this->can_do('read', $post);
     }
@@ -156,10 +156,10 @@ class User extends WpUser
     /**
      * Can user edit post?
      *
-     * @param Post $post
+     * @param BasePost $post
      * @return bool
      */
-    public function can_edit(Post $post): bool
+    public function can_edit(BasePost $post): bool
     {
         return $this->can_do('edit', $post);
     }
@@ -167,10 +167,10 @@ class User extends WpUser
     /**
      * Can user delete post?
      *
-     * @param Post $post
+     * @param BasePost $post
      * @return bool
      */
-    public function can_delete(Post $post): bool
+    public function can_delete(BasePost $post): bool
     {
         return $this->can_do('delete', $post);
     }
@@ -179,10 +179,10 @@ class User extends WpUser
      * Can user do action?
      *
      * @param string $action
-     * @param Post $post
+     * @param BasePost $post
      * @return bool
      */
-    public function can_do(string $action, Post $post): bool
+    public function can_do(string $action, BasePost $post): bool
     {
         $capability = $action . '_' . $post->get_post_type();
 

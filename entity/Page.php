@@ -8,7 +8,7 @@ namespace Charm\Entity;
  * @author Ryan Sechrest
  * @package Charm\Entity
  */
-class Page extends Post
+class Page extends BasePost
 {
     /************************************************************************************/
     // Object access methods

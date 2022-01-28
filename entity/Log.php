@@ -460,7 +460,7 @@ class Log
                 if (!class_exists($post_class)) {
                     return;
                 }
-                /** @var Post $post */
+                /** @var BasePost $post */
                 $post = call_user_func($post_class . '::init', $object_id);
                 /** @var PostMeta $post_meta */
                 $post_meta = call_user_func(
@@ -499,7 +499,7 @@ class Log
                 if (!class_exists($post_class)) {
                     return;
                 }
-                /** @var Post $post */
+                /** @var BasePost $post */
                 $post = call_user_func($post_class . '::init', $object_id);
                 /** @var PostMeta $post_meta */
                 $post_meta = call_user_func(
@@ -538,7 +538,7 @@ class Log
                 if (!class_exists($post_class)) {
                     return;
                 }
-                /** @var Post $post */
+                /** @var BasePost $post */
                 $post = call_user_func($post_class . '::init', $object_id);
                 foreach ($meta_ids as $meta_id) {
                     /** @var PostMeta $post_meta */
@@ -809,7 +809,7 @@ class Log
             if (!class_exists($post_class)) {
                 return;
             }
-            /** @var Post $post */
+            /** @var BasePost $post */
             $post = call_user_func($post_class . '::init', $object_id);
             $term_class = static::get_class_name('taxonomy', $taxonomy);
             if (!class_exists($term_class)) {
@@ -845,7 +845,7 @@ class Log
                 if (!class_exists($post_class)) {
                     return;
                 }
-                /** @var Post $post */
+                /** @var BasePost $post */
                 $post = call_user_func($post_class . '::init', $object_id);
                 $term_class = static::get_class_name('taxonomy', $taxonomy);
                 if (!class_exists($term_class)) {
@@ -1478,7 +1478,7 @@ class Log
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get user name
+     * Get username
      *
      * @return string
      */
@@ -1488,7 +1488,7 @@ class Log
     }
 
     /**
-     * Set user name
+     * Set username
      *
      * @param string $user_name
      */

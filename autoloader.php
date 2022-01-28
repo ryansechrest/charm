@@ -97,13 +97,13 @@ require_once WPMU_PLUGIN_DIR . '/charm/entity/TermMeta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/UserMeta.php';
 
 // Application Entities
+require_once WPMU_PLUGIN_DIR . '/charm/entity/BasePost.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Log.php';
-require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';
-require_once WPMU_PLUGIN_DIR . '/charm/entity/BlogPost.php';  // Relies on Post
-require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php'; // Relies on Post
 require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenuItem.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Network.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Option.php';
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Page.php'; // Relies on BasePost
+require_once WPMU_PLUGIN_DIR . '/charm/entity/Post.php';  // Relies on BasePost
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Site.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/Term.php';
 require_once WPMU_PLUGIN_DIR . '/charm/entity/NavMenu.php';
