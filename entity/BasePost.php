@@ -143,6 +143,20 @@ class BasePost extends WpPost
     }
 
     /**
+     * Get posts by page
+
+     * @uses get_query_var()
+     * @param array $params
+     * @return static[]
+     */
+    public static function get_by_page(array $params = []): array
+    {
+        $params['paged'] = get_query_var('paged');
+
+        return self::query($params)->posts;
+    }
+
+    /**
      * Query using WP_Query
      *
      * @param array $params
