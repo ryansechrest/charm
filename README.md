@@ -31,7 +31,7 @@ Your `mu-plugins` directory should now look something like this:
 ```
 |-- mu-plugins
 |   |-- charm
-|   |   |-- cron
+|   |   |-- conductor
 |   |   |-- ...
 |   |   |-- wordpress
 |   |   |-- autoloader.php
@@ -54,7 +54,7 @@ Your `mu-plugins` directory should now look something like this:
 ```
 |-- mu-plugins
 |   |-- charm
-|   |   |-- cron
+|   |   |-- conductor
 |   |   |-- ...
 |   |   |-- wordpress
 |   |   |-- autoloader.php
@@ -117,7 +117,7 @@ php wp-content/mu-plugins/charm/cli.php deactivate
 
 ### Remove Charm
 
-Remove all of the submodule references and Charm files.
+Remove all the submodule references and Charm files.
 
 #### 1. Remove submodule from `.git/config` file
 
