@@ -37,6 +37,7 @@ Your `mu-plugins` directory should now look something like this:
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
 |   |   |-- cli.php
+|   |   |-- MuPlugin.php
 |   |   |-- plugin.php
 |   |   |-- README.md
 ```
@@ -60,6 +61,7 @@ Your `mu-plugins` directory should now look something like this:
 |   |   |-- autoloader.php
 |   |   |-- Charm.php
 |   |   |-- cli.php
+|   |   |-- MuPlugin.php
 |   |   |-- plugin.php
 |   |   |-- README.md
 |   |-- _charm.php
