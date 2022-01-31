@@ -43,6 +43,10 @@ require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
+// Form Fields
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Field.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php';
+
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Convert.php';
