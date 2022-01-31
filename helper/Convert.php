@@ -79,34 +79,43 @@ class Convert
     // Chainable conversion methods
 
     /**
-     * Convert (t)ext (a)rea value to (a)rray
-     *  e.g. "hello" -> ["hello", "world"]
-     *       "world"
+     * Convert (a) array to (2) (a) attribute
      *
-     * @param string $row_delimiter
-     * @param string $column_delimiter
+     * Input (Array):
+     *   ["hello" => "world", "foobar"]
+     *
+     * Output (String):
+     *  hello="world" foobar
+     *
      * @return self
      */
-    public function ta2a(string $row_delimiter = "\n", string $column_delimiter = ''): self
+    public function a2a(): self
     {
-        if ($this->value === '') {
-            $this->value = [];
+        if (count($this->value) === 0) {
+            $this->value = '';
             return $this;
         }
-        $this->value = array_map('trim', explode($row_delimiter, $this->value));
-        if ($column_delimiter === '') {
-            return $this;
+        $attributes = [];
+        foreach ($this->value as $key => $value) {
+            if (!is_integer($key)) {
+                $attributes[] = $key . '="' . $value . '"';
+                continue;
+            }
+            $attributes[] = $value;
         }
-        $this->value = array_map(function($row) use ($column_delimiter) {
-            return array_map('trim', explode($column_delimiter, $row));
-        }, $this->value);
+        $this->value = implode(' ', $attributes);
 
         return $this;
     }
 
     /**
-     * Convert (a)rray value to (d)ata (a)ttribute
-     *  e.g. ["hello", "world"] -> "["hello", "world"]"
+     * Convert (a) array to (2) (da) data attribute
+     *
+     * Input (Array):
+     *  ["hello", "world"]
+     *
+     * Output (String):
+     *  ["hello", "world"]
      *
      * @return self
      */
@@ -134,8 +143,13 @@ class Convert
     }
 
     /**
-     * Convert (t)ext to (s)lug
-     *  e.g. "Hello World" -> "hello-world"
+     * Convert (t) text (2) to (s) slug
+     *
+     * Input (String):
+     *  Hello World
+     *
+     * Output (String):
+     *  hello-world
      *
      * @return self
      */
@@ -148,8 +162,13 @@ class Convert
     }
 
     /**
-     * Convert (t)ext to (k)ey
-     *  e.g. "Hello World" -> "hello_world"
+     * Convert (t) text to (2) (k) key
+     *
+     * Input (String):
+     *  Hello World
+     *
+     * Output (String):
+     *  hello_world
      *
      * @return self
      */
@@ -157,6 +176,37 @@ class Convert
     {
         $this->value = strtolower($this->value);
         $this->value = str_replace(' ', '_', $this->value);
+
+        return $this;
+    }
+
+    /**
+     * Convert (ta) text area to (2) (a) array
+     *
+     * Input (String):
+     *  hello
+     *  world
+     *
+     * Output (Array):
+     *  ["hello", "world"]
+     *
+     * @param string $row_delimiter
+     * @param string $column_delimiter
+     * @return self
+     */
+    public function ta2a(string $row_delimiter = "\n", string $column_delimiter = ''): self
+    {
+        if ($this->value === '') {
+            $this->value = [];
+            return $this;
+        }
+        $this->value = array_map('trim', explode($row_delimiter, $this->value));
+        if ($column_delimiter === '') {
+            return $this;
+        }
+        $this->value = array_map(function($row) use ($column_delimiter) {
+            return array_map('trim', explode($column_delimiter, $row));
+        }, $this->value);
 
         return $this;
     }
