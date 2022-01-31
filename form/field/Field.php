@@ -98,7 +98,7 @@ class Field
      * @param array $params
      * @return static
      */
-    public static function new(array $params): Field
+    public static function init(array $params): Field
     {
         return new static($params);
     }
@@ -111,7 +111,7 @@ class Field
      */
     public static function html(array $params): string
     {
-        return (new static($params))->to_html();
+        return (static::init($params))->to_html();
     }
 
     /**
