@@ -239,20 +239,17 @@ class Field
     public function to_html(): string
     {
         $output = [];
-        if ($id = $this->get_id_html()) {
-            $output[] = $id;
+        if ($this->id !== '') {
+            $output[] = $this->get_id_html();
         }
-        if ($name = $this->get_name_html()) {
-            $output[] = $name;
+        if ($this->name !== '') {
+            $output[] = $this->get_name_html();
         }
-        if ($value = $this->get_value_html()) {
-            $output[] = $value;
+        if (count($this->classes) > 0) {
+            $output[] = $this->get_classes_html();
         }
-        if ($classes = $this->get_classes_html()) {
-            $output[] = $classes;
-        }
-        if ($attributes = $this->get_attributes_html()) {
-            $output[] = $attributes;
+        if (count($this->attributes) > 0) {
+            $output[] = $this->get_attributes_html();
         }
 
         return implode(' ', $output);
@@ -415,10 +412,6 @@ class Field
      */
     public function get_classes_html(): string
     {
-        if (count($this->classes) === 0) {
-            return '';
-        }
-
         return 'class="' . Convert::init($this->classes)->a2a()->value() . '"';
     }
 
@@ -472,10 +465,6 @@ class Field
      */
     public function get_attributes_html(): string
     {
-        if (count($this->attributes) === 0) {
-            return '';
-        }
-
         return Convert::init($this->attributes)->a2a()->value();
     }
 
