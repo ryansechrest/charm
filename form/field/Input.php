@@ -47,8 +47,8 @@ class Input extends Field
     public function to_array(): array
     {
         $data = [];
-        if (count($this->attributes) > 0) {
-            $data['attributes'] = $this->attributes;
+        if ($this->type !== '') {
+            $data['type'] = $this->type;
         }
         array_merge($data, parent::to_array());
 
