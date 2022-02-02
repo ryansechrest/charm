@@ -18,7 +18,7 @@ class Input extends Field
      *
      * @var string
      */
-    protected string $type = '';
+    protected string $type = 'text';
 
     /************************************************************************************/
     // Default constructor and load method
@@ -62,8 +62,13 @@ class Input extends Field
      */
     public function to_html(): string
     {
-        $output = '<input type="' . $this->type . '"';
-        $output .= parent::to_html();
+        $output = '<input ';
+        $attributes[] = $this->get_type_html();
+        if ($this->value !== '') {
+            $attributes[] = $this->get_value_html();
+        }
+        $attributes[] = parent::to_html();
+        $output .= implode(' ', $attributes);
         $output .= ' />';
 
         return $output;
@@ -80,6 +85,16 @@ class Input extends Field
     public function get_type(): string
     {
         return $this->type;
+    }
+
+    /**
+     * Get type as HTML
+     *
+     * @return string
+     */
+    public function get_type_html(): string
+    {
+        return 'type="' . $this->type . '"';
     }
 
     /**
