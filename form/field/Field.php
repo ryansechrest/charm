@@ -16,6 +16,13 @@ class Field
     // Properties
 
     /**
+     * Label
+     *
+     * @var string
+     */
+    protected string $label = '';
+
+    /**
      * ID
      *
      * @var string
@@ -50,6 +57,15 @@ class Field
      */
     protected array $attributes = [];
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Label object
+     *
+     * @var Label|null
+     */
+    protected ?Label $label_obj = null;
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -72,11 +88,18 @@ class Field
      */
     public function load(array $data): void
     {
+        if (isset($data['label'])) {
+            $this->label = $data['label'];
+        }
         if (isset($data['id'])) {
             $this->id = $data['id'];
+        } elseif ($this->id === '' && $this->label !== '') {
+            $this->autogenerate_id();
         }
         if (isset($data['name'])) {
             $this->name = $data['name'];
+        } elseif ($this->name === '' && $this->label !== '') {
+            $this->autogenerate_name();
         }
         if (isset($data['value'])) {
             $this->value = $data['value'];
@@ -95,33 +118,84 @@ class Field
     /**
      * New field
      *
-     * @param array $params
+     * @param array $data
      * @return static
      */
-    public static function init(array $params): Field
+    public static function init(array $data): Field
     {
-        return new static($params);
+        return new static($data);
     }
 
     /**
      * Get new field as HTML
      *
-     * @param array $params
+     * @param array $data
      * @return string
      */
-    public static function html(array $params): string
+    public static function html(array $data): string
     {
-        return (static::init($params))->to_html();
+        return (static::init($data))->to_html();
     }
 
     /**
      * Display new field as HTML
      *
-     * @param array $params
+     * @param array $data
      */
-    public static function display(array $params): void
+    public static function display(array $data): void
     {
-        echo static::html($params);
+        echo static::html($data);
+    }
+
+    /************************************************************************************/
+    // Object access methods
+
+    /**
+     * Get label
+     *
+     * @return Label|null
+     */
+    public function label(): ?Label
+    {
+        if ($this->label_obj) {
+            return $this->label_obj;
+        }
+        if (!$this->label) {
+            return null;
+        }
+
+        return $this->label_obj = Label::init([
+            'for' => $this->id,
+            'value' => $this->label,
+        ]);
+    }
+
+    /************************************************************************************/
+    // Action methods
+
+    /**
+     * Autogenerate properties based on label
+     */
+    public function autogenerate(): void
+    {
+        $this->autogenerate_id();
+        $this->autogenerate_name();
+    }
+
+    /**
+     * Autogenerate ID based on label
+     */
+    public function autogenerate_id()
+    {
+        $this->id = Convert::init($this->label)->t2s()->value();
+    }
+
+    /**
+     * Autogenerate name based on label
+     */
+    public function autogenerate_name()
+    {
+        $this->name = Convert::init($this->label)->t2k()->value();
     }
 
     /************************************************************************************/
@@ -135,6 +209,9 @@ class Field
     public function to_array(): array
     {
         $data = [];
+        if ($this->label !== '') {
+            $data['label'] = $this->label;
+        }
         if ($this->id !== '') {
             $data['id'] = $this->id;
         }
@@ -162,20 +239,20 @@ class Field
     public function to_html(): string
     {
         $output = [];
-        if ($this->id !== '') {
-            $output[] = 'id="' . $this->id . '"';
+        if ($id = $this->get_id_html()) {
+            $output[] = $id;
         }
-        if ($this->name !== '') {
-            $output[] = 'name="' . $this->name . '"';
+        if ($name = $this->get_name_html()) {
+            $output[] = $name;
         }
-        if ($this->value !== '') {
-            $output[] = 'value="' . $this->value . '"';
+        if ($value = $this->get_value_html()) {
+            $output[] = $value;
         }
-        if ($classes_html = $this->get_classes_html()) {
-            $output[] = $classes_html;
+        if ($classes = $this->get_classes_html()) {
+            $output[] = $classes;
         }
-        if ($attributes_html = $this->get_attributes_html()) {
-            $output[] = $attributes_html;
+        if ($attributes = $this->get_attributes_html()) {
+            $output[] = $attributes;
         }
 
         return implode(' ', $output);
@@ -202,6 +279,28 @@ class Field
 
     /************************************************************************************/
     // Get and set methods
+
+    /**
+     * Get label
+     *
+     * @return string
+     */
+    public function get_label(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Set label
+     *
+     * @param string $label
+     */
+    public function set_label(string $label): void
+    {
+        $this->label = $label;
+    }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get ID
@@ -274,7 +373,7 @@ class Field
      */
     public function get_value(): string
     {
-        return $this->name;
+        return $this->value;
     }
 
     /**
