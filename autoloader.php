@@ -46,6 +46,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 // Form Fields
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Field.php';
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Label.php';
 
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';
