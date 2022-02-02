@@ -120,7 +120,7 @@ class Label
      */
     public function to_html(): string
     {
-        return '<label for="' . $this->for . '">' . $this->value . '</label>';
+        return '<label ' . $this->get_for_html() . '>' . $this->value . '</label>';
     }
 
     /**
@@ -153,6 +153,16 @@ class Label
     public function get_for(): string
     {
         return $this->for;
+    }
+
+    /**
+     * Get for as HTML
+     *
+     * @return string
+     */
+    public function get_for_html(): string
+    {
+        return 'for="' . $this->for . '"';
     }
 
     /**
