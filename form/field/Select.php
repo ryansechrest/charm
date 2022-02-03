@@ -21,13 +21,6 @@ class Select extends Field
     protected int $size = 0;
 
     /**
-     * Multiple
-     *
-     * @var bool
-     */
-    protected bool $multiple = false;
-
-    /**
      * Options
      *
      * @var array
@@ -46,9 +39,6 @@ class Select extends Field
     {
         if (isset($data['size'])) {
             $this->size = $data['size'];
-        }
-        if (isset($data['multiple'])) {
-            $this->multiple = $data['multiple'];
         }
         if (isset($data['options'])) {
             $this->options = $data['options'];
@@ -70,7 +60,6 @@ class Select extends Field
         if ($this->size !== 0) {
             $data['size'] = $this->size;
         }
-        $data['multiple'] = $this->multiple;
         if (count($this->options) > 0) {
             $data['options'] = $this->options;
         }
@@ -164,7 +153,9 @@ class Select extends Field
         $output = '';
         foreach ($this->options as $key => $value) {
             $output .= '<option value="' . $key . '"';
-            if ($key == $this->value) {
+            $matches_single = !$this->multiple && $key == $this->value;
+            $matches_multi = $this->multiple && $this->has_value($key);
+            if ($matches_single || $matches_multi) {
                 $output .= ' selected';
             }
             $output .= '>';
