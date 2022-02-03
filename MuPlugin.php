@@ -12,6 +12,22 @@ use Charm\Helper\File;
  */
 class MuPlugin
 {
+
+    /**
+     * Autoload and initialize mu-plugin
+     *
+     * Assuming $name = 'ProjectName', this method will attempt to autoload all
+     * mu-plugin files within a 'projectname' directory, and then attempt to call the
+     * init() method within a class of the same name and namespace, e.g.
+     * 'ProjectName\ProjectName::init()'
+     */
+    public static function run(string $name): void
+    {
+        $mu_plugin = strtolower($name);
+        static::autoload($mu_plugin);
+        static::init($name);
+    }
+
     /**
      * Autoload all mu-plugin files
      *
@@ -42,5 +58,15 @@ class MuPlugin
     public static function get_file_paths(string $mu_plugin): array
     {
         return File::get_file_paths(WPMU_PLUGIN_DIR . '/' . $mu_plugin);
+    }
+
+    /**
+     * Initialize plugin after WordPress loads
+     *
+     * @param string $class_name
+     */
+    public static function init(string $class_name)
+    {
+        add_action('init', [$class_name . '\\' . $class_name, 'init']);
     }
 }
