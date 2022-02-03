@@ -45,10 +45,11 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Form Fields
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Field.php';
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Datalist.php'; // Relies on Field
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Label.php';
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Select.php';
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Textarea.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Select.php'; // Relies on Field
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Textarea.php'; // Relies on Field
 
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';
