@@ -49,6 +49,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/form/field/Checkbox.php'; // Relies on Fi
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Datalist.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Label.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Radio.php'; // Relies on Field, Checkbox
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Select.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Textarea.php'; // Relies on Field
 
