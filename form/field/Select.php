@@ -21,6 +21,13 @@ class Select extends Field
     protected int $size = 0;
 
     /**
+     * Groups
+     *
+     * @var array
+     */
+    protected array $groups = [];
+
+    /**
      * Options
      *
      * @var array
@@ -39,6 +46,9 @@ class Select extends Field
     {
         if (isset($data['size'])) {
             $this->size = $data['size'];
+        }
+        if (isset($data['groups'])) {
+            $this->groups = $data['groups'];
         }
         if (isset($data['options'])) {
             $this->options = $data['options'];
@@ -59,6 +69,9 @@ class Select extends Field
         $data = [];
         if ($this->size !== 0) {
             $data['size'] = $this->size;
+        }
+        if (count($this->groups) > 0) {
+            $data['groups'] = $this->groups;
         }
         if (count($this->options) > 0) {
             $data['options'] = $this->options;
@@ -85,7 +98,11 @@ class Select extends Field
         }
         $output .= implode(' ', $attributes);
         $output .= '>';
-        $output .= $this->get_options_html();
+        if (count($this->groups) > 0) {
+            $output .= $this->get_groups_html();
+        } else {
+            $output .= $this->get_options_html();
+        }
         $output .= '</select>';
 
         return $output;
@@ -126,6 +143,67 @@ class Select extends Field
     public function set_size(int $size): void
     {
         $this->size = $size;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get groups
+     *
+     * @return array
+     */
+    public function get_groups(): array
+    {
+        return $this->groups;
+    }
+
+    /**
+     * Get groups as HTML
+     *
+     * @return string
+     */
+    public function get_groups_html(): string
+    {
+        if (count($this->groups) === 0) {
+            return '';
+        }
+        $output = '';
+        foreach ($this->groups as $group) {
+            $has_label = isset($group['label']) &&  $group['label'] !== '';
+            if ($has_label) {
+                $output .= '<optgroup label="' . $group['label'] . '">';
+            }
+            if (isset($group['options']) && count($group['options']) > 0) {
+                $this->options = $group['options'];
+                $output .= $this->get_options_html();
+                $this->options = [];
+            }
+            if ($has_label) {
+                $output .= '</optgroup>';
+            }
+        }
+
+        return $output;
+    }
+
+    /**
+     * Add group
+     *
+     * @param array $group
+     */
+    public function add_group(array $group): void
+    {
+        $this->groups[] = $group;
+    }
+
+    /**
+     * Set groups
+     *
+     * @param array $groups
+     */
+    public function set_groups(array $groups): void
+    {
+        $this->groups = $groups;
     }
 
     /*----------------------------------------------------------------------------------*/
