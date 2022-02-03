@@ -43,15 +43,15 @@ require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
 require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
-// Form Fields
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Field.php';
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Checkbox.php'; // Relies on Field
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Datalist.php'; // Relies on Field
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php'; // Relies on Field
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Label.php';
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Radio.php'; // Relies on Field, Checkbox
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Select.php'; // Relies on Field
-require_once WPMU_PLUGIN_DIR . '/charm/form/field/Textarea.php'; // Relies on Field
+// Form Elements
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Field.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Checkbox.php'; // Relies on Field
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Datalist.php'; // Relies on Field
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Input.php'; // Relies on Field
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Label.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Radio.php'; // Relies on Field, Checkbox
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Select.php'; // Relies on Field
+require_once WPMU_PLUGIN_DIR . '/charm/form-element/Textarea.php'; // Relies on Field
 
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';

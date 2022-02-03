@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\Form\Field;
+namespace Charm\FormElement;
 
 /**
  * Class Textarea
  *
  * @author Ryan Sechrest
- * @package Charm\Form\Field
+ * @package Charm\FormElement
  */
 class Textarea extends Field
 {

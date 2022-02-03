@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\Form\Field;
+namespace Charm\FormElement;
 
 /**
  * Class Radio
  *
  * @author Ryan Sechrest
- * @package Charm\Form\Field
+ * @package Charm\FormElement
  */
 class Radio extends Checkbox
 {

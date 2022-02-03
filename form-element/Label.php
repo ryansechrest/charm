@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\Form\Field;
+namespace Charm\FormElement;
 
 /**
  * Class Label
  *
  * @author Ryan Sechrest
- * @package Charm\Form\Field
+ * @package Charm\FormElement
  */
 class Label
 {

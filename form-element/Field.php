@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Form\Field;
+namespace Charm\FormElement;
 
 use Charm\Helper\Convert;
 use Charm\Helper\Generate;
@@ -9,7 +9,7 @@ use Charm\Helper\Generate;
  * Class Field
  *
  * @author Ryan Sechrest
- * @package Charm\Form\Field
+ * @package Charm\FormElement
  */
 class Field
 {
