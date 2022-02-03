@@ -6,6 +6,11 @@ if (!defined('ABSPATH')) {
     die('Whatcha doin? Ƹ̵̡Ӝ̵̨̄Ʒ');
 }
 
+// WordPress Admin
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/Setting.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/SettingsField.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/SettingsSection.php';
+
 // WordPress Conductors
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/conductor/ObjectTaxonomy.php';
 
