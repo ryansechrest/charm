@@ -3,6 +3,7 @@
 namespace Charm\Form\Field;
 
 use Charm\Helper\Convert;
+use Charm\Helper\Generate;
 
 /**
  * Class Field
@@ -107,13 +108,13 @@ class Field
         }
         if (isset($data['id'])) {
             $this->id = $data['id'];
-        } elseif ($this->id === '' && $this->label !== '') {
-            $this->autogenerate_id();
+        } elseif ($this->id === '') {
+            $this->id = $this->random_id();
         }
         if (isset($data['name'])) {
             $this->name = $data['name'];
         } elseif ($this->name === '' && $this->label !== '') {
-            $this->autogenerate_name();
+            $this->name = $this->autogenerate_name();
         }
         if (isset($data['value'])) {
             $this->value = $data['value'];
@@ -191,31 +192,46 @@ class Field
     }
 
     /************************************************************************************/
-    // Action methods
-
-    /**
-     * Autogenerate properties based on label
-     */
-    public function autogenerate(): void
-    {
-        $this->autogenerate_id();
-        $this->autogenerate_name();
-    }
+    // Autogenerate methods
 
     /**
      * Autogenerate ID based on label
+     *
+     * @return string
      */
-    public function autogenerate_id()
+    public function autogenerate_id(): string
     {
-        $this->id = Convert::init($this->label)->t2s()->value();
+        return Convert::init($this->label)->t2s()->value();
     }
 
     /**
      * Autogenerate name based on label
+     *
+     * @return string
      */
-    public function autogenerate_name()
+    public function autogenerate_name(): string
     {
-        $this->name = Convert::init($this->label)->t2k()->value();
+        return Convert::init($this->label)->t2k()->value();
+    }
+
+    /**
+     * Autogenerate value based on label
+     *
+     * @return string
+     */
+    public function autogenerate_value(): string
+    {
+        return Convert::init($this->label)->t2k()->value();
+    }
+
+    /**
+     * Generate random ID
+     *
+     * @return string
+     */
+    public function random_id(): string
+    {
+        return Generate::string();
     }
 
     /************************************************************************************/
