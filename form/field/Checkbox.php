@@ -2,16 +2,26 @@
 
 namespace Charm\Form\Field;
 
-use Charm\Helper\Convert;
-
 /**
- * Class Input
+ * Class Checkbox
  *
  * @author Ryan Sechrest
  * @package Charm\Form\Field
  */
 class Checkbox extends Field
 {
+    /************************************************************************************/
+    // Constants
+
+    /**
+     * Type
+     *
+     * @var string
+     */
+    const TYPE = 'checkbox';
+
+    /************************************************************************************/
+    // Properties
 
     /**
      * Checked
@@ -63,7 +73,7 @@ class Checkbox extends Field
      */
     public function to_html(): string
     {
-        $output = '<input type="checkbox"';
+        $output = '<input type="' . static::TYPE . '"';
         $attributes = [];
         if ($this->value !== '') {
             $attributes[] = $this->get_value_html();
