@@ -37,11 +37,25 @@ class Field
     protected string $name = '';
 
     /**
-     * Value
+     * Value (Single)
      *
      * @var string
      */
     protected string $value = '';
+
+    /**
+     * Values (Multiple)
+     *
+     * @var array
+     */
+    protected array $values = [];
+
+    /**
+     * Multiple
+     *
+     * @var ?bool
+     */
+    protected ?bool $multiple = null;
 
     /**
      * Classes
@@ -103,6 +117,12 @@ class Field
         }
         if (isset($data['value'])) {
             $this->value = $data['value'];
+        }
+        if (isset($data['values'])) {
+            $this->values = $data['values'];
+        }
+        if (isset($data['multiple'])) {
+            $this->multiple = $data['multiple'];
         }
         if (isset($data['classes'])) {
             $this->classes = $data['classes'];
@@ -220,6 +240,9 @@ class Field
         }
         if ($this->value !== '') {
             $data['value'] = $this->value;
+        }
+        if ($this->multiple !== null) {
+            $data['multiple'] = $this->multiple;
         }
         if (count($this->classes) > 0) {
             $data['classes'] = $this->classes;
@@ -348,7 +371,11 @@ class Field
      */
     public function get_name_html(): string
     {
-        return 'name="' . $this->name . '"';
+        $name = $this->name;
+        if ($this->multiple) {
+            $name .= '[]';
+        }
+        return 'name="' . $name . '"';
     }
 
     /**
@@ -391,6 +418,71 @@ class Field
     public function set_value(string $value): void
     {
         $this->value = $value;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get values
+     *
+     * @return array
+     */
+    public function get_values(): array
+    {
+        return $this->values;
+    }
+
+    /**
+     * Add value (to values)
+     *
+     * @param int|string $value
+     */
+    public function add_value(int|string $value): void
+    {
+        $this->values[] = $value;
+    }
+
+    /**
+     * Has value (in values)?
+     *
+     * @param int|string $value
+     * @return bool
+     */
+    public function has_value(int|string $value): bool
+    {
+        return in_array($value, $this->values);
+    }
+
+    /**
+     * Set value
+     *
+     * @param array $values
+     */
+    public function set_values(array $values): void
+    {
+        $this->values = $values;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Has multiple?
+     *
+     * @return bool
+     */
+    public function has_multiple(): bool
+    {
+        return $this->multiple;
+    }
+
+    /**
+     * Set multiple
+     *
+     * @param bool $multiple
+     */
+    public function set_multiple(bool $multiple): void
+    {
+        $this->multiple = $multiple;
     }
 
     /*----------------------------------------------------------------------------------*/
