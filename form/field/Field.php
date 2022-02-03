@@ -563,12 +563,16 @@ class Field
     /**
      * Add attribute
      *
-     * @param string $key
      * @param string $value
+     * @param string $key
      */
-    public function add_attribute(string $key, string $value = ''): void
+    public function add_attribute(string $value, string $key = ''): void
     {
-        $this->attributes[$key] = $value;
+        if ($key == '') {
+            $this->attributes[] = $value;
+        } else {
+            $this->attributes[$key] = $value;
+        }
     }
 
     /**
@@ -579,7 +583,16 @@ class Field
      */
     public function has_attribute(string $attribute): bool
     {
-        return array_key_exists($attribute, $this->attributes);
+        foreach ($this->attributes as $key => $value) {
+            if (is_integer($key) && $value == $attribute) {
+                return true;
+            }
+            if (is_string($key) && $key == $attribute) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
