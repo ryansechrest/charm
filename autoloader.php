@@ -48,6 +48,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/form/field/Field.php';
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php';
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Label.php';
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Select.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Textarea.php';
 
 // Helpers
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Cast.php';
