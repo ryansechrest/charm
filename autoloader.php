@@ -45,6 +45,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Form Fields
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Field.php';
+require_once WPMU_PLUGIN_DIR . '/charm/form/field/Checkbox.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Datalist.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Input.php'; // Relies on Field
 require_once WPMU_PLUGIN_DIR . '/charm/form/field/Label.php';
@@ -57,6 +58,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/helper/Convert.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Debug.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Database.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/File.php';
+require_once WPMU_PLUGIN_DIR . '/charm/helper/Generate.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Location.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Redirect.php';
 require_once WPMU_PLUGIN_DIR . '/charm/helper/Validate.php';
