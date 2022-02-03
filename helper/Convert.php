@@ -156,6 +156,8 @@ class Convert
     public function t2s(): self
     {
         $this->value = strtolower($this->value);
+        $this->value = preg_replace('/[^a-z0-9]+/i', ' ', $this->value);
+        $this->value = trim($this->value);
         $this->value = str_replace(' ', '-', $this->value);
 
         return $this;
@@ -175,6 +177,8 @@ class Convert
     public function t2k(): self
     {
         $this->value = strtolower($this->value);
+        $this->value = preg_replace('/[^a-z0-9]+/i', ' ', $this->value);
+        $this->value = trim($this->value);
         $this->value = str_replace(' ', '_', $this->value);
 
         return $this;
