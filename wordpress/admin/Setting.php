@@ -41,7 +41,7 @@ class Setting
      *
      * @var string
      */
-    protected string $type = '';
+    protected string $type = 'string';
 
     /**
      * Description
@@ -125,6 +125,134 @@ class Setting
         if (isset($data['default'])) {
             $this->default = $data['default'];
         }
+    }
+
+    /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Initialize setting
+     *
+     * @param string $option_name
+     * @return static|null
+     */
+    public static function init(string $option_name): ?Setting
+    {
+        $settings = static::get();
+        if (!isset($settings[$option_name])) {
+            return null;
+        }
+
+        return $settings[$option_name];
+    }
+
+    /**
+     * Get registered settings
+     *
+     * @see get_registered_settings()
+     * @return array
+     */
+    public static function get(): array
+    {
+        $settings = [];
+        $wp_settings = get_registered_settings();
+        foreach ($wp_settings as $option_name => $wp_setting) {
+            $setting = new static();
+            $wp_setting['option_name'] = $option_name;
+            $wp_setting['option_group'] = $wp_setting['group'];
+            $setting->load($wp_setting);
+            $settings[$option_name] = $setting;
+        }
+
+        return $settings;
+    }
+
+    /************************************************************************************/
+    // Action methods
+
+    /**
+     * Register setting
+     *
+     * @see register_setting()
+     */
+    public function register(): void
+    {
+        add_action('admin_init', function() {
+            $args = $this->to_array();
+            unset($args['option_group']);
+            unset($args['option_name']);
+            register_setting(
+                $this->option_group,
+                $this->option_name,
+                $args
+            );
+        });
+    }
+
+    /**
+     * Unregister setting
+     *
+     * @see unregister_setting()
+     */
+    public function unregister(): void
+    {
+        add_action('admin_init', function() {
+            unregister_setting(
+                $this->option_group,
+                $this->option_name
+            );
+        });
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast properties to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        $data = [];
+        if ($this->option_group !== '') {
+            $data['option_group'] = $this->option_group;
+        }
+        if ($this->option_name !== '') {
+            $data['option_name'] = $this->option_name;
+        }
+        $data['type'] = $this->type;
+        if ($this->description !== '') {
+            $data['description'] = $this->description;
+        }
+        if ($this->sanitize_callback !== null) {
+            $data['sanitize_callback'] = $this->sanitize_callback;
+        }
+        $data['show_in_rest'] = $this->show_in_rest;
+        if ($this->default !== null) {
+            $data['default'] = $this->default;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
     }
 
     /************************************************************************************/
