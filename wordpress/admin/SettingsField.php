@@ -14,7 +14,7 @@ class SettingsField
     // Properties
 
     /**
-     * ID
+     * ID (Required)
      *
      * Slug-name to identify the field. Used in the 'id' attribute of tags.
      *
@@ -23,7 +23,7 @@ class SettingsField
     protected string $id = '';
 
     /**
-     * Title
+     * Title (Required)
      *
      * Formatted title of the field. Shown as the label for the field during output.
      *
@@ -32,7 +32,7 @@ class SettingsField
     protected string $title = '';
 
     /**
-     * Callback
+     * Callback (Required)
      *
      * Function that fills the field with the desired form inputs. The function should echo
      * its output.
@@ -42,7 +42,7 @@ class SettingsField
     protected $callback = null;
 
     /**
-     * Page
+     * Page (Required)
      *
      * The slug-name of the settings page on which to show the section (general, reading,
      * writing, ...).
@@ -59,7 +59,7 @@ class SettingsField
      *
      * @var string
      */
-    protected string $section = '';
+    protected string $section = 'default';
 
     /**
      * Label for
@@ -124,6 +124,78 @@ class SettingsField
         if (isset($data['class'])) {
             $this->class = $data['class'];
         }
+    }
+
+    /************************************************************************************/
+    // Action methods
+
+    /**
+     * Register settings section
+     */
+    public function register()
+    {
+        add_action('admin_init', function() {
+            add_settings_field(
+                $this->id,
+                $this->title,
+                $this->callback,
+                $this->page,
+                $this->section,
+                $this->to_array()
+            );
+        });
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast properties to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        $data = [];
+        if ($this->id !== '') {
+            $data['id'] = $this->id;
+        }
+        if ($this->title !== '') {
+            $data['title'] = $this->title;
+        }
+        if ($this->callback !== null) {
+            $data['callback'] = $this->callback;
+        }
+        if ($this->page !== '') {
+            $data['page'] = $this->page;
+        }
+        if ($this->label_for !== '') {
+            $data['label_for'] = $this->label_for;
+        }
+        if ($this->class !== '') {
+            $data['class'] = $this->class;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
     }
 
     /************************************************************************************/
