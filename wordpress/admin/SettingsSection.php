@@ -14,7 +14,7 @@ class SettingsSection
     // Properties
 
     /**
-     * ID
+     * ID (Required)
      *
      * Slug-name to identify the section. Used in the 'id' attribute of tags.
      *
@@ -23,7 +23,7 @@ class SettingsSection
     protected string $id = '';
 
     /**
-     * Title
+     * Title (Required)
      *
      * Formatted title of the section. Shown as the heading for the section.
      *
@@ -32,7 +32,7 @@ class SettingsSection
     protected string $title = '';
 
     /**
-     * Callback
+     * Callback (Required)
      *
      * Function that echos out any content at the top of the section (between heading
      * and fields).
@@ -41,9 +41,8 @@ class SettingsSection
      */
     protected $callback = null;
 
-
     /**
-     * Page
+     * Page (Required)
      *
      * The slug-name of the settings page on which to show the section. Built-in pages
      * include 'general', 'reading', 'writing', 'discussion', 'media', etc. Create your
@@ -88,6 +87,72 @@ class SettingsSection
         if (isset($data['page'])) {
             $this->page = $data['page'];
         }
+    }
+
+    /************************************************************************************/
+    // Action methods
+
+    /**
+     * Register settings section
+     *
+     * @see add_settings_section()
+     */
+    public function register()
+    {
+        add_action('admin_init', function() {
+            add_settings_section(
+                $this->id,
+                $this->title,
+                $this->callback,
+                $this->page
+            );
+        });
+    }
+
+    /************************************************************************************/
+    // Cast methods
+
+    /**
+     * Cast properties to array
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        $data = [];
+        if ($this->id !== '') {
+            $data['id'] = $this->id;
+        }
+        if ($this->title !== '') {
+            $data['title'] = $this->title;
+        }
+        if ($this->callback !== null) {
+            $data['callback'] = $this->callback;
+        }
+        if ($this->page !== '') {
+            $data['page'] = $this->page;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Cast instance to JSON
+     *
+     * @return string
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array());
+    }
+    /**
+     * Cast instance to object
+     *
+     * @return object
+     */
+    public function to_object(): object
+    {
+        return (object) $this->to_array();
     }
 
     /************************************************************************************/
