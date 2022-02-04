@@ -158,10 +158,10 @@ class CLI
      */
     private function help(): void
     {
-        $this->log($this->white('[a]ctivate') . ' ..................... Activate Charm plugin');
-        $this->log($this->white('[u]pdate') . ' .............. Update Charm to latest version');
-        $this->log($this->white('[d]eactivate') . ' ................. Deactivate Charm plugin');
-        $this->log($this->white('[h]elp') . ' ......................... View list of commands');
+        $this->log($this->white('(a) activate') . ' ................... Activate Charm plugin');
+        $this->log($this->white('(u) update') . ' ............ Update Charm to latest version');
+        $this->log($this->white('(d) deactivate') . ' ............... Deactivate Charm plugin');
+        $this->log($this->white('(h) help') . ' ....................... View list of commands');
         $this->log();
     }
 
