@@ -14,7 +14,7 @@ class Setting
     // Properties
 
     /**
-     * Option group
+     * Option group (Required)
      *
      * A settings group name. Should correspond to an allowed option key name. Default
      * allowed option key names include 'general', 'discussion', 'media', 'reading',
@@ -25,7 +25,7 @@ class Setting
     protected string $option_group = '';
 
     /**
-     * Option name
+     * Option name (Required)
      *
      * The name of an option to sanitize and save.
      *
@@ -41,7 +41,7 @@ class Setting
      *
      * @var string
      */
-    protected string $type = 'string';
+    protected string $type = '';
 
     /**
      * Description
