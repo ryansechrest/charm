@@ -109,6 +109,16 @@ class SettingsSection
         });
     }
 
+    /**
+     * Display settings section
+     *
+     * @see do_settings_sections()
+     */
+    public function display(): void
+    {
+        do_settings_sections($this->page);
+    }
+
     /************************************************************************************/
     // Cast methods
 

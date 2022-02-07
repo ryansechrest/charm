@@ -146,6 +146,16 @@ class SettingsField
         });
     }
 
+    /**
+     * Display settings field
+     *
+     * @see do_settings_fields()
+     */
+    public function display(): void
+    {
+        do_settings_fields($this->page, $this->section);
+    }
+
     /************************************************************************************/
     // Cast methods
 
