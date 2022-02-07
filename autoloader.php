@@ -9,6 +9,7 @@ if (!defined('ABSPATH')) {
 // WordPress Admin
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/MenuPage.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/Setting.php';
+require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/SettingsError.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/SettingsField.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/SettingsSection.php';
 require_once WPMU_PLUGIN_DIR . '/charm/wordpress/admin/SubmenuPage.php';
@@ -43,6 +44,7 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 // Admin
 require_once WPMU_PLUGIN_DIR . '/charm/admin/MenuPage.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/Setting.php';
+require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsError.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsField.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsSection.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SubmenuPage.php';
