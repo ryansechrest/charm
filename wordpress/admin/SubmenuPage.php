@@ -19,6 +19,8 @@ class SubmenuPage
      * The slug name for the parent menu (or the file name of a standard WordPress
      * admin page).
      *
+     * Individual admin:
+     *
      *  Dashboard -> index.php
      *  Posts -> edit.php
      *  Media -> upload.php
@@ -29,6 +31,15 @@ class SubmenuPage
      *  Users -> users.php
      *  Tools -> tools.php
      *  Settings -> options-general.php
+     *
+     * Network admin:
+     *
+     *  Dashboard -> index.php
+     *  Sites -> sites.php
+     *  Users -> users.php
+     *  Themes -> themes.php
+     *  Plugins -> plugins.php
+     *  Settings -> settings.php
      *
      * @var string
      */
@@ -119,6 +130,29 @@ class SubmenuPage
      */
     protected ?int $position = null;
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Network
+     *
+     * Options:
+     *
+     *  false -> Add to individual site admin
+     *  true -> Add to multi-site network admin
+     *
+     * @var bool
+     */
+    protected bool $network = false;
+
+    /**
+     * Hook name
+     *
+     * Property to store result of add_submenu_page().
+     *
+     * @var string
+     */
+    protected string $hook_name = '';
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -163,6 +197,9 @@ class SubmenuPage
         if (isset($data['position'])) {
             $this->position = $data['position'];
         }
+        if (isset($data['network'])) {
+            $this->network = $data['network'];
+        }
     }
 
     /************************************************************************************/
@@ -175,8 +212,9 @@ class SubmenuPage
      */
     public function register(): void
     {
-        add_action('admin_menu', function() {
-            add_submenu_page(
+        $prefix = $this->network ? 'network_' : '';
+        add_action($prefix . 'admin_menu', function() {
+            $hook_name = add_submenu_page(
                 $this->parent_slug,
                 $this->page_title,
                 $this->menu_title,
@@ -185,6 +223,10 @@ class SubmenuPage
                 $this->function,
                 $this->position
             );
+            if ($hook_name === false) {
+                return;
+            }
+            $this->hook_name = $hook_name;
         });
     }
 
@@ -231,6 +273,10 @@ class SubmenuPage
         }
         if ($this->position !== null) {
             $data['position'] = $this->position;
+        }
+        $data['network'] = $this->network;
+        if ($this->hook_name !== '') {
+            $data['hook_name'] = $this->hook_name;
         }
 
         return $data;
@@ -408,5 +454,49 @@ class SubmenuPage
     public function set_position(int $position): void
     {
         $this->position = $position;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Is network?
+     *
+     * @return bool
+     */
+    public function is_network(): bool
+    {
+        return $this->network;
+    }
+
+    /**
+     * Set network
+     *
+     * @param bool $network
+     */
+    public function set_network(bool $network): void
+    {
+        $this->network = $network;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get hook name
+     *
+     * @return string
+     */
+    public function get_hook_name(): string
+    {
+        return $this->hook_name;
+    }
+
+    /**
+     * Set hook name
+     *
+     * @param string $hook_name
+     */
+    public function set_hook_name(string $hook_name): void
+    {
+        $this->hook_name = $hook_name;
     }
 }

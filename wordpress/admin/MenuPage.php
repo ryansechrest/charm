@@ -113,6 +113,29 @@ class MenuPage
      */
     protected ?int $position = null;
 
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Network
+     *
+     * Options:
+     *
+     *  false -> Add to individual site admin
+     *  true -> Add to multi-site network admin
+     *
+     * @var bool
+     */
+    protected bool $network = false;
+
+    /**
+     * Hook name
+     *
+     * Property to store result of add_menu_page().
+     *
+     * @var string
+     */
+    protected string $hook_name = '';
+
     /************************************************************************************/
     // Default constructor and load method
 
@@ -157,6 +180,9 @@ class MenuPage
         if (isset($data['position'])) {
             $this->position = $data['position'];
         }
+        if (isset($data['network'])) {
+            $this->network = $data['network'];
+        }
     }
 
     /************************************************************************************/
@@ -169,8 +195,9 @@ class MenuPage
      */
     public function register(): void
     {
-        add_action('admin_menu', function() {
-            add_menu_page(
+        $prefix = $this->network ? 'network_' : '';
+        add_action($prefix . 'admin_menu', function() {
+            $this->hook_name = add_menu_page(
                 $this->page_title,
                 $this->menu_title,
                 $this->capability,
@@ -225,6 +252,10 @@ class MenuPage
         }
         if ($this->position !== null) {
             $data['position'] = $this->position;
+        }
+        $data['network'] = $this->network;
+        if ($this->hook_name !== '') {
+            $data['hook_name'] = $this->hook_name;
         }
 
         return $data;
@@ -402,5 +433,27 @@ class MenuPage
     public function set_position(int $position): void
     {
         $this->position = $position;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get page hook
+     *
+     * @return string
+     */
+    public function get_page_hook(): string
+    {
+        return $this->page_hook;
+    }
+
+    /**
+     * Set page hook
+     *
+     * @param string $page_hook
+     */
+    public function set_page_hook(string $page_hook): void
+    {
+        $this->page_hook = $page_hook;
     }
 }
