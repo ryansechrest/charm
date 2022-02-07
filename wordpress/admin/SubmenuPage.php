@@ -19,6 +19,17 @@ class SubmenuPage
      * The slug name for the parent menu (or the file name of a standard WordPress
      * admin page).
      *
+     *  Dashboard -> index.php
+     *  Posts -> edit.php
+     *  Media -> upload.php
+     *  Pages -> edit.php?post_type=page
+     *  Comments -> edit-comments.php
+     *  Appearance -> themes.php
+     *  Plugins -> plugins.php
+     *  Users -> users.php
+     *  Tools -> tools.php
+     *  Settings -> options-general.php
+     *
      * @var string
      */
     protected string $parent_slug = '';
