@@ -14,22 +14,22 @@ class SettingsError
     // Properties
 
     /**
-     * Title (Required)
+     * Setting (Required)
      *
      * Slug title of the setting to which this error applies.
      *
      * @var string
      */
-    protected string $title = '';
+    protected string $setting = '';
 
     /**
-     * Slug (Required)
+     * Code (Required)
      *
      * Slug to identify the error. Used as part of 'id' attribute in HTML output.
      *
      * @var string
      */
-    protected string $slug = '';
+    protected string $code = '';
 
     /**
      * Message (Required)
@@ -74,11 +74,11 @@ class SettingsError
      */
     public function load(array $data): void
     {
-        if (isset($data['title'])) {
-            $this->title = $data['title'];
+        if (isset($data['setting'])) {
+            $this->setting = $data['setting'];
         }
-        if (isset($data['slug'])) {
-            $this->slug = $data['slug'];
+        if (isset($data['code'])) {
+            $this->code = $data['code'];
         }
         if (isset($data['message'])) {
             $this->message = $data['message'];
@@ -96,14 +96,12 @@ class SettingsError
      */
     public function register(): void
     {
-        add_action('admin_init', function() {
-            add_settings_error(
-                $this->title,
-                $this->slug,
-                $this->message,
-                $this->type
-            );
-        });
+        add_settings_error(
+            $this->setting,
+            $this->code,
+            $this->message,
+            $this->type
+        );
     }
 
     /************************************************************************************/
@@ -117,11 +115,11 @@ class SettingsError
     public function to_array(): array
     {
         $data = [];
-        if ($this->title !== '') {
-            $data['title'] = $this->title;
+        if ($this->setting !== '') {
+            $data['setting'] = $this->setting;
         }
-        if ($this->slug !== '') {
-            $data['slug'] = $this->slug;
+        if ($this->code !== '') {
+            $data['code'] = $this->code;
         }
         if ($this->message !== '') {
             $data['message'] = $this->message;
@@ -156,45 +154,45 @@ class SettingsError
     // Get and set methods
 
     /**
-     * Get title
+     * Get setting
      *
      * @return string
      */
-    public function get_title(): string
+    public function get_setting(): string
     {
-        return $this->title;
+        return $this->setting;
     }
 
     /**
-     * Set title
+     * Set setting
      *
-     * @param string $title
+     * @param string $setting
      */
-    public function set_title(string $title): void
+    public function set_setting(string $setting): void
     {
-        $this->title = $title;
+        $this->setting = $setting;
     }
 
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get slug
+     * Get code
      *
      * @return string
      */
-    public function get_slug(): string
+    public function get_code(): string
     {
-        return $this->slug;
+        return $this->code;
     }
 
     /**
-     * Set slug
+     * Set code
      *
-     * @param string $slug
+     * @param string $code
      */
-    public function set_slug(string $slug): void
+    public function set_code(string $code): void
     {
-        $this->slug = $slug;
+        $this->code = $code;
     }
 
     /*----------------------------------------------------------------------------------*/
