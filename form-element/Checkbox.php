@@ -78,7 +78,9 @@ class Checkbox extends Field
         if ($this->value !== '') {
             $attributes[] = $this->get_value_html();
         }
-        if ($this->checked === true || in_array($this->value, $this->values)) {
+        $matches_single = !$this->multiple && $this->value == $this->db_value;
+        $matches_multi = $this->multiple && $this->has_db_value($this->value);
+        if ($this->checked === true || $matches_single || $matches_multi) {
             $attributes[] = 'checked';
         }
         $attributes[] = parent::to_html();
@@ -123,6 +125,22 @@ class Checkbox extends Field
     public function is_checked(): bool
     {
         return $this->checked;
+    }
+
+    /**
+     * Check checkbox
+     */
+    public function check(): void
+    {
+        $this->checked = true;
+    }
+
+    /**
+     * Uncheck checkbox
+     */
+    public function uncheck(): void
+    {
+        $this->checked = false;
     }
 
     /**
