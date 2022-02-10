@@ -25,7 +25,7 @@ class SettingsError
     /**
      * Code (Required)
      *
-     * Slug to identify the error. Used as part of 'id' attribute in HTML output.
+     * Slug name to identify the error. Used as part of 'id' attribute in HTML output.
      *
      * @var string
      */
