@@ -221,7 +221,9 @@ class Setting
         if ($this->option_name !== '') {
             $data['option_name'] = $this->option_name;
         }
-        $data['type'] = $this->type;
+        if ($this->type !== '') {
+            $data['type'] = $this->type;
+        }
         if ($this->description !== '') {
             $data['description'] = $this->description;
         }
