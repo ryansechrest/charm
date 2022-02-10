@@ -41,23 +41,25 @@ require_once WPMU_PLUGIN_DIR . '/charm/wordpress/User.php';
 
 /****************************************************************************************/
 
+// Features
+require_once WPMU_PLUGIN_DIR . '/charm/feature/MenuPosition.php';
+require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
+require_once WPMU_PLUGIN_DIR . '/charm/feature/ParentSlug.php';
+require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
+
 // Admin
-require_once WPMU_PLUGIN_DIR . '/charm/admin/MenuPage.php';
+require_once WPMU_PLUGIN_DIR . '/charm/admin/MenuPage.php'; // Relies on MenuPosition
 require_once WPMU_PLUGIN_DIR . '/charm/admin/Setting.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsError.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsField.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsSection.php';
-require_once WPMU_PLUGIN_DIR . '/charm/admin/SubmenuPage.php';
+require_once WPMU_PLUGIN_DIR . '/charm/admin/SubmenuPage.php'; // Relies on ParentSlug
 
 // Conductor
 require_once WPMU_PLUGIN_DIR . '/charm/conductor/ObjectTaxonomy.php';
 
 // Data Types
 require_once WPMU_PLUGIN_DIR . '/charm/data-type/DateTime.php';
-
-// Features
-require_once WPMU_PLUGIN_DIR . '/charm/feature/Meta.php';
-require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Form Elements
 require_once WPMU_PLUGIN_DIR . '/charm/form-element/Field.php';
