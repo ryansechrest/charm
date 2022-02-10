@@ -120,7 +120,27 @@ class Label
      */
     public function to_html(): string
     {
-        return '<label ' . $this->get_for_html() . '>' . $this->value . '</label>';
+        return $this->to_html_close() . $this->value . $this->to_html_close();
+    }
+
+    /**
+     * Cast instance to HTML (open)
+     *
+     * @return string
+     */
+    public function to_html_open(): string
+    {
+        return '<label ' . $this->get_for_html() . '>';
+    }
+
+    /**
+     * Cast instance to HTML (close)
+     *
+     * @return string
+     */
+    public function to_html_close(): string
+    {
+        return '</label>';
     }
 
     /**
