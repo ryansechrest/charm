@@ -38,18 +38,25 @@ class Field
     protected string $name = '';
 
     /**
-     * Value (Single)
+     * Value
      *
      * @var string
      */
     protected string $value = '';
 
     /**
-     * Values (Multiple)
+     * Database value (single)
+     *
+     * @var string
+     */
+    protected string $db_value = '';
+
+    /**
+     * Database values (multiple)
      *
      * @var array
      */
-    protected array $values = [];
+    protected array $db_values = [];
 
     /**
      * Multiple
@@ -119,8 +126,11 @@ class Field
         if (isset($data['value'])) {
             $this->value = $data['value'];
         }
-        if (isset($data['values'])) {
-            $this->values = $data['values'];
+        if (isset($data['db_value'])) {
+            $this->db_value = $data['db_value'];
+        }
+        if (isset($data['db_values'])) {
+            $this->db_values = $data['db_values'];
         }
         if (isset($data['multiple'])) {
             $this->multiple = $data['multiple'];
@@ -256,6 +266,12 @@ class Field
         }
         if ($this->value !== '') {
             $data['value'] = $this->value;
+        }
+        if ($this->db_value !== '') {
+            $data['db_value'] = $this->db_value;
+        }
+        if (count($this->db_values) > 0) {
+            $data['db_values'] = $this->db_values;
         }
         if ($this->multiple !== null) {
             $data['multiple'] = $this->multiple;
@@ -439,44 +455,66 @@ class Field
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Get values
+     * Get database value
+     *
+     * @return string
+     */
+    public function get_db_value(): string
+    {
+        return $this->db_value;
+    }
+
+    /**
+     * Set database value
+     *
+     * @param string $db_value
+     */
+    public function set_values(string $db_value): void
+    {
+        $this->db_value = $db_value;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get database values
      *
      * @return array
      */
-    public function get_values(): array
+    public function get_db_values(): array
     {
-        return $this->values;
+        return $this->db_values;
     }
 
     /**
-     * Add value (to values)
+     * Add database value (to db_values)
      *
-     * @param int|string $value
+     * @param int|string $db_value
      */
-    public function add_value(int|string $value): void
+    public function add_db_value(int|string $db_value): void
     {
-        $this->values[] = $value;
+        $this->db_values[] = $db_value;
     }
 
     /**
-     * Has value (in values)?
+     * Has database value (in db_values)?
      *
-     * @param int|string $value
+     * @param int|string $db_value
      * @return bool
      */
-    public function has_value(int|string $value): bool
+    public function has_db_value(int|string $db_value): bool
     {
-        return in_array($value, $this->values);
+        return in_array($db_value, $this->db_values);
     }
 
     /**
-     * Set value
+     * Set database values
      *
-     * @param array $values
+     * @param array $db_values
      */
-    public function set_values(array $values): void
+    public function set_db_values(array $db_values): void
     {
-        $this->values = $values;
+        $this->db_values = $db_values;
     }
 
     /*----------------------------------------------------------------------------------*/
