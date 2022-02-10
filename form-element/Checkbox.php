@@ -89,6 +89,20 @@ class Checkbox extends Field
     }
 
     /**
+     * Cast instance to HTML in label
+     *
+     * @return string
+     */
+    public function to_html_in_label(): string
+    {
+        return $this->label()->to_html_open()
+            . $this->to_html()
+            . ' '
+            . $this->label()->get_value()
+            . $this->label()->to_html_close();
+    }
+
+    /**
      * Cast instance to HTML with label
      *
      * @return string
