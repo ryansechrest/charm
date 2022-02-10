@@ -231,8 +231,8 @@ class Select extends Field
         $output = '';
         foreach ($this->options as $key => $value) {
             $output .= '<option value="' . $key . '"';
-            $matches_single = !$this->multiple && $key == $this->value;
-            $matches_multi = $this->multiple && $this->has_value($key);
+            $matches_single = !$this->multiple && $key == $this->db_value;
+            $matches_multi = $this->multiple && $this->has_db_value($key);
             if ($matches_single || $matches_multi) {
                 $output .= ' selected';
             }
