@@ -116,31 +116,32 @@ class MenuPage
     /*----------------------------------------------------------------------------------*/
 
     /**
-     * Network
+     * Hook prefix
      *
      * Options:
      *
-     *  false -> Add to individual site admin
-     *  true -> Add to multi-site network admin
+     *  <blank> -> Add to individual site admin
+     *  user -> Add to individual user admin
+     *  network -> Add to multi-site network admin
      *
-     * @var bool
+     * @var string
      */
-    protected bool $network = false;
+    protected string $hook_prefix = '';
 
     /**
-     * Hook name
+     * Page hook
      *
      * Property to store result of add_menu_page().
      *
      * @var string
      */
-    protected string $hook_name = '';
+    protected string $page_hook = '';
 
     /************************************************************************************/
     // Default constructor and load method
 
     /**
-     * Setting constructor
+     * MenuPage constructor
      *
      * @param array $data
      */
@@ -159,6 +160,9 @@ class MenuPage
      */
     public function load(array $data): void
     {
+        if (isset($data['hook_prefix'])) {
+            $this->hook_prefix = $data['hook_prefix'];
+        }
         if (isset($data['page_title'])) {
             $this->page_title = $data['page_title'];
         }
@@ -167,6 +171,8 @@ class MenuPage
         }
         if (isset($data['capability'])) {
             $this->capability = $data['capability'];
+        } else {
+            $this->default_capability();
         }
         if (isset($data['menu_slug'])) {
             $this->menu_slug = $data['menu_slug'];
@@ -180,9 +186,21 @@ class MenuPage
         if (isset($data['position'])) {
             $this->position = $data['position'];
         }
-        if (isset($data['network'])) {
-            $this->network = $data['network'];
+    }
+
+    /************************************************************************************/
+    // Default methods
+
+    /**
+     * Default capability
+     */
+    public function default_capability(): void
+    {
+        $default_capability = 'manage_options';
+        if ($this->get_location() === 'network') {
+            $default_capability = 'manage_network_options';
         }
+        $this->capability = $default_capability;
     }
 
     /************************************************************************************/
@@ -195,9 +213,8 @@ class MenuPage
      */
     public function register(): void
     {
-        $prefix = $this->network ? 'network_' : '';
-        add_action($prefix . 'admin_menu', function() {
-            $this->hook_name = add_menu_page(
+        add_action($this->get_admin_menu_hook(), function() {
+            $this->page_hook = add_menu_page(
                 $this->page_title,
                 $this->menu_title,
                 $this->capability,
@@ -216,7 +233,7 @@ class MenuPage
      */
     public function unregister(): void
     {
-        add_action('admin_menu', function() {
+        add_action($this->get_admin_menu_hook(), function() {
             remove_menu_page($this->menu_slug);
         });
     }
@@ -253,9 +270,11 @@ class MenuPage
         if ($this->position !== null) {
             $data['position'] = $this->position;
         }
-        $data['network'] = $this->network;
-        if ($this->hook_name !== '') {
-            $data['hook_name'] = $this->hook_name;
+        if ($this->hook_prefix !== '') {
+            $data['hook_prefix'] = $this->hook_prefix;
+        }
+        if ($this->page_hook !== '') {
+            $data['page_hook'] = $this->page_hook;
         }
 
         return $data;
@@ -282,6 +301,35 @@ class MenuPage
 
     /************************************************************************************/
     // Get and set methods
+
+    /**
+     * Get admin menu hook
+     *  e.g. admin_menu, user_admin_menu, network_admin_menu
+     *
+     * @return string
+     */
+    protected function get_admin_menu_hook(): string
+    {
+        $admin_menu_hook = 'admin_menu';
+        if ($this->hook_prefix) {
+            $admin_menu_hook = $this->hook_prefix . '_' . $admin_menu_hook;
+        }
+
+        return $admin_menu_hook;
+    }
+
+    /**
+     * Get location
+     *  e.g. site or network
+     *
+     * @return string
+     */
+    protected function get_location(): string
+    {
+        return $this->hook_prefix === '' ? 'site' : 'network';
+    }
+
+    /*----------------------------------------------------------------------------------*/
 
     /**
      * Get page title
@@ -433,6 +481,28 @@ class MenuPage
     public function set_position(int $position): void
     {
         $this->position = $position;
+    }
+
+    /*----------------------------------------------------------------------------------*/
+
+    /**
+     * Get hook prefix
+     *
+     * @return string
+     */
+    public function get_hook_prefix(): string
+    {
+        return $this->hook_prefix;
+    }
+
+    /**
+     * Set hook prefix
+     *
+     * @param string $hook_prefix
+     */
+    public function set_hook_prefix(string $hook_prefix): void
+    {
+        $this->hook_prefix = $hook_prefix;
     }
 
     /*----------------------------------------------------------------------------------*/
