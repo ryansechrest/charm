@@ -67,6 +67,13 @@ class MuPlugin
      */
     public static function init(string $class_name)
     {
-        add_action('init', [$class_name . '\\' . $class_name, 'init']);
+        $class = $class_name . '\\' . $class_name;
+        if (!class_exists($class)) {
+            return;
+        }
+        if (method_exists($class, 'init')) {
+            return;
+        }
+        call_user_func([$class, 'init']);
     }
 }
