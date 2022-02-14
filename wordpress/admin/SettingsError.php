@@ -89,6 +89,45 @@ class SettingsError
     }
 
     /************************************************************************************/
+    // Instantiation methods
+
+    /**
+     * Get first settings error
+     *
+     * @param array $data
+     * @return static|null
+     */
+    public static function first(array $data = []): ?static
+    {
+        $settings_errors = static::get($data);
+        if (!isset($settings_errors[0])) {
+            return null;
+        }
+
+        return $settings_errors[0];
+    }
+
+    /**
+     * Get settings errors
+     *
+     * @see get_settings_errors()
+     * @param array $data
+     * @return static[]
+     */
+    public static function get(array $data = []): array
+    {
+        $settings_errors = [];
+        $setting = $data['setting'] ?: '';
+        $sanitize = $data['sanitize'] ?: false;
+        $wp_settings_errors = get_settings_errors($setting, $sanitize);
+        foreach ($wp_settings_errors as $wp_settings_error) {
+            $settings_errors[] = new static($wp_settings_error);
+        }
+
+        return $settings_errors;
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
