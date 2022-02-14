@@ -49,6 +49,9 @@ require_once WPMU_PLUGIN_DIR . '/charm/feature/Taxonomy.php';
 
 // Admin
 require_once WPMU_PLUGIN_DIR . '/charm/admin/MenuPage.php'; // Relies on MenuPosition
+require_once WPMU_PLUGIN_DIR . '/charm/admin/Page.php';
+require_once WPMU_PLUGIN_DIR . '/charm/admin/Row.php';
+require_once WPMU_PLUGIN_DIR . '/charm/admin/Section.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/Setting.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsError.php';
 require_once WPMU_PLUGIN_DIR . '/charm/admin/SettingsField.php';
