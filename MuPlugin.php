@@ -71,7 +71,7 @@ class MuPlugin
         if (!class_exists($class)) {
             return;
         }
-        if (method_exists($class, 'init')) {
+        if (!method_exists($class, 'init')) {
             return;
         }
         call_user_func([$class, 'init']);
