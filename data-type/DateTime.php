@@ -2,6 +2,7 @@
 
 namespace Charm\DataType;
 
+use DateInterval as DI;
 use DateTime as DT;
 use DateTimeZone as DTZ;
 use Exception;
@@ -67,6 +68,35 @@ class DateTime extends DT
         }
 
         return implode(' ', $duration);
+    }
+
+    /************************************************************************************/
+    // Calculation methods
+
+    /**
+     * Add time to date
+     *
+     * @param string $duration
+     */
+    public function addTime(string $duration): void
+    {
+        if (!$di = DI::createFromDateString($duration)) {
+            return;
+        }
+        $this->add($di);
+    }
+
+    /**
+     * Subtract time from date
+     *
+     * @param string $duration
+     */
+    public function subtractTime(string $duration): void
+    {
+        if (!$di = DI::createFromDateString($duration)) {
+            return;
+        }
+        $this->sub($di);
     }
 
     /************************************************************************************/
