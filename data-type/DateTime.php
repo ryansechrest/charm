@@ -71,32 +71,36 @@ class DateTime extends DT
     }
 
     /************************************************************************************/
-    // Calculation methods
+    // Chainable calculation methods
 
     /**
      * Add time to date
      *
      * @param string $duration
+     * @return DateTime
      */
-    public function addTime(string $duration): void
+    public function addTime(string $duration): DateTime
     {
         if (!$di = DI::createFromDateString($duration)) {
-            return;
+            return $this;
         }
-        $this->add($di);
+
+        return $this->add($di);
     }
 
     /**
      * Subtract time from date
      *
      * @param string $duration
+     * @return DateTime
      */
-    public function subtractTime(string $duration): void
+    public function subtractTime(string $duration): DateTime
     {
         if (!$di = DI::createFromDateString($duration)) {
-            return;
+            return $this;
         }
-        $this->sub($di);
+
+        return $this->sub($di);
     }
 
     /************************************************************************************/
