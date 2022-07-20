@@ -95,6 +95,16 @@ class Meta extends WpMeta
         return $this->meta_id;
     }
 
+    /**
+     * Get meta value
+     *
+     * @return mixed
+     */
+    public function value(): mixed
+    {
+        return $this->meta_value;
+    }
+
     /************************************************************************************/
     // Action methods
 
@@ -132,5 +142,18 @@ class Meta extends WpMeta
     public function convert(): Convert
     {
         return Convert::init($this->meta_value);
+    }
+
+    /************************************************************************************/
+    // Get and set methods
+
+    /**
+     * Does meta key exist in database?
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->from_db || $this->meta_id;
     }
 }
