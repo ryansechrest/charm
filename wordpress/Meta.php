@@ -204,7 +204,7 @@ class Meta
      * @see get_metadata_by_mid()
      * @param int $id
      */
-    protected function load_from_id(int $id)
+    protected function load_from_id(int $id): void
     {
         if (!$object = get_metadata_by_mid($this->meta_type, $id)) {
             return;
