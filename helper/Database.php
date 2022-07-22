@@ -144,12 +144,13 @@ class Database
      *
      * @param string $table
      * @param int $id
+     * @param string $key
      * @return object|null
      */
-    public function select_where_id(string $table, int $id): ?object
+    public function select_where_id(string $table, int $id, string $key = 'id'): ?object
     {
         $records = $this->select_where(
-            [], [$table], ['id' => $id], 1
+            [], [$table], [$key => $id], 1
         );
         if (count($records) === 1) {
             return $records[0];
@@ -169,7 +170,11 @@ class Database
      * @return array
      */
     public function select_where(
-        array $fields, array $table, array $conditions = [], string $order_by = '', int $limit = 0
+        array $fields,
+        array $table,
+        array $conditions = [],
+        string $order_by = '',
+        int $limit = 0
     ): array
     {
         $query = [
@@ -191,7 +196,7 @@ class Database
         $sql = $this->sql_spaces($query) . ';';
         if ($this->query($sql, $params) > 0) {
             return $this->wpdb->last_result;
-        };
+        }
 
         return [];
     }
