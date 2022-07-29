@@ -247,7 +247,7 @@ class Log
     /**
      * Create logs table
      */
-    public static function create_table()
+    public static function create_table(): void
     {
         $db = Database::init();
         if (!$db->table_exists(static::TABLE)) {
@@ -278,7 +278,7 @@ class Log
     /**
      * Log everything
      */
-    public static function everything()
+    public static function everything(): void
     {
         // Posts (and CPTs)
         static::when_post_saved();
@@ -451,36 +451,36 @@ class Log
     {
         add_action(
             'added_post_meta', function ($meta_id, $object_id, $meta_key, $meta_value) {
-                if (in_array($meta_key, static::ignore_post_metas())) {
-                    return;
-                }
-                $post_class = static::get_class_name(
-                    'post_type', get_post_type($object_id)
-                );
-                if (!class_exists($post_class)) {
-                    return;
-                }
-                /** @var BasePost $post */
-                $post = call_user_func($post_class . '::init', $object_id);
-                /** @var PostMeta $post_meta */
-                $post_meta = call_user_func(
-                    static::get_class_name('meta', 'post') . '::init',
-                    $meta_id
-                );
-                $post_meta->set_meta_value($meta_value);
-                static::new([
-                    'action' => 'update',
-                    'object_id' => $post->get_id(),
-                    'object_type' => $post->get_post_type(),
-                    'object_name' => $post->get_post_title(),
-                    'sub_action' => 'add',
-                    'sub_object_id' => $post_meta->get_meta_id(),
-                    'sub_object_type' => $post_meta->get_meta_type() . '_meta',
-                    'sub_object_name' => $post_meta->get_meta_key(),
-                    'success' => 1,
-                    'detail' => $post_meta->to_json(),
-                ]);
-            }, 10, 4);
+            if (in_array($meta_key, static::ignore_post_metas())) {
+                return;
+            }
+            $post_class = static::get_class_name(
+                'post_type', get_post_type($object_id)
+            );
+            if (!class_exists($post_class)) {
+                return;
+            }
+            /** @var BasePost $post */
+            $post = call_user_func($post_class . '::init', $object_id);
+            /** @var PostMeta $post_meta */
+            $post_meta = call_user_func(
+                static::get_class_name('meta', 'post') . '::init',
+                $meta_id
+            );
+            $post_meta->set_meta_value($meta_value);
+            static::new([
+                'action' => 'update',
+                'object_id' => $post->get_id(),
+                'object_type' => $post->get_post_type(),
+                'object_name' => $post->get_post_title(),
+                'sub_action' => 'add',
+                'sub_object_id' => $post_meta->get_meta_id(),
+                'sub_object_type' => $post_meta->get_meta_type() . '_meta',
+                'sub_object_name' => $post_meta->get_meta_key(),
+                'success' => 1,
+                'detail' => $post_meta->to_json(),
+            ]);
+        }, 10, 4);
     }
 
     /**
@@ -490,17 +490,57 @@ class Log
     {
         add_action(
             'update_post_meta', function ($meta_id, $object_id, $meta_key, $meta_value) {
-                if (in_array($meta_key, static::ignore_post_metas())) {
-                    return;
-                }
-                $post_class = static::get_class_name(
-                    'post_type', get_post_type($object_id)
-                );
-                if (!class_exists($post_class)) {
-                    return;
-                }
-                /** @var BasePost $post */
-                $post = call_user_func($post_class . '::init', $object_id);
+            if (in_array($meta_key, static::ignore_post_metas())) {
+                return;
+            }
+            $post_class = static::get_class_name(
+                'post_type', get_post_type($object_id)
+            );
+            if (!class_exists($post_class)) {
+                return;
+            }
+            /** @var BasePost $post */
+            $post = call_user_func($post_class . '::init', $object_id);
+            /** @var PostMeta $post_meta */
+            $post_meta = call_user_func(
+                static::get_class_name('meta', 'post') . '::init',
+                $meta_id
+            );
+            $post_meta->set_meta_value($meta_value);
+            static::new([
+                'action' => 'update',
+                'object_id' => $post->get_id(),
+                'object_type' => $post->get_post_type(),
+                'object_name' => $post->get_post_title(),
+                'sub_action' => 'update',
+                'sub_object_id' => $post_meta->get_meta_id(),
+                'sub_object_type' => $post_meta->get_meta_type() . '_meta',
+                'sub_object_name' => $post_meta->get_meta_key(),
+                'success' => 1,
+                'detail' => $post_meta->to_json(),
+            ]);
+        }, 10, 4);
+    }
+
+    /**
+     * Log when post meta is deleted
+     */
+    public static function when_post_meta_deleted(): void
+    {
+        add_action(
+            'delete_post_meta', function ($meta_ids, $object_id, $meta_key, $meta_value) {
+            if (in_array($meta_key, static::ignore_post_metas())) {
+                return;
+            }
+            $post_class = static::get_class_name(
+                'post_type', get_post_type($object_id)
+            );
+            if (!class_exists($post_class)) {
+                return;
+            }
+            /** @var BasePost $post */
+            $post = call_user_func($post_class . '::init', $object_id);
+            foreach ($meta_ids as $meta_id) {
                 /** @var PostMeta $post_meta */
                 $post_meta = call_user_func(
                     static::get_class_name('meta', 'post') . '::init',
@@ -512,55 +552,15 @@ class Log
                     'object_id' => $post->get_id(),
                     'object_type' => $post->get_post_type(),
                     'object_name' => $post->get_post_title(),
-                    'sub_action' => 'update',
+                    'sub_action' => 'delete',
                     'sub_object_id' => $post_meta->get_meta_id(),
                     'sub_object_type' => $post_meta->get_meta_type() . '_meta',
                     'sub_object_name' => $post_meta->get_meta_key(),
                     'success' => 1,
                     'detail' => $post_meta->to_json(),
                 ]);
-            }, 10, 4);
-    }
-
-    /**
-     * Log when post meta is deleted
-     */
-    public static function when_post_meta_deleted(): void
-    {
-        add_action(
-            'delete_post_meta', function ($meta_ids, $object_id, $meta_key, $meta_value) {
-                if (in_array($meta_key, static::ignore_post_metas())) {
-                    return;
-                }
-                $post_class = static::get_class_name(
-                    'post_type', get_post_type($object_id)
-                );
-                if (!class_exists($post_class)) {
-                    return;
-                }
-                /** @var BasePost $post */
-                $post = call_user_func($post_class . '::init', $object_id);
-                foreach ($meta_ids as $meta_id) {
-                    /** @var PostMeta $post_meta */
-                    $post_meta = call_user_func(
-                        static::get_class_name('meta', 'post') . '::init',
-                        $meta_id
-                    );
-                    $post_meta->set_meta_value($meta_value);
-                    static::new([
-                        'action' => 'update',
-                        'object_id' => $post->get_id(),
-                        'object_type' => $post->get_post_type(),
-                        'object_name' => $post->get_post_title(),
-                        'sub_action' => 'delete',
-                        'sub_object_id' => $post_meta->get_meta_id(),
-                        'sub_object_type' => $post_meta->get_meta_type() . '_meta',
-                        'sub_object_name' => $post_meta->get_meta_key(),
-                        'success' => 1,
-                        'detail' => $post_meta->to_json(),
-                    ]);
-                }
-            }, 10, 4);
+            }
+        }, 10, 4);
     }
 
     /**
@@ -585,7 +585,7 @@ class Log
     /**
      * Log when term is created
      */
-    public static function when_term_created()
+    public static function when_term_created(): void
     {
         add_action('create_term', function ($term_id, $tt_id, $taxonomy) {
             /** @var Taxonomy $taxonomy */
@@ -616,7 +616,7 @@ class Log
     /**
      * Log when term is edited
      */
-    public static function when_term_edited()
+    public static function when_term_edited(): void
     {
         add_action('edited_term', function ($term_id, $tt_id, $taxonomy) {
             /** @var Taxonomy $taxonomy */
@@ -647,7 +647,7 @@ class Log
     /**
      * Log when term is deleted
      */
-    public static function when_term_deleted()
+    public static function when_term_deleted(): void
     {
         add_action('pre_delete_term', function ($term_id, $taxonomy) {
             /** @var Taxonomy $taxonomy */
@@ -682,33 +682,33 @@ class Log
     {
         add_action(
             'added_term_meta', function ($meta_id, $object_id, $meta_key, $meta_value) {
-                if (in_array($meta_key, static::ignore_term_metas())) {
-                    return;
-                }
-                /** @var Term $term */
-                $term = call_user_func(
-                    static::get_class_name('term') . '::init',
-                    $object_id
-                );
-                /** @var TermMeta $term_meta */
-                $term_meta = call_user_func(
-                    static::get_class_name('meta', 'term') . '::init',
-                    $meta_id
-                );
-                $term_meta->set_meta_value($meta_value);
-                static::new([
-                    'action' => 'update',
-                    'object_id' => $term->get_term_id(),
-                    'object_type' => 'term',
-                    'object_name' => $term->get_name(),
-                    'sub_action' => 'add',
-                    'sub_object_id' => $term_meta->get_meta_id(),
-                    'sub_object_type' => $term_meta->get_meta_type() . '_meta',
-                    'sub_object_name' => $term_meta->get_meta_key(),
-                    'success' => 1,
-                    'detail' => $term_meta->to_json(),
-                ]);
-            }, 10, 4);
+            if (in_array($meta_key, static::ignore_term_metas())) {
+                return;
+            }
+            /** @var Term $term */
+            $term = call_user_func(
+                static::get_class_name('term') . '::init',
+                $object_id
+            );
+            /** @var TermMeta $term_meta */
+            $term_meta = call_user_func(
+                static::get_class_name('meta', 'term') . '::init',
+                $meta_id
+            );
+            $term_meta->set_meta_value($meta_value);
+            static::new([
+                'action' => 'update',
+                'object_id' => $term->get_term_id(),
+                'object_type' => 'term',
+                'object_name' => $term->get_name(),
+                'sub_action' => 'add',
+                'sub_object_id' => $term_meta->get_meta_id(),
+                'sub_object_type' => $term_meta->get_meta_type() . '_meta',
+                'sub_object_name' => $term_meta->get_meta_key(),
+                'success' => 1,
+                'detail' => $term_meta->to_json(),
+            ]);
+        }, 10, 4);
     }
 
     /**
@@ -718,14 +718,51 @@ class Log
     {
         add_action(
             'update_term_meta', function ($meta_id, $object_id, $meta_key, $meta_value) {
-                if (in_array($meta_key, static::ignore_term_metas())) {
-                    return;
-                }
-                /** @var Term $term */
-                $term = call_user_func(
-                    static::get_class_name('term') . '::init',
-                    $object_id
-                );
+            if (in_array($meta_key, static::ignore_term_metas())) {
+                return;
+            }
+            /** @var Term $term */
+            $term = call_user_func(
+                static::get_class_name('term') . '::init',
+                $object_id
+            );
+            /** @var TermMeta $term_meta */
+            $term_meta = call_user_func(
+                static::get_class_name('meta', 'term') . '::init',
+                $meta_id
+            );
+            $term_meta->set_meta_value($meta_value);
+            static::new([
+                'action' => 'update',
+                'object_id' => $term->get_term_id(),
+                'object_type' => 'term',
+                'object_name' => $term->get_name(),
+                'sub_action' => 'update',
+                'sub_object_id' => $term_meta->get_meta_id(),
+                'sub_object_type' => $term_meta->get_meta_type() . '_meta',
+                'sub_object_name' => $term_meta->get_meta_key(),
+                'success' => 1,
+                'detail' => $term_meta->to_json(),
+            ]);
+        }, 10, 4);
+    }
+
+    /**
+     * Log when term meta is deleted
+     */
+    public static function when_term_meta_deleted(): void
+    {
+        add_action(
+            'delete_term_meta', function ($meta_ids, $object_id, $meta_key, $meta_value) {
+            if (in_array($meta_key, static::ignore_term_metas())) {
+                return;
+            }
+            /** @var Term $term */
+            $term = call_user_func(
+                static::get_class_name('term') . '::init',
+                $object_id
+            );
+            foreach ($meta_ids as $meta_id) {
                 /** @var TermMeta $term_meta */
                 $term_meta = call_user_func(
                     static::get_class_name('meta', 'term') . '::init',
@@ -737,52 +774,15 @@ class Log
                     'object_id' => $term->get_term_id(),
                     'object_type' => 'term',
                     'object_name' => $term->get_name(),
-                    'sub_action' => 'update',
+                    'sub_action' => 'delete',
                     'sub_object_id' => $term_meta->get_meta_id(),
                     'sub_object_type' => $term_meta->get_meta_type() . '_meta',
                     'sub_object_name' => $term_meta->get_meta_key(),
                     'success' => 1,
                     'detail' => $term_meta->to_json(),
                 ]);
-            }, 10, 4);
-    }
-
-    /**
-     * Log when term meta is deleted
-     */
-    public static function when_term_meta_deleted(): void
-    {
-        add_action(
-            'delete_term_meta', function ($meta_ids, $object_id, $meta_key, $meta_value) {
-                if (in_array($meta_key, static::ignore_term_metas())) {
-                    return;
-                }
-                /** @var Term $term */
-                $term = call_user_func(
-                    static::get_class_name('term') . '::init',
-                    $object_id
-                );
-                foreach ($meta_ids as $meta_id) {
-                    /** @var TermMeta $term_meta */
-                    $term_meta = call_user_func(
-                        static::get_class_name('meta', 'term') . '::init',
-                        $meta_id
-                    );
-                    $term_meta->set_meta_value($meta_value);
-                    static::new([
-                        'action' => 'update',
-                        'object_id' => $term->get_term_id(),
-                        'object_type' => 'term',
-                        'object_name' => $term->get_name(),
-                        'sub_action' => 'delete',
-                        'sub_object_id' => $term_meta->get_meta_id(),
-                        'sub_object_type' => $term_meta->get_meta_type() . '_meta',
-                        'sub_object_name' => $term_meta->get_meta_key(),
-                        'success' => 1,
-                        'detail' => $term_meta->to_json(),
-                    ]);
-                }
-            }, 10, 4);
+            }
+        }, 10, 4);
     }
 
     /**
@@ -839,35 +839,35 @@ class Log
     {
         add_action(
             'deleted_term_relationships', function ($object_id, $tt_ids, $taxonomy) {
-                $post_class = static::get_class_name(
-                    'post_type', get_post_type($object_id)
-                );
-                if (!class_exists($post_class)) {
-                    return;
-                }
-                /** @var BasePost $post */
-                $post = call_user_func($post_class . '::init', $object_id);
-                $term_class = static::get_class_name('taxonomy', $taxonomy);
-                if (!class_exists($term_class)) {
-                    $term_class = static::get_class_name('term');
-                }
-                foreach ($tt_ids as $tt_id) {
-                    /** @var Term $term */
-                    $term = call_user_func($term_class . '::init', $tt_id);
-                    static::new([
-                        'action' => 'update',
-                        'object_id' => $post->get_id(),
-                        'object_type' => $post->get_post_type(),
-                        'object_name' => $post->get_post_title(),
-                        'sub_action' => 'delete',
-                        'sub_object_id' => $term->get_term_id(),
-                        'sub_object_type' => 'term',
-                        'sub_object_name' => $term->get_name(),
-                        'success' => 1,
-                        'detail' => $term->to_json(),
-                    ]);
-                }
-            }, 10, 3);
+            $post_class = static::get_class_name(
+                'post_type', get_post_type($object_id)
+            );
+            if (!class_exists($post_class)) {
+                return;
+            }
+            /** @var BasePost $post */
+            $post = call_user_func($post_class . '::init', $object_id);
+            $term_class = static::get_class_name('taxonomy', $taxonomy);
+            if (!class_exists($term_class)) {
+                $term_class = static::get_class_name('term');
+            }
+            foreach ($tt_ids as $tt_id) {
+                /** @var Term $term */
+                $term = call_user_func($term_class . '::init', $tt_id);
+                static::new([
+                    'action' => 'update',
+                    'object_id' => $post->get_id(),
+                    'object_type' => $post->get_post_type(),
+                    'object_name' => $post->get_post_title(),
+                    'sub_action' => 'delete',
+                    'sub_object_id' => $term->get_term_id(),
+                    'sub_object_type' => 'term',
+                    'sub_object_name' => $term->get_name(),
+                    'success' => 1,
+                    'detail' => $term->to_json(),
+                ]);
+            }
+        }, 10, 3);
     }
 
     /*----------------------------------------------------------------------------------*/
@@ -1142,11 +1142,13 @@ class Log
      * @param string $order_by
      * @return static[]
      */
-    public static function get(array $conditions = [], string $order_by = 'id DESC'): array
-    {
+    public static function get(
+        array $conditions = [],
+        string $order_by = 'id DESC'
+    ): array {
         $db = Database::init();
         $logs = $db->select_where([], [static::TABLE], $conditions, $order_by);
-        if (!is_array($logs)) {
+        if (count($logs) === 0) {
             return [];
         }
 
@@ -1205,16 +1207,16 @@ class Log
     protected function load_from_object(object $object): void
     {
         $this->id = (int)$object->id;
-        $this->user_id = (int)$object->user_id;
-        $this->user_name = $object->user_name;
+        $this->user_id = (int)$object->user_id ?? 0;
+        $this->user_name = $object->user_name ?? '';
         $this->action = $object->action;
         $this->object_id = (int)$object->object_id;
         $this->object_type = $object->object_type;
         $this->object_name = $object->object_name;
-        $this->sub_action = $object->sub_action;
-        $this->sub_object_id = (int)$object->sub_object_id;
-        $this->sub_object_type = $object->sub_object_type;
-        $this->sub_object_name = $object->sub_object_name;
+        $this->sub_action = $object->sub_action ?? '';
+        $this->sub_object_id = (int)$object->sub_object_id ?? 0;
+        $this->sub_object_type = $object->sub_object_type ?? '';
+        $this->sub_object_name = $object->sub_object_name ?? '';
         $this->success = (int)$object->success;
         $this->message = $object->message;
         $this->detail = $object->detail;
