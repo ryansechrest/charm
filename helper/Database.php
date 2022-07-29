@@ -68,6 +68,19 @@ class Database
     }
 
     /************************************************************************************/
+    // Data methods
+
+    /**
+     * List of supported MySQL operators
+     *
+     * @return string[]
+     */
+    public static function operators(): array
+    {
+        return ['AND', 'OR'];
+    }
+
+    /************************************************************************************/
     // Action methods
 
     /**
@@ -175,8 +188,7 @@ class Database
         array $conditions = [],
         string $order_by = '',
         int $limit = 0
-    ): array
-    {
+    ): array {
         $query = [
             $this->sql_select($fields),
             $this->sql_from($table),
@@ -184,7 +196,7 @@ class Database
         $params = [];
         if (count($conditions) > 0) {
             $query[] = $this->sql_where($this->sql_types($conditions));
-            $params = array_values($conditions);
+            $params = $this->sql_params($conditions);
         }
         if ($order_by !== '') {
             $query[] = 'ORDER BY ' . $order_by;
@@ -236,9 +248,11 @@ class Database
      * @return bool
      */
     public function update_where_id(
-        string $table, array $columns, int $id, string $key = 'id'
-    ): bool
-    {
+        string $table,
+        array $columns,
+        int $id,
+        string $key = 'id'
+    ): bool {
         return $this->update($table, $columns, [$key => $id]);
     }
 
@@ -291,10 +305,10 @@ class Database
     public function delete_from(string $table, array $conditions): bool
     {
         $sql = $this->sql_spaces([
-            'DELETE',
-            $this->sql_from([$table]),
-            $this->sql_where($this->sql_types($conditions))
-        ]) . ';';
+                'DELETE',
+                $this->sql_from([$table]),
+                $this->sql_where($this->sql_types($conditions))
+            ]) . ';';
         if ($this->query($sql, $conditions) > 0) {
             return true;
         }
@@ -316,6 +330,8 @@ class Database
         if (count($data) > 0) {
             $sql = $this->wpdb->prepare($sql, $data);
         }
+
+        echo $sql;
 
         return $this->wpdb->query($sql);
     }
@@ -381,23 +397,46 @@ class Database
 
     /**
      * Replace values with types for preparing statement
-     *   Before: ['id' => 12345, 'name' => 'Hello World']
-     *   After:  ['id' => '%d', 'name' => '%s']
+     *   Before: ['id' => 12345, 'AND', 'name' => 'Hello World']
+     *   After:  ['id' => '%d', 'AND', 'name' => '%s']
      *
      * @param array $lines
      * @return array
      */
     protected function sql_types(array $lines): array
     {
-        return array_map(function($line) {
+        return array_map(function ($line) {
             if (is_int($line)) {
                 return '%d';
             } elseif (is_float($line)) {
                 return '%f';
+            } elseif (in_array(strtoupper($line), static::operators())) {
+                return $line;
             }
 
             return '%s';
         }, $lines);
+    }
+
+    /**
+     * Strip operators from array of params
+     *   Before: ['id' => 12345, 'AND', 'name' => 'Hello World']
+     *   After:  [1234, 'Hello World']
+     *
+     * @param array $lines
+     * @return array
+     */
+    protected function sql_params(array $lines): array
+    {
+        $params = [];
+        foreach ($lines as $value) {
+            if (in_array($value, static::operators())) {
+                continue;
+            }
+            $params[] = $value;
+        }
+
+        return $params;
     }
 
     /**
