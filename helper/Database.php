@@ -232,11 +232,14 @@ class Database
      * @param string $table
      * @param array $columns
      * @param int $id
+     * @param string $key
      * @return bool
      */
-    public function update_where_id(string $table, array $columns, int $id): bool
+    public function update_where_id(
+        string $table, array $columns, int $id, string $key = 'id'
+    ): bool
     {
-        return $this->update($table, $columns, ['id' => $id]);
+        return $this->update($table, $columns, [$key => $id]);
     }
 
     /**
@@ -270,11 +273,12 @@ class Database
      *
      * @param int $id
      * @param string $table
+     * @param string $key
      * @return bool
      */
-    public function delete_where_id(int $id, string $table): bool
+    public function delete_where_id(int $id, string $table, string $key = 'id'): bool
     {
-        return $this->delete_from($table, ['id' => $id]);
+        return $this->delete_from($table, [$key => $id]);
     }
 
     /**
@@ -377,7 +381,8 @@ class Database
 
     /**
      * Replace values with types for preparing statement
-     *   ['id' => 12345, 'name' => 'Hello World'] => ['id' => '%d', 'name' => '%s']
+     *   Before: ['id' => 12345, 'name' => 'Hello World']
+     *   After:  ['id' => '%d', 'name' => '%s']
      *
      * @param array $lines
      * @return array
@@ -397,7 +402,8 @@ class Database
 
     /**
      * Combine keys and values with equal sign
-     *   ['hello' => 'world', 'foo' = 'bar'] => ['hello = world', 'foo = bar']
+     *   Before: ['hello' => 'world', 'foo' = 'bar']
+     *   After:  ['hello = world', 'foo = bar']
      *
      * @param array $lines
      * @return array
@@ -414,7 +420,8 @@ class Database
 
     /**
      * Combine lines with commas
-     *   ['hello', 'world'] => 'hello, world'
+     *   Before: ['hello', 'world']
+     *   After:  'hello, world'
      *
      * @param array $lines
      * @return string
@@ -426,7 +433,8 @@ class Database
 
     /**
      * Combine lines with spaces
-     *   ['hello', 'world'] => 'hello world'
+     *   Before: ['hello', 'world']
+     *   After:  'hello world'
      *
      * @param array $lines
      * @return string
