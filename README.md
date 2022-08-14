@@ -1,5 +1,7 @@
 # Charm
 
+An object-oriented WordPress framework for developers to build entities and relationships.
+
 Charm started on Feb 29, 2020, but is still in its early stages and continuously evolving. If you're curious about how Charm works under the hood, have a look around or take it for a spin in a development environment.
 
 ## Prerequisites
