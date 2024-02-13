@@ -295,7 +295,7 @@ class Post
     public static function init(int|string|WP_Post $key = null): ?Post
     {
         $post = new static();
-        if (is_int($key) || ctype_digit($key)) {
+        if (!is_object($key) && (is_int($key) || ctype_digit($key))) {
             $post->load_from_id($key);
         } elseif (is_string($key)) {
             $post->load_from_path($key);
