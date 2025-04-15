@@ -15,7 +15,7 @@ use WP_Query;
 abstract class BasePost
 {
     /**
-     * Model's post type
+     * Post type for a post-based model in WordPress
      */
     protected const POST_TYPE = '';
 
