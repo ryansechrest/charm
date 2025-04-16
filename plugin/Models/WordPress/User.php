@@ -4,6 +4,7 @@ namespace Charm\Models\WordPress;
 
 use Charm\Support\Result;
 use WP_User;
+use WP_User_Query;
 
 /**
  * Represents a user in WordPress.
@@ -102,10 +103,6 @@ class User
      */
     public function load(array $data): void
     {
-        if (isset($data['id'])) {
-            $this->id = (int) $data['id'];
-        }
-
         if (isset($data['userLogin'])) {
             $this->userLogin = $data['userLogin'];
         }
@@ -166,7 +163,37 @@ class User
         return !$user->getId() ? null : $user;
     }
 
-    /*------------------------------------------------------------------------*/
+    /**
+     * Get users
+     *
+     * @param array $params
+     * @return static[]
+     */
+    public static function get(array $params): array
+    {
+        $wpUserQuery = static::query($params);
+
+        if ($wpUserQuery->get_total() === 0) {
+            return [];
+        }
+
+        return array_map(function (WP_User $wpUser) {
+            return static::init($wpUser);
+        }, $wpUserQuery->get_results());
+    }
+
+    /**
+     * Query users with WP_User_Query
+     *
+     * @param array $params
+     * @return WP_User_Query
+     */
+    public static function query(array $params): WP_User_Query
+    {
+        return new WP_User_Query($params);
+    }
+
+    /**************************************************************************/
 
     /**
      * Load instance from ID
@@ -175,6 +202,10 @@ class User
      */
     protected function loadFromId(int $id): void
     {
+        if ($id === 0) {
+            return;
+        }
+
         if (!$user = static::getBy('id', $id)) {
             return;
         }
@@ -232,7 +263,6 @@ class User
      * Load instance from WP_User object
      *
      * @param WP_User $wpUser
-     * @see WP_User
      */
     protected function loadFromUser(WP_User $wpUser): void
     {
@@ -246,6 +276,18 @@ class User
         $this->userActivationKey = $wpUser->data->user_activation_key;
         $this->userStatus = (int) $wpUser->data->user_status;
         $this->displayName = $wpUser->data->display_name;
+    }
+
+    /**
+     * Reload instance from database
+     */
+    protected function reload(): void
+    {
+        if ($this->id === null) {
+            return;
+        }
+
+        $this->loadFromId($this->id);
     }
 
     /**
@@ -304,7 +346,7 @@ class User
      */
     public function save(): Result
     {
-        return !$this->id ? $this->create() : $this->update();
+        return $this->id === null ? $this->create() : $this->update();
     }
 
     /**
@@ -312,27 +354,34 @@ class User
      *
      * @return Result
      * @see wp_insert_user()
+     * @see is_wp_error()
      */
     public function create(): Result
     {
-        $result = wp_insert_user($this->toWpUserArray());
-
-        // WordPress successfully created the user
-        if (is_int($result)) {
-            $this->id = $result;
-            return Result::success();
+        if ($this->id !== null) {
+            return Result::error(
+                'existing_user_id',
+                __('User already exists with ID.', 'charm')
+            );
         }
 
-        // WordPress failed to create the user
+        $result = wp_insert_user($this->toWpUserArray());
+
         if (is_wp_error($result)) {
             return Result::wpError($result);
         }
 
-        // WordPress returned something unexpected
-        return Result::error(
-            'wp_insert_user_failed',
-            __('wp_insert_user() did not return integer or WP_Error.', 'charm')
-        );
+        if (!is_int($result)) {
+            Result::error(
+                'wp_insert_user_failed',
+                __('wp_insert_user() did not return an ID.', 'charm')
+            );
+        }
+
+        $this->id = $result;
+        $this->reload();
+
+        return Result::success();
     }
 
     /**
@@ -340,26 +389,33 @@ class User
      *
      * @return Result
      * @see wp_update_user()
+     * @see is_wp_error()
      */
     public function update(): Result
     {
-        $result = wp_update_user($this->toWpUserArray());
-
-        // WordPress successfully updated the user
-        if (is_int($result)) {
-            return Result::success();
+        if ($this->id === null) {
+            return Result::error(
+                'missing_user_id',
+                __('Cannot update user with blank ID.', 'charm')
+            );
         }
 
-        // WordPress failed to update the user
+        $result = wp_update_user($this->toWpUserArray());
+
         if (is_wp_error($result)) {
             return Result::wpError($result);
         }
 
-        // WordPress returned something unexpected
-        return Result::error(
-            'wp_update_user_failed',
-            __('wp_update_user() did not return integer or WP_Error.', 'charm')
-        );
+        if (!is_int($result)) {
+            Result::error(
+                'wp_update_user_failed',
+                __('wp_update_user() did not return an ID.', 'charm')
+            );
+        }
+
+        $this->reload();
+
+        return Result::success();
     }
 
     /**
@@ -370,26 +426,25 @@ class User
      */
     public function delete(): Result
     {
-        $result = wp_delete_user($this->id);
-
-        // WordPress successfully deleted the user
-        if ($result === true) {
-            return Result::success();
-        }
-
-        // WordPress failed to delete the user
-        if ($result === false) {
+        if ($this->id === null) {
             return Result::error(
-                'wp_delete_user_failed',
-                __('wp_delete_user() return false.', 'charm')
+                'missing_user_id',
+                __('Cannot delete user with blank ID.', 'charm')
             );
         }
 
-        // WordPress failed to delete the user
-        return Result::error(
-            'wp_delete_user_failed',
-            __('wp_delete_user() returned something unexpected.', 'charm')
-        );
+        $result = wp_delete_user($this->id);
+
+        if ($result !== true) {
+            return Result::error(
+                'wp_delete_user_failed',
+                __('wp_delete_user() did not return true.', 'charm')
+            );
+        }
+
+        $this->id = null;
+
+        return Result::success();
     }
 
     /**************************************************************************/
@@ -402,16 +457,6 @@ class User
     public function getId(): int
     {
         return $this->id ?? 0;
-    }
-
-    /**
-     * Set ID
-     *
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     /*------------------------------------------------------------------------*/
@@ -430,10 +475,13 @@ class User
      * Set user login
      *
      * @param string $userLogin
+     * @return static
      */
-    public function setUserLogin(string $userLogin): void
+    public function setUserLogin(string $userLogin): static
     {
         $this->userLogin = $userLogin;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -452,10 +500,13 @@ class User
      * Set user pass
      *
      * @param string $userPass
+     * @return static
      */
-    public function setUserPass(string $userPass): void
+    public function setUserPass(string $userPass): static
     {
         $this->userPass = $userPass;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -474,10 +525,13 @@ class User
      * Set user nicename
      *
      * @param string $userNicename
+     * @return static
      */
-    public function setUserNicename(string $userNicename): void
+    public function setUserNicename(string $userNicename): static
     {
         $this->userNicename = $userNicename;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -496,10 +550,13 @@ class User
      * Set user email
      *
      * @param string $userEmail
+     * @return static
      */
-    public function setUserEmail(string $userEmail): void
+    public function setUserEmail(string $userEmail): static
     {
         $this->userEmail = $userEmail;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -518,10 +575,13 @@ class User
      * Set user URL
      *
      * @param string $userUrl
+     * @return static
      */
-    public function setUserUrl(string $userUrl): void
+    public function setUserUrl(string $userUrl): static
     {
         $this->userUrl = $userUrl;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -540,10 +600,13 @@ class User
      * Set user registered
      *
      * @param string $userRegistered
+     * @return static
      */
-    public function setUserRegistered(string $userRegistered): void
+    public function setUserRegistered(string $userRegistered): static
     {
         $this->userRegistered = $userRegistered;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -562,10 +625,13 @@ class User
      * Set user activation key
      *
      * @param string $userActivationKey
+     * @return static
      */
-    public function setUserActivationKey(string $userActivationKey): void
+    public function setUserActivationKey(string $userActivationKey): static
     {
         $this->userActivationKey = $userActivationKey;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -584,10 +650,13 @@ class User
      * Set user status
      *
      * @param int $userStatus
+     * @return static
      */
-    public function setUserStatus(int $userStatus): void
+    public function setUserStatus(int $userStatus): static
     {
         $this->userStatus = $userStatus;
+
+        return $this;
     }
 
     /*------------------------------------------------------------------------*/
@@ -606,9 +675,12 @@ class User
      * Set display name
      *
      * @param string $displayName
+     * @return static
      */
-    public function setDisplayName(string $displayName): void
+    public function setDisplayName(string $displayName): static
     {
         $this->displayName = $displayName;
+
+        return $this;
     }
 }
