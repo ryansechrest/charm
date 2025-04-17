@@ -194,6 +194,10 @@ class Post
      */
     public function load(array $data): void
     {
+        if (isset($data['id'])) {
+            $this->id = (int) $data['id'];
+        }
+
         if (isset($data['postAuthor'])) {
             $this->postAuthor = (int) $data['postAuthor'];
         }
@@ -435,9 +439,10 @@ class Post
      * Remove keys from array if the value is null,
      * since that indicates no value has been set.
      *
+     * @param array $includeData
      * @return array
      */
-    private function toWpPostArray(): array
+    private function toWpPostArray(array $includeData = []): array
     {
         $data = [
             'ID' => $this->id,
@@ -458,12 +463,12 @@ class Post
             'post_modified_gmt' => $this->postModifiedGmt,
             'post_content_filtered' => $this->postContentFiltered,
             'post_parent' => $this->postParent,
-            'guid' => $this->guid,
             'menu_order' => $this->menuOrder,
             'post_type' => $this->postType,
             'post_mime_type' => $this->postMimeType,
-            'comment_count' => $this->commentCount,
         ];
+
+        $data = array_merge($includeData, $data);
 
         return array_filter($data, fn($value) => !is_null($value));
     }
@@ -503,7 +508,7 @@ class Post
         }
 
         if (!is_int($result) || $result === 0) {
-            Result::error(
+            return Result::error(
                 'wp_insert_post_failed',
                 __('wp_insert_post() did not return an ID.', 'charm')
             );
@@ -531,14 +536,16 @@ class Post
             );
         }
 
-        $result = wp_update_post($this->toWpPostArray());
+        $includeData = ['ID' => $this->id];
+
+        $result = wp_update_post($this->toWpPostArray($includeData));
 
         if (is_wp_error($result)) {
             return Result::error($result);
         }
 
         if (!is_int($result) || $result === 0) {
-            Result::error(
+            return Result::error(
                 'wp_update_post_failed',
                 __('wp_update_post() did not return an ID.', 'charm')
             );
@@ -567,7 +574,7 @@ class Post
         $result = wp_trash_post($this->id);
 
         if (!$result instanceof WP_Post) {
-            Result::error(
+            return Result::error(
                 'wp_trash_post_failed',
                 __('wp_trash_post() did not return a post.', 'charm')
             );
@@ -596,7 +603,7 @@ class Post
         $result = wp_untrash_post($this->id);
 
         if (!$result instanceof WP_Post) {
-            Result::error(
+            return Result::error(
                 'wp_untrash_post_failed',
                 __('wp_untrash_post() did not return a post.', 'charm')
             );
@@ -625,7 +632,7 @@ class Post
         $result = wp_delete_post($this->id, true);
 
         if (!$result instanceof WP_Post) {
-            Result::error(
+            return Result::error(
                 'wp_delete_post_failed',
                 __('wp_delete_post() did not return a post.', 'charm')
             );
@@ -1085,19 +1092,6 @@ class Post
         return $this->guid ?? '';
     }
 
-    /**
-     * Set GUID
-     *
-     * @param string $guid
-     * @return static
-     */
-    public function setGuid(string $guid): static
-    {
-        $this->guid = $guid;
-
-        return $this;
-    }
-
     /*------------------------------------------------------------------------*/
 
     /**
@@ -1183,18 +1177,5 @@ class Post
     public function getCommentCount(): int
     {
         return $this->commentCount ?? 0;
-    }
-
-    /**
-     * Set comment count
-     *
-     * @param int $commentCount
-     * @return static
-     */
-    public function setCommentCount(int $commentCount): static
-    {
-        $this->commentCount = $commentCount;
-
-        return $this;
     }
 }
