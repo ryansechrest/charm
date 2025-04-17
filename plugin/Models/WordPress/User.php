@@ -103,6 +103,10 @@ class User
      */
     public function load(array $data): void
     {
+        if (isset($data['id'])) {
+            $this->id = $data['id'];
+        }
+
         if (isset($data['userLogin'])) {
             $this->userLogin = $data['userLogin'];
         }
@@ -317,13 +321,12 @@ class User
      * Remove keys from array if the value is null,
      * since that indicates no value has been set.
      *
+     * @param array $includeData
      * @return array
      */
-    private function toWpUserArray(): array
+    private function toWpUserArray(array $includeData = []): array
     {
         $data = [
-            'ID' => $this->id,
-            'user_login' => $this->userLogin,
             'user_pass' => $this->userPass,
             'user_nicename' => $this->userNicename,
             'user_email' => $this->userEmail,
@@ -333,6 +336,8 @@ class User
             'user_status' => $this->userStatus,
             'display_name' => $this->displayName,
         ];
+
+        $data = array_merge($includeData, $data);
 
         return array_filter($data, fn($value) => !is_null($value));
     }
@@ -365,14 +370,16 @@ class User
             );
         }
 
-        $result = wp_insert_user($this->toWpUserArray());
+        $includeData = ['user_login' => $this->userLogin];
+
+        $result = wp_insert_user($this->toWpUserArray($includeData));
 
         if (is_wp_error($result)) {
             return Result::wpError($result);
         }
 
         if (!is_int($result)) {
-            Result::error(
+            return Result::error(
                 'wp_insert_user_failed',
                 __('wp_insert_user() did not return an ID.', 'charm')
             );
@@ -400,14 +407,16 @@ class User
             );
         }
 
-        $result = wp_update_user($this->toWpUserArray());
+        $includeData = ['ID' => $this->id];
+
+        $result = wp_update_user($this->toWpUserArray($includeData));
 
         if (is_wp_error($result)) {
             return Result::wpError($result);
         }
 
         if (!is_int($result)) {
-            Result::error(
+            return Result::error(
                 'wp_update_user_failed',
                 __('wp_update_user() did not return an ID.', 'charm')
             );
