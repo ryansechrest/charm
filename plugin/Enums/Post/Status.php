@@ -3,7 +3,7 @@
 namespace Charm\Enums\Post;
 
 /**
- * Indicates status of post.
+ * Indicates the status of post.
  *
  * Table: wp_posts
  * Column: post_status
@@ -29,7 +29,7 @@ enum Status: string
     case PRIVATE = 'private';
 
     // Post is trashed
-    case TRASH = 'trash';
+    case TRASHED = 'trash';
 
     // Post is a revision that was automatically created by WordPress
     case REVISION = 'auto-draft';
