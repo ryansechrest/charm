@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Models\User;
 
 /**
- * Indicates post has created by user.
+ * Indicates that a post can have a user.
  *
  * Table: wp_posts
  * Column: post_author
