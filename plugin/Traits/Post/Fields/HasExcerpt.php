@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has excerpt.
+ * Indicates that a post has an excerpt.
  *
  * Table: wp_posts
  * Column: post_excerpt

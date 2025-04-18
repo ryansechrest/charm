@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has slug.
+ * Indicates that a post has a slug.
  *
  * Table: wp_posts
  * Column: post_name

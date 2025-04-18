@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has MIME type.
+ * Indicates that a post has a MIME type.
  *
  * Table: wp_posts
  * Column: post_mime_type

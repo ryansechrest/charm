@@ -5,7 +5,7 @@ namespace Charm\Traits\Post;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has permalink.
+ * Indicates that a post has a permalink.
  *
  * @author Ryan Sechrest
  * @package Charm

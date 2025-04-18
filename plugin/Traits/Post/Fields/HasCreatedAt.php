@@ -7,7 +7,7 @@ use Charm\Utilities\DateTime;
 use DateTimeInterface;
 
 /**
- * Indicates post has created date.
+ * Indicates that a post has a created date.
  *
  * Table: wp_posts
  * Column: post_created_gmt

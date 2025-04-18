@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has password.
+ * Indicates that a post has a password.
  *
  * Table: wp_posts
  * Column: post_password

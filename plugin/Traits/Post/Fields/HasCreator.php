@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Models\User;
 
 /**
- * Indicates that a post can have a user.
+ * Indicates that a post has a creator.
  *
  * Table: wp_posts
  * Column: post_author
@@ -14,26 +14,26 @@ use Charm\Models\User;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasCreatedBy
+trait HasCreator
 {
     /**
-     * Get created by user
+     * Get creator
      *
      * @return User|null
      */
-    public function getCreatedBy(): ?User
+    public function getCreator(): ?User
     {
         /** @var HasWpPost $this */
         return User::init($this->wp()->getPostAuthor());
     }
 
     /**
-     * Set created by user
+     * Set creator
      *
      * @param User|int|null $user
      * @return static
      */
-    public function setCreatedBy(User|int|null $user): static
+    public function setCreator(User|int|null $user): static
     {
         $id = $user instanceof User ? $user->getId() : $user;
 

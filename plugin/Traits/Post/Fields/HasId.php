@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has ID.
+ * Indicates that a post has an ID.
  *
  * Table: wp_posts
  * Column: ID

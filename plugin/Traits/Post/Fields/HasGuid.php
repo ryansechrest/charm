@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates post has GUID.
+ * Indicates that a post has a GUID.
  *
  * Table: wp_posts
  * Column: guid

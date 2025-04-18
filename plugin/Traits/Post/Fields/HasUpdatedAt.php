@@ -7,7 +7,7 @@ use Charm\Utilities\DateTime;
 use DateTimeInterface;
 
 /**
- * Indicates post has updated date.
+ * Indicates that a post has an updated date.
  *
  * Table: wp_posts
  * Column: post_modified_gmt

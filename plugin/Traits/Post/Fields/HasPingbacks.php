@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Enums\Post\PingStatus;
 
 /**
- * Indicates that a post has pingbacks and trackbacks.
+ * Indicates that a post has pingbacks.
  *
  * Table: wp_posts
  * Columns: ping_status, pinged, to_ping
@@ -14,10 +14,10 @@ use Charm\Enums\Post\PingStatus;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasPings
+trait HasPingbacks
 {
     /**
-     * Get ping status
+     * Get pingback status
      *
      * @return PingStatus
      */
@@ -28,7 +28,7 @@ trait HasPings
     }
 
     /**
-     * Set ping status
+     * Set pingback status
      *
      * @param PingStatus $status
      * @return static

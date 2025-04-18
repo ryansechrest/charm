@@ -7,7 +7,7 @@ use Charm\Models\BasePost;
 use WP_Post;
 
 /**
- * Indicates post has parent.
+ * Indicates that a post has a parent.
  *
  * Table: wp_posts
  * Column: post_parent
