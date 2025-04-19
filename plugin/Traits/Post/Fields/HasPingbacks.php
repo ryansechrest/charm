@@ -30,13 +30,15 @@ trait HasPingbacks
     /**
      * Set pingback status
      *
-     * @param PingStatus $status
+     * @param PingStatus|string $status
      * @return static
      */
-    public function setPingStatus(PingStatus $status): static
+    public function setPingStatus(PingStatus|string $status): static
     {
+        $value = $status instanceof PingStatus ? $status->value : $status;
+
         /** @var HasWpPost $this */
-        $this->wp()->setPingStatus($status->value);
+        $this->wp()->setPingStatus($value);
 
         return $this;
     }
