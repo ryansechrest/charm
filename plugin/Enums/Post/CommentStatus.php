@@ -3,7 +3,7 @@
 namespace Charm\Enums\Post;
 
 /**
- * Indicates the comment status on post.
+ * Indicates the comment status on a post.
  *
  * Table: wp_posts
  * Column: comment_status
