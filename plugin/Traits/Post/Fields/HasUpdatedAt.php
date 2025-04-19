@@ -31,15 +31,17 @@ trait HasUpdatedAt
     /**
      * Set updated date
      *
-     * @param DateTimeInterface $dateTime
+     * @param DateTimeInterface|string $dateTime
      * @return static
      */
-    public function setUpdatedAt(DateTimeInterface $dateTime): static
+    public function setUpdatedAt(DateTimeInterface|string $dateTime): static
     {
+        $value = $dateTime instanceof DateTimeInterface
+            ? $dateTime->format('Y-m-d H:i:s')
+            : $dateTime;
+
         /** @var HasWpPost $this */
-        $this->wp()->setPostModifiedGmt(
-            $dateTime->format('Y-m-d H:i:s')
-        );
+        $this->wp()->setPostModifiedGmt($value);
 
         return $this;
     }
