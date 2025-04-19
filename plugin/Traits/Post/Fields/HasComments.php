@@ -30,13 +30,15 @@ trait HasComments
     /**
      * Set comment status
      *
-     * @param CommentStatus $status
+     * @param CommentStatus|string $status
      * @return static
      */
-    public function setCommentStatus(CommentStatus $status): static
+    public function setCommentStatus(CommentStatus|string $status): static
     {
+        $value = $status instanceof CommentStatus ? $status->value : $status;
+
         /** @var HasWpPost $this */
-        $this->wp()->setCommentStatus($status->value);
+        $this->wp()->setCommentStatus($value);
 
         return $this;
     }
