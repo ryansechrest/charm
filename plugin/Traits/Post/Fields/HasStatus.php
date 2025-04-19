@@ -17,7 +17,7 @@ use Charm\Enums\Post\Status;
 trait HasStatus
 {
     /**
-     * Get status (wp_posts: post_status)
+     * Get status
      *
      * @return Status
      */
@@ -28,15 +28,17 @@ trait HasStatus
     }
 
     /**
-     * Set status (wp_posts: post_status)
+     * Set status
      *
-     * @param Status $status
+     * @param Status|string $status
      * @return static
      */
-    public function setStatus(Status $status): static
+    public function setStatus(Status|string $status): static
     {
+        $value = $status instanceof Status ? $status->value : $status;
+
         /** @var HasWpPost $this */
-        $this->wp()->setPostStatus($status->value);
+        $this->wp()->setPostStatus($value);
 
         return $this;
     }
