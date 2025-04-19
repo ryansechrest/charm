@@ -368,7 +368,9 @@ class Post
      */
     private function loadFromPath(string $path): void
     {
-        if (!$wpPost = get_page_by_path($path, OBJECT, $this->postType)) {
+        if (!$wpPost = get_page_by_path(
+            $path, OBJECT, $this->postType)
+        ) {
             return;
         }
 
