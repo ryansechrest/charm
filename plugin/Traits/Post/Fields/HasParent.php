@@ -23,7 +23,9 @@ trait HasParent
      * @param int|null|string|WP_Post $key
      * @return static|null
      */
-    abstract public static function init(int|null|string|WP_Post $key = null): ?static;
+    abstract public static function init(
+        int|null|string|WP_Post $key = null
+    ): ?static;
 
     /**************************************************************************/
 
