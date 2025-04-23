@@ -11,36 +11,30 @@ use stdClass;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class BaseMeta
+class Meta
 {
     /**
      * Meta type
      *
-     * WordPress supports: `comment`, `post`, `term`, and `user`.
+     * @var string `comment`, `post`, `term`, or `user`
      */
-    protected const META_TYPE = '';
+    protected string $metaType = '';
 
     /**
      * Meta ID field
      *
-     * Since most meta types use `meta_id`, it makes for a sensible default,
-     * and then allows `UserMeta` to overwrite it.
-     *
-     * comment -> meta_id
-     * post    -> meta_id
-     * term    -> meta_id
-     * user    -> umeta_id
+     * @var string `meta_id` or `umeta_id` (if $metaType === `user`)
      */
-    protected const META_ID_FIELD = 'meta_id';
+    protected string $metaIdField = '';
 
     /*------------------------------------------------------------------------*/
 
     /**
-     * ID
+     * Meta ID
      *
      * @var ?int
      */
-    protected ?int $id = null;
+    protected ?int $metaId = null;
 
     /**
      * Object ID
@@ -82,12 +76,16 @@ abstract class BaseMeta
     /**************************************************************************/
 
     /**
-     * BaseMeta constructor
+     * Meta constructor
      *
+     * @param string $metaType
      * @param array $data
      */
-    public function __construct(array $data = [])
+    public function __construct(string $metaType, array $data = [])
     {
+        $this->metaType = $metaType;
+        $this->metaIdField = $metaType === 'user' ? 'umeta_id' : 'meta_id';
+
         $this->load($data);
     }
 
@@ -98,8 +96,8 @@ abstract class BaseMeta
      */
     public function load(array $data): void
     {
-        if (isset($data['id'])) {
-            $this->id = (int) $data['id'];
+        if (isset($data['metaId'])) {
+            $this->metaId = (int) $data['metaId'];
         }
 
         if (isset($data['objectId'])) {
@@ -128,35 +126,35 @@ abstract class BaseMeta
     /**
      * Initialize meta
      *
-     * @param int|object $key
+     * @param string $metaType
+     * @param int|stdClass $key
      * @return ?static
      */
-    public static function init(int|object $key): ?static
+    public static function init(string $metaType, int|stdClass $key): ?static
     {
-        if (static::META_TYPE === '') {
-            return null;
-        }
-
-        $meta = new static();
+        $meta = new static($metaType);
 
         match (true) {
             is_numeric($key) => $meta->loadFromId((int) $key),
             is_object($key) => $meta->loadFromMetaData($key),
         };
 
-        return !$meta->id ? null : $meta;
+        return !$meta->metaId ? null : $meta;
     }
 
     /**
      * Get first meta by specified key
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @return ?static
      */
-    public static function getFirst(int $objectId, string $metaKey): ?static
+    public static function getFirst(
+        string $metaType, int $objectId, string $metaKey
+    ): ?static
     {
-        $metas = static::get($objectId, $metaKey);
+        $metas = static::get($metaType, $objectId, $metaKey);
 
         if (!isset($metas[0])) {
             return null;
@@ -168,17 +166,18 @@ abstract class BaseMeta
     /**
      * Get all metas or by specified key
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @return static[]
      * @see get_metadata()
      */
-    public static function get(int $objectId, string $metaKey = ''): array
+    public static function get(
+        string $metaType, int $objectId, string $metaKey = ''
+    ): array
     {
         // Get either all metas or metas that match specified key
-        $metaValues = get_metadata(
-            static::META_TYPE, $objectId, $metaKey
-        );
+        $metaValues = get_metadata($metaType, $objectId, $metaKey);
 
         // If objectId is invalid
         if ($metaValues ===  false) {
@@ -192,16 +191,17 @@ abstract class BaseMeta
 
         // If metaKey was blank, assume we need to load array of arrays
         if ($metaKey === '') {
-            return self::loadAll($objectId, $metaValues);
+            return static::getAll($metaType, $objectId, $metaValues);
         }
 
         // Assume specified meta key can occur more than once
-        return self::loadMultiple($objectId, $metaKey, $metaValues);
+        return static::getMultiple($metaType, $objectId, $metaKey, $metaValues);
     }
 
     /**
      * Update meta with specified key and value
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @param mixed $metaValue
@@ -210,6 +210,7 @@ abstract class BaseMeta
      * @see update_metadata()
      */
     public static function updateMeta(
+        string $metaType,
         int $objectId,
         string $metaKey,
         mixed $metaValue,
@@ -217,7 +218,7 @@ abstract class BaseMeta
     ): Result
     {
         $result = update_metadata(
-            static::META_TYPE,
+            $metaType,
             $objectId,
             $metaKey,
             $metaValue,
@@ -237,6 +238,7 @@ abstract class BaseMeta
     /**
      * Delete meta with specified key
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @param mixed $metaValue
@@ -244,15 +246,10 @@ abstract class BaseMeta
      * @see delete_metadata()
      */
     public static function deleteMeta(
-        int $objectId, string $metaKey, mixed $metaValue = ''
+        string $metaType, int $objectId, string $metaKey, mixed $metaValue = ''
     ): Result
     {
-        $result = delete_metadata(
-            static::META_TYPE,
-            $objectId,
-            $metaKey,
-            $metaValue
-        );
+        $result = delete_metadata($metaType, $objectId, $metaKey, $metaValue);
 
         return $result ? Result::success() : Result::error();
     }
@@ -260,16 +257,17 @@ abstract class BaseMeta
     /**
      * Whether meta with specified key exists
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @return bool
      * @see metadata_exists()
      */
-    public static function hasMeta(int $objectId, string $metaKey): bool
+    public static function hasMeta(
+        string $metaType, int $objectId, string $metaKey
+    ): bool
     {
-        return metadata_exists(
-            static::META_TYPE, $objectId, $metaKey
-        );
+        return metadata_exists($metaType, $objectId, $metaKey);
     }
 
     /**************************************************************************/
@@ -295,7 +293,7 @@ abstract class BaseMeta
          *     @type string $user_id Set when meta type is `user`
          *  }
          */
-        $metaData = get_metadata_by_mid(static::META_TYPE, $id);
+        $metaData = get_metadata_by_mid($this->metaType, $id);
 
         if ($metaData === false) {
             return;
@@ -313,16 +311,16 @@ abstract class BaseMeta
     protected function loadFromMetaData(object $metaData): void
     {
         // e.g. `meta_id` or `umeta_id`
-        $idField = static::META_ID_FIELD;
+        $metaIdField = $this->metaIdField;
 
         // e.g. `comment_id`, `post_id`, `user_id`, or `term_id`
-        $objectIdField = static::META_TYPE . '_id';
+        $objectIdField = $this->metaType . '_id';
 
         if (!property_exists($metaData, $objectIdField)) {
             return;
         }
 
-        $this->id = $metaData->$idField;
+        $this->metaId = $metaData->$metaIdField;
         $this->objectId = $metaData->$objectIdField;
         $this->metaKey = $metaData->meta_key;
         $this->metaValue = $metaData->meta_value;
@@ -331,13 +329,16 @@ abstract class BaseMeta
     /*------------------------------------------------------------------------*/
 
     /**
-     * Load all metas
+     * Get all metas
      *
+     * @param string $metaType
      * @param int $objectId
      * @param array $metaValues
      * @return static[]
      */
-    protected static function loadAll(int $objectId, array $metaValues): array {
+    protected static function getAll(
+        string $metaType, int $objectId, array $metaValues
+    ): array {
         $metas = [];
 
         foreach ($metaValues as $metaKey => $metaValue) {
@@ -347,14 +348,14 @@ abstract class BaseMeta
             }
 
             if (count($metaValue) === 1 && isset($metaValue[0])) {
-                $metas[$metaKey] = self::loadSingle(
-                    $objectId, $metaKey, $metaValue[0]
+                $metas[$metaKey] = self::getSingle(
+                    $metaType, $objectId, $metaKey, $metaValue[0]
                 );
                 continue;
             }
 
-            $metas[$metaKey] = self::loadMultiple(
-                $objectId, $metaKey, $metaValue
+            $metas[$metaKey] = self::getMultiple(
+                $metaType, $objectId, $metaKey, $metaValue
             );
         }
 
@@ -362,44 +363,47 @@ abstract class BaseMeta
     }
 
     /**
-     * Load meta with multiple, identical keys
+     * Get meta with multiple, identical keys
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @param array $metaValues
      * @return static[]
      */
     protected static function loadMultiple(
-        int $objectId, string $metaKey, array $metaValues
+        string $metaType, int $objectId, string $metaKey, array $metaValues
     ): array {
         $metas = [];
 
         foreach ($metaValues as $metaValue) {
-            $metas[] = self::loadSingle($objectId, $metaKey, $metaValue);
+            $metas[] = self::getSingle($metaType, $objectId, $metaKey, $metaValue);
         }
 
         return $metas;
     }
 
     /**
-     * Load meta with single key and value
+     * Get meta with single key and value
      *
+     * @param string $metaType
      * @param int $objectId
      * @param string $metaKey
      * @param mixed $metaValue
      * @return static
      * @see maybe_unserialize()
      */
-    protected static function loadSingle(
-        int $objectId, string $metaKey, mixed $metaValue
+    protected static function getSingle(
+        string $metaType, int $objectId, string $metaKey, mixed $metaValue
     ): static {
         global $wpdb;
 
-        $metaTable = static::META_TYPE . 'meta';
+        $metaTable = $metaType . 'meta';
+        $metaIdField = $metaType === 'user' ? 'umeta_id' : 'meta_id';
 
-        $query = 'SELECT ' . static::META_ID_FIELD . ' ';
+        $query = 'SELECT ' . $metaIdField . ' ';
         $query .= 'FROM ' . $wpdb->$metaTable . ' ';
-        $query .= 'WHERE ' . static::META_TYPE . '_id = %d ';
+        $query .= 'WHERE ' . $metaType . '_id = %d ';
         $query .= 'AND meta_key = %s ';
         $query .= 'AND meta_value = %s';
 
@@ -409,8 +413,8 @@ abstract class BaseMeta
 
         $metaValue = maybe_unserialize($metaValue);
 
-        return new static([
-            'id' => $metaId,
+        return new static($metaType, [
+            'metaId' => $metaId,
             'objectId' => $objectId,
             'metaKey' => $metaKey,
             'metaValue' => $metaValue,
@@ -439,7 +443,7 @@ abstract class BaseMeta
      */
     public function create(): Result
     {
-        if ($this->id !== null) {
+        if ($this->metaId !== null) {
             return Result::error(
                 'existing_meta_id',
                 __('Meta already exists.', 'charm')
@@ -447,7 +451,7 @@ abstract class BaseMeta
         }
 
         $result = add_metadata(
-            static::META_TYPE,
+            $this->metaType,
             $this->objectId,
             $this->metaKey,
             $this->metaValue
@@ -460,7 +464,7 @@ abstract class BaseMeta
             );
         }
 
-        $this->id = $result;
+        $this->metaId = $result;
         $this->exists = true;
 
         return Result::success();
@@ -474,7 +478,7 @@ abstract class BaseMeta
      */
     public function update(): Result
     {
-        if ($this->id === null) {
+        if ($this->metaId === null) {
             return Result::error(
                 'missing_meta_id',
                 __('Cannot update meta with blank ID.', 'charm')
@@ -489,8 +493,8 @@ abstract class BaseMeta
         }
 
         $result = update_metadata_by_mid(
-            static::META_TYPE,
-            $this->id,
+            $this->metaType,
+            $this->metaId,
             $this->metaValue
         );
 
@@ -514,17 +518,14 @@ abstract class BaseMeta
      */
     public function delete(): Result
     {
-        if ($this->id === null) {
+        if ($this->metaId === null) {
             return Result::error(
                 'missing_meta_id',
                 __('Cannot delete meta with blank ID.', 'charm')
             );
         }
 
-        $result = delete_metadata_by_mid(
-            static::META_TYPE,
-            $this->id
-        );
+        $result = delete_metadata_by_mid($this->metaType, $this->metaId);
 
         if ($result !== true) {
             return Result::error(
@@ -533,7 +534,7 @@ abstract class BaseMeta
             );
         }
 
-        $this->id = null;
+        $this->metaId = null;
         $this->exists = false;
 
         return Result::success();
@@ -542,13 +543,25 @@ abstract class BaseMeta
     /**************************************************************************/
 
     /**
-     * Get ID
+     * Get meta type
+     *
+     * @return string
+     */
+    public function getMetaType(): string
+    {
+        return $this->metaType ?? '';
+    }
+
+    /*------------------------------------------------------------------------*/
+
+    /**
+     * Get meta ID
      *
      * @return int
      */
-    public function getId(): int
+    public function getMetaId(): int
     {
-        return $this->id ?? 0;
+        return $this->metaId ?? 0;
     }
 
     /*------------------------------------------------------------------------*/
