@@ -177,7 +177,19 @@ class DateTime
     /**************************************************************************/
 
     /**
-     * Format the UTC time using a WordPress or custom format
+     * Format UTC time using WordPress database format
+     *
+     * @return string
+     */
+    public function formatForDb(): string
+    {
+        return $this->dti->format(
+            static::DATE_FORMAT . ' ' . static::TIME_FORMAT
+        );
+    }
+
+    /**
+     * Format UTC time using WordPress or custom format
      *
      * @param string $format
      * @return string
