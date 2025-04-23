@@ -164,7 +164,7 @@ class User
             default => $user->loadFromGlobalUser(),
         };
 
-        return !$user->getId() ? null : $user;
+        return !$user->id ? null : $user;
     }
 
     /**
@@ -294,6 +294,8 @@ class User
         $this->loadFromId($this->id);
     }
 
+    /*------------------------------------------------------------------------*/
+
     /**
      * Get WP_User by field
      *
@@ -301,7 +303,7 @@ class User
      * @param int|string $value
      * @return ?WP_User
      */
-    private function getBy(string $field, int|string $value): ?WP_User
+    protected function getBy(string $field, int|string $value): ?WP_User
     {
         $object = WP_User::get_data_by($field, $value);
 
@@ -324,7 +326,7 @@ class User
      * @param array $includeData
      * @return array
      */
-    private function toWpUserArray(array $includeData = []): array
+    protected function toWpUserArray(array $includeData = []): array
     {
         $data = [
             'user_pass' => $this->userPass,
@@ -366,7 +368,7 @@ class User
         if ($this->id !== null) {
             return Result::error(
                 'existing_user_id',
-                __('User already exists with ID.', 'charm')
+                __('User already exists.', 'charm')
             );
         }
 
