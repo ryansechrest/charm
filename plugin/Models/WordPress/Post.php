@@ -306,7 +306,7 @@ class Post
             default => $post->loadFromGlobalPost(),
         };
 
-        return !$post->getId() ? null : $post;
+        return !$post->id ? null : $post;
     }
 
     /**
@@ -347,7 +347,7 @@ class Post
      * @param int $id
      * @see get_post()
      */
-    private function loadFromId(int $id): void
+    protected function loadFromId(int $id): void
     {
         if ($id === 0) {
             return;
@@ -366,7 +366,7 @@ class Post
      * @param string $path
      * @see get_page_by_path()
      */
-    private function loadFromPath(string $path): void
+    protected function loadFromPath(string $path): void
     {
         if (!$wpPost = get_page_by_path(
             $path, OBJECT, $this->postType)
@@ -382,7 +382,7 @@ class Post
      *
      * @see get_post()
      */
-    private function loadFromGlobalPost(): void
+    protected function loadFromGlobalPost(): void
     {
         if (!$wpPost = get_post()) {
             return;
@@ -396,7 +396,7 @@ class Post
      *
      * @param WP_Post $wpPost
      */
-    private function loadFromPost(WP_Post $wpPost): void
+    protected function loadFromPost(WP_Post $wpPost): void
     {
         $this->id = (int) $wpPost->ID;
         $this->postAuthor = (int) $wpPost->post_author;
@@ -435,6 +435,8 @@ class Post
         $this->loadFromId($this->id);
     }
 
+    /*------------------------------------------------------------------------*/
+
     /**
      * Cast post to array to be used by WordPress functions
      *
@@ -444,7 +446,7 @@ class Post
      * @param array $includeData
      * @return array
      */
-    private function toWpPostArray(array $includeData = []): array
+    protected function toWpPostArray(array $includeData = []): array
     {
         $data = [
             'ID' => $this->id,
@@ -499,7 +501,7 @@ class Post
         if ($this->id !== null) {
             return Result::error(
                 'existing_post_id',
-                __('Post already exists with ID.', 'charm')
+                __('Post already exists.', 'charm')
             );
         }
 
