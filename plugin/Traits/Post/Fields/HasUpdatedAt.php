@@ -4,7 +4,6 @@ namespace Charm\Traits\Post\Fields;
 
 use Charm\Contracts\HasWpPost;
 use Charm\Utilities\DateTime;
-use DateTimeInterface;
 
 /**
  * Indicates that a post has an updated date.
@@ -31,13 +30,13 @@ trait HasUpdatedAt
     /**
      * Set updated date
      *
-     * @param DateTimeInterface|string $dateTime
+     * @param DateTime|string $dateTime
      * @return static
      */
-    public function setUpdatedAt(DateTimeInterface|string $dateTime): static
+    public function setUpdatedAt(DateTime|string $dateTime): static
     {
-        $value = $dateTime instanceof DateTimeInterface
-            ? $dateTime->format('Y-m-d H:i:s')
+        $value = $dateTime instanceof DateTime
+            ? $dateTime->formatForDb()
             : $dateTime;
 
         /** @var HasWpPost $this */
