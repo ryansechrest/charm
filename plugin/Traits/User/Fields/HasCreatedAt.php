@@ -4,7 +4,6 @@ namespace Charm\Traits\User\Fields;
 
 use Charm\Contracts\HasWpUser;
 use Charm\Utilities\DateTime;
-use DateTimeInterface;
 
 /**
  * Indicates that a user has a created date.
@@ -31,13 +30,13 @@ trait HasCreatedAt
     /**
      * Set created date
      *
-     * @param DateTimeInterface|string $dateTime
+     * @param DateTime|string $dateTime
      * @return static
      */
-    public function setCreatedAt(DateTimeInterface|string $dateTime): static
+    public function setCreatedAt(DateTime|string $dateTime): static
     {
-        $value = $dateTime instanceof DateTimeInterface
-            ? $dateTime->format('Y-m-d H:i:s')
+        $value = $dateTime instanceof DateTime
+            ? $dateTime->formatForDb()
             : $dateTime;
 
         /** @var HasWpUser $this */
