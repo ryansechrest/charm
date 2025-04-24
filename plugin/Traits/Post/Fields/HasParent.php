@@ -3,7 +3,7 @@
 namespace Charm\Traits\Post\Fields;
 
 use Charm\Contracts\HasWpPost;
-use Charm\Models\BasePost;
+use Charm\Models\Base\Post;
 use WP_Post;
 
 /**
@@ -43,12 +43,12 @@ trait HasParent
     /**
      * Set parent
      *
-     * @param BasePost|int|null $parent
+     * @param Post|int|null $parent
      * @return static
      */
-    public function setParent(BasePost|int|null $parent): static
+    public function setParent(Post|int|null $parent): static
     {
-        $id = $parent instanceof BasePost ? $parent->wp()->getId() : $parent;
+        $id = $parent instanceof Post ? $parent->wp()->getId() : $parent;
 
         /** @var HasWpPost $this */
         $this->wp()->setPostParent($id ?? 0);
