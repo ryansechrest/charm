@@ -22,7 +22,7 @@ use Charm\Traits\Post\HasPermalink;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Page extends BasePost
+class Page extends Base\Post
 {
     use HasId;
     use HasCreator;
