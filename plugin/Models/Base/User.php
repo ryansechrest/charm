@@ -1,8 +1,9 @@
 <?php
 
-namespace Charm\Models;
+namespace Charm\Models\Base;
 
 use Charm\Contracts\HasWpUser;
+use Charm\Models\WordPress;
 use Charm\Support\Result;
 use WP_User;
 use WP_User_Query;
@@ -13,7 +14,7 @@ use WP_User_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class BaseUser implements HasWpUser
+abstract class User implements HasWpUser
 {
     /**
      * WordPress user

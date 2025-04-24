@@ -1,8 +1,9 @@
 <?php
 
-namespace Charm\Models;
+namespace Charm\Models\Base;
 
 use Charm\Contracts\HasWpPost;
+use Charm\Models\WordPress;
 use Charm\Support\Result;
 use WP_Post;
 use WP_Query;
@@ -13,7 +14,7 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class BasePost implements HasWpPost
+abstract class Post implements HasWpPost
 {
     /**
      * Post type
