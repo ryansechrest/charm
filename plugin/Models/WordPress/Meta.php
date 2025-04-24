@@ -6,7 +6,7 @@ use Charm\Support\Result;
 use stdClass;
 
 /**
- * Represents a meta field for any model in WordPress.
+ * Represents a generic meta in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -143,27 +143,6 @@ class Meta
     }
 
     /**
-     * Get first meta by specified key
-     *
-     * @param string $metaType
-     * @param int $objectId
-     * @param string $metaKey
-     * @return ?static
-     */
-    public static function getFirst(
-        string $metaType, int $objectId, string $metaKey
-    ): ?static
-    {
-        $metas = static::get($metaType, $objectId, $metaKey);
-
-        if (!isset($metas[0])) {
-            return null;
-        }
-
-        return $metas[0];
-    }
-
-    /**
      * Get all metas or by specified key
      *
      * @param string $metaType
@@ -196,6 +175,27 @@ class Meta
 
         // Assume specified meta key can occur more than once
         return static::getMultiple($metaType, $objectId, $metaKey, $metaValues);
+    }
+
+    /**
+     * Get first meta by specified key
+     *
+     * @param string $metaType
+     * @param int $objectId
+     * @param string $metaKey
+     * @return ?static
+     */
+    public static function getFirst(
+        string $metaType, int $objectId, string $metaKey
+    ): ?static
+    {
+        $metas = static::get($metaType, $objectId, $metaKey);
+
+        if (!isset($metas[0])) {
+            return null;
+        }
+
+        return $metas[0];
     }
 
     /**
@@ -371,7 +371,7 @@ class Meta
      * @param array $metaValues
      * @return static[]
      */
-    protected static function loadMultiple(
+    protected static function getMultiple(
         string $metaType, int $objectId, string $metaKey, array $metaValues
     ): array {
         $metas = [];
