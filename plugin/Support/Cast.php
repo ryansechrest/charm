@@ -119,7 +119,7 @@ class Cast
      *
      * @return string
      */
-    public function json(): string
+    public function toJson(): string
     {
         return json_encode($this->value, JSON_UNESCAPED_UNICODE);
     }
