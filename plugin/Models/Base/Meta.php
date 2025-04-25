@@ -2,9 +2,12 @@
 
 namespace Charm\Models\Base;
 
+use Charm\Contracts\HasWpMeta;
+use Charm\Contracts\IsPersistable;
 use Charm\Models\WordPress;
 use Charm\Support\Cast;
 use Charm\Support\Result;
+use Charm\Traits\HasPersistenceState;
 use stdClass;
 
 /**
@@ -13,8 +16,12 @@ use stdClass;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class Meta
+abstract class Meta implements HasWpMeta, IsPersistable
 {
+    use HasPersistenceState;
+
+    /*------------------------------------------------------------------------*/
+
     /**
      * Meta type
      *
