@@ -2,6 +2,7 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_User;
 use WP_User_Query;
@@ -12,7 +13,7 @@ use WP_User_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class User
+class User implements IsPersistable
 {
     /**
      * ID
@@ -367,7 +368,7 @@ class User
     {
         if ($this->id !== null) {
             return Result::error(
-                'existing_user_id',
+                'user_id_exists',
                 __('User already exists.', 'charm')
             );
         }
@@ -404,7 +405,7 @@ class User
     {
         if ($this->id === null) {
             return Result::error(
-                'missing_user_id',
+                'user_id_missing',
                 __('Cannot update user with blank ID.', 'charm')
             );
         }
@@ -439,7 +440,7 @@ class User
     {
         if ($this->id === null) {
             return Result::error(
-                'missing_user_id',
+                'user_id_missing',
                 __('Cannot delete user with blank ID.', 'charm')
             );
         }

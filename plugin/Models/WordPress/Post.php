@@ -2,6 +2,7 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_Post;
 use WP_Query;
@@ -12,7 +13,7 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Post
+class Post implements IsPersistable
 {
     /**
      * ID
@@ -500,7 +501,7 @@ class Post
     {
         if ($this->id !== null) {
             return Result::error(
-                'existing_post_id',
+                'post_id_exists',
                 __('Post already exists.', 'charm')
             );
         }
@@ -535,7 +536,7 @@ class Post
     {
         if ($this->id === null) {
             return Result::error(
-                'missing_post_id',
+                'post_id_missing',
                 __('Cannot update post with blank ID.', 'charm')
             );
         }
@@ -570,7 +571,7 @@ class Post
     {
         if ($this->id === null) {
             return Result::error(
-                'missing_post_id',
+                'post_id_missing',
                 __('Cannot trash post with blank ID.', 'charm')
             );
         }
@@ -599,7 +600,7 @@ class Post
     {
         if ($this->id === null) {
             return Result::error(
-                'missing_post_id',
+                'post_id_missing',
                 __('Cannot restore post with blank ID.', 'charm')
             );
         }
@@ -628,7 +629,7 @@ class Post
     {
         if ($this->id === null) {
             return Result::error(
-                'missing_post_id',
+                'post_id_missing',
                 __('Cannot delete post with blank ID.', 'charm')
             );
         }

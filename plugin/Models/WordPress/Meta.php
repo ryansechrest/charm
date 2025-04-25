@@ -2,6 +2,7 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use stdClass;
 
@@ -11,7 +12,7 @@ use stdClass;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Meta
+class Meta implements IsPersistable
 {
     /**
      * Meta type
@@ -158,22 +159,22 @@ class Meta
         // Get either all metas or metas that match specified key
         $metaValues = get_metadata($metaType, $objectId, $metaKey);
 
-        // If objectId is invalid
+        // If get_metadata() determined object ID is invalid
         if ($metaValues ===  false) {
             return [];
         }
 
-        // If no metas exist
+        // If no metas were returned
         if (is_array($metaValues) && count($metaValues) === 0) {
             return [];
         }
 
-        // If metaKey was blank, assume we need to load array of arrays
+        // If no meta key provided, assume we need to load array of arrays
         if ($metaKey === '') {
             return static::getAll($metaType, $objectId, $metaValues);
         }
 
-        // Assume specified meta key can occur more than once
+        // Otherwise, assume specified meta key can occur more than once
         return static::getMultiple($metaType, $objectId, $metaKey, $metaValues);
     }
 
@@ -341,12 +342,15 @@ class Meta
     ): array {
         $metas = [];
 
+        // Loop over every meta with different key
         foreach ($metaValues as $metaKey => $metaValue) {
 
+            // They should all be arrays, even if just one item
             if (!is_array($metaValue)) {
                 continue;
             }
 
+            // If array contains one item, save it and move on
             if (count($metaValue) === 1 && isset($metaValue[0])) {
                 $metas[$metaKey] = self::getSingle(
                     $metaType, $objectId, $metaKey, $metaValue[0]
@@ -354,6 +358,8 @@ class Meta
                 continue;
             }
 
+            // Otherwise, if array contains multiple items with same key,
+            // put them in an array with that key
             $metas[$metaKey] = self::getMultiple(
                 $metaType, $objectId, $metaKey, $metaValue
             );
@@ -376,6 +382,7 @@ class Meta
     ): array {
         $metas = [];
 
+        // Loop over every meta with same key
         foreach ($metaValues as $metaValue) {
             $metas[] = self::getSingle($metaType, $objectId, $metaKey, $metaValue);
         }
@@ -445,7 +452,7 @@ class Meta
     {
         if ($this->metaId !== null) {
             return Result::error(
-                'existing_meta_id',
+                'meta_id_exists',
                 __('Meta already exists.', 'charm')
             );
         }
@@ -480,16 +487,13 @@ class Meta
     {
         if ($this->metaId === null) {
             return Result::error(
-                'missing_meta_id',
+                'meta_id_missing',
                 __('Cannot update meta with blank ID.', 'charm')
             );
         }
 
         if ($this->metaValue === $this->prevMetaValue) {
-            return Result::error(
-                'meta_value_unchanged',
-                __('Meta has not changed', 'charm')
-            );
+            return Result::success();
         }
 
         $result = update_metadata_by_mid(
@@ -520,7 +524,7 @@ class Meta
     {
         if ($this->metaId === null) {
             return Result::error(
-                'missing_meta_id',
+                'meta_id_missing',
                 __('Cannot delete meta with blank ID.', 'charm')
             );
         }
