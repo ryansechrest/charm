@@ -5,7 +5,7 @@ namespace Charm\Contracts;
 use Charm\Models\WordPress\Post;
 
 /**
- * Ensures wp() exists and returns WordPress\Post.
+ * Ensures wp() exists to return WordPress\Post.
  *
  * @author Ryan Sechrest
  * @package Charm
