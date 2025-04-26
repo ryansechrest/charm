@@ -21,7 +21,7 @@ trait HasPersistenceState
      */
     protected PersistenceState $state = PersistenceState::CLEAN;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Mark model with state
@@ -35,6 +35,8 @@ trait HasPersistenceState
 
         return $this;
     }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Persist model based on state
@@ -68,7 +70,7 @@ trait HasPersistenceState
         return $result;
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Get persistence state
