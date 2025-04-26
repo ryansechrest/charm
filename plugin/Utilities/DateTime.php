@@ -28,7 +28,7 @@ class DateTime
      */
     protected const TIME_FORMAT = 'H:i:s';
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Date and time
@@ -44,7 +44,7 @@ class DateTime
      */
     protected ?DateTimeZone $timezone = null;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize DateTime from WordPress GMT date string
@@ -73,7 +73,91 @@ class DateTime
         return static::init('now');
     }
 
-    /**************************************************************************/
+    // *************************************************************************
+
+    /**
+     * Set timezone as UTC
+     *
+     * @return static
+     */
+    public function asUtc(): static
+    {
+        $this->timezone = new DateTimeZone('UTC');
+
+        return $this;
+    }
+
+    /**
+     * Set timezone as configured in WordPress
+     *
+     * @return static
+     */
+    public function asLocal(): static
+    {
+        $this->timezone = new DateTimeZone($this->getWpTimezoneString());
+
+        return $this;
+    }
+
+    /**
+     * Set timezone as provided
+     *
+     * @param string $timezone
+     * @return static
+     */
+    public function as(string $timezone): static
+    {
+        $this->timezone = new DateTimeZone($timezone);
+
+        return $this;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Format UTC time using WordPress or custom format
+     *
+     * @param string $format
+     * @return string
+     */
+    public function format(string $format = ''): string
+    {
+        if ($format === '') {
+            $format = $this->getWpDateFormat() . ' ' . $this->getWpTimeFormat();
+        }
+
+        $timezone = $this->timezone ?? new DateTimeZone(
+            $this->getWpTimezoneString()
+        );
+
+        return $this->dti->setTimezone($timezone)->format($format);
+    }
+
+    /**
+     * Format UTC time using WordPress database format
+     *
+     * @return string
+     */
+    public function formatForDb(): string
+    {
+        return $this->dti->format(
+            static::DATE_FORMAT . ' ' . static::TIME_FORMAT
+        );
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Return local formatted string (default behavior)
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->format();
+    }
+
+    // *************************************************************************
 
     /**
      * Get timezone string from WordPress
@@ -133,87 +217,5 @@ class DateTime
         }
 
         return $value;
-    }
-
-    /**************************************************************************/
-
-    /**
-     * Set timezone as UTC
-     *
-     * @return static
-     */
-    public function asUtc(): static
-    {
-        $this->timezone = new DateTimeZone('UTC');
-
-        return $this;
-    }
-
-    /**
-     * Set timezone as configured in WordPress
-     *
-     * @return static
-     */
-    public function asLocal(): static
-    {
-        $this->timezone = new DateTimeZone($this->getWpTimezoneString());
-
-        return $this;
-    }
-
-    /**
-     * Set timezone as provided
-     *
-     * @param string $timezone
-     * @return static
-     */
-    public function as(string $timezone): static
-    {
-        $this->timezone = new DateTimeZone($timezone);
-
-        return $this;
-    }
-
-    /**************************************************************************/
-
-    /**
-     * Format UTC time using WordPress database format
-     *
-     * @return string
-     */
-    public function formatForDb(): string
-    {
-        return $this->dti->format(
-            static::DATE_FORMAT . ' ' . static::TIME_FORMAT
-        );
-    }
-
-    /**
-     * Format UTC time using WordPress or custom format
-     *
-     * @param string $format
-     * @return string
-     */
-    public function format(string $format = ''): string
-    {
-        if ($format === '') {
-            $format = $this->getWpDateFormat() . ' ' . $this->getWpTimeFormat();
-        }
-
-        $timezone = $this->timezone ?? new DateTimeZone(
-            $this->getWpTimezoneString()
-        );
-
-        return $this->dti->setTimezone($timezone)->format($format);
-    }
-
-    /**
-     * Return local formatted string (default behavior)
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->format();
     }
 }
