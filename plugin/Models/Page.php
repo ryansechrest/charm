@@ -6,7 +6,6 @@ use Charm\Traits\Post\Fields\HasContent;
 use Charm\Traits\Post\Fields\HasCreatedAt;
 use Charm\Traits\Post\Fields\HasCreator;
 use Charm\Traits\Post\Fields\HasExcerpt;
-use Charm\Traits\Post\Fields\HasId;
 use Charm\Traits\Post\Fields\HasMenuOrder;
 use Charm\Traits\Post\Fields\HasParent;
 use Charm\Traits\Post\Fields\HasPassword;
@@ -24,7 +23,8 @@ use Charm\Traits\Post\HasPermalink;
  */
 class Page extends Base\Post
 {
-    use HasId;
+    // --- Post Fields ---------------------------------------------------------
+
     use HasCreator;
     use HasCreatedAt;
     use HasUpdatedAt;
@@ -39,12 +39,30 @@ class Page extends Base\Post
     use HasMenuOrder;
 
     use HasParent;
+
+    // --- Post Helpers --------------------------------------------------------
+
     use HasPermalink;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
-     * Post type
+     * Define post type
      */
-    protected const POST_TYPE = 'page';
+    protected static function postType(): string
+    {
+        return 'page';
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Define parent class
+     *
+     * @return string
+     */
+    protected static function parentClass(): string
+    {
+        return Page::class;
+    }
 }
