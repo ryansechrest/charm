@@ -4,9 +4,11 @@ namespace Charm\Models\Base;
 
 use Charm\Contracts\HasWpPost;
 use Charm\Contracts\IsPersistable;
+use Charm\Models\PostMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
 use Charm\Traits\HasPersistenceState;
+use Charm\Traits\Metas\HasMeta;
 use WP_Post;
 use WP_Query;
 
@@ -18,16 +20,10 @@ use WP_Query;
  */
 abstract class Post implements HasWpPost, IsPersistable
 {
+    use HasMeta;
     use HasPersistenceState;
 
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * Post type
-     */
-    protected const POST_TYPE = '';
-
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * WordPress post
@@ -36,7 +32,28 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     protected ?WordPress\Post $wpPost = null;
 
-    /**************************************************************************/
+    // *************************************************************************
+
+    /**
+     * Force post type definition
+     *
+     * e.g. `post`, `page`, `attachment`, etc.
+     *
+     * @return string
+     */
+    abstract protected static function postType(): string;
+
+    /**
+     * Define default meta class
+     *
+     * @return string
+     */
+    protected static function metaClass(): string
+    {
+        return PostMeta::class;
+    }
+
+    // *************************************************************************
 
     /**
      * Post constructor
@@ -48,6 +65,8 @@ abstract class Post implements HasWpPost, IsPersistable
         $this->wpPost = new WordPress\Post($data);
     }
 
+    // -------------------------------------------------------------------------
+
     /**
      * Get WordPress post instance
      *
@@ -58,7 +77,7 @@ abstract class Post implements HasWpPost, IsPersistable
         return $this->wpPost;
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize post
@@ -72,7 +91,7 @@ abstract class Post implements HasWpPost, IsPersistable
             return null;
         }
 
-        if ($wpPost->getPostType() !== static::POST_TYPE) {
+        if ($wpPost->getPostType() !== static::postType()) {
             return null;
         }
 
@@ -114,7 +133,7 @@ abstract class Post implements HasWpPost, IsPersistable
         return WordPress\Post::query($params);
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Save post
@@ -133,7 +152,20 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function create(): Result
     {
-        return $this->wp()->create();
+        $result = $this->wp()->create();
+
+        // Don't proceed with metas if create failed
+        if ($result->hasFailed()) {
+            return $result;
+        }
+
+        // Ensure all metas have newly created post ID
+        $this->fillMetasWithObjectId($this->wp()->getId());
+
+        // Persist metas in database and save results
+        $result->addResults($this->persistMetas());
+
+        return $result;
     }
 
     /**
@@ -143,7 +175,17 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function update(): Result
     {
-        return $this->wp()->update();
+        $result = $this->wp()->update();
+
+        // Don't proceed with metas if update failed
+        if ($result->hasFailed()) {
+            return $result;
+        }
+
+        // Persist metas in database and save results
+        $result->addResults($this->persistMetas());
+
+        return $result;
     }
 
     /**
@@ -174,5 +216,17 @@ abstract class Post implements HasWpPost, IsPersistable
     public function delete(): Result
     {
         return $this->wp()->delete();
+    }
+
+    // *************************************************************************
+
+    /**
+     * Get ID
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->wp()->getId();
     }
 }
