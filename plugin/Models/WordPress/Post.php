@@ -176,7 +176,7 @@ class Post implements IsPersistable
      */
     protected ?int $commentCount = null;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Post constructor
@@ -288,7 +288,7 @@ class Post implements IsPersistable
         }
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize post
@@ -340,145 +340,7 @@ class Post implements IsPersistable
         return new WP_Query($params);
     }
 
-    /**************************************************************************/
-
-    /**
-     * Load instance from ID
-     *
-     * @param int $id
-     * @see get_post()
-     */
-    protected function loadFromId(int $id): void
-    {
-        if ($id === 0) {
-            return;
-        }
-
-        if (!$wpPost = get_post($id)) {
-            return;
-        };
-
-        $this->loadFromPost($wpPost);
-    }
-
-    /**
-     * Load instance from path
-     *
-     * @param string $path
-     * @see get_page_by_path()
-     */
-    protected function loadFromPath(string $path): void
-    {
-        if (!$wpPost = get_page_by_path(
-            $path, OBJECT, $this->postType)
-        ) {
-            return;
-        }
-
-        $this->loadFromPost($wpPost);
-    }
-
-    /**
-     * Load instance from global WP_Post
-     *
-     * @see get_post()
-     */
-    protected function loadFromGlobalPost(): void
-    {
-        if (!$wpPost = get_post()) {
-            return;
-        }
-
-        $this->loadFromPost($wpPost);
-    }
-
-    /**
-     * Load instance from WP_Post
-     *
-     * @param WP_Post $wpPost
-     */
-    protected function loadFromPost(WP_Post $wpPost): void
-    {
-        $this->id = (int) $wpPost->ID;
-        $this->postAuthor = (int) $wpPost->post_author;
-        $this->postDate = $wpPost->post_date;
-        $this->postDateGmt = $wpPost->post_date_gmt;
-        $this->postContent = $wpPost->post_content;
-        $this->postTitle = $wpPost->post_title;
-        $this->postExcerpt = $wpPost->post_excerpt;
-        $this->postStatus = $wpPost->post_status;
-        $this->commentStatus = $wpPost->comment_status;
-        $this->pingStatus = $wpPost->ping_status;
-        $this->postPassword = $wpPost->post_password;
-        $this->postName = $wpPost->post_name;
-        $this->toPing = $wpPost->to_ping;
-        $this->pinged = $wpPost->pinged;
-        $this->postModified = $wpPost->post_modified;
-        $this->postModifiedGmt = $wpPost->post_modified_gmt;
-        $this->postContentFiltered = $wpPost->post_content_filtered;
-        $this->postParent = (int) $wpPost->post_parent;
-        $this->guid = $wpPost->guid;
-        $this->menuOrder = (int) $wpPost->menu_order;
-        $this->postType = $wpPost->post_type;
-        $this->postMimeType = $wpPost->post_mime_type;
-        $this->commentCount = (int) $wpPost->comment_count;
-    }
-
-    /**
-     * Reload instance from database
-     */
-    protected function reload(): void
-    {
-        if ($this->id === null) {
-            return;
-        }
-
-        $this->loadFromId($this->id);
-    }
-
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * Cast post to array to be used by WordPress functions
-     *
-     * Remove keys from array if the value is null,
-     * since that indicates no value has been set.
-     *
-     * @param array $includeData
-     * @return array
-     */
-    protected function toWpPostArray(array $includeData = []): array
-    {
-        $data = [
-            'ID' => $this->id,
-            'post_author' => $this->postAuthor,
-            'post_date' => $this->postDate,
-            'post_date_gmt' => $this->postDateGmt,
-            'post_content' => $this->postContent,
-            'post_title' => $this->postTitle,
-            'post_excerpt' => $this->postExcerpt,
-            'post_status' => $this->postStatus,
-            'comment_status' => $this->commentStatus,
-            'ping_status' => $this->pingStatus,
-            'post_password' => $this->postPassword,
-            'post_name' => $this->postName,
-            'to_ping' => $this->toPing,
-            'pinged' => $this->pinged,
-            'post_modified' => $this->postModified,
-            'post_modified_gmt' => $this->postModifiedGmt,
-            'post_content_filtered' => $this->postContentFiltered,
-            'post_parent' => $this->postParent,
-            'menu_order' => $this->menuOrder,
-            'post_type' => $this->postType,
-            'post_mime_type' => $this->postMimeType,
-        ];
-
-        $data = array_merge($includeData, $data);
-
-        return array_filter($data, fn($value) => !is_null($value));
-    }
-
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Save post
@@ -648,7 +510,7 @@ class Post implements IsPersistable
         return Result::success();
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Get ID
@@ -660,7 +522,7 @@ class Post implements IsPersistable
         return $this->id ?? 0;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post author
@@ -685,7 +547,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post date
@@ -710,7 +572,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post date (GMT)
@@ -735,7 +597,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post content
@@ -760,7 +622,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post title
@@ -785,7 +647,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post excerpt
@@ -810,7 +672,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post status
@@ -835,7 +697,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get comment status
@@ -860,7 +722,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get ping status
@@ -885,7 +747,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post password
@@ -910,7 +772,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post name
@@ -935,7 +797,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get URLs to ping
@@ -960,7 +822,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get pinged URLs
@@ -985,7 +847,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post modified
@@ -1010,7 +872,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post modified (GMT)
@@ -1035,7 +897,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get filtered post content
@@ -1060,7 +922,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post parent
@@ -1085,7 +947,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get GUID
@@ -1097,7 +959,7 @@ class Post implements IsPersistable
         return $this->guid ?? '';
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get menu order
@@ -1122,7 +984,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post type
@@ -1147,7 +1009,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get post MIME type
@@ -1172,7 +1034,7 @@ class Post implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get comment count
@@ -1182,5 +1044,145 @@ class Post implements IsPersistable
     public function getCommentCount(): int
     {
         return $this->commentCount ?? 0;
+    }
+
+    // *************************************************************************
+
+    /**
+     * Load instance from ID
+     *
+     * @param int $id
+     * @see get_post()
+     */
+    protected function loadFromId(int $id): void
+    {
+        if ($id === 0) {
+            return;
+        }
+
+        if (!$wpPost = get_post($id)) {
+            return;
+        };
+
+        $this->loadFromPost($wpPost);
+    }
+
+    /**
+     * Load instance from path
+     *
+     * @param string $path
+     * @see get_page_by_path()
+     */
+    protected function loadFromPath(string $path): void
+    {
+        if (!$wpPost = get_page_by_path(
+            $path, OBJECT, $this->postType)
+        ) {
+            return;
+        }
+
+        $this->loadFromPost($wpPost);
+    }
+
+    /**
+     * Load instance from global WP_Post
+     *
+     * @see get_post()
+     */
+    protected function loadFromGlobalPost(): void
+    {
+        if (!$wpPost = get_post()) {
+            return;
+        }
+
+        $this->loadFromPost($wpPost);
+    }
+
+    /**
+     * Load instance from WP_Post
+     *
+     * @param WP_Post $wpPost
+     */
+    protected function loadFromPost(WP_Post $wpPost): void
+    {
+        $this->id = (int) $wpPost->ID;
+        $this->postAuthor = (int) $wpPost->post_author;
+        $this->postDate = $wpPost->post_date;
+        $this->postDateGmt = $wpPost->post_date_gmt;
+        $this->postContent = $wpPost->post_content;
+        $this->postTitle = $wpPost->post_title;
+        $this->postExcerpt = $wpPost->post_excerpt;
+        $this->postStatus = $wpPost->post_status;
+        $this->commentStatus = $wpPost->comment_status;
+        $this->pingStatus = $wpPost->ping_status;
+        $this->postPassword = $wpPost->post_password;
+        $this->postName = $wpPost->post_name;
+        $this->toPing = $wpPost->to_ping;
+        $this->pinged = $wpPost->pinged;
+        $this->postModified = $wpPost->post_modified;
+        $this->postModifiedGmt = $wpPost->post_modified_gmt;
+        $this->postContentFiltered = $wpPost->post_content_filtered;
+        $this->postParent = (int) $wpPost->post_parent;
+        $this->guid = $wpPost->guid;
+        $this->menuOrder = (int) $wpPost->menu_order;
+        $this->postType = $wpPost->post_type;
+        $this->postMimeType = $wpPost->post_mime_type;
+        $this->commentCount = (int) $wpPost->comment_count;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Reload instance from database
+     */
+    protected function reload(): void
+    {
+        if ($this->id === null) {
+            return;
+        }
+
+        $this->loadFromId($this->id);
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Cast post to array to be used by WordPress functions
+     *
+     * Remove keys from array if the value is null,
+     * since that indicates no value has been set.
+     *
+     * @param array $includeData
+     * @return array
+     */
+    protected function toWpPostArray(array $includeData = []): array
+    {
+        $data = [
+            'ID' => $this->id,
+            'post_author' => $this->postAuthor,
+            'post_date' => $this->postDate,
+            'post_date_gmt' => $this->postDateGmt,
+            'post_content' => $this->postContent,
+            'post_title' => $this->postTitle,
+            'post_excerpt' => $this->postExcerpt,
+            'post_status' => $this->postStatus,
+            'comment_status' => $this->commentStatus,
+            'ping_status' => $this->pingStatus,
+            'post_password' => $this->postPassword,
+            'post_name' => $this->postName,
+            'to_ping' => $this->toPing,
+            'pinged' => $this->pinged,
+            'post_modified' => $this->postModified,
+            'post_modified_gmt' => $this->postModifiedGmt,
+            'post_content_filtered' => $this->postContentFiltered,
+            'post_parent' => $this->postParent,
+            'menu_order' => $this->menuOrder,
+            'post_type' => $this->postType,
+            'post_mime_type' => $this->postMimeType,
+        ];
+
+        $data = array_merge($includeData, $data);
+
+        return array_filter($data, fn($value) => !is_null($value));
     }
 }
