@@ -20,26 +20,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
 {
     use HasPersistenceState;
 
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * Meta type
-     *
-     * WordPress supports: `comment`, `post`, `term`, and `user`.
-     */
-    protected const META_TYPE = '';
-
-    /**
-     * Meta ID field
-     *
-     * comment -> meta_id
-     * post    -> meta_id
-     * term    -> meta_id
-     * user    -> umeta_id
-     */
-    protected const META_ID_FIELD = 'meta_id';
-
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * WordPress meta
@@ -48,7 +29,18 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     protected ?WordPress\Meta $wpMeta = null;
 
-    /**************************************************************************/
+    // *************************************************************************
+
+    /**
+     * Force meta type definition
+     *
+     * e.g. `comment`, `post`, `term`, and `user`
+     *
+     * @return string
+     */
+    abstract protected static function metaType(): string;
+
+    // *************************************************************************
 
     /**
      * BaseMeta constructor
@@ -57,8 +49,10 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function __construct(array $data = [])
     {
-        $this->wpMeta = new WordPress\Meta(static::META_TYPE, $data);
+        $this->wpMeta = new WordPress\Meta(static::metaType(), $data);
     }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Get WordPress meta instance
@@ -70,7 +64,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
         return $this->wpMeta;
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize meta
@@ -80,7 +74,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public static function init(int|stdClass $key): ?static
     {
-        if (!$wpMeta = WordPress\Meta::init(static::META_TYPE, $key)) {
+        if (!$wpMeta = WordPress\Meta::init(static::metaType(), $key)) {
             return null;
         }
 
@@ -117,22 +111,31 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public static function get(int $objectId, string $metaKey = ''): array
     {
-        $wpMetas = WordPress\Meta::get(
-            static::META_TYPE, $objectId, $metaKey
-        );
+        $wpMetas = WordPress\Meta::get(static::metaType(), $objectId, $metaKey);
 
         $metas = [];
 
-        foreach ($wpMetas as $wpMeta) {
-            $meta = new static();
-            $meta->wpMeta = $wpMeta;
-            $metas[] = $meta;
+        foreach ($wpMetas as $metaKey => $wpMeta) {
+
+            if (!is_array($wpMeta)) {
+                $meta = new static();
+                $meta->wpMeta = $wpMeta;
+                $metas[$metaKey] = $meta;
+                continue;
+            }
+
+            foreach ($wpMeta as $wpSingleMeta) {
+                $meta = new static();
+                $meta->wpMeta = $wpSingleMeta;
+                $metas[$metaKey][] = $meta;
+            }
+
         }
 
         return $metas;
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Save meta
@@ -174,7 +177,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
         return $this->wp()->delete();
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Get meta ID
@@ -183,10 +186,10 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getId(): int
     {
-        return $this->wp()->getMetaId() ?? 0;
+        return $this->wp()->getId();
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get object ID
@@ -195,7 +198,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getObjectId(): int
     {
-        return $this->wp()->getObjectId() ?? 0;
+        return $this->wp()->getObjectId();
     }
 
     /**
@@ -211,7 +214,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get meta key
@@ -220,7 +223,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getKey(): string
     {
-        return $this->wp()->getMetaKey() ?? '';
+        return $this->wp()->getMetaKey();
     }
 
     /**
@@ -236,7 +239,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get meta value
@@ -245,7 +248,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getValue(): mixed
     {
-        return $this->wp()->getMetaValue() ?? null;
+        return $this->wp()->getMetaValue();
     }
 
     /**
@@ -261,7 +264,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Pass value to Cast
