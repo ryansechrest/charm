@@ -85,7 +85,7 @@ class User implements IsPersistable
      */
     protected ?string $displayName = null;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * User constructor
@@ -145,7 +145,7 @@ class User implements IsPersistable
         }
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize user
@@ -198,154 +198,7 @@ class User implements IsPersistable
         return new WP_User_Query($params);
     }
 
-    /**************************************************************************/
-
-    /**
-     * Load instance from ID
-     *
-     * @param int $id
-     */
-    protected function loadFromId(int $id): void
-    {
-        if ($id === 0) {
-            return;
-        }
-
-        if (!$user = static::getBy('id', $id)) {
-            return;
-        }
-
-        $this->loadFromUser($user);
-    }
-
-    /**
-     * Load instance from login
-     *
-     * @param string $login
-     */
-    protected function loadFromLogin(string $login): void
-    {
-        if (!$user = static::getBy('login', $login)) {
-            return;
-        }
-
-        $this->loadFromUser($user);
-    }
-
-    /**
-     * Load instance from email
-     *
-     * @param string $email
-     */
-    protected function loadFromEmail(string $email): void
-    {
-        if (!$user = static::getBy('email', $email)) {
-            return;
-        }
-
-        $this->loadFromUser($user);
-    }
-
-    /**
-     * Load instance from global WP_User
-     *
-     * @see wp_get_current_user()
-     */
-    protected function loadFromGlobalUser(): void
-    {
-        if (!$user = wp_get_current_user()) {
-            return;
-        }
-
-        if ($user->ID === 0) {
-            return;
-        }
-
-        $this->loadFromUser($user);
-    }
-
-    /**
-     * Load instance from WP_User object
-     *
-     * @param WP_User $wpUser
-     */
-    protected function loadFromUser(WP_User $wpUser): void
-    {
-        $this->id = (int) $wpUser->data->ID;
-        $this->userLogin = $wpUser->data->user_login;
-        $this->userPass = $wpUser->data->user_pass;
-        $this->userNicename = $wpUser->data->user_nicename;
-        $this->userEmail = $wpUser->data->user_email;
-        $this->userUrl = $wpUser->data->user_url;
-        $this->userRegistered = $wpUser->data->user_registered;
-        $this->userActivationKey = $wpUser->data->user_activation_key;
-        $this->userStatus = (int) $wpUser->data->user_status;
-        $this->displayName = $wpUser->data->display_name;
-    }
-
-    /**
-     * Reload instance from database
-     */
-    protected function reload(): void
-    {
-        if ($this->id === null) {
-            return;
-        }
-
-        $this->loadFromId($this->id);
-    }
-
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * Get WP_User by field
-     *
-     * @param string $field
-     * @param int|string $value
-     * @return ?WP_User
-     */
-    protected function getBy(string $field, int|string $value): ?WP_User
-    {
-        $object = WP_User::get_data_by($field, $value);
-
-        if ($object === false) {
-            return null;
-        }
-
-        $user = new WP_User();
-        $user->init($object);
-
-        return $user;
-    }
-
-    /**
-     * Cast user to array to be used by WordPress functions
-     *
-     * Remove keys from array if the value is null,
-     * since that indicates no value has been set.
-     *
-     * @param array $includeData
-     * @return array
-     */
-    protected function toWpUserArray(array $includeData = []): array
-    {
-        $data = [
-            'user_pass' => $this->userPass,
-            'user_nicename' => $this->userNicename,
-            'user_email' => $this->userEmail,
-            'user_url' => $this->userUrl,
-            'user_registered' => $this->userRegistered,
-            'user_activation_key' => $this->userActivationKey,
-            'user_status' => $this->userStatus,
-            'display_name' => $this->displayName,
-        ];
-
-        $data = array_merge($includeData, $data);
-
-        return array_filter($data, fn($value) => !is_null($value));
-    }
-
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Save user
@@ -459,7 +312,7 @@ class User implements IsPersistable
         return Result::success();
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Get ID
@@ -471,7 +324,7 @@ class User implements IsPersistable
         return $this->id ?? 0;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user login
@@ -496,7 +349,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user pass
@@ -521,7 +374,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user nicename
@@ -546,7 +399,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user email
@@ -571,7 +424,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user URL
@@ -596,7 +449,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user registered
@@ -621,7 +474,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user activation key
@@ -646,7 +499,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get user status
@@ -671,7 +524,7 @@ class User implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get display name
@@ -694,5 +547,156 @@ class User implements IsPersistable
         $this->displayName = $displayName;
 
         return $this;
+    }
+
+    // *************************************************************************
+
+    /**
+     * Load instance from ID
+     *
+     * @param int $id
+     */
+    protected function loadFromId(int $id): void
+    {
+        if ($id === 0) {
+            return;
+        }
+
+        if (!$wpUser = static::getWpUserBy('id', $id)) {
+            return;
+        }
+
+        $this->loadFromUser($wpUser);
+    }
+
+    /**
+     * Load instance from login
+     *
+     * @param string $login
+     */
+    protected function loadFromLogin(string $login): void
+    {
+        if (!$wpUser = static::getWpUserBy('login', $login)) {
+            return;
+        }
+
+        $this->loadFromUser($wpUser);
+    }
+
+    /**
+     * Load instance from email
+     *
+     * @param string $email
+     */
+    protected function loadFromEmail(string $email): void
+    {
+        if (!$wpUser = static::getWpUserBy('email', $email)) {
+            return;
+        }
+
+        $this->loadFromUser($wpUser);
+    }
+
+    /**
+     * Load instance from global WP_User
+     *
+     * @see wp_get_current_user()
+     */
+    protected function loadFromGlobalUser(): void
+    {
+        if (!$wpUser = wp_get_current_user()) {
+            return;
+        }
+
+        if ($wpUser->ID === 0) {
+            return;
+        }
+
+        $this->loadFromUser($wpUser);
+    }
+
+    /**
+     * Load instance from WP_User object
+     *
+     * @param WP_User $wpUser
+     */
+    protected function loadFromUser(WP_User $wpUser): void
+    {
+        $this->id = (int) $wpUser->data->ID;
+        $this->userLogin = $wpUser->data->user_login;
+        $this->userPass = $wpUser->data->user_pass;
+        $this->userNicename = $wpUser->data->user_nicename;
+        $this->userEmail = $wpUser->data->user_email;
+        $this->userUrl = $wpUser->data->user_url;
+        $this->userRegistered = $wpUser->data->user_registered;
+        $this->userActivationKey = $wpUser->data->user_activation_key;
+        $this->userStatus = (int) $wpUser->data->user_status;
+        $this->displayName = $wpUser->data->display_name;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Reload instance from database
+     */
+    protected function reload(): void
+    {
+        if ($this->id === null) {
+            return;
+        }
+
+        $this->loadFromId($this->id);
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get WP_User by field
+     *
+     * @param string $field
+     * @param int|string $value
+     * @return ?WP_User
+     */
+    protected function getWpUserBy(string $field, int|string $value): ?WP_User
+    {
+        $object = WP_User::get_data_by($field, $value);
+
+        if ($object === false) {
+            return null;
+        }
+
+        $user = new WP_User();
+        $user->init($object);
+
+        return $user;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Cast user to array to be used by WordPress functions
+     *
+     * Remove keys from array if the value is null,
+     * since that indicates no value has been set.
+     *
+     * @param array $includeData
+     * @return array
+     */
+    protected function toWpUserArray(array $includeData = []): array
+    {
+        $data = [
+            'user_pass' => $this->userPass,
+            'user_nicename' => $this->userNicename,
+            'user_email' => $this->userEmail,
+            'user_url' => $this->userUrl,
+            'user_registered' => $this->userRegistered,
+            'user_activation_key' => $this->userActivationKey,
+            'user_status' => $this->userStatus,
+            'display_name' => $this->displayName,
+        ];
+
+        $data = array_merge($includeData, $data);
+
+        return array_filter($data, fn($value) => !is_null($value));
     }
 }
