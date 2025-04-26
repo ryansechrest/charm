@@ -4,9 +4,11 @@ namespace Charm\Models\Base;
 
 use Charm\Contracts\HasWpUser;
 use Charm\Contracts\IsPersistable;
+use Charm\Models\UserMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
 use Charm\Traits\HasPersistenceState;
+use Charm\Traits\Metas\HasMeta;
 use WP_User;
 use WP_User_Query;
 
@@ -18,9 +20,10 @@ use WP_User_Query;
  */
 abstract class User implements HasWpUser, IsPersistable
 {
+    use HasMeta;
     use HasPersistenceState;
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * WordPress user
@@ -29,7 +32,19 @@ abstract class User implements HasWpUser, IsPersistable
      */
     protected ?WordPress\User $wpUser = null;
 
-    /**************************************************************************/
+    // *************************************************************************
+
+    /**
+     * Define default meta class
+     *
+     * @return string
+     */
+    protected static function metaClass(): string
+    {
+        return UserMeta::class;
+    }
+
+    // *************************************************************************
 
     /**
      * User constructor
@@ -41,6 +56,8 @@ abstract class User implements HasWpUser, IsPersistable
         $this->wpUser = new WordPress\User($data);
     }
 
+    // -------------------------------------------------------------------------
+
     /**
      * Get WordPress user instance
      *
@@ -51,7 +68,7 @@ abstract class User implements HasWpUser, IsPersistable
         return $this->wpUser;
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize user
@@ -103,7 +120,7 @@ abstract class User implements HasWpUser, IsPersistable
         return WordPress\User::query($params);
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Save user
@@ -143,5 +160,17 @@ abstract class User implements HasWpUser, IsPersistable
     public function delete(): Result
     {
         return $this->wp()->delete();
+    }
+
+    // *************************************************************************
+
+    /**
+     * Get ID
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->wp()->getId();
     }
 }
