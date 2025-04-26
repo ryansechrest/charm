@@ -7,7 +7,6 @@ use Charm\Traits\Post\Fields\HasContent;
 use Charm\Traits\Post\Fields\HasCreatedAt;
 use Charm\Traits\Post\Fields\HasCreator;
 use Charm\Traits\Post\Fields\HasExcerpt;
-use Charm\Traits\Post\Fields\HasId;
 use Charm\Traits\Post\Fields\HasPassword;
 use Charm\Traits\Post\Fields\HasPingbacks;
 use Charm\Traits\Post\Fields\HasSlug;
@@ -24,7 +23,8 @@ use Charm\Traits\Post\HasPermalink;
  */
 class Post extends Base\Post
 {
-    use HasId;
+    // --- Post Fields ---------------------------------------------------------
+
     use HasCreator;
     use HasCreatedAt;
     use HasUpdatedAt;
@@ -39,12 +39,17 @@ class Post extends Base\Post
     use HasPingbacks;
     use HasComments;
 
+    // --- Post Helpers --------------------------------------------------------
+
     use HasPermalink;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
-     * Post type
+     * Define post type
      */
-    protected const POST_TYPE = 'post';
+    protected static function postType(): string
+    {
+        return 'post';
+    }
 }
