@@ -5,13 +5,22 @@ namespace Charm\Contracts;
 use Charm\Support\Result;
 
 /**
- * Ensures model implements save(), create(), update(), and delete().
+ * Ensures model implements methods required for persistence.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
 interface IsPersistable
 {
+    /**
+     * Get model ID
+     *
+     * @return int
+     */
+    public function getId(): int;
+
+    // -------------------------------------------------------------------------
+
     /**
      * Save model in database
      *
