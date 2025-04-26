@@ -3,8 +3,8 @@
 namespace Charm\Traits\Post\Fields;
 
 use Charm\Contracts\HasWpPost;
-use Charm\Models\Base\Post;
-use WP_Post;
+use Charm\Models\Base;
+use Charm\Models\Post;
 
 /**
  * Indicates that a post has a parent.
@@ -18,26 +18,26 @@ use WP_Post;
 trait HasParent
 {
     /**
-     * Initialize post
+     * Force parent class definition
      *
-     * @param int|null|string|WP_Post $key
-     * @return static|null
+     * @return class-string<Base\Post>
      */
-    abstract public static function init(
-        int|null|string|WP_Post $key = null
-    ): ?static;
+    abstract protected static function parentClass(): string;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Get parent
      *
-     * @return ?static
+     * @return ?Base\Post
      */
-    public function getParent(): ?static
+    public function getParent(): ?Base\Post
     {
+        /** @var class-string<Base\Post> $parentClass */
+        $parentClass = static::parentClass();
+
         /** @var HasWpPost $this */
-        return static::init($this->wp()->getPostParent());
+        return $parentClass::init($this->wp()->getPostParent());
     }
 
     /**
