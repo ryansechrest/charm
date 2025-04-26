@@ -28,7 +28,7 @@ class Meta implements IsPersistable
      */
     protected string $metaIdField = '';
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Meta ID
@@ -65,7 +65,7 @@ class Meta implements IsPersistable
      */
     protected mixed $prevMetaValue = null;
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Whether meta exists in database
@@ -74,7 +74,7 @@ class Meta implements IsPersistable
      */
     protected bool $exists = false;
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Meta constructor
@@ -85,7 +85,7 @@ class Meta implements IsPersistable
     public function __construct(string $metaType, array $data = [])
     {
         $this->metaType = $metaType;
-        $this->metaIdField = $metaType === 'user' ? 'umeta_id' : 'meta_id';
+        $this->metaIdField = static::getMetaIdField($metaType);
 
         $this->load($data);
     }
@@ -122,7 +122,7 @@ class Meta implements IsPersistable
         }
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize meta
@@ -271,166 +271,7 @@ class Meta implements IsPersistable
         return metadata_exists($metaType, $objectId, $metaKey);
     }
 
-    /**************************************************************************/
-
-    /**
-     * Load instance from ID
-     *
-     * @param int $id
-     * @return void
-     * @see get_metadata_by_mid()
-     */
-    protected function loadFromId(int $id): void
-    {
-        /**
-         * @var $metaData stdClass|false {
-         *     @type string $meta_key
-         *     @type mixed $meta_value
-         *     @type string $meta_id Set when meta type is `comment`, `post`, or `term`
-         *     @type string $umeta_id Set when meta type is `user`
-         *     @type string $post_id Set when meta type is `post`
-         *     @type string $comment_id Set when meta type is `comment`
-         *     @type string $term_id Set when meta type is `term`
-         *     @type string $user_id Set when meta type is `user`
-         *  }
-         */
-        $metaData = get_metadata_by_mid($this->metaType, $id);
-
-        if ($metaData === false) {
-            return;
-        }
-
-        $this->loadFromMetaData($metaData);
-    }
-
-    /**
-     * Load instance from meta data
-     *
-     * @param object $metaData
-     * @return void
-     */
-    protected function loadFromMetaData(object $metaData): void
-    {
-        // e.g. `meta_id` or `umeta_id`
-        $metaIdField = $this->metaIdField;
-
-        // e.g. `comment_id`, `post_id`, `user_id`, or `term_id`
-        $objectIdField = $this->metaType . '_id';
-
-        if (!property_exists($metaData, $objectIdField)) {
-            return;
-        }
-
-        $this->metaId = $metaData->$metaIdField;
-        $this->objectId = $metaData->$objectIdField;
-        $this->metaKey = $metaData->meta_key;
-        $this->metaValue = $metaData->meta_value;
-    }
-
-    /*------------------------------------------------------------------------*/
-
-    /**
-     * Get all metas
-     *
-     * @param string $metaType
-     * @param int $objectId
-     * @param array $metaValues
-     * @return static[]
-     */
-    protected static function getAll(
-        string $metaType, int $objectId, array $metaValues
-    ): array {
-        $metas = [];
-
-        // Loop over every meta with different key
-        foreach ($metaValues as $metaKey => $metaValue) {
-
-            // They should all be arrays, even if just one item
-            if (!is_array($metaValue)) {
-                continue;
-            }
-
-            // If array contains one item, save it and move on
-            if (count($metaValue) === 1 && isset($metaValue[0])) {
-                $metas[$metaKey] = self::getSingle(
-                    $metaType, $objectId, $metaKey, $metaValue[0]
-                );
-                continue;
-            }
-
-            // Otherwise, if array contains multiple items with same key,
-            // put them in an array with that key
-            $metas[$metaKey] = self::getMultiple(
-                $metaType, $objectId, $metaKey, $metaValue
-            );
-        }
-
-        return $metas;
-    }
-
-    /**
-     * Get meta with multiple, identical keys
-     *
-     * @param string $metaType
-     * @param int $objectId
-     * @param string $metaKey
-     * @param array $metaValues
-     * @return static[]
-     */
-    protected static function getMultiple(
-        string $metaType, int $objectId, string $metaKey, array $metaValues
-    ): array {
-        $metas = [];
-
-        // Loop over every meta with same key
-        foreach ($metaValues as $metaValue) {
-            $metas[] = self::getSingle($metaType, $objectId, $metaKey, $metaValue);
-        }
-
-        return $metas;
-    }
-
-    /**
-     * Get meta with single key and value
-     *
-     * @param string $metaType
-     * @param int $objectId
-     * @param string $metaKey
-     * @param mixed $metaValue
-     * @return static
-     * @see maybe_unserialize()
-     */
-    protected static function getSingle(
-        string $metaType, int $objectId, string $metaKey, mixed $metaValue
-    ): static {
-        global $wpdb;
-
-        $metaTable = $metaType . 'meta';
-        $metaIdField = $metaType === 'user' ? 'umeta_id' : 'meta_id';
-
-        $query = 'SELECT ' . $metaIdField . ' ';
-        $query .= 'FROM ' . $wpdb->$metaTable . ' ';
-        $query .= 'WHERE ' . $metaType . '_id = %d ';
-        $query .= 'AND meta_key = %s ';
-        $query .= 'AND meta_value = %s';
-
-        $metaId = $wpdb->get_var(
-            $wpdb->prepare($query, [$objectId, $metaKey, $metaValue])
-        );
-
-        $metaValue = maybe_unserialize($metaValue);
-
-        return new static($metaType, [
-            'metaId' => $metaId,
-            'objectId' => $objectId,
-            'metaKey' => $metaKey,
-            'metaValue' => $metaValue,
-            'prevMetaValue' => $metaValue,
-            'exists' => true,
-        ]);
-    }
-
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Save meta
@@ -544,7 +385,7 @@ class Meta implements IsPersistable
         return Result::success();
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Get meta type
@@ -556,19 +397,19 @@ class Meta implements IsPersistable
         return $this->metaType ?? '';
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get meta ID
      *
      * @return int
      */
-    public function getMetaId(): int
+    public function getId(): int
     {
         return $this->metaId ?? 0;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get object ID
@@ -593,7 +434,7 @@ class Meta implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get meta key
@@ -618,7 +459,7 @@ class Meta implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get meta value
@@ -643,7 +484,7 @@ class Meta implements IsPersistable
         return $this;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Whether meta exists in database
@@ -663,5 +504,177 @@ class Meta implements IsPersistable
     public function hasChanged(): bool
     {
         return $this->metaValue !== $this->prevMetaValue;
+    }
+
+    // *************************************************************************
+
+    /**
+     * Load instance from ID
+     *
+     * @param int $id
+     * @return void
+     * @see get_metadata_by_mid()
+     */
+    protected function loadFromId(int $id): void
+    {
+        /**
+         * @var $metaData stdClass|false {
+         *     @type string $meta_key
+         *     @type mixed $meta_value
+         *     @type string $meta_id Set when meta type is `comment`, `post`, or `term`
+         *     @type string $umeta_id Set when meta type is `user`
+         *     @type string $post_id Set when meta type is `post`
+         *     @type string $comment_id Set when meta type is `comment`
+         *     @type string $term_id Set when meta type is `term`
+         *     @type string $user_id Set when meta type is `user`
+         *  }
+         */
+        $metaData = get_metadata_by_mid($this->metaType, $id);
+
+        if ($metaData === false) {
+            return;
+        }
+
+        $this->loadFromMetaData($metaData);
+    }
+
+    /**
+     * Load instance from meta data
+     *
+     * @param object $metaData
+     * @return void
+     */
+    protected function loadFromMetaData(object $metaData): void
+    {
+        // e.g. `meta_id` or `umeta_id`
+        $metaIdField = $this->metaIdField;
+
+        // e.g. `comment_id`, `post_id`, `user_id`, or `term_id`
+        $objectIdField = $this->metaType . '_id';
+
+        if (!property_exists($metaData, $objectIdField)) {
+            return;
+        }
+
+        $this->metaId = $metaData->$metaIdField;
+        $this->objectId = $metaData->$objectIdField;
+        $this->metaKey = $metaData->meta_key;
+        $this->metaValue = $metaData->meta_value;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get all metas
+     *
+     * @param string $metaType
+     * @param int $objectId
+     * @param array $metaValues
+     * @return static[]
+     */
+    protected static function getAll(
+        string $metaType, int $objectId, array $metaValues
+    ): array {
+        $metas = [];
+
+        // Loop over every meta with different key
+        foreach ($metaValues as $metaKey => $metaValue) {
+
+            // They should all be arrays, even if just one item
+            if (!is_array($metaValue)) {
+                continue;
+            }
+
+            // If array contains one item, save it and move on
+            if (count($metaValue) === 1 && isset($metaValue[0])) {
+                $metas[$metaKey] = self::getSingle(
+                    $metaType, $objectId, $metaKey, $metaValue[0]
+                );
+                continue;
+            }
+
+            // Otherwise, if array contains multiple items with same key,
+            // put them in an array with that key
+            $metas[$metaKey] = self::getMultiple(
+                $metaType, $objectId, $metaKey, $metaValue
+            );
+        }
+
+        return $metas;
+    }
+
+    /**
+     * Get meta with multiple, identical keys
+     *
+     * @param string $metaType
+     * @param int $objectId
+     * @param string $metaKey
+     * @param array $metaValues
+     * @return static[]
+     */
+    protected static function getMultiple(
+        string $metaType, int $objectId, string $metaKey, array $metaValues
+    ): array {
+        $metas = [];
+
+        // Loop over every meta with same key
+        foreach ($metaValues as $metaValue) {
+            $metas[] = self::getSingle($metaType, $objectId, $metaKey, $metaValue);
+        }
+
+        return $metas;
+    }
+
+    /**
+     * Get meta with single key and value
+     *
+     * @param string $metaType
+     * @param int $objectId
+     * @param string $metaKey
+     * @param mixed $metaValue
+     * @return static
+     * @see maybe_unserialize()
+     */
+    protected static function getSingle(
+        string $metaType, int $objectId, string $metaKey, mixed $metaValue
+    ): static {
+        global $wpdb;
+
+        $metaTable = $metaType . 'meta';
+        $metaIdField = static::getMetaIdField($metaType);
+
+        $query = 'SELECT ' . $metaIdField . ' ';
+        $query .= 'FROM ' . $wpdb->$metaTable . ' ';
+        $query .= 'WHERE ' . $metaType . '_id = %d ';
+        $query .= 'AND meta_key = %s ';
+        $query .= 'AND meta_value = %s';
+
+        $metaId = $wpdb->get_var(
+            $wpdb->prepare($query, [$objectId, $metaKey, $metaValue])
+        );
+
+        $metaValue = maybe_unserialize($metaValue);
+
+        return new static($metaType, [
+            'metaId' => $metaId,
+            'objectId' => $objectId,
+            'metaKey' => $metaKey,
+            'metaValue' => $metaValue,
+            'prevMetaValue' => $metaValue,
+            'exists' => true,
+        ]);
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get meta ID field based on type
+     *
+     * @param string $metaType
+     * @return string
+     */
+    protected static function getMetaIdField(string $metaType): string
+    {
+        return $metaType === 'user' ? 'umeta_id' : 'meta_id';
     }
 }
