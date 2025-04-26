@@ -3,6 +3,7 @@
 namespace Charm\Traits\Post\Fields;
 
 use Charm\Contracts\HasWpPost;
+use Charm\Models\Base;
 use Charm\Models\User;
 
 /**
@@ -17,14 +18,29 @@ use Charm\Models\User;
 trait HasCreator
 {
     /**
+     * Default user class definition
+     *
+     * @return class-string<Base\User>
+     */
+    protected static function userClass(): string
+    {
+        return User::class;
+    }
+
+    // *************************************************************************
+
+    /**
      * Get creator
      *
-     * @return User|null
+     * @return ?Base\User
      */
-    public function getCreator(): ?User
+    public function getCreator(): ?Base\User
     {
+        /** @var class-string<Base\User> $userClass */
+        $userClass = static::userClass();
+
         /** @var HasWpPost $this */
-        return User::init($this->wp()->getPostAuthor());
+        return $userClass::init($this->wp()->getPostAuthor());
     }
 
     /**
