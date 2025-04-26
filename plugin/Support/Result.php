@@ -40,7 +40,16 @@ class Result
      */
     private ?WP_Error $wpError = null;
 
-    /**************************************************************************/
+    // -------------------------------------------------------------------------
+
+    /**
+     * Related results triggered by main operation
+     *
+     * @var array
+     */
+    private array $relatedResults = [];
+
+    // *************************************************************************
 
     /**
      * Result constructor
@@ -63,7 +72,7 @@ class Result
         $this->wpError = $wpError;
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Initialize result that operation succeeded
@@ -103,7 +112,7 @@ class Result
         );
     }
 
-    /**************************************************************************/
+    // *************************************************************************
 
     /**
      * Whether operation succeeded
@@ -125,7 +134,7 @@ class Result
         return !$this->success;
     }
 
-    /*------------------------------------------------------------------------*/
+    // -------------------------------------------------------------------------
 
     /**
      * Get error code
@@ -157,7 +166,7 @@ class Result
         return $this->wpError;
     }
 
-    /**************************************************************************/
+    // -------------------------------------------------------------------------
 
     /**
      * Ability to directly print result as message
@@ -169,5 +178,83 @@ class Result
         return $this->hasSucceeded()
             ? 'Success'
             : 'Error: ' . $this->getErrorMessage();
+    }
+
+    // *************************************************************************
+
+    /**
+     * Add single, related result
+     *
+     * @param Result $result
+     * @return void
+     */
+    public function addResult(Result $result): void
+    {
+        $this->relatedResults[] = $result;
+    }
+
+    /**
+     * Add multiple, related results
+     *
+     * @param Result[] $results
+     * @return void
+     */
+    public function addResults(array $results): void
+    {
+        foreach ($results as $result) {
+            $this->addResult($result);
+        }
+    }
+
+    /**
+     * Get all results (main and related)
+     *
+     * @return Result[]
+     */
+    public function getResults(): array
+    {
+        return array_merge([$this], $this->relatedResults);
+    }
+
+    /**
+     * Get all failed (main and related) results
+     *
+     * @return Result[]
+     */
+    public function getFailedResults(): array
+    {
+        return array_values(
+            array_filter(
+                $this->getResults(),
+                fn(Result $result) => $result->hasFailed()
+            )
+        );
+    }
+
+    /**
+     * Get all successful (main and related) results
+     *
+     * @return Result[]
+     */
+    public function getSuccessfulResults(): array
+    {
+        return array_values(
+            array_filter(
+                $this->getResults(),
+                fn(Result $result) => $result->hasSucceeded()
+            )
+        );
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Whether any result (main or related) failed
+     *
+     * @return bool
+     */
+    public function hasFailedResults(): bool
+    {
+        return count($this->getFailedResults()) > 0;
     }
 }
