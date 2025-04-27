@@ -63,7 +63,7 @@ class Result
         bool $success,
         string $errorCode = '',
         string $errorMessage = '',
-        WP_Error $wpError = null
+        ?WP_Error $wpError = null
     )
     {
         $this->success = $success;
