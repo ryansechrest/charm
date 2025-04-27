@@ -2,14 +2,12 @@
 
 namespace Charm\Models;
 
-use Charm\Models\Base\Meta;
-
 /**
  * Represents a user meta in WordPress.
  *
  * @package Charm
  */
-class UserMeta extends Meta
+class UserMeta extends Base\Meta
 {
     /**
      * Define meta type
