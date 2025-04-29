@@ -76,13 +76,14 @@ class DateTime
     // *************************************************************************
 
     /**
-     * Set timezone as UTC
+     * Set timezone as provided
      *
+     * @param string $timezone
      * @return static
      */
-    public function asUtc(): static
+    public function as(string $timezone): static
     {
-        $this->timezone = new DateTimeZone('UTC');
+        $this->timezone = new DateTimeZone($timezone);
 
         return $this;
     }
@@ -94,20 +95,7 @@ class DateTime
      */
     public function asLocal(): static
     {
-        $this->timezone = new DateTimeZone($this->getWpTimezoneString());
-
-        return $this;
-    }
-
-    /**
-     * Set timezone as provided
-     *
-     * @param string $timezone
-     * @return static
-     */
-    public function as(string $timezone): static
-    {
-        $this->timezone = new DateTimeZone($timezone);
+        $this->as($this->getWpTimezoneString());
 
         return $this;
     }
@@ -123,7 +111,7 @@ class DateTime
     public function format(string $format = ''): string
     {
         if ($format === '') {
-            $format = $this->getWpDateFormat() . ' ' . $this->getWpTimeFormat();
+            $format = $this->getWpDateFormat() . ' \a\t ' . $this->getWpTimeFormat();
         }
 
         $timezone = $this->timezone ?? new DateTimeZone(
