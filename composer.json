@@ -16,12 +16,19 @@
         "db:reset": [
             "export $(grep -v '^#' .env | xargs) && export MYSQL_PWD=\"$DB_PASS\" && mysql -u \"$DB_USER\" \"$DB_NAME\" < tests/charm.sql"
         ],
-        "test:run": [
+        "test:all": [
             "./vendor/bin/phpunit"
         ],
-        "go": [
+        "test:unit": [
+            "./vendor/bin/phpunit --testsuite unit"
+        ],
+        "test:integration": [
+            "./vendor/bin/phpunit --testsuite integration"
+        ],
+        "test": [
             "@db:reset",
-            "@test:run"
+            "@test:unit",
+            "@test:integration"
         ]
     }
 }
