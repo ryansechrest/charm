@@ -7,7 +7,7 @@ use Charm\Contracts\IsPersistable;
 use Charm\Models\WordPress;
 use Charm\Support\Cast;
 use Charm\Support\Result;
-use Charm\Traits\HasPersistenceState;
+use Charm\Traits\WithPersistenceState;
 use stdClass;
 
 /**
@@ -18,7 +18,7 @@ use stdClass;
  */
 abstract class Meta implements HasWpMeta, IsPersistable
 {
-    use HasPersistenceState;
+    use WithPersistenceState;
 
     // -------------------------------------------------------------------------
 
@@ -267,11 +267,11 @@ abstract class Meta implements HasWpMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Pass value to Cast
+     * Cast value to specified data type
      *
      * @return Cast
      */
-    public function cast(): Cast
+    public function castValue(): Cast
     {
         return Cast::from($this->wp()->getMetaValue());
     }
