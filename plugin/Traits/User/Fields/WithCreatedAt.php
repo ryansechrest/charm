@@ -14,7 +14,7 @@ use Charm\Utilities\DateTime;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasCreatedAt
+trait WithCreatedAt
 {
     /**
      * Get created date

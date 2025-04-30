@@ -13,7 +13,7 @@ use Charm\Contracts\HasWpPost;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasContent
+trait WithContent
 {
     /**
      * Get content

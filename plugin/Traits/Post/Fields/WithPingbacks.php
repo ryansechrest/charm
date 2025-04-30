@@ -14,7 +14,7 @@ use Charm\Enums\Post\PingStatus;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasPingbacks
+trait WithPingbacks
 {
     /**
      * Get pingback status

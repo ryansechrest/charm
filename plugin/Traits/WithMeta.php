@@ -39,7 +39,7 @@ trait HasMeta
      * @param string $key
      * @return ?Base\Meta
      */
-    protected function getMeta(string $key): Base\Meta|null
+    protected function getMeta(string $key): ?Base\Meta
     {
         // Get all metas by key from cache or database
         $metas = $this->getMetas($key);

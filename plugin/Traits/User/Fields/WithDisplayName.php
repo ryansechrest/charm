@@ -13,7 +13,7 @@ use Charm\Contracts\HasWpUser;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasDisplayName
+trait WithDisplayName
 {
     /**
      * Get display name

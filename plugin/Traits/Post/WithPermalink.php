@@ -10,7 +10,7 @@ use Charm\Contracts\HasWpPost;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasPermalink
+trait WithPermalink
 {
     /**
      * Get permalink

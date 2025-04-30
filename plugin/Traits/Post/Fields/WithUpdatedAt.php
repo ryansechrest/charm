@@ -6,41 +6,41 @@ use Charm\Contracts\HasWpPost;
 use Charm\Utilities\DateTime;
 
 /**
- * Indicates that a post has a created date.
+ * Indicates that a post has an updated date.
  *
  * Table: wp_posts
- * Column: post_date_gmt
+ * Column: post_modified_gmt
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasCreatedAt
+trait WithUpdatedAt
 {
     /**
-     * Get created date
+     * Get updated date
      *
      * @return DateTime
      */
-    public function getCreatedAt(): DateTime
+    public function getUpdatedAt(): DateTime
     {
         /** @var HasWpPost $this */
-        return DateTime::init($this->wp()->getPostDateGmt());
+        return DateTime::init($this->wp()->getPostModifiedGmt());
     }
 
     /**
-     * Set created date
+     * Set updated date
      *
      * @param DateTime|string $dateTime
      * @return static
      */
-    public function setCreatedAt(DateTime|string $dateTime): static
+    public function setUpdatedAt(DateTime|string $dateTime): static
     {
         $value = $dateTime instanceof DateTime
             ? $dateTime->formatForDb()
             : $dateTime;
 
         /** @var HasWpPost $this */
-        $this->wp()->setPostDateGmt($value);
+        $this->wp()->setPostModifiedGmt($value);
 
         return $this;
     }

@@ -5,37 +5,37 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has a username.
+ * Indicates that a user has a slug.
  *
  * Table: wp_users
- * Column: user_login
+ * Column: user_nicename
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasUsername
+trait WithSlug
 {
     /**
-     * Get username
+     * Get slug
      *
      * @return string
      */
-    public function getUsername(): string
+    public function getSlug(): string
     {
         /** @var HasWpUser $this */
-        return $this->wp()->getUserLogin();
+        return $this->wp()->getUserNicename();
     }
 
     /**
-     * Set username
+     * Set slug
      *
-     * @param string $username
+     * @param string $slug
      * @return static
      */
-    public function setUsername(string $username): static
+    public function setSlug(string $slug): static
     {
         /** @var HasWpUser $this */
-        $this->wp()->setUserLogin($username);
+        $this->wp()->setUserNicename($slug);
 
         return $this;
     }

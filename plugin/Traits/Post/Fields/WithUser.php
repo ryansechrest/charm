@@ -7,7 +7,7 @@ use Charm\Models\Base;
 use Charm\Models\User;
 
 /**
- * Indicates that a post has a creator.
+ * Indicates that a post has a user.
  *
  * Table: wp_posts
  * Column: post_author
@@ -15,7 +15,7 @@ use Charm\Models\User;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasCreator
+trait WithUser
 {
     /**
      * Default user class definition
@@ -30,11 +30,11 @@ trait HasCreator
     // *************************************************************************
 
     /**
-     * Get creator
+     * Get user
      *
      * @return ?Base\User
      */
-    public function getCreator(): ?Base\User
+    public function getUser(): ?Base\User
     {
         /** @var class-string<Base\User> $userClass */
         $userClass = static::userClass();
@@ -44,12 +44,12 @@ trait HasCreator
     }
 
     /**
-     * Set creator
+     * Set user
      *
      * @param User|int|null $user
      * @return static
      */
-    public function setCreator(User|int|null $user): static
+    public function setUser(User|int|null $user): static
     {
         $id = $user instanceof User ? $user->getId() : $user;
 

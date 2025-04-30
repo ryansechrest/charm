@@ -12,7 +12,7 @@ use Charm\Support\Result;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasPersistenceState
+trait WithPersistenceState
 {
     /**
      * State of model

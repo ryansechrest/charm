@@ -15,7 +15,7 @@ use Charm\Models\Post;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasParent
+trait WithParent
 {
     /**
      * Force parent class definition

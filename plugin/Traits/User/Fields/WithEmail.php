@@ -5,37 +5,37 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has a slug.
+ * Indicates that a user has an email address.
  *
  * Table: wp_users
- * Column: user_nicename
+ * Column: user_email
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasSlug
+trait WithEmail
 {
     /**
-     * Get slug
+     * Get email
      *
      * @return string
      */
-    public function getSlug(): string
+    public function getEmail(): string
     {
         /** @var HasWpUser $this */
-        return $this->wp()->getUserNicename();
+        return $this->wp()->getUserEmail();
     }
 
     /**
-     * Set slug
+     * Set email
      *
-     * @param string $slug
+     * @param string $email
      * @return static
      */
-    public function setSlug(string $slug): static
+    public function setEmail(string $email): static
     {
         /** @var HasWpUser $this */
-        $this->wp()->setUserNicename($slug);
+        $this->wp()->setUserEmail($email);
 
         return $this;
     }

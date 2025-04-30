@@ -14,7 +14,7 @@ use Charm\Enums\Post\CommentStatus;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasComments
+trait WithComments
 {
     /**
      * Get comment status

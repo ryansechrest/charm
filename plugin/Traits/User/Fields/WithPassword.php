@@ -5,37 +5,37 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has a website.
+ * Indicates that a user has a password.
  *
  * Table: wp_users
- * Column: user_url
+ * Column: user_pass
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasWebsite
+trait WithPassword
 {
     /**
-     * Get website URL
+     * Get password hash
      *
      * @return string|null
      */
-    public function getWebsite(): ?string
+    public function getPassword(): ?string
     {
         /** @var HasWpUser $this */
-        return $this->wp()->getUserUrl();
+        return $this->wp()->getUserPass();
     }
 
     /**
-     * Set website URL
+     * Set password
      *
-     * @param string $url
+     * @param string $password
      * @return static
      */
-    public function setWebsite(string $url): static
+    public function setPassword(string $password): static
     {
         /** @var HasWpUser $this */
-        $this->wp()->setUserUrl($url);
+        $this->wp()->setUserPass($password);
 
         return $this;
     }

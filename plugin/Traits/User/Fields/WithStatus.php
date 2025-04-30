@@ -14,7 +14,7 @@ use Charm\Enums\User\Status;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasStatus
+trait WithStatus
 {
     /**
      * Get status

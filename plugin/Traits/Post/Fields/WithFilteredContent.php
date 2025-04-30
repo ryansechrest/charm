@@ -13,7 +13,7 @@ use Charm\Contracts\HasWpPost;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasFilteredContent
+trait WithFilteredContent
 {
     /**
      * Get filtered content

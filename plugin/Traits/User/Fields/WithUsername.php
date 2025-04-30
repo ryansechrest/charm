@@ -5,37 +5,37 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has an email.
+ * Indicates that a user has a username.
  *
  * Table: wp_users
- * Column: user_email
+ * Column: user_login
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasEmail
+trait WithUsername
 {
     /**
-     * Get email
+     * Get username
      *
      * @return string
      */
-    public function getEmail(): string
+    public function getUsername(): string
     {
         /** @var HasWpUser $this */
-        return $this->wp()->getUserEmail();
+        return $this->wp()->getUserLogin();
     }
 
     /**
-     * Set email
+     * Set username
      *
-     * @param string $email
+     * @param string $username
      * @return static
      */
-    public function setEmail(string $email): static
+    public function setUsername(string $username): static
     {
         /** @var HasWpUser $this */
-        $this->wp()->setUserEmail($email);
+        $this->wp()->setUserLogin($username);
 
         return $this;
     }

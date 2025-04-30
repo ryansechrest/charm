@@ -5,37 +5,37 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates that a post has a MIME type.
+ * Indicates that a post has a title.
  *
  * Table: wp_posts
- * Column: post_mime_type
+ * Column: post_title
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasMimeType
+trait WithTitle
 {
     /**
-     * Get MIME type
+     * Get title
      *
      * @return string
      */
-    public function getMimeType(): string
+    public function getTitle(): string
     {
         /** @var HasWpPost $this */
-        return $this->wp()->getPostMimeType();
+        return $this->wp()->getPostTitle();
     }
 
     /**
-     * Set MIME type
+     * Set title
      *
-     * @param string $mimeType
+     * @param string $title
      * @return static
      */
-    public function setMimeType(string $mimeType): static
+    public function setTitle(string $title): static
     {
         /** @var HasWpPost $this */
-        $this->wp()->setPostMimeType($mimeType);
+        $this->wp()->setPostTitle($title);
 
         return $this;
     }
