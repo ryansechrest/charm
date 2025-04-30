@@ -7,8 +7,8 @@ use Charm\Contracts\IsPersistable;
 use Charm\Models\UserMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
-use Charm\Traits\HasPersistenceState;
-use Charm\Traits\Metas\HasMeta;
+use Charm\Traits\WithPersistenceState;
+use Charm\Traits\WithMeta;
 use WP_User;
 use WP_User_Query;
 
@@ -20,8 +20,8 @@ use WP_User_Query;
  */
 abstract class User implements HasWpUser, IsPersistable
 {
-    use HasMeta;
-    use HasPersistenceState;
+    use WithMeta;
+    use WithPersistenceState;
 
     // -------------------------------------------------------------------------
 
