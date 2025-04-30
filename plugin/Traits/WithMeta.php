@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Traits\Metas;
+namespace Charm\Traits;
 
 use Charm\Contracts\IsPersistable;
 use Charm\Enums\PersistenceState;
@@ -13,7 +13,7 @@ use Charm\Support\Result;
  * @author Ryan Sechrest
  * @package Charm
  */
-trait HasMeta
+trait WithMeta
 {
     /**
      * Meta cache
