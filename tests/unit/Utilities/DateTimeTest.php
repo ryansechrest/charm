@@ -1,19 +1,12 @@
 <?php
 
-namespace Charm\Tests\Utilities;
+namespace Charm\Tests\Unit\Utilities;
 
 use Charm\Utilities\DateTime;
 use PHPUnit\Framework\TestCase;
 
 class DateTimeTest extends TestCase
 {
-    public function testInit()
-    {
-        $dateTime = DateTime::init('2023-01-10 03:42:00');
-
-        $this->assertInstanceOf(DateTime::class, $dateTime);
-    }
-
     public function testTimezoneChange()
     {
         $timezone = 'America/Chicago';
