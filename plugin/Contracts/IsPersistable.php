@@ -5,7 +5,7 @@ namespace Charm\Contracts;
 use Charm\Support\Result;
 
 /**
- * Ensures model implements methods required for persistence.
+ * Ensures that the model can be persisted.
  *
  * @author Ryan Sechrest
  * @package Charm

@@ -5,7 +5,7 @@ namespace Charm\Contracts;
 use Charm\Models\WordPress\User;
 
 /**
- * Ensures wp() exists to return WordPress\User.
+ * Ensures that the model has a WordPress user.
  *
  * @author Ryan Sechrest
  * @package Charm

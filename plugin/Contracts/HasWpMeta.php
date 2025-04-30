@@ -5,7 +5,7 @@ namespace Charm\Contracts;
 use Charm\Models\WordPress\Meta;
 
 /**
- * Ensures wp() exists to return WordPress\Meta.
+ * Ensures that the model has a WordPress meta.
  *
  * @author Ryan Sechrest
  * @package Charm
