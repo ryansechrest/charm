@@ -2,18 +2,18 @@
 
 namespace Charm\Models;
 
-use Charm\Traits\Post\Fields\HasContent;
-use Charm\Traits\Post\Fields\HasCreatedAt;
-use Charm\Traits\Post\Fields\HasCreator;
-use Charm\Traits\Post\Fields\HasExcerpt;
-use Charm\Traits\Post\Fields\HasMenuOrder;
-use Charm\Traits\Post\Fields\HasParent;
-use Charm\Traits\Post\Fields\HasPassword;
-use Charm\Traits\Post\Fields\HasSlug;
-use Charm\Traits\Post\Fields\HasStatus;
-use Charm\Traits\Post\Fields\HasTitle;
-use Charm\Traits\Post\Fields\HasUpdatedAt;
-use Charm\Traits\Post\HasPermalink;
+use Charm\Traits\Post\Fields\WithContent;
+use Charm\Traits\Post\Fields\WithCreatedAt;
+use Charm\Traits\Post\Fields\WithUser;
+use Charm\Traits\Post\Fields\WithExcerpt;
+use Charm\Traits\Post\Fields\WithMenuOrder;
+use Charm\Traits\Post\Fields\WithParent;
+use Charm\Traits\Post\Fields\WithPassword;
+use Charm\Traits\Post\Fields\WithSlug;
+use Charm\Traits\Post\Fields\WithStatus;
+use Charm\Traits\Post\Fields\WithTitle;
+use Charm\Traits\Post\Fields\WithUpdatedAt;
+use Charm\Traits\Post\WithPermalink;
 
 /**
  * Represents a page in WordPress.
@@ -25,24 +25,24 @@ class Page extends Base\Post
 {
     // --- Post Fields ---------------------------------------------------------
 
-    use HasCreator;
-    use HasCreatedAt;
-    use HasUpdatedAt;
+    use WithUser;
+    use WithCreatedAt;
+    use WithUpdatedAt;
 
-    use HasTitle;
-    use HasSlug;
-    use HasContent;
-    use HasExcerpt;
+    use WithTitle;
+    use WithSlug;
+    use WithContent;
+    use WithExcerpt;
 
-    use HasStatus;
-    use HasPassword;
-    use HasMenuOrder;
+    use WithStatus;
+    use WithPassword;
+    use WithMenuOrder;
 
-    use HasParent;
+    use WithParent;
 
     // --- Post Helpers --------------------------------------------------------
 
-    use HasPermalink;
+    use WithPermalink;
 
     // *************************************************************************
 
