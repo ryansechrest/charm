@@ -2,12 +2,16 @@
 
 namespace Charm\Models;
 
-use Charm\Traits\User\Fields\HasCreatedAt;
-use Charm\Traits\User\Fields\HasDisplayName;
-use Charm\Traits\User\Fields\HasEmail;
-use Charm\Traits\User\Fields\HasPassword;
-use Charm\Traits\User\Fields\HasUsername;
-use Charm\Traits\User\Fields\HasWebsite;
+use Charm\Traits\User\Fields\WithCreatedAt;
+use Charm\Traits\User\Fields\WithDisplayName;
+use Charm\Traits\User\Fields\WithEmail;
+use Charm\Traits\User\Fields\WithPassword;
+use Charm\Traits\User\Fields\WithUsername;
+use Charm\Traits\User\Fields\WithWebsite;
+use Charm\Traits\User\Metas\WithBioInfo;
+use Charm\Traits\User\Metas\WithFirstName;
+use Charm\Traits\User\Metas\WithLastName;
+use Charm\Traits\User\Metas\WithNickname;
 
 /**
  * Represents a user in WordPress.
@@ -18,12 +22,19 @@ class User extends Base\User
 {
     // --- User Fields ---------------------------------------------------------
 
-    use HasCreatedAt;
+    use WithCreatedAt;
 
-    use HasUsername;
-    use HasEmail;
-    use HasPassword;
+    use WithUsername;
+    use WithEmail;
+    use WithPassword;
 
-    use HasDisplayName;
-    use HasWebsite;
+    use WithDisplayName;
+    use WithWebsite;
+
+    // --- User Metas ----------------------------------------------------------
+
+    use WithFirstName;
+    use WithLastName;
+    use WithNickname;
+    use WithBioInfo;
 }
