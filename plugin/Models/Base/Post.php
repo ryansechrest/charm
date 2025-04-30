@@ -7,8 +7,8 @@ use Charm\Contracts\IsPersistable;
 use Charm\Models\PostMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
-use Charm\Traits\HasPersistenceState;
-use Charm\Traits\Metas\HasMeta;
+use Charm\Traits\WithPersistenceState;
+use Charm\Traits\WithMeta;
 use WP_Post;
 use WP_Query;
 
@@ -20,8 +20,8 @@ use WP_Query;
  */
 abstract class Post implements HasWpPost, IsPersistable
 {
-    use HasMeta;
-    use HasPersistenceState;
+    use WithMeta;
+    use WithPersistenceState;
 
     // -------------------------------------------------------------------------
 
@@ -142,7 +142,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function save(): Result
     {
-        return $this->wp()->save();
+        return !$this->getId() ? $this->create() : $this->update();
     }
 
     /**
