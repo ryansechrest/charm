@@ -34,6 +34,6 @@ spl_autoload_register(function ($class) {
     if (!file_exists($class)) return;
 
     // Require class:
-    // /wp-content/mu-plugins/charm/plugin/Foo/Bar.php
+    // <root>/wp-content/mu-plugins/charm/plugin/Foo/Bar.php
     require_once $class;
 });
