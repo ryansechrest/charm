@@ -13,15 +13,6 @@ use Charm\Support\Result;
 interface IsPersistable
 {
     /**
-     * Get model ID
-     *
-     * @return int
-     */
-    public function getId(): int;
-
-    // -------------------------------------------------------------------------
-
-    /**
      * Save model in database
      *
      * @return Result
