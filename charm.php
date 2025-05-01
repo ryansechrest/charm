@@ -4,7 +4,7 @@ namespace Charm;
 
 /**
  * Plugin name: Charm <code>Ƹ̵̡Ӝ̵̨̄Ʒ</code>
- * Plugin URI: https://github.com/ryansechrest/charm
+ * Plugin URI: https://wpcharm.dev
  * Version: 0.1.0
  * Description: Charm is a modern framework for working with WordPress data through object-oriented models.
  * Author: Ryan Sechrest
