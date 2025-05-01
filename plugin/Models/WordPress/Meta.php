@@ -2,7 +2,6 @@
 
 namespace Charm\Models\WordPress;
 
-use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use stdClass;
 
@@ -12,7 +11,7 @@ use stdClass;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Meta implements IsPersistable
+class Meta
 {
     /**
      * Meta type
@@ -29,13 +28,6 @@ class Meta implements IsPersistable
     protected string $metaIdField = '';
 
     // -------------------------------------------------------------------------
-
-    /**
-     * Meta ID
-     *
-     * @var ?int
-     */
-    protected ?int $metaId = null;
 
     /**
      * Object ID
@@ -97,10 +89,6 @@ class Meta implements IsPersistable
      */
     public function load(array $data): void
     {
-        if (isset($data['metaId'])) {
-            $this->metaId = (int) $data['metaId'];
-        }
-
         if (isset($data['objectId'])) {
             $this->objectId = (int) $data['objectId'];
         }
@@ -123,25 +111,6 @@ class Meta implements IsPersistable
     }
 
     // *************************************************************************
-
-    /**
-     * Initialize meta
-     *
-     * @param string $metaType
-     * @param int|stdClass $key
-     * @return ?static
-     */
-    public static function init(string $metaType, int|stdClass $key): ?static
-    {
-        $meta = new static($metaType);
-
-        match (true) {
-            is_numeric($key) => $meta->loadFromId((int) $key),
-            is_object($key) => $meta->loadFromMetaData($key),
-        };
-
-        return !$meta->metaId ? null : $meta;
-    }
 
     /**
      * Get all metas or by specified key
@@ -200,7 +169,41 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Update meta with specified key and value
+     * Create meta with specified key and value on object
+     *
+     * @param string $metaType
+     * @param int $objectId
+     * @param string $metaKey
+     * @param mixed $metaValue
+     * @return Result
+     * @see add_metadata()
+     */
+    public static function createMeta(
+        string $metaType,
+        int $objectId,
+        string $metaKey,
+        mixed $metaValue
+    ): Result
+    {
+        $result = add_metadata(
+            $metaType,
+            $objectId,
+            $metaKey,
+            $metaValue
+        );
+
+        if ($result === false) {
+            return Result::error(
+                'add_metadata_failed',
+                __('add_metadata() returned false.', 'charm')
+            );
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Update meta with specified key and value on object
      *
      * @param string $metaType
      * @param int $objectId
@@ -237,7 +240,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Delete meta with specified key
+     * Delete meta with specified key (and optional value) from object
      *
      * @param string $metaType
      * @param int $objectId
@@ -252,11 +255,45 @@ class Meta implements IsPersistable
     {
         $result = delete_metadata($metaType, $objectId, $metaKey, $metaValue);
 
-        return $result ? Result::success() : Result::error();
+        if ($result === false) {
+            return Result::error(
+                'delete_metadata_failed',
+                __('delete_metadata() returned false.', 'charm')
+            );
+        }
+
+        return Result::success();
     }
 
     /**
-     * Whether meta with specified key exists
+     * Purge meta with specified key (and optional value) from ALL objects
+     *
+     * @param string $metaType
+     * @param string $metaKey
+     * @param string $metaValue
+     * @return Result
+     * @see delete_metadata()
+     */
+    public static function purgeMeta(
+        string $metaType, string $metaKey, string $metaValue = ''
+    ): Result
+    {
+        $result = delete_metadata(
+            $metaType, 0, $metaKey, $metaValue, true
+        );
+
+        if ($result === false) {
+            return Result::error(
+                'delete_metadata_failed',
+                __('delete_metadata() returned false.', 'charm')
+            );
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Whether meta with specified key (and optional value) exists on object
      *
      * @param string $metaType
      * @param int $objectId
@@ -287,102 +324,70 @@ class Meta implements IsPersistable
      * Create new meta
      *
      * @return Result
-     * @see add_metadata()
      */
     public function create(): Result
     {
-        if ($this->metaId !== null) {
-            return Result::error(
-                'meta_id_exists',
-                __('Meta already exists.', 'charm')
-            );
-        }
-
-        $result = add_metadata(
+        $result = static::createMeta(
             $this->metaType,
             $this->objectId,
             $this->metaKey,
             $this->metaValue
         );
 
-        if (!is_int($result)) {
-            return Result::error(
-                'add_metadata_failed',
-                __('add_metadata() did not return an ID.', 'charm')
-            );
+        if ($result->hasFailed()) {
+            return $result;
         }
 
-        $this->metaId = $result;
         $this->exists = true;
 
-        return Result::success();
+        return $result;
     }
 
     /**
      * Update existing meta
      *
      * @return Result
-     * @see update_metadata_by_mid()
      */
     public function update(): Result
     {
-        if ($this->metaId === null) {
-            return Result::error(
-                'meta_id_missing',
-                __('Cannot update meta with blank ID.', 'charm')
-            );
-        }
-
-        if ($this->metaValue === $this->prevMetaValue) {
-            return Result::success();
-        }
-
-        $result = update_metadata_by_mid(
+        $result = static::updateMeta(
             $this->metaType,
-            $this->metaId,
-            $this->metaValue
+            $this->objectId,
+            $this->metaKey,
+            $this->metaValue,
+            $this->prevMetaValue
         );
 
-        if ($result !== true) {
-            return Result::error(
-                'update_metadata_by_mid_failed',
-                __('update_metadata_by_mid() did not return true.', 'charm')
-            );
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->prevMetaValue = $this->metaValue;
 
-        return Result::success();
+        return $result;
     }
 
     /**
      * Delete meta
      *
      * @return Result
-     * @see delete_metadata_by_mid()
      */
     public function delete(): Result
     {
-        if ($this->metaId === null) {
-            return Result::error(
-                'meta_id_missing',
-                __('Cannot delete meta with blank ID.', 'charm')
-            );
+        $result = static::deleteMeta(
+            $this->metaType,
+            $this->objectId,
+            $this->metaKey,
+            $this->metaValue
+        );
+
+        if ($result->hasFailed()) {
+            return $result;
         }
 
-        $result = delete_metadata_by_mid($this->metaType, $this->metaId);
-
-        if ($result !== true) {
-            return Result::error(
-                'delete_metadata_by_mid_failed',
-                __('delete_metadata_by_mid() did not return true.', 'charm')
-            );
-        }
-
-        $this->metaId = null;
         $this->exists = false;
 
-        return Result::success();
+        return $result;
     }
 
     // *************************************************************************
@@ -395,18 +400,6 @@ class Meta implements IsPersistable
     public function getMetaType(): string
     {
         return $this->metaType ?? '';
-    }
-
-    // -------------------------------------------------------------------------
-
-    /**
-     * Get meta ID
-     *
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->metaId ?? 0;
     }
 
     // -------------------------------------------------------------------------
@@ -509,62 +502,6 @@ class Meta implements IsPersistable
     // *************************************************************************
 
     /**
-     * Load instance from ID
-     *
-     * @param int $id
-     * @return void
-     * @see get_metadata_by_mid()
-     */
-    protected function loadFromId(int $id): void
-    {
-        /**
-         * @var $metaData stdClass|false {
-         *     @type string $meta_key
-         *     @type mixed $meta_value
-         *     @type string $meta_id Set when meta type is `comment`, `post`, or `term`
-         *     @type string $umeta_id Set when meta type is `user`
-         *     @type string $post_id Set when meta type is `post`
-         *     @type string $comment_id Set when meta type is `comment`
-         *     @type string $term_id Set when meta type is `term`
-         *     @type string $user_id Set when meta type is `user`
-         *  }
-         */
-        $metaData = get_metadata_by_mid($this->metaType, $id);
-
-        if ($metaData === false) {
-            return;
-        }
-
-        $this->loadFromMetaData($metaData);
-    }
-
-    /**
-     * Load instance from meta data
-     *
-     * @param object $metaData
-     * @return void
-     */
-    protected function loadFromMetaData(object $metaData): void
-    {
-        // e.g. `meta_id` or `umeta_id`
-        $metaIdField = $this->metaIdField;
-
-        // e.g. `comment_id`, `post_id`, `user_id`, or `term_id`
-        $objectIdField = $this->metaType . '_id';
-
-        if (!property_exists($metaData, $objectIdField)) {
-            return;
-        }
-
-        $this->metaId = $metaData->$metaIdField;
-        $this->objectId = $metaData->$objectIdField;
-        $this->metaKey = $metaData->meta_key;
-        $this->metaValue = $metaData->meta_value;
-    }
-
-    // -------------------------------------------------------------------------
-
-    /**
      * Get all metas
      *
      * @param string $metaType
@@ -640,23 +577,9 @@ class Meta implements IsPersistable
     ): static {
         global $wpdb;
 
-        $metaTable = $metaType . 'meta';
-        $metaIdField = static::getMetaIdField($metaType);
-
-        $query = 'SELECT ' . $metaIdField . ' ';
-        $query .= 'FROM ' . $wpdb->$metaTable . ' ';
-        $query .= 'WHERE ' . $metaType . '_id = %d ';
-        $query .= 'AND meta_key = %s ';
-        $query .= 'AND meta_value = %s';
-
-        $metaId = $wpdb->get_var(
-            $wpdb->prepare($query, [$objectId, $metaKey, $metaValue])
-        );
-
         $metaValue = maybe_unserialize($metaValue);
 
         return new static($metaType, [
-            'metaId' => $metaId,
             'objectId' => $objectId,
             'metaKey' => $metaKey,
             'metaValue' => $metaValue,
