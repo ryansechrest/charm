@@ -160,7 +160,7 @@ abstract class Post implements HasWpPost, IsPersistable
         }
 
         // Ensure all metas have newly created post ID
-        $this->fillMetasWithObjectId($this->wp()->getId());
+        $this->fillMetasWithObjectId($this->getId());
 
         // Persist metas in database and save results
         $result->addResults($this->persistMetas());
