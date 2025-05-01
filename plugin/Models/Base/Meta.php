@@ -8,7 +8,6 @@ use Charm\Models\WordPress;
 use Charm\Support\Cast;
 use Charm\Support\Result;
 use Charm\Traits\WithPersistenceState;
-use stdClass;
 
 /**
  * Represents a base meta in WordPress.
@@ -65,24 +64,6 @@ abstract class Meta implements HasWpMeta, IsPersistable
     }
 
     // *************************************************************************
-
-    /**
-     * Initialize meta
-     *
-     * @param int|stdClass $key
-     * @return ?static
-     */
-    public static function init(int|stdClass $key): ?static
-    {
-        if (!$wpMeta = WordPress\Meta::init(static::metaType(), $key)) {
-            return null;
-        }
-
-        $meta = new static();
-        $meta->wpMeta = $wpMeta;
-
-        return $meta;
-    }
 
     /**
      * Get first meta by specified key
@@ -178,18 +159,6 @@ abstract class Meta implements HasWpMeta, IsPersistable
     }
 
     // *************************************************************************
-
-    /**
-     * Get meta ID
-     *
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->wp()->getId();
-    }
-
-    // -------------------------------------------------------------------------
 
     /**
      * Get object ID
