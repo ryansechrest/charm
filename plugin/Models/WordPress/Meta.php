@@ -2,8 +2,8 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
-use stdClass;
 
 /**
  * Represents a generic meta in WordPress.
@@ -11,7 +11,7 @@ use stdClass;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Meta
+class Meta implements IsPersistable
 {
     /**
      * Meta type
