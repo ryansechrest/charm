@@ -76,9 +76,19 @@ abstract class User implements HasWpUser, IsPersistable
      * @param int|null|string|WP_User $key
      * @return ?static
      */
-    public static function init(int|null|string|WP_User $key = null): ?static
+    public static function init(
+        int|null|string|WP_User $key = null
+    ): ?static
     {
-        if (!$wpUser = WordPress\User::init($key)) {
+        $wpUser = match (true) {
+            is_numeric($key) => WordPress\User::fromId((int) $key),
+            is_string($key) && !is_email($key) => WordPress\User::fromLogin($key),
+            is_string($key) && is_email($key) => WordPress\User::fromEmail($key),
+            $key instanceof WP_User => WordPress\User::fromWpUser($key),
+            default => WordPress\User::fromGlobalWpUser(),
+        };
+
+        if ($wpUser === null) {
             return null;
         }
 
@@ -87,6 +97,21 @@ abstract class User implements HasWpUser, IsPersistable
 
         return $user;
     }
+
+    /**
+     * Initialize user and preload metas
+     *
+     * @param int|string|WP_User|null $key
+     * @return ?static
+     */
+    public static function withMetas(
+        int|null|string|WP_User $key = null
+    ): ?static
+    {
+        return static::init($key)?->preloadMetas();
+    }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Get users
@@ -139,7 +164,16 @@ abstract class User implements HasWpUser, IsPersistable
      */
     public function create(): Result
     {
-        return $this->wp()->create();
+        $result = $this->wp()->create();
+
+        if ($result->hasFailed()) {
+            return $result;
+        }
+
+        $results = $this->persistMetas($this->getId());
+        $result->addResults($results);
+
+        return $result;
     }
 
     /**
@@ -149,7 +183,16 @@ abstract class User implements HasWpUser, IsPersistable
      */
     public function update(): Result
     {
-        return $this->wp()->update();
+        $result = $this->wp()->update();
+
+        if ($result->hasFailed()) {
+            return $result;
+        }
+
+        $results = $this->persistMetas($this->getId());
+        $result->addResults($results);
+
+        return $result;
     }
 
     /**
