@@ -148,25 +148,90 @@ class User implements IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize user
+     * Initialize user from ID
      *
-     * @param int|null|string|WP_User $key
-     * @return ?User
+     * @param int $id
+     * @return ?static
      */
-    public static function init(int|null|string|WP_User $key = null): ?User
+    public static function fromId(int $id): ?static
     {
-        $user = new static();
+        $user = new static;
+        $user->loadFromId($id);
 
-        match (true) {
-            is_numeric($key) => $user->loadFromId($key),
-            is_string($key) && !is_email($key) => $user->loadFromLogin($key),
-            is_string($key) && is_email($key) => $user->loadFromEmail($key),
-            $key instanceof WP_User => $user->loadFromUser($key),
-            default => $user->loadFromGlobalUser(),
-        };
-
-        return !$user->id ? null : $user;
+        return $user->id ? $user : null;
     }
+
+    /**
+     * Initialize user from login
+     *
+     * @param string $userLogin
+     * @return ?static
+     */
+    public static function fromLogin(string $userLogin): ?static
+    {
+        $user = new static;
+        $user->loadFromLogin($userLogin);
+
+        return $user->id ? $user : null;
+    }
+
+    /**
+     * Initialize user from slug
+     *
+     * @param string $userNicename
+     * @return ?static
+     */
+    public static function fromSlug(string $userNicename): ?static
+    {
+        $user = new static;
+        $user->loadFromSlug($userNicename);
+
+        return $user->id ? $user : null;
+    }
+
+    /**
+     * Initialize user from email
+     *
+     * @param string $userEmail
+     * @return ?static
+     */
+    public static function fromEmail(string $userEmail): ?static
+    {
+        $user = new static;
+        $user->loadFromEmail($userEmail);
+
+        return $user->id ? $user : null;
+    }
+
+    /**
+     * Initialize user from global WP_User
+     *
+     * @return ?static
+     * @see wp_get_current_user()
+     */
+    public static function fromGlobalWpUser(): ?static
+    {
+        $user = new static;
+        $user->loadFromGlobalUser();
+
+        return $user->id ? $user : null;
+    }
+
+    /**
+     * Initialize user from WP_User
+     *
+     * @param WP_User $wpUser
+     * @return static
+     */
+    public static function fromWpUser(WP_User $wpUser): static
+    {
+        $user = new static;
+        $user->loadFromWpUser($wpUser);
+
+        return $user;
+    }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Get users
@@ -223,22 +288,24 @@ class User implements IsPersistable
             return Result::error(
                 'user_id_exists',
                 __('User already exists.', 'charm')
-            );
+            )->withData($this);
         }
 
-        $includeData = ['user_login' => $this->userLogin];
-
-        $result = wp_insert_user($this->toWpUserArray($includeData));
+        $result = wp_insert_user(
+            $this->toWpUserArray(
+                ['user_login' => $this->userLogin]
+            )
+        );
 
         if (is_wp_error($result)) {
-            return Result::wpError($result);
+            return Result::wpError($result)->withData($this);
         }
 
         if (!is_int($result)) {
             return Result::error(
                 'wp_insert_user_failed',
                 __('wp_insert_user() did not return an ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->id = $result;
@@ -260,22 +327,22 @@ class User implements IsPersistable
             return Result::error(
                 'user_id_missing',
                 __('Cannot update user with blank ID.', 'charm')
-            );
+            )->withData($this);
         }
 
-        $includeData = ['ID' => $this->id];
+        $data = $this->toWpUserArray(['ID' => $this->id]);
 
-        $result = wp_update_user($this->toWpUserArray($includeData));
+        $result = wp_update_user($data);
 
         if (is_wp_error($result)) {
-            return Result::wpError($result);
+            return Result::wpError($result)->withData($data);
         }
 
         if (!is_int($result)) {
             return Result::error(
                 'wp_update_user_failed',
                 __('wp_update_user() did not return an ID.', 'charm')
-            );
+            )->withData($data);
         }
 
         $this->reload();
@@ -295,7 +362,7 @@ class User implements IsPersistable
             return Result::error(
                 'user_id_missing',
                 __('Cannot delete user with blank ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $result = wp_delete_user($this->id);
@@ -304,7 +371,7 @@ class User implements IsPersistable
             return Result::error(
                 'wp_delete_user_failed',
                 __('wp_delete_user() did not return true.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->id = null;
@@ -552,6 +619,29 @@ class User implements IsPersistable
     // *************************************************************************
 
     /**
+     * Get WP_User by field
+     *
+     * @param string $field
+     * @param int|string $value
+     * @return ?WP_User
+     */
+    protected static function getWpUserBy(string $field, int|string $value): ?WP_User
+    {
+        $object = WP_User::get_data_by($field, $value);
+
+        if ($object === false) {
+            return null;
+        }
+
+        $user = new WP_User();
+        $user->init($object);
+
+        return $user;
+    }
+
+    // *************************************************************************
+
+    /**
      * Load instance from ID
      *
      * @param int $id
@@ -566,7 +656,7 @@ class User implements IsPersistable
             return;
         }
 
-        $this->loadFromUser($wpUser);
+        $this->loadFromWpUser($wpUser);
     }
 
     /**
@@ -580,7 +670,21 @@ class User implements IsPersistable
             return;
         }
 
-        $this->loadFromUser($wpUser);
+        $this->loadFromWpUser($wpUser);
+    }
+
+    /**
+     * Load instance from slug
+     *
+     * @param string $slug
+     */
+    protected function loadFromSlug(string $slug): void
+    {
+        if (!$wpUser = static::getWpUserBy('slug', $slug)) {
+            return;
+        }
+
+        $this->loadFromWpUser($wpUser);
     }
 
     /**
@@ -594,7 +698,7 @@ class User implements IsPersistable
             return;
         }
 
-        $this->loadFromUser($wpUser);
+        $this->loadFromWpUser($wpUser);
     }
 
     /**
@@ -612,15 +716,15 @@ class User implements IsPersistable
             return;
         }
 
-        $this->loadFromUser($wpUser);
+        $this->loadFromWpUser($wpUser);
     }
 
     /**
-     * Load instance from WP_User object
+     * Load instance from WP_User
      *
      * @param WP_User $wpUser
      */
-    protected function loadFromUser(WP_User $wpUser): void
+    protected function loadFromWpUser(WP_User $wpUser): void
     {
         $this->id = (int) $wpUser->data->ID;
         $this->userLogin = $wpUser->data->user_login;
@@ -651,36 +755,13 @@ class User implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get WP_User by field
-     *
-     * @param string $field
-     * @param int|string $value
-     * @return ?WP_User
-     */
-    protected function getWpUserBy(string $field, int|string $value): ?WP_User
-    {
-        $object = WP_User::get_data_by($field, $value);
-
-        if ($object === false) {
-            return null;
-        }
-
-        $user = new WP_User();
-        $user->init($object);
-
-        return $user;
-    }
-
-    // -------------------------------------------------------------------------
-
-    /**
      * Cast user to array to be used by WordPress functions
      *
      * Remove keys from array if the value is null,
      * since that indicates no value has been set.
      *
-     * @param array $includeData
-     * @return array
+     * @param array $includeData ['ID' => 1]
+     * @return array ['ID' => 1, 'user_nicename' => 'charm']
      */
     protected function toWpUserArray(array $includeData = []): array
     {
