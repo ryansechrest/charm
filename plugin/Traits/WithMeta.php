@@ -2,7 +2,6 @@
 
 namespace Charm\Traits;
 
-use Charm\Contracts\IsPersistable;
 use Charm\Enums\PersistenceState;
 use Charm\Models\Base;
 use Charm\Support\Result;
@@ -34,109 +33,137 @@ trait WithMeta
     // *************************************************************************
 
     /**
-     * Get single (or first) meta by key from cache or database
+     * Preload missing metas in cache from database
+     *
+     * @return static
+     */
+    public function preloadMetas(): static
+    {
+        $objectId = $this->getId();
+
+        if ($objectId === 0) {
+            return $this;
+        }
+
+        $metaClass = static::metaClass();
+        $metas = $metaClass::get($objectId);
+
+        foreach ($metas as $meta) {
+            $key = $meta->getKey();
+            if (!isset($this->metaCache[$key])) {
+                $this->metaCache[$key] = [];
+            }
+            $this->metaCache[$key][] = $meta;
+        }
+
+        return $this;
+    }
+
+    // *************************************************************************
+
+    /**
+     * Get single (or first) meta from cache or database
      *
      * @param string $key
      * @return ?Base\Meta
      */
     protected function getMeta(string $key): ?Base\Meta
     {
-        // Get all metas by key from cache or database
         $metas = $this->getMetas($key);
 
-        // If no metas exist, return null
         if (!isset($metas[0])) {
             return null;
         }
 
-        // Otherwise, return first (and maybe only) meta
         return $metas[0];
     }
 
     /**
-     * Get all metas by key from cache or database
+     * Get metas from cache or database
      *
      * @param string $key
      * @return Base\Meta[]
      */
     protected function getMetas(string $key): array
     {
-        /** @var IsPersistable $this */
-
-        // Class to use for building up metas
         $metaClass = static::metaClass();
 
-        // If metas are not cached, fetch and cache them
         if (!isset($this->metaCache[$key])) {
             $this->metaCache[$key] = $metaClass::get($this->getId(), $key);
         }
 
-        // Filter out metas marked as deleted
-        return array_values(
-            array_filter(
-                $this->metaCache[$key],
-                fn(Base\Meta $meta) => $meta->getPersistenceState() !== PersistenceState::DELETED
-            )
-        );
+        return $this->metaCache[$key];
     }
 
     /**
-     * Create or append meta to key in cache
+     * Create meta in cache
      *
      * @param string $key
      * @param mixed $value
      * @return Result
      */
-    protected function addMeta(string $key, mixed $value): Result
+    protected function createMeta(string $key, mixed $value): Result
     {
-        /** @var IsPersistable $this */
-
-        // Class to use for building up metas
         $metaClass = static::metaClass();
 
-        // Create new meta
         $meta = new $metaClass([
             'objectId' => $this->getId(),
             'metaKey' => $key,
             'metaValue' => $value,
         ]);
 
-        // Mark it as new so it can be persisted later
         $meta->mark(PersistenceState::NEW);
 
-        // If key doesn't exist...
-        // Create array with new meta
         if (!isset($this->metaCache[$key])) {
             $this->metaCache[$key] = [$meta];
             return Result::success();
         }
 
-        // Otherwise, add new meta to existing array
         $this->metaCache[$key][] = $meta;
 
         return Result::success();
     }
 
     /**
-     * Overwrite meta(s) by key in cache
+     * Create or update meta in cache
      *
      * @param string $key
      * @param mixed $value
      * @return Result
      */
-    protected function setMeta(string $key, mixed $value): Result
+    protected function updateMeta(string $key, mixed $value): Result
     {
-        // Mark existing metas as deleted so they can be persisted later
-        $this->deleteMeta($key);
+        $meta = $this->getMeta($key);
 
-        // Append new meta to key in cache
-        $this->addMeta($key, $value);
+        if ($meta === null) {
+            return $this->createMeta($key, $value);
+        }
+
+        $meta->setValue($value);
+        $meta->mark(PersistenceState::DIRTY);
+
+        $this->metaCache[$key][0] = $meta;
 
         return Result::success();
     }
 
     /**
-     * Delete all metas or specified value by key from cache
+     * Replace meta(s) in cache
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return Result
+     */
+    protected function replaceMeta(string $key, mixed $value): Result
+    {
+        $this->deleteMeta($key);
+        $this->createMeta($key, $value);
+
+        return Result::success();
+    }
+
+    /**
+     * Delete all metas or specified value from cache
      *
      * @param string $key
      * @param mixed $value
@@ -144,51 +171,24 @@ trait WithMeta
      */
     protected function deleteMeta(string $key, mixed $value = null): Result
     {
-        // Get all metas by key from cache or database
         $metas = $this->getMetas($key);
 
-        // If no specific value is targeted
-        if ($value === null) {
+        foreach ($metas as $index => $meta) {
 
-            // Loop over each meta in key
-            foreach ($metas as $index => $meta) {
-
-                // Mark it as deleted so it can be persisted later
+            if ($value === null) {
                 $meta->mark(PersistenceState::DELETED);
-
-                // Save updated meta in cache
                 $this->metaCache[$key][$index] = $meta;
-            }
-
-            return Result::success();
-        }
-
-        $index = 0;
-        $found = false;
-
-        do {
-
-            // Alias for current meta
-            $meta = $metas[$index];
-
-            // If meta is not target, keep looking
-            if ($meta->getValue() !== $value) {
-                $index++;
                 continue;
             }
 
-            // Otherwise, we found target
-            $found = true;
+            if ($meta->getValue() === $value) {
+                $meta->mark(PersistenceState::DELETED);
+                $this->metaCache[$key][$index] = $meta;
+                return Result::success();
+            }
+        }
 
-            // Mark it as deleted so it can be persisted later
-            $meta->mark(PersistenceState::DELETED);
-
-            // Save updated meta in cache
-            $this->metaCache[$key][$index] = $meta;
-
-        } while (!$found && $index < count($metas));
-
-        return $found ? Result::success() : Result::error(
+        return Result::error(
             'meta_not_found', __('Meta does not exist.', 'charm')
         );
     }
@@ -198,57 +198,43 @@ trait WithMeta
     /**
      * Persist metas in database and return results
      *
+     * Called by base model in `create()` and `update()`.
+     *
+     * @param int $objectId
      * @return Result[]
      */
-    protected function persistMetas(): array
+    protected function persistMetas(int $objectId): array
     {
         $results = [];
 
-        // Loop over each meta key in cache
+        if (count($this->metaCache) === 0) {
+            return $results;
+        }
+
+        // Loop over every meta key in cache
         foreach ($this->metaCache as $key => $metas) {
 
-            // Loop over each meta for key
+            // Loop over every meta value in cache
             foreach ($metas as $index => $meta) {
 
-                // Persist meta in database and save result
+                // Ensure object ID is set
+                $meta->setObjectId($objectId);
+
+                // Persist meta and save result
                 $results[] = $meta->persist();
 
-                // If meta was deleted, remove it from cache
+                // If meta was deleted, remove from cache
                 if ($meta->getPersistenceState() === PersistenceState::DELETED) {
                     unset($this->metaCache[$key][$index]);
                 }
             }
 
-            // If no metas exist for key, remove key from cache
+            // If not values left for meta key, remove key from cache
             if (count($this->metaCache[$key]) === 0) {
                 unset($this->metaCache[$key]);
             }
         }
 
         return $results;
-    }
-
-    // *************************************************************************
-
-    /**
-     * Fill metas with object ID
-     *
-     * @param int $objectId
-     * @return void
-     */
-    private function fillMetasWithObjectId(int $objectId): void
-    {
-        /** @var IsPersistable $this */
-
-        // Loop over each meta key in cache
-        foreach ($this->metaCache as $metas) {
-
-            // Loop over each meta for key
-            foreach ($metas as $meta) {
-
-                // Set current object ID
-                $meta->setObjectId($objectId);
-            }
-        }
     }
 }
