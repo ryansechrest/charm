@@ -82,12 +82,26 @@ abstract class Post implements HasWpPost, IsPersistable
     /**
      * Initialize post
      *
+     * int     -> Post ID
+     * null    -> Global Post
+     * string  -> Post Slug / Path
+     * WP_Post -> WP_Post instance
+     *
      * @param int|null|string|WP_Post $key
      * @return ?static
      */
-    public static function init(int|null|string|WP_Post $key = null): ?static
+    public static function init(
+        int|null|string|WP_Post $key = null
+    ): ?static
     {
-        if (!$wpPost = WordPress\Post::init($key)) {
+        $wpPost = match (true) {
+            is_numeric($key) => WordPress\Post::fromId((int) $key),
+            is_string($key) => WordPress\Post::fromPath($key, static::postType()),
+            $key instanceof WP_Post => WordPress\Post::fromWpPost($key),
+            default => WordPress\Post::fromGlobalWpPost(),
+        };
+
+        if ($wpPost === null) {
             return null;
         }
 
@@ -100,6 +114,21 @@ abstract class Post implements HasWpPost, IsPersistable
 
         return $post;
     }
+
+    /**
+     * Initialize post and preload metas
+     *
+     * @param int|string|WP_Post|null $key
+     * @return ?static
+     */
+    public static function withMetas(
+        int|null|string|WP_Post $key = null
+    ): ?static
+    {
+        return static::init($key)?->preloadMetas();
+    }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Get posts
@@ -154,16 +183,12 @@ abstract class Post implements HasWpPost, IsPersistable
     {
         $result = $this->wp()->create();
 
-        // Don't proceed with metas if create failed
         if ($result->hasFailed()) {
             return $result;
         }
 
-        // Ensure all metas have newly created post ID
-        $this->fillMetasWithObjectId($this->getId());
-
-        // Persist metas in database and save results
-        $result->addResults($this->persistMetas());
+        $results = $this->persistMetas($this->getId());
+        $result->addResults($results);
 
         return $result;
     }
@@ -177,13 +202,12 @@ abstract class Post implements HasWpPost, IsPersistable
     {
         $result = $this->wp()->update();
 
-        // Don't proceed with metas if update failed
         if ($result->hasFailed()) {
             return $result;
         }
 
-        // Persist metas in database and save results
-        $result->addResults($this->persistMetas());
+        $results = $this->persistMetas($this->getId());
+        $result->addResults($results);
 
         return $result;
     }
