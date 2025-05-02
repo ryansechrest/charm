@@ -236,6 +236,9 @@ class User implements IsPersistable
     /**
      * Get users
      *
+     * See possible parameters:
+     * https://developer.wordpress.org/reference/classes/wp_user_query/
+     *
      * @param array $params
      * @return static[]
      */
@@ -248,12 +251,15 @@ class User implements IsPersistable
         }
 
         return array_map(function (WP_User $wpUser) {
-            return static::init($wpUser);
+            return static::fromWpUser($wpUser);
         }, $wpUserQuery->get_results());
     }
 
     /**
      * Query users with WP_User_Query
+     *
+     * See possible parameters:
+     * https://developer.wordpress.org/reference/classes/wp_user_query/
      *
      * @param array $params
      * @return WP_User_Query

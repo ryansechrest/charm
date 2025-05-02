@@ -354,6 +354,9 @@ class Post implements IsPersistable
     /**
      * Get posts
      *
+     * See possible parameters:
+     * https://developer.wordpress.org/reference/classes/wp_query/
+     *
      * @param array $params
      * @return static[]
      */
@@ -372,6 +375,9 @@ class Post implements IsPersistable
 
     /**
      * Query posts with WP_Query
+     *
+     * See possible parameters:
+     * https://developer.wordpress.org/reference/classes/wp_query/
      *
      * @param array $params
      * @return WP_Query
