@@ -34,6 +34,13 @@ class Result
     private string $errorMessage = '';
 
     /**
+     * Associated data
+     *
+     * @var ?mixed
+     */
+    private mixed $data = null;
+
+    /**
      * Relevant WP_Error instance
      *
      * @var ?WP_Error
@@ -157,6 +164,16 @@ class Result
     }
 
     /**
+     * Get associated data
+     *
+     * @return mixed
+     */
+    public function getData(): mixed
+    {
+        return $this->data;
+    }
+
+    /**
      * Get WP_Error instance
      *
      * @return ?WP_Error
@@ -181,6 +198,21 @@ class Result
     }
 
     // *************************************************************************
+
+    /**
+     * Add data to result
+     *
+     * @param mixed $data
+     * @return self
+     */
+    public function withData(mixed $data): self
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Add single, related result
