@@ -291,24 +291,65 @@ class Post implements IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize post
+     * Initialize post from ID
      *
-     * @param int|null|string|WP_Post $key
+     * @param int $id
      * @return ?static
+     * @see get_post()
      */
-    public static function init(int|null|string|WP_Post $key = null): ?static
+    public static function fromId(int $id): ?static
     {
-        $post = new static();
+        $post = new static;
+        $post->loadFromId($id);
 
-        match (true) {
-            is_numeric($key) => $post->loadFromId((int) $key),
-            is_string($key) => $post->loadFromPath($key),
-            $key instanceof WP_Post => $post->loadFromPost($key),
-            default => $post->loadFromGlobalPost(),
-        };
-
-        return !$post->id ? null : $post;
+        return $post->id ? $post : null;
     }
+
+    /**
+     * Initialize post from path
+     *
+     * @param string $path
+     * @param string $postType
+     * @return ?static
+     * @see get_page_by_path()
+     */
+    public static function fromPath(string $path, string $postType): ?static
+    {
+        $post = new static;
+        $post->loadFromPath($path, $postType);
+
+        return $post->id ? $post : null;
+    }
+
+    /**
+     * Initialize post from global WP_Post
+     *
+     * @return ?static
+     * @see get_post()
+     */
+    public static function fromGlobalWpPost(): ?static
+    {
+        $post = new static;
+        $post->loadFromGlobalPost();
+
+        return $post->id ? $post : null;
+    }
+
+    /**
+     * Initialize post from WP_Post
+     *
+     * @param WP_Post $wpPost
+     * @return static
+     */
+    public static function fromWpPost(WP_Post $wpPost): static
+    {
+        $post = new static;
+        $post->loadFromPost($wpPost);
+
+        return $post;
+    }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Get posts
@@ -325,7 +366,7 @@ class Post implements IsPersistable
         }
 
         return array_map(function (WP_Post $wpPost) {
-            return static::init($wpPost);
+            return static::fromWpPost($wpPost);
         }, $wpQuery->posts);
     }
 
@@ -365,20 +406,20 @@ class Post implements IsPersistable
             return Result::error(
                 'post_id_exists',
                 __('Post already exists.', 'charm')
-            );
+            )->withData($this);
         }
 
         $result = wp_insert_post($this->toWpPostArray());
 
         if (is_wp_error($result)) {
-            return Result::wpError($result);
+            return Result::wpError($result)->withData($this);
         }
 
         if (!is_int($result) || $result === 0) {
             return Result::error(
                 'wp_insert_post_failed',
                 __('wp_insert_post() did not return an ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->id = $result;
@@ -400,22 +441,22 @@ class Post implements IsPersistable
             return Result::error(
                 'post_id_missing',
                 __('Cannot update post with blank ID.', 'charm')
-            );
+            )->withData($this);
         }
 
-        $includeData = ['ID' => $this->id];
-
-        $result = wp_update_post($this->toWpPostArray($includeData));
+        $result = wp_update_post(
+            $this->toWpPostArray(['ID' => $this->id])
+        );
 
         if (is_wp_error($result)) {
-            return Result::error($result);
+            return Result::error($result)->withData($this);
         }
 
         if (!is_int($result) || $result === 0) {
             return Result::error(
                 'wp_update_post_failed',
                 __('wp_update_post() did not return an ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->reload();
@@ -435,7 +476,7 @@ class Post implements IsPersistable
             return Result::error(
                 'post_id_missing',
                 __('Cannot trash post with blank ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $result = wp_trash_post($this->id);
@@ -444,7 +485,7 @@ class Post implements IsPersistable
             return Result::error(
                 'wp_trash_post_failed',
                 __('wp_trash_post() did not return a post.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->reload();
@@ -464,7 +505,7 @@ class Post implements IsPersistable
             return Result::error(
                 'post_id_missing',
                 __('Cannot restore post with blank ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $result = wp_untrash_post($this->id);
@@ -473,7 +514,7 @@ class Post implements IsPersistable
             return Result::error(
                 'wp_untrash_post_failed',
                 __('wp_untrash_post() did not return a post.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->reload();
@@ -493,7 +534,7 @@ class Post implements IsPersistable
             return Result::error(
                 'post_id_missing',
                 __('Cannot delete post with blank ID.', 'charm')
-            );
+            )->withData($this);
         }
 
         $result = wp_delete_post($this->id, true);
@@ -502,7 +543,7 @@ class Post implements IsPersistable
             return Result::error(
                 'wp_delete_post_failed',
                 __('wp_delete_post() did not return a post.', 'charm')
-            );
+            )->withData($this);
         }
 
         $this->id = null;
@@ -1071,13 +1112,12 @@ class Post implements IsPersistable
      * Load instance from path
      *
      * @param string $path
+     * @param string $postType
      * @see get_page_by_path()
      */
-    protected function loadFromPath(string $path): void
+    protected function loadFromPath(string $path, string $postType): void
     {
-        if (!$wpPost = get_page_by_path(
-            $path, OBJECT, $this->postType)
-        ) {
+        if (!$wpPost = get_page_by_path($path, OBJECT, $postType)) {
             return;
         }
 
@@ -1152,13 +1192,12 @@ class Post implements IsPersistable
      * Remove keys from array if the value is null,
      * since that indicates no value has been set.
      *
-     * @param array $includeData
-     * @return array
+     * @param array $includeData ['ID' => 1]
+     * @return array ['ID' => 1, 'post_author' => 1]
      */
     protected function toWpPostArray(array $includeData = []): array
     {
         $data = [
-            'ID' => $this->id,
             'post_author' => $this->postAuthor,
             'post_date' => $this->postDate,
             'post_date_gmt' => $this->postDateGmt,
