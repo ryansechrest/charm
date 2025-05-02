@@ -6,6 +6,7 @@ use Charm\Traits\User\Fields\WithCreatedAt;
 use Charm\Traits\User\Fields\WithDisplayName;
 use Charm\Traits\User\Fields\WithEmail;
 use Charm\Traits\User\Fields\WithPassword;
+use Charm\Traits\User\Fields\WithSlug;
 use Charm\Traits\User\Fields\WithUsername;
 use Charm\Traits\User\Fields\WithWebsite;
 use Charm\Traits\User\Metas\WithBioInfo;
@@ -25,6 +26,7 @@ class User extends Base\User
     use WithCreatedAt;
 
     use WithUsername;
+    use WithSlug;
     use WithEmail;
     use WithPassword;
 
