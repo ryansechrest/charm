@@ -73,6 +73,12 @@ abstract class User implements HasWpUser, IsPersistable
     /**
      * Initialize user
      *
+     * int                -> User ID
+     * null               -> Global User
+     * string (not email) -> Username / User Login
+     * string (email)     -> Email Address
+     * WP_User            -> WP_User instance
+     *
      * @param int|null|string|WP_User $key
      * @return ?static
      */
@@ -82,7 +88,7 @@ abstract class User implements HasWpUser, IsPersistable
     {
         $wpUser = match (true) {
             is_numeric($key) => WordPress\User::fromId((int) $key),
-            is_string($key) && !is_email($key) => WordPress\User::fromLogin($key),
+            is_string($key) && !is_email($key) => WordPress\User::fromUsername($key),
             is_string($key) && is_email($key) => WordPress\User::fromEmail($key),
             $key instanceof WP_User => WordPress\User::fromWpUser($key),
             default => WordPress\User::fromGlobalWpUser(),
