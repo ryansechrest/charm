@@ -196,7 +196,7 @@ class Meta implements IsPersistable
             return Result::error(
                 'add_metadata_failed',
                 __('add_metadata() returned false.', 'charm')
-            );
+            )->withData(func_get_args());
         }
 
         return Result::success();
@@ -233,7 +233,7 @@ class Meta implements IsPersistable
             return Result::error(
                 'update_metadata_failed',
                 __('update_metadata() returned false.', 'charm')
-            );
+            )->withData(func_get_args());
         }
 
         return Result::success();
@@ -259,7 +259,7 @@ class Meta implements IsPersistable
             return Result::error(
                 'delete_metadata_failed',
                 __('delete_metadata() returned false.', 'charm')
-            );
+            )->withData(func_get_args());
         }
 
         return Result::success();
@@ -286,7 +286,7 @@ class Meta implements IsPersistable
             return Result::error(
                 'delete_metadata_failed',
                 __('delete_metadata() returned false.', 'charm')
-            );
+            )->withData(func_get_args());
         }
 
         return Result::success();
@@ -327,6 +327,13 @@ class Meta implements IsPersistable
      */
     public function create(): Result
     {
+        if ($this->exists) {
+            return Result::error(
+                'meta_exists',
+                __('Meta already exists.', 'charm')
+            )->withData($this);
+        }
+
         $result = static::createMeta(
             $this->metaType,
             $this->objectId,
@@ -350,6 +357,13 @@ class Meta implements IsPersistable
      */
     public function update(): Result
     {
+        if (!$this->exists) {
+            return Result::error(
+                'meta_not_found',
+                __('Meta does not exist.', 'charm')
+            )->withData($this);
+        }
+
         $result = static::updateMeta(
             $this->metaType,
             $this->objectId,
@@ -374,6 +388,13 @@ class Meta implements IsPersistable
      */
     public function delete(): Result
     {
+        if (!$this->exists) {
+            return Result::error(
+                'meta_not_found',
+                __('Meta does not exist.', 'charm')
+            )->withData($this);
+        }
+
         $result = static::deleteMeta(
             $this->metaType,
             $this->objectId,
