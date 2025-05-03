@@ -176,6 +176,15 @@ class Post implements IsPersistable
      */
     protected ?int $commentCount = null;
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * WP_Post instance
+     *
+     * @var ?WP_Post
+     */
+    protected ?WP_Post $wpPost = null;
+
     // *************************************************************************
 
     /**
@@ -288,10 +297,24 @@ class Post implements IsPersistable
         }
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get WP_Post instance
+     *
+     * @return ?WP_Post
+     */
+    public function core(): ?WP_Post
+    {
+        return $this->wpPost;
+    }
+
     // *************************************************************************
 
     /**
      * Initialize post from ID
+     *
+     * From: wp_posts -> ID
      *
      * @param int $id
      * @return ?static
@@ -308,8 +331,10 @@ class Post implements IsPersistable
     /**
      * Initialize post from path
      *
-     * @param string $path
-     * @param string $postType
+     * From: wp_posts -> post_name
+     *
+     * @param string $path hello-world
+     * @param string $postType post
      * @return ?static
      * @see get_page_by_path()
      */
@@ -330,7 +355,7 @@ class Post implements IsPersistable
     public static function fromGlobalWpPost(): ?static
     {
         $post = new static;
-        $post->loadFromGlobalPost();
+        $post->loadFromGlobalWpPost();
 
         return $post->id ? $post : null;
     }
@@ -344,7 +369,7 @@ class Post implements IsPersistable
     public static function fromWpPost(WP_Post $wpPost): static
     {
         $post = new static;
-        $post->loadFromPost($wpPost);
+        $post->loadFromWpPost($wpPost);
 
         return $post;
     }
@@ -599,7 +624,7 @@ class Post implements IsPersistable
     /**
      * Get post date
      *
-     * @return string
+     * @return string 0000-00-00 00:00:00
      */
     public function getPostDate(): string
     {
@@ -609,7 +634,7 @@ class Post implements IsPersistable
     /**
      * Set post date
      *
-     * @param string $postDate
+     * @param string $postDate 0000-00-00 00:00:00
      * @return static
      */
     public function setPostDate(string $postDate): static
@@ -624,7 +649,7 @@ class Post implements IsPersistable
     /**
      * Get post date (GMT)
      *
-     * @return string
+     * @return string 0000-00-00 00:00:00
      */
     public function getPostDateGmt(): string
     {
@@ -634,7 +659,7 @@ class Post implements IsPersistable
     /**
      * Set post date (GMT)
      *
-     * @param string $postDateGmt
+     * @param string $postDateGmt 0000-00-00 00:00:00
      * @return static
      */
     public function setPostDateGmt(string $postDateGmt): static
@@ -649,7 +674,7 @@ class Post implements IsPersistable
     /**
      * Get post content
      *
-     * @return string
+     * @return string Welcome to WordPress.
      */
     public function getPostContent(): string
     {
@@ -659,7 +684,7 @@ class Post implements IsPersistable
     /**
      * Set post content
      *
-     * @param string $postContent
+     * @param string $postContent Welcome to WordPress.
      * @return static
      */
     public function setPostContent(string $postContent): static
@@ -674,7 +699,7 @@ class Post implements IsPersistable
     /**
      * Get post title
      *
-     * @return string
+     * @return string Hello World
      */
     public function getPostTitle(): string
     {
@@ -684,7 +709,7 @@ class Post implements IsPersistable
     /**
      * Set post title
      *
-     * @param string $postTitle
+     * @param string $postTitle Hello World
      * @return static
      */
     public function setPostTitle(string $postTitle): static
@@ -724,7 +749,7 @@ class Post implements IsPersistable
     /**
      * Get post status
      *
-     * @return string
+     * @return string publish
      */
     public function getPostStatus(): string
     {
@@ -734,7 +759,7 @@ class Post implements IsPersistable
     /**
      * Set post status
      *
-     * @param string $postStatus
+     * @param string $postStatus publish
      * @return static
      */
     public function setPostStatus(string $postStatus): static
@@ -749,7 +774,7 @@ class Post implements IsPersistable
     /**
      * Get comment status
      *
-     * @return string
+     * @return string open
      */
     public function getCommentStatus(): string
     {
@@ -759,7 +784,7 @@ class Post implements IsPersistable
     /**
      * Set comment status
      *
-     * @param string $commentStatus
+     * @param string $commentStatus open
      * @return static
      */
     public function setCommentStatus(string $commentStatus): static
@@ -774,7 +799,7 @@ class Post implements IsPersistable
     /**
      * Get ping status
      *
-     * @return string
+     * @return string open
      */
     public function getPingStatus(): string
     {
@@ -784,7 +809,7 @@ class Post implements IsPersistable
     /**
      * Set ping status
      *
-     * @param string $pingStatus
+     * @param string $pingStatus open
      * @return static
      */
     public function setPingStatus(string $pingStatus): static
@@ -799,7 +824,7 @@ class Post implements IsPersistable
     /**
      * Get post password
      *
-     * @return string
+     * @return string foobar
      */
     public function getPostPassword(): string
     {
@@ -809,7 +834,7 @@ class Post implements IsPersistable
     /**
      * Set post password
      *
-     * @param string $postPassword
+     * @param string $postPassword foobar
      * @return static
      */
     public function setPostPassword(string $postPassword): static
@@ -824,7 +849,7 @@ class Post implements IsPersistable
     /**
      * Get post name
      *
-     * @return string
+     * @return string hello-world
      */
     public function getPostName(): string
     {
@@ -834,7 +859,7 @@ class Post implements IsPersistable
     /**
      * Set post name
      *
-     * @param string $postName
+     * @param string $postName hello-world
      * @return static
      */
     public function setPostName(string $postName): static
@@ -849,7 +874,7 @@ class Post implements IsPersistable
     /**
      * Get URLs to ping
      *
-     * @return string
+     * @return string https://example.org
      */
     public function getToPing(): string
     {
@@ -859,7 +884,7 @@ class Post implements IsPersistable
     /**
      * Set URLs to ping
      *
-     * @param string $toPing
+     * @param string $toPing https://example.org
      * @return static
      */
     public function setToPing(string $toPing): static
@@ -874,7 +899,7 @@ class Post implements IsPersistable
     /**
      * Get pinged URLs
      *
-     * @return string
+     * @return string https://example.org
      */
     public function getPinged(): string
     {
@@ -884,7 +909,7 @@ class Post implements IsPersistable
     /**
      * Set pinged URLs
      *
-     * @param string $pinged
+     * @param string $pinged https://example.org
      * @return static
      */
     public function setPinged(string $pinged): static
@@ -899,7 +924,7 @@ class Post implements IsPersistable
     /**
      * Get post modified
      *
-     * @return string
+     * @return string 0000-00-00 00:00:00
      */
     public function getPostModified(): string
     {
@@ -909,7 +934,7 @@ class Post implements IsPersistable
     /**
      * Set post modified
      *
-     * @param string $postModified
+     * @param string $postModified 0000-00-00 00:00:00
      * @return static
      */
     public function setPostModified(string $postModified): static
@@ -924,7 +949,7 @@ class Post implements IsPersistable
     /**
      * Get post modified (GMT)
      *
-     * @return string
+     * @return string 0000-00-00 00:00:00
      */
     public function getPostModifiedGmt(): string
     {
@@ -934,7 +959,7 @@ class Post implements IsPersistable
     /**
      * Set post modified (GMT)
      *
-     * @param string $postModifiedGmt
+     * @param string $postModifiedGmt 0000-00-00 00:00:00
      * @return static
      */
     public function setPostModifiedGmt(string $postModifiedGmt): static
@@ -1036,7 +1061,7 @@ class Post implements IsPersistable
     /**
      * Get post type
      *
-     * @return string
+     * @return string post
      */
     public function getPostType(): string
     {
@@ -1046,7 +1071,7 @@ class Post implements IsPersistable
     /**
      * Set post type
      *
-     * @param string $postType
+     * @param string $postType post
      * @return static
      */
     public function setPostType(string $postType): static
@@ -1111,14 +1136,14 @@ class Post implements IsPersistable
             return;
         };
 
-        $this->loadFromPost($wpPost);
+        $this->loadFromWpPost($wpPost);
     }
 
     /**
      * Load instance from path
      *
-     * @param string $path
-     * @param string $postType
+     * @param string $path hello-world
+     * @param string $postType post
      * @see get_page_by_path()
      */
     protected function loadFromPath(string $path, string $postType): void
@@ -1127,7 +1152,7 @@ class Post implements IsPersistable
             return;
         }
 
-        $this->loadFromPost($wpPost);
+        $this->loadFromWpPost($wpPost);
     }
 
     /**
@@ -1135,13 +1160,13 @@ class Post implements IsPersistable
      *
      * @see get_post()
      */
-    protected function loadFromGlobalPost(): void
+    protected function loadFromGlobalWpPost(): void
     {
         if (!$wpPost = get_post()) {
             return;
         }
 
-        $this->loadFromPost($wpPost);
+        $this->loadFromWpPost($wpPost);
     }
 
     /**
@@ -1149,8 +1174,10 @@ class Post implements IsPersistable
      *
      * @param WP_Post $wpPost
      */
-    protected function loadFromPost(WP_Post $wpPost): void
+    protected function loadFromWpPost(WP_Post $wpPost): void
     {
+        $this->wpPost = $wpPost;
+
         $this->id = (int) $wpPost->ID;
         $this->postAuthor = (int) $wpPost->post_author;
         $this->postDate = $wpPost->post_date;
