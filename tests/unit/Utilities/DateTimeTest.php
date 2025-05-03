@@ -10,7 +10,6 @@ class DateTimeTest extends TestCase
     public function testTimezoneChange()
     {
         $timezone = 'America/Chicago';
-
         $dateTime = DateTime::init('2023-01-10 03:42:00');
         $actualTimezone = $dateTime->as($timezone)->format('e');
 
