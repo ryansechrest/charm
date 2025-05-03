@@ -42,7 +42,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
     // *************************************************************************
 
     /**
-     * BaseMeta constructor
+     * Meta constructor
      *
      * @param array $data
      */
