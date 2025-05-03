@@ -19,6 +19,9 @@
         "test:all": [
             "./vendor/bin/phpunit"
         ],
+        "test:debug": [
+            "./vendor/bin/phpunit --debug"
+        ],
         "test:unit": [
             "./vendor/bin/phpunit --testsuite unit"
         ],
