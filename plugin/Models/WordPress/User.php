@@ -85,6 +85,15 @@ class User implements IsPersistable
      */
     protected ?string $displayName = null;
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * WP_User instance
+     *
+     * @var ?WP_User
+     */
+    protected ?WP_User $wpUser = null;
+
     // *************************************************************************
 
     /**
@@ -145,10 +154,24 @@ class User implements IsPersistable
         }
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get WP_User instance
+     *
+     * @return ?WP_User
+     */
+    public function core(): ?WP_User
+    {
+        return $this->wpUser;
+    }
+
     // *************************************************************************
 
     /**
      * Initialize user from ID
+     *
+     * From: wp_user -> ID
      *
      * @param int $id
      * @return ?static
@@ -162,15 +185,17 @@ class User implements IsPersistable
     }
 
     /**
-     * Initialize user from login
+     * Initialize user from username
      *
-     * @param string $userLogin
+     * From: wp_user -> user_login
+     *
+     * @param string $username john.doe
      * @return ?static
      */
-    public static function fromLogin(string $userLogin): ?static
+    public static function fromUsername(string $username): ?static
     {
         $user = new static;
-        $user->loadFromLogin($userLogin);
+        $user->loadFromUsername($username);
 
         return $user->id ? $user : null;
     }
@@ -178,13 +203,15 @@ class User implements IsPersistable
     /**
      * Initialize user from slug
      *
-     * @param string $userNicename
+     * From: wp_user -> user_nicename
+     *
+     * @param string $slug john-doe
      * @return ?static
      */
-    public static function fromSlug(string $userNicename): ?static
+    public static function fromSlug(string $slug): ?static
     {
         $user = new static;
-        $user->loadFromSlug($userNicename);
+        $user->loadFromSlug($slug);
 
         return $user->id ? $user : null;
     }
@@ -192,13 +219,15 @@ class User implements IsPersistable
     /**
      * Initialize user from email
      *
-     * @param string $userEmail
+     * From: wp_user -> user_email
+     *
+     * @param string $email john.doe@example.org
      * @return ?static
      */
-    public static function fromEmail(string $userEmail): ?static
+    public static function fromEmail(string $email): ?static
     {
         $user = new static;
-        $user->loadFromEmail($userEmail);
+        $user->loadFromEmail($email);
 
         return $user->id ? $user : null;
     }
@@ -212,7 +241,7 @@ class User implements IsPersistable
     public static function fromGlobalWpUser(): ?static
     {
         $user = new static;
-        $user->loadFromGlobalUser();
+        $user->loadFromGlobalWpUser();
 
         return $user->id ? $user : null;
     }
@@ -402,7 +431,7 @@ class User implements IsPersistable
     /**
      * Get user login
      *
-     * @return string
+     * @return string john.doe
      */
     public function getUserLogin(): string
     {
@@ -412,7 +441,7 @@ class User implements IsPersistable
     /**
      * Set user login
      *
-     * @param string $userLogin
+     * @param string $userLogin john.doe
      * @return static
      */
     public function setUserLogin(string $userLogin): static
@@ -427,7 +456,7 @@ class User implements IsPersistable
     /**
      * Get user pass
      *
-     * @return string
+     * @return string Hashed password
      */
     public function getUserPass(): string
     {
@@ -437,7 +466,7 @@ class User implements IsPersistable
     /**
      * Set user pass
      *
-     * @param string $userPass
+     * @param string $userPass Cleartext password
      * @return static
      */
     public function setUserPass(string $userPass): static
@@ -452,7 +481,7 @@ class User implements IsPersistable
     /**
      * Get user nicename
      *
-     * @return string
+     * @return string john-doe
      */
     public function getUserNicename(): string
     {
@@ -462,7 +491,7 @@ class User implements IsPersistable
     /**
      * Set user nicename
      *
-     * @param string $userNicename
+     * @param string $userNicename john-doe
      * @return static
      */
     public function setUserNicename(string $userNicename): static
@@ -477,7 +506,7 @@ class User implements IsPersistable
     /**
      * Get user email
      *
-     * @return string
+     * @return string john.doe@example.org
      */
     public function getUserEmail(): string
     {
@@ -487,7 +516,7 @@ class User implements IsPersistable
     /**
      * Set user email
      *
-     * @param string $userEmail
+     * @param string $userEmail john.doe@example.org
      * @return static
      */
     public function setUserEmail(string $userEmail): static
@@ -502,7 +531,7 @@ class User implements IsPersistable
     /**
      * Get user URL
      *
-     * @return string
+     * @return string https://example.org
      */
     public function getUserUrl(): string
     {
@@ -512,7 +541,7 @@ class User implements IsPersistable
     /**
      * Set user URL
      *
-     * @param string $userUrl
+     * @param string $userUrl https://example.org
      * @return static
      */
     public function setUserUrl(string $userUrl): static
@@ -527,7 +556,7 @@ class User implements IsPersistable
     /**
      * Get user registered
      *
-     * @return string
+     * @return string 0000-00-00 00:00:00
      */
     public function getUserRegistered(): string
     {
@@ -537,7 +566,7 @@ class User implements IsPersistable
     /**
      * Set user registered
      *
-     * @param string $userRegistered
+     * @param string $userRegistered 0000-00-00 00:00:00
      * @return static
      */
     public function setUserRegistered(string $userRegistered): static
@@ -552,7 +581,7 @@ class User implements IsPersistable
     /**
      * Get user activation key
      *
-     * @return string
+     * @return string Random string
      */
     public function getUserActivationKey(): string
     {
@@ -562,7 +591,7 @@ class User implements IsPersistable
     /**
      * Set user activation key
      *
-     * @param string $userActivationKey
+     * @param string $userActivationKey Random string
      * @return static
      */
     public function setUserActivationKey(string $userActivationKey): static
@@ -602,7 +631,7 @@ class User implements IsPersistable
     /**
      * Get display name
      *
-     * @return string
+     * @return string John Doe
      */
     public function getDisplayName(): string
     {
@@ -612,7 +641,7 @@ class User implements IsPersistable
     /**
      * Set display name
      *
-     * @param string $displayName
+     * @param string $displayName John Doe
      * @return static
      */
     public function setDisplayName(string $displayName): static
@@ -666,13 +695,13 @@ class User implements IsPersistable
     }
 
     /**
-     * Load instance from login
+     * Load instance from username
      *
-     * @param string $login
+     * @param string $username john.doe
      */
-    protected function loadFromLogin(string $login): void
+    protected function loadFromUsername(string $username): void
     {
-        if (!$wpUser = static::getWpUserBy('login', $login)) {
+        if (!$wpUser = static::getWpUserBy('login', $username)) {
             return;
         }
 
@@ -682,7 +711,7 @@ class User implements IsPersistable
     /**
      * Load instance from slug
      *
-     * @param string $slug
+     * @param string $slug john-doe
      */
     protected function loadFromSlug(string $slug): void
     {
@@ -696,7 +725,7 @@ class User implements IsPersistable
     /**
      * Load instance from email
      *
-     * @param string $email
+     * @param string $email john.doe@example.org
      */
     protected function loadFromEmail(string $email): void
     {
@@ -712,7 +741,7 @@ class User implements IsPersistable
      *
      * @see wp_get_current_user()
      */
-    protected function loadFromGlobalUser(): void
+    protected function loadFromGlobalWpUser(): void
     {
         if (!$wpUser = wp_get_current_user()) {
             return;
@@ -732,6 +761,8 @@ class User implements IsPersistable
      */
     protected function loadFromWpUser(WP_User $wpUser): void
     {
+        $this->wpUser = $wpUser;
+
         $this->id = (int) $wpUser->data->ID;
         $this->userLogin = $wpUser->data->user_login;
         $this->userPass = $wpUser->data->user_pass;
