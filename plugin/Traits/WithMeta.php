@@ -9,6 +9,23 @@ use Charm\Support\Result;
 /**
  * Indicates that a model has meta.
  *
+ * First, a model that wants to interact with metas needs to define which
+ * `metaClass()` it should build up when referring to a meta.
+ *
+ * That meta class needs to contain the `metaType()` for that model so that
+ * all the metas can be read from and written to the correct database table.
+ *
+ * Second, this trait gives a model methods to get, create, update, replace,
+ * and delete metas from its `$metaCache`.
+ *
+ * It also gives a model the ability to preload all metas into its cache versus
+ * lazy-loading them as they're being requested for the first time. This is a
+ * good option if you know you're going to access many of a model's metas.
+ *
+ * Last, once an `IsPersistable` model is being saved, created, or updated, it
+ * should call `persistMetas()` so that each new or updated meta can be written
+ * to the database as well.
+ *
  * @author Ryan Sechrest
  * @package Charm
  */
