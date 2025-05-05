@@ -9,6 +9,15 @@ use Charm\Support\Result;
 /**
  * Indicates that a model has a persistence state.
  *
+ * There may be times we don't want to immediately `save()`, `create()`,
+ * `update()`, or `delete()` a model from the database, but rather `mark()`
+ * its state, and then later `persist()` it to the database based on that.
+ *
+ * For example, we have a `Post` with `PostMeta`. Imagine we make changes to
+ * some of its core data like title and content, but then also change a several
+ * metas. We expect nothing to be written to the database until we call the
+ * respective method on that model. This trait allows us to do that.
+ *
  * @author Ryan Sechrest
  * @package Charm
  */
