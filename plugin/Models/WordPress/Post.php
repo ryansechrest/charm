@@ -1118,6 +1118,18 @@ class Post implements IsPersistable
         return $this->commentCount ?? 0;
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Whether post exists in database
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->getId() > 0;
+    }
+
     // *************************************************************************
 
     /**
