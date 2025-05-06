@@ -253,4 +253,16 @@ abstract class Post implements HasWpPost, IsPersistable
     {
         return $this->wp()->getId();
     }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Whether post exists in database
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->wp()->exists();
+    }
 }
