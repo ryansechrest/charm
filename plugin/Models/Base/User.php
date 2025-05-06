@@ -222,4 +222,16 @@ abstract class User implements HasWpUser, IsPersistable
     {
         return $this->wp()->getId();
     }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Whether user exists in database
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->wp()->exists();
+    }
 }
