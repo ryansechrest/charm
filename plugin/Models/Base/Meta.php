@@ -244,4 +244,16 @@ abstract class Meta implements HasWpMeta, IsPersistable
     {
         return Cast::from($this->wp()->getMetaValue());
     }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Whether meta exists in database
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->wp()->exists();
+    }
 }
