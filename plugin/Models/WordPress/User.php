@@ -651,6 +651,18 @@ class User implements IsPersistable
         return $this;
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Whether user exists in database
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return $this->getId() > 0;
+    }
+
     // *************************************************************************
 
     /**
