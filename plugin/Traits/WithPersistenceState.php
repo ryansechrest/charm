@@ -7,24 +7,30 @@ use Charm\Enums\PersistenceState;
 use Charm\Support\Result;
 
 /**
- * Indicates that a model has a persistence state.
+ * Adds persistence state tracking to a model.
  *
- * There may be times we don't want to immediately `save()`, `create()`,
- * `update()`, or `delete()` a model from the database, but rather `mark()`
- * its state, and then later `persist()` it to the database based on that.
+ * A model, like `Post` or `User`, will immediately persist changes to the
+ * database via one of its persistence methods, such as `create()` or
+ * `update()`.
  *
- * For example, we have a `Post` with `PostMeta`. Imagine we make changes to
- * some of its core data like title and content, but then also change a several
- * metas. We expect nothing to be written to the database until we call the
- * respective method on that model. This trait allows us to do that.
+ * When a model (e.g. `Post`) changes other models (e.g. `Meta`), we may want to
+ * defer persisting changes to `Meta` models until a persistence method on the
+ * `Post` model is called.
  *
- * @author Ryan Sechrest
+ * This avoids having to manually call a persistence method on each `Meta` model
+ * and ensures that `Meta` models don't change before the `Post` model.
+ *
+ * We accomplish this by tracking the persistence state within each `Meta`
+ * model and calling a unified `persist()` method, which automatically invokes
+ * the appropriate persistence method based on the model’s state.
+ *
  * @package Charm
+ * @author Ryan Sechrest
  */
 trait WithPersistenceState
 {
     /**
-     * State of model
+     * Current persistence state of the model
      *
      * @var PersistenceState
      */
@@ -33,7 +39,10 @@ trait WithPersistenceState
     // *************************************************************************
 
     /**
-     * Mark model with state
+     * Mark the model with a new persistence state
+     *
+     * Use this to indicate that the model has been created, updated, or
+     * deleted, but should not yet be persisted.
      *
      * @param PersistenceState $state
      * @return $this
@@ -48,7 +57,10 @@ trait WithPersistenceState
     // -------------------------------------------------------------------------
 
     /**
-     * Persist model based on state
+     * Persist the model based on its persistence state
+     *
+     * Executes the appropriate method (`create()`, `update()`, `delete()`)
+     * based on the internal state. If the state is `CLEAN`, no action is taken.
      *
      * @return Result
      */
@@ -82,7 +94,7 @@ trait WithPersistenceState
     // *************************************************************************
 
     /**
-     * Get persistence state
+     * Get current persistence state
      *
      * @return PersistenceState
      */
