@@ -13,6 +13,7 @@ use Charm\Traits\User\Metas\WithBioInfo;
 use Charm\Traits\User\Metas\WithFirstName;
 use Charm\Traits\User\Metas\WithLastName;
 use Charm\Traits\User\Metas\WithNickname;
+use Charm\Traits\User\WithRole;
 
 /**
  * Represents a user in WordPress.
@@ -39,4 +40,8 @@ class User extends Base\User
     use WithLastName;
     use WithNickname;
     use WithBioInfo;
+
+    // --- User Helpers --------------------------------------------------------
+
+    use WithRole;
 }
