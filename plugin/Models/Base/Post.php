@@ -7,6 +7,7 @@ use Charm\Contracts\IsPersistable;
 use Charm\Models\PostMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
+use Charm\Traits\WithDeferredPersistence;
 use Charm\Traits\WithPersistenceState;
 use Charm\Traits\WithMeta;
 use WP_Post;
@@ -20,6 +21,7 @@ use WP_Query;
  */
 abstract class Post implements HasWpPost, IsPersistable
 {
+    use WithDeferredPersistence;
     use WithMeta;
     use WithPersistenceState;
 
@@ -187,8 +189,7 @@ abstract class Post implements HasWpPost, IsPersistable
             return $result;
         }
 
-        $results = $this->persistMetas($this->getId());
-        $result->addResults($results);
+        $result->addResults($this->persistDeferred());
 
         return $result;
     }
@@ -206,8 +207,7 @@ abstract class Post implements HasWpPost, IsPersistable
             return $result;
         }
 
-        $results = $this->persistMetas($this->getId());
-        $result->addResults($results);
+        $result->addResults($this->persistDeferred());
 
         return $result;
     }
