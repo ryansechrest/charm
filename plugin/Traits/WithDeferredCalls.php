@@ -5,16 +5,30 @@ namespace Charm\Traits;
 use Charm\Support\Result;
 
 /**
- * Adds deferred method execution to a model.
+ * Adds support for deferring method calls for later execution.
  *
- * Traits can call `registerDeferred()` to queue methods with arguments for
- * later execution. The parent object can then call `persistDeferred()` to run
- * them all.
+ * Traits like `WithMetas` and `WithRole` provide functionality for managing
+ * related data (e.g., meta data or roles) within a model like `Post` or `User`.
+ *
+ * These traits define methods such as `createMeta()`, `updateMeta()`, or
+ * `setRole()` that modify internal state, along with corresponding persistence
+ * methods like `persistMetas()` or `persistRole()`.
+ *
+ * To allow a model to persist all such changes without needing to know which
+ * traits it uses, this trait provides a centralized mechanism for deferring
+ * method calls until a later time.
+ *
+ * Whenever a trait makes a change, it can register its persistence method,
+ * e.g. `persistMetas()` or `persistRole()`, using `registerDeferred()`. Later,
+ * the model can call `runDeferred()` to execute all registered methods.
+ *
+ * This decouples traits from models and enables a unified persistence flow
+ * without tight coupling or assumptions about which traits are present.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-trait WithDeferredPersistence
+trait WithDeferredCalls
 {
     /**
      * List of deferred method names and their arguments.
@@ -44,7 +58,7 @@ trait WithDeferredPersistence
      *
      * @return Result[]
      */
-    protected function persistDeferred(): array
+    protected function runDeferred(): array
     {
         $results = [];
 
