@@ -2,13 +2,13 @@
 
 namespace Charm\Traits\User;
 
-use Charm\Contracts\HasDeferredPersistence;
+use Charm\Contracts\HasDeferredCalls;
 use Charm\Contracts\HasWpUser;
 use Charm\Structures\Role;
 use Charm\Support\Result;
 
 /**
- * Indicates that a user has a role.
+ * Adds role to user model.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Support\Result;
 trait WithRole
 {
     /**
-     * Role to assign user
+     * Role to assign user.
      *
      * @var ?Role
      */
@@ -43,11 +43,10 @@ trait WithRole
      */
     public function setRole(Role|string $role): static
     {
-        /** @var HasDeferredPersistence $this */
-
         $this->pendingRole = is_string($role) ? Role::init($role) : $role;
 
-        $this->registerPersistenceMethod('persistRole');
+        /** @var HasDeferredCalls $this */
+        $this->registerDeferred('persistRole');
 
         return $this;
     }
@@ -61,8 +60,6 @@ trait WithRole
      */
     protected function persistRole(): Result
     {
-        /** @var HasWpUser $this */
-
         if ($this->pendingRole === null) {
             return Result::error(
                 'role_not_persisted',
@@ -77,6 +74,7 @@ trait WithRole
             );
         }
 
+        /** @var HasWpUser $this */
         $this->wp()->core()->set_role($this->pendingRole->getSlug());
 
         $this->pendingRole = null;
