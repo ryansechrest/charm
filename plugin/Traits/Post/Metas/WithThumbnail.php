@@ -5,9 +5,10 @@ namespace Charm\Traits\Post\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Indicates that a post has a thumbnail.
+ * Adds thumbnail to post model.
  *
  * Table: wp_postmeta
+ * Meta Key: _thumbnail_id
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -32,7 +33,20 @@ trait WithThumbnail
     public function setThumbnailId(int $id): static
     {
         /** @var HasMeta $this */
-        $this->setMeta('_thumbnail_id', $id);
+        $this->updateMeta('_thumbnail_id', $id);
+
+        return $this;
+    }
+
+    /**
+     * Set thumbnail ID
+     *
+     * @return static
+     */
+    public function deleteThumbnailId(): static
+    {
+        /** @var HasMeta $this */
+        $this->deleteMeta('_thumbnail_id');
 
         return $this;
     }
