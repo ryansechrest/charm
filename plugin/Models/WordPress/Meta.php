@@ -596,8 +596,6 @@ class Meta implements IsPersistable
     protected static function getSingle(
         string $metaType, int $objectId, string $metaKey, mixed $metaValue
     ): static {
-        global $wpdb;
-
         $metaValue = maybe_unserialize($metaValue);
 
         return new static($metaType, [
