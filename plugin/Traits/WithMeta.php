@@ -2,7 +2,7 @@
 
 namespace Charm\Traits;
 
-use Charm\Contracts\HasDeferredPersistence;
+use Charm\Contracts\HasDeferredCalls;
 use Charm\Enums\PersistenceState;
 use Charm\Models\Base;
 use Charm\Support\Result;
@@ -15,22 +15,24 @@ use Charm\Support\Result;
  * represented by another model called `Meta`.
  *
  * When a `Meta` is retrieved, created, updated, or deleted using one of the
- * methods in this trait, the change is recorded in the `$metaCache` but not
- * immediately persisted.
+ * methods in this trait, the change is recorded in the `$metaCache` and not
+ * persisted to the database.
  *
  * Each meta tracks its own internal state (e.g. created, updated, deleted), so
- * when `persistMetas()` is called, it loops through `$metaCache` and calls
+ * when `persistMetas()` is called, it loops through the `$metaCache` and calls
  * `persist()` on each meta accordingly.
  *
- * If many or all metas are needed, they can be preloaded with
- * `preloadMetas()`, which fetches all meta records in a single query instead
- * of triggering multiple database calls.
+ * If many or all metas are needed, they can be preloaded with `preloadMetas()`,
+ * which fetches all metas in a single query instead of triggering multiple
+ * database calls.
  *
- * Because different models store metas in separate tables, models do not use
- * the base `Meta` class directly, but extend it (e.g. `PostMeta`, `UserMeta`).
+ * Since different models store metas in their own, respective table, models
+ * do not use the base `Meta` class directly, but extend it (e.g. `PostMeta`,
+ * `UserMeta`).
  *
  * Therefore, each model must implement a `metaClass()` method that returns its
- * specialized meta class name, such as `PostMeta` or `UserMeta`.
+ * specialized meta class name, such as `PostMeta` or `UserMeta`, which
+ * tells WordPress from which table to retrieve the meta data.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -38,7 +40,7 @@ use Charm\Support\Result;
 trait WithMeta
 {
     /**
-     * Meta cache indexed by key
+     * Meta cache indexed by key.
      *
      * @var array<string, Base\Meta[]>
      */
@@ -47,7 +49,7 @@ trait WithMeta
     // *************************************************************************
 
     /**
-     * Returns the meta class name used by the model
+     * Returns the meta class name used by the model.
      *
      * Must be implemented by the model using this trait to define which
      * specialized `Meta` class (e.g. `PostMeta`, `UserMeta`) should be used.
@@ -59,7 +61,7 @@ trait WithMeta
     // *************************************************************************
 
     /**
-     * Loads all metas from the database into the cache
+     * Loads all metas from the database into the cache.
      *
      * Useful when multiple metas are expected, and it's more efficient to load
      * them all in one query rather than fetching them one at a time.
@@ -108,7 +110,7 @@ trait WithMeta
     }
 
     /**
-     * Returns all metas for the given key, from cache or database
+     * Returns all metas for the given key, from cache or database.
      *
      * If the metas are not already in cache, they will be fetched from the
      * database.
@@ -128,10 +130,10 @@ trait WithMeta
     }
 
     /**
-     * Creates a new meta in the cache
+     * Creates a new meta in the cache.
      *
-     * Marks the meta as new and defers persistence until `persistMetas()` is
-     * called.
+     * Marks the meta as `NEW` and defers persistence until `persistMetas()`
+     * is called.
      *
      * @param string $key
      * @param mixed $value
@@ -156,8 +158,8 @@ trait WithMeta
 
         $this->metaCache[$key][] = $meta;
 
-        /** @var HasDeferredPersistence $this */
-        $this->registerPersistenceMethod('persistMetas');
+        /** @var HasDeferredCalls $this */
+        $this->registerDeferred('persistMetas', $this->getId());
 
         return Result::success();
     }
@@ -165,8 +167,8 @@ trait WithMeta
     /**
      * Updates an existing meta or creates a new one if none exists.
      *
-     * Marks the meta as dirty and defers persistence until `persistMetas()` is
-     * called.
+     * Marks the meta as `DIRTY` and defers persistence until `persistMetas()`
+     * is called.
      *
      * @param string $key
      * @param mixed $value
@@ -185,14 +187,14 @@ trait WithMeta
 
         $this->metaCache[$key][0] = $meta;
 
-        /** @var HasDeferredPersistence $this */
-        $this->registerPersistenceMethod('persistMetas');
+        /** @var HasDeferredCalls $this */
+        $this->registerDeferred('persistMetas', $this->getId());
 
         return Result::success();
     }
 
     /**
-     * Replaces all existing metas for a key with a new one
+     * Replaces all existing metas for a key with a new one.
      *
      * Deletes all existing metas for the key and creates a new meta in the
      * cache.
@@ -210,7 +212,7 @@ trait WithMeta
     }
 
     /**
-     * Marks metas for deletion from cache
+     * Marks metas for deletion from cache.
      *
      * If a value is provided, only the matching meta is deleted. If null,
      * all metas for the key are deleted. Persistence is deferred.
@@ -223,27 +225,37 @@ trait WithMeta
     {
         $metas = $this->getMetas($key);
 
-        // @todo Register persistence method?
-        // @todo Fix error result when value === null
+        $foundValue = false;
 
         foreach ($metas as $index => $meta) {
 
+            // If no specified value, mark all metas as deleted
             if ($value === null) {
                 $meta->mark(PersistenceState::DELETED);
                 $this->metaCache[$key][$index] = $meta;
                 continue;
             }
 
+            // Otherwise, exit loop early if value was found
             if ($meta->getValue() === $value) {
                 $meta->mark(PersistenceState::DELETED);
                 $this->metaCache[$key][$index] = $meta;
-                return Result::success();
+                $foundValue = true;
+                break;
             }
         }
 
-        return Result::error(
-            'meta_not_found', __('Meta does not exist.', 'charm')
-        );
+        // If specified value was not found
+        if ($value !== null && !$foundValue) {
+            return Result::error(
+                'meta_not_found', __('Meta does not exist.', 'charm')
+            )->withData($this);
+        }
+
+        /** @var HasDeferredCalls $this */
+        $this->registerDeferred('persistMetas', $this->getId());
+
+        return Result::success();
     }
 
     // -------------------------------------------------------------------------
@@ -252,8 +264,8 @@ trait WithMeta
      * Persists all cached metas to the database.
      *
      * Called automatically by the base model’s `create()` or `update()`
-     * methods. Applies each meta’s state (new, dirty, deleted) and returns an
-     * array of results.
+     * method. Applies each meta’s state (`NEW`, `DIRTY`, `DELETED`) and
+     * returns an array of results.
      *
      * @param int $objectId
      * @return Result[]
