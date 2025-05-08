@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Enums\Post\Status;
 
 /**
- * Indicates that a post has a status.
+ * Adds status to post model.
  *
  * Table: wp_posts
  * Column: post_status

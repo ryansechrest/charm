@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates that a post has a menu order.
+ * Adds menu order to post model.
  *
  * Table: wp_posts
  * Column: menu_order

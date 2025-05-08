@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Enums\Post\PingStatus;
 
 /**
- * Indicates that a post has pingbacks.
+ * Adds pingbacks to post model.
  *
  * Table: wp_posts
  * Columns: ping_status, pinged, to_ping

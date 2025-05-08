@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Utilities\DateTime;
 
 /**
- * Indicates that a post has a created date.
+ * Adds created date to post model.
  *
  * Table: wp_posts
  * Column: post_date_gmt

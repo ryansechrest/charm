@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Utilities\DateTime;
 
 /**
- * Indicates that a post has an updated date.
+ * Adds updated date to post model.
  *
  * Table: wp_posts
  * Column: post_modified_gmt

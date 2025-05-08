@@ -7,7 +7,7 @@ use Charm\Models\Base;
 use Charm\Models\User;
 
 /**
- * Indicates that a post has a user.
+ * Adds user to post model.
  *
  * Table: wp_posts
  * Column: post_author

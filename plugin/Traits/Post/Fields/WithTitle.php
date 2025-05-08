@@ -5,7 +5,7 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\HasWpPost;
 
 /**
- * Indicates that a post has a title.
+ * Adds title to post model.
  *
  * Table: wp_posts
  * Column: post_title
