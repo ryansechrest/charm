@@ -5,7 +5,7 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has a website.
+ * Adds website to user model.
  *
  * Table: wp_users
  * Column: user_url

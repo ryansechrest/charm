@@ -5,7 +5,7 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has a password.
+ * Adds password to user model.
  *
  * Table: wp_users
  * Column: user_pass

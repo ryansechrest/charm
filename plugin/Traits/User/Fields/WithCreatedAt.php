@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpUser;
 use Charm\Utilities\DateTime;
 
 /**
- * Indicates that a user has a created date.
+ * Adds created date to user model.
  *
  * Table: wp_users
  * Column: user_registered

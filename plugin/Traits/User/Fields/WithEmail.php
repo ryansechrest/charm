@@ -5,7 +5,7 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\HasWpUser;
 
 /**
- * Indicates that a user has an email address.
+ * Adds email address to user model.
  *
  * Table: wp_users
  * Column: user_email

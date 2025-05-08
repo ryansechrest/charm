@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpUser;
 use Charm\Enums\User\Status;
 
 /**
- * Indicates that a user has a status.
+ * Adds status to user model.
  *
  * Table: wp_users
  * Column: user_status
