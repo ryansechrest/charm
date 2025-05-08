@@ -7,6 +7,7 @@ use Charm\Contracts\IsPersistable;
 use Charm\Models\UserMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
+use Charm\Traits\WithDeferredCalls;
 use Charm\Traits\WithPersistenceState;
 use Charm\Traits\WithMeta;
 use WP_User;
@@ -20,6 +21,7 @@ use WP_User_Query;
  */
 abstract class User implements HasWpUser, IsPersistable
 {
+    use WithDeferredCalls;
     use WithMeta;
     use WithPersistenceState;
 
@@ -125,7 +127,7 @@ abstract class User implements HasWpUser, IsPersistable
      * @param array $params
      * @return static[]
      */
-    public static function get(array $params): array
+    public static function get(array $params = ['search' => '']): array
     {
         $wpUsers = WordPress\User::get($params);
 
@@ -160,7 +162,7 @@ abstract class User implements HasWpUser, IsPersistable
      */
     public function save(): Result
     {
-        return $this->wp()->save();
+        return !$this->getId() ? $this->create() : $this->update();
     }
 
     /**
@@ -176,8 +178,7 @@ abstract class User implements HasWpUser, IsPersistable
             return $result;
         }
 
-        $results = $this->persistMetas($this->getId());
-        $result->addResults($results);
+        $result->addResults($this->runDeferred());
 
         return $result;
     }
@@ -195,8 +196,7 @@ abstract class User implements HasWpUser, IsPersistable
             return $result;
         }
 
-        $results = $this->persistMetas($this->getId());
-        $result->addResults($results);
+        $result->addResults($this->runDeferred());
 
         return $result;
     }
