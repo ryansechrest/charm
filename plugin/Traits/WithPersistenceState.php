@@ -30,7 +30,7 @@ use Charm\Support\Result;
 trait WithPersistenceState
 {
     /**
-     * Current persistence state of the model
+     * Current persistence state of the model.
      *
      * @var PersistenceState
      */
@@ -39,13 +39,13 @@ trait WithPersistenceState
     // *************************************************************************
 
     /**
-     * Mark the model with a new persistence state
+     * Mark the model with a new persistence state.
      *
      * Use this to indicate that the model has been created, updated, or
      * deleted, but should not yet be persisted.
      *
      * @param PersistenceState $state
-     * @return $this
+     * @return static
      */
     public function mark(PersistenceState $state): static
     {
@@ -57,9 +57,9 @@ trait WithPersistenceState
     // -------------------------------------------------------------------------
 
     /**
-     * Persist the model based on its persistence state
+     * Persist the model based on its persistence state.
      *
-     * Executes the appropriate method (`create()`, `update()`, `delete()`)
+     * Executes the appropriate method, e.g. `create()`, `update()`, `delete()`,
      * based on the internal state. If the state is `CLEAN`, no action is taken.
      *
      * @return Result
@@ -94,7 +94,7 @@ trait WithPersistenceState
     // *************************************************************************
 
     /**
-     * Get current persistence state
+     * Get current persistence state.
      *
      * @return PersistenceState
      */
