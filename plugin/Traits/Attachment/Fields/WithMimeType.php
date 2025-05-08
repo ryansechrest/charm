@@ -1,11 +1,11 @@
 <?php
 
-namespace Charm\Traits\Post\Fields;
+namespace Charm\Traits\Attachment\Fields;
 
 use Charm\Contracts\HasWpPost;
 
 /**
- * Adds MIME type to post model.
+ * Adds MIME type to attachment model.
  *
  * Table: wp_posts
  * Column: post_mime_type
