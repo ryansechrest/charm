@@ -5,9 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Indicates that a user has a first name.
+ * Adds first name to user model.
  *
  * Table: wp_usermeta
+ * Meta Key: first_name
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -32,7 +33,20 @@ trait WithFirstName
     public function setFirstName(string $firstName): static
     {
         /** @var HasMeta $this */
-        $this->setMeta('first_name', $firstName);
+        $this->updateMeta('first_name', $firstName);
+
+        return $this;
+    }
+
+    /**
+     * Delete first name
+     *
+     * @return static
+     */
+    public function deleteFirstName(): static
+    {
+        /** @var HasMeta $this */
+        $this->deleteMeta('first_name');
 
         return $this;
     }

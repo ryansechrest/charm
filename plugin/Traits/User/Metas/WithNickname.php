@@ -5,9 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Indicates that a user has a nickname.
+ * Adds nickname to user model.
  *
  * Table: wp_usermeta
+ * Meta Key: nickname
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -32,7 +33,20 @@ trait WithNickname
     public function setNickname(string $nickname): static
     {
         /** @var HasMeta $this */
-        $this->setMeta('nickname', $nickname);
+        $this->updateMeta('nickname', $nickname);
+
+        return $this;
+    }
+
+    /**
+     * Delete nickname
+     *
+     * @return static
+     */
+    public function deleteNickname(): static
+    {
+        /** @var HasMeta $this */
+        $this->deleteMeta('nickname');
 
         return $this;
     }

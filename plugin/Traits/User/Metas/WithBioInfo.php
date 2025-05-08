@@ -5,9 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Indicates that a user has biographical info.
+ * Adds biographical information to user model.
  *
  * Table: wp_usermeta
+ * Meta Key: description
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -32,7 +33,20 @@ trait WithBioInfo
     public function setBioInfo(string $bioInfo): static
     {
         /** @var HasMeta $this */
-        $this->setMeta('description', $bioInfo);
+        $this->updateMeta('description', $bioInfo);
+
+        return $this;
+    }
+
+    /**
+     * Delete biographical info
+     *
+     * @return static
+     */
+    public function deleteBioInfo(): static
+    {
+        /** @var HasMeta $this */
+        $this->deleteMeta('description');
 
         return $this;
     }

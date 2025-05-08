@@ -5,9 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Indicates that a user has a last name.
+ * Adds last name to user model.
  *
  * Table: wp_usermeta
+ * Meta Key: last_name
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -32,7 +33,20 @@ trait WithLastName
     public function setLastName(string $lastName): static
     {
         /** @var HasMeta $this */
-        $this->setMeta('last_name', $lastName);
+        $this->updateMeta('last_name', $lastName);
+
+        return $this;
+    }
+
+    /**
+     * Delete last name
+     *
+     * @return static
+     */
+    public function deleteLastName(): static
+    {
+        /** @var HasMeta $this */
+        $this->deleteMeta('last_name');
 
         return $this;
     }
