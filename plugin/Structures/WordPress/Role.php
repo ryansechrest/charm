@@ -373,5 +373,6 @@ class Role implements IsPersistable
         $this->slug = $wpRole->name;
         $this->name = $roles->role_names[$wpRole->name] ?: '';
         $this->capabilities = $wpRole->capabilities;
+        $this->exists = true;
     }
 }
