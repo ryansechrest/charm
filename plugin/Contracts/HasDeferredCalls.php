@@ -5,15 +5,15 @@ namespace Charm\Contracts;
 use Charm\Support\Result;
 
 /**
- * Ensures that the model can defer persistence.
+ * Ensures that the model can defer method execution.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-interface HasDeferredPersistence
+interface HasDeferredCalls
 {
     /**
-     * Register a persistence method to be executed later.
+     * Register a method to be executed later.
      *
      * @param string $method
      * @return void
@@ -21,9 +21,9 @@ interface HasDeferredPersistence
     function registerDeferred(string $method): void;
 
     /**
-     * Execute all registered persistence methods.
+     * Execute all registered methods.
      *
      * @return Result[]
      */
-    function persistDeferred(): array;
+    function runDeferred(): array;
 }
