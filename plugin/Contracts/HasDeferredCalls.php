@@ -13,15 +13,15 @@ use Charm\Support\Result;
 interface HasDeferredPersistence
 {
     /**
-     * Register a persistence method to be executed later
+     * Register a persistence method to be executed later.
      *
      * @param string $method
      * @return void
      */
-    function registerPersistenceMethod(string $method): void;
+    function registerDeferred(string $method): void;
 
     /**
-     * Execute all registered persistence methods
+     * Execute all registered persistence methods.
      *
      * @return Result[]
      */

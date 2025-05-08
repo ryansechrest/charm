@@ -6,7 +6,7 @@ use Charm\Contracts\HasWpPost;
 use Charm\Enums\Post\CommentStatus;
 
 /**
- * Indicates that a post has comments.
+ * Adds comments to post model.
  *
  * Table: wp_posts
  * Columns: comment_status, comment_count
