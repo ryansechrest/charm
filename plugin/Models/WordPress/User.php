@@ -298,6 +298,83 @@ class User implements IsPersistable
         return new WP_User_Query(query: $params);
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Create new user
+     *
+     * @param array $data
+     * @return Result
+     * @see wp_insert_user()
+     * @see is_wp_error()
+     */
+    public static function createUser(array $data): Result
+    {
+        $result = wp_insert_user(userdata: $data);
+
+        if (is_wp_error($result)) {
+            return Result::wpError(wpError: $result)
+                ->withData(func_get_args());
+        }
+
+        if (!is_int($result)) {
+            return Result::error(
+                code: 'wp_insert_user_failed',
+                message: __('wp_insert_user() did not return an ID.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success()->withData($result);
+    }
+
+    /**
+     * Update existing user
+     *
+     * @param array $data
+     * @return Result
+     * @see wp_update_user()
+     * @see is_wp_error()
+     */
+    public static function updateUser(array $data): Result
+    {
+        $result = wp_update_user(userdata: $data);
+
+        if (is_wp_error($result)) {
+            return Result::wpError(wpError: $result)
+                ->withData($data);
+        }
+
+        if (!is_int($result)) {
+            return Result::error(
+                code: 'wp_update_user_failed',
+                message: __('wp_update_user() did not return an ID.', 'charm')
+            )->withData($data);
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Delete user
+     *
+     * @param int $id
+     * @return Result
+     * @see wp_delete_user()
+     */
+    public static function deleteUser(int $id): Result
+    {
+        $result = wp_delete_user(id: $id);
+
+        if ($result !== true) {
+            return Result::error(
+                code: 'wp_delete_user_failed',
+                message: __('wp_delete_user() did not return true.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success();
+    }
+
     // *************************************************************************
 
     /**
@@ -326,35 +403,26 @@ class User implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_insert_user(
-            userdata: $this->toWpUserArray(
+        $result = static::createUser(
+            data: $this->toWpUserArray(
                 includeData: ['user_login' => $this->userLogin]
             )
         );
 
-        if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
-        if (!is_int($result)) {
-            return Result::error(
-                code: 'wp_insert_user_failed',
-                message: __('wp_insert_user() did not return an ID.', 'charm')
-            )->withData($this);
-        }
-
-        $this->id = $result;
+        $this->id = $result->getData();
         $this->reload();
 
-        return Result::success();
+        return $result;
     }
 
     /**
      * Update existing user
      *
      * @return Result
-     * @see wp_update_user()
-     * @see is_wp_error()
      */
     public function update(): Result
     {
@@ -365,31 +433,23 @@ class User implements IsPersistable
             )->withData($this);
         }
 
-        $data = $this->toWpUserArray(includeData: ['ID' => $this->id]);
+        $result = static::updateUser(
+            data: $this->toWpUserArray(includeData: ['ID' => $this->id])
+        );
 
-        $result = wp_update_user(userdata: $data);
-
-        if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)->withData($data);
-        }
-
-        if (!is_int($result)) {
-            return Result::error(
-                code: 'wp_update_user_failed',
-                message: __('wp_update_user() did not return an ID.', 'charm')
-            )->withData($data);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->reload();
 
-        return Result::success();
+        return $result;
     }
 
     /**
      * Delete user
      *
      * @return Result
-     * @see wp_delete_user()
      */
     public function delete(): Result
     {
@@ -400,18 +460,15 @@ class User implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_delete_user(id: $this->id);
+        $result =  static::deleteUser(id: $this->id);
 
-        if ($result !== true) {
-            return Result::error(
-                code: 'wp_delete_user_failed',
-                message: __('wp_delete_user() did not return true.', 'charm')
-            )->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->id = null;
 
-        return Result::success();
+        return $result;
     }
 
     // *************************************************************************
