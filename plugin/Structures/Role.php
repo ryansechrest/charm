@@ -69,7 +69,7 @@ class Role implements HasWpRole, IsPersistable
             return null;
         }
 
-        $role = new static;
+        $role = new static();
         $role->wpRole = $wpRole;
 
         return $role;
