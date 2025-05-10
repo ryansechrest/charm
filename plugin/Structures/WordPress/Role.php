@@ -90,7 +90,7 @@ class Role implements IsPersistable
      */
     public static function fromSlug(string $slug): ?static
     {
-        $role = new static;
+        $role = new static();
         $role->loadFromSlug($slug);
 
         return $role->slug ? $role : null;
@@ -104,7 +104,7 @@ class Role implements IsPersistable
      */
     public static function fromWpRole(WP_Role $wpRole): static
     {
-        $role = new static;
+        $role = new static();
         $role->loadFromWpRole($wpRole);
 
         return $role;
@@ -153,19 +153,21 @@ class Role implements IsPersistable
     {
         if ($this->exists) {
             return Result::error(
-                'role_exists',
-                __('Role already exists.', 'charm')
+                code: 'role_exists',
+                message: __('Role already exists.', 'charm')
             )->withData($this);
         }
 
         $result = add_role(
-            $this->slug, $this->name, $this->capabilities
+            role: $this->slug,
+            display_name: $this->name,
+            capabilities: $this->capabilities
         );
 
         if (!$result instanceof WP_Role) {
             return Result::error(
-                'add_role_failed',
-                __('add_role() did not return WP_Role.', 'charm')
+                code: 'add_role_failed',
+                message: __('add_role() did not return WP_Role.', 'charm')
             )->withData($this);
         }
 
@@ -183,8 +185,8 @@ class Role implements IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                'role_not_found',
-                __('Role does not exist.', 'charm')
+                code: 'role_not_found',
+                message: __('Role does not exist.', 'charm')
             )->withData($this);
         }
 
@@ -203,17 +205,17 @@ class Role implements IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                'role_not_found',
-                __('Role does not exist.', 'charm')
+                code: 'role_not_found',
+                message: __('Role does not exist.', 'charm')
             )->withData($this);
         }
 
-        remove_role($this->name);
+        remove_role(role: $this->name);
 
         if (static::fromSlug($this->name) !== null) {
             return Result::error(
-                'role_not_deleted',
-                __('Role could not be deleted.', 'charm')
+                code: 'role_not_deleted',
+                message: __('Role could not be deleted.', 'charm')
             )->withData($this);
         }
 
@@ -352,7 +354,7 @@ class Role implements IsPersistable
             return;
         }
 
-        if (!$role = get_role($slug)) {
+        if (!$role = get_role(role: $slug)) {
             return;
         }
 
