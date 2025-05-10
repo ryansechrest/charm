@@ -412,6 +412,125 @@ class Post implements IsPersistable
         return new WP_Query($params);
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Create new post
+     *
+     * @param array $data
+     * @return Result
+     * @see wp_insert_post()
+     * @see is_wp_error()
+     */
+    public static function createPost(array $data): Result
+    {
+        $result = wp_insert_post(postarr: $data, wp_error: true);
+
+        if (is_wp_error($result)) {
+            return Result::wpError(wpError: $result)
+                ->withData(func_get_args());
+        }
+
+        if (!is_int($result) || $result === 0) {
+            return Result::error(
+                code: 'wp_insert_post_failed',
+                message: __('wp_insert_post() did not return an ID.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success()->withData($result);
+    }
+
+    /**
+     * Update existing post
+     *
+     * @param array $data
+     * @return Result
+     * @see wp_update_post()
+     * @see is_wp_error()
+     */
+    public static function updatePost(array $data): Result
+    {
+        $result = wp_update_post(postarr: $data, wp_error: true);
+
+        if (is_wp_error($result)) {
+            return Result::wpError(wpError: $result)
+                ->withData(func_get_args());
+        }
+
+        if (!is_int($result) || $result === 0) {
+            return Result::error(
+                code: 'wp_update_post_failed',
+                message: __('wp_update_post() did not return an ID.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Move post to trash
+     *
+     * @param int $id
+     * @return Result
+     * @see wp_trash_post()
+     */
+    public static function trashPost(int $id): Result
+    {
+        $result = wp_trash_post(post_id: $id);
+
+        if (!$result instanceof WP_Post) {
+            return Result::error(
+                code: 'wp_trash_post_failed',
+                message: __('wp_trash_post() did not return a post.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Restore post from trash
+     *
+     * @param int $id
+     * @return Result
+     * @see wp_untrash_post()
+     */
+    public static function restorePost(int $id): Result
+    {
+        $result = wp_untrash_post(post_id: $id);
+
+        if (!$result instanceof WP_Post) {
+            return Result::error(
+                code: 'wp_untrash_post_failed',
+                message: __('wp_untrash_post() did not return a post.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Permanently delete post
+     *
+     * @param int $id
+     * @return Result
+     * @see wp_delete_post()
+     */
+    public static function deletePost(int $id): Result
+    {
+        $result = wp_delete_post(post_id: $id, force_delete: true);
+
+        if (!$result instanceof WP_Post) {
+            return Result::error(
+                code: 'wp_delete_post_failed',
+                message: __('wp_delete_post() did not return a post.', 'charm')
+            )->withData(func_get_args());
+        }
+
+        return Result::success();
+    }
+
     // *************************************************************************
 
     /**
@@ -428,8 +547,6 @@ class Post implements IsPersistable
      * Create new post
      *
      * @return Result
-     * @see wp_insert_post()
-     * @see is_wp_error()
      */
     public function create(): Result
     {
@@ -440,23 +557,16 @@ class Post implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_insert_post(postarr: $this->toWpPostArray());
+        $result = static::createPost(data: $this->toWpPostArray());
 
-        if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
-        if (!is_int($result) || $result === 0) {
-            return Result::error(
-                code: 'wp_insert_post_failed',
-                message: __('wp_insert_post() did not return an ID.', 'charm')
-            )->withData($this);
-        }
-
-        $this->id = $result;
+        $this->id = $result->getData();
         $this->reload();
 
-        return Result::success();
+        return $result;
     }
 
     /**
@@ -475,31 +585,23 @@ class Post implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_update_post(
-            postarr: $this->toWpPostArray(includeData: ['ID' => $this->id])
+        $result = static::updatePost(
+            data: $this->toWpPostArray(includeData: ['ID' => $this->id])
         );
 
-        if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)->withData($this);
-        }
-
-        if (!is_int($result) || $result === 0) {
-            return Result::error(
-                code: 'wp_update_post_failed',
-                message: __('wp_update_post() did not return an ID.', 'charm')
-            )->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->reload();
 
-        return Result::success();
+        return $result;
     }
 
     /**
      * Move post to trash
      *
      * @return Result
-     * @see wp_trash_post()
      */
     public function trash(): Result
     {
@@ -510,25 +612,21 @@ class Post implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_trash_post(post_id: $this->id);
+        $result = static::trashPost(id: $this->id);
 
-        if (!$result instanceof WP_Post) {
-            return Result::error(
-                code: 'wp_trash_post_failed',
-                message: __('wp_trash_post() did not return a post.', 'charm')
-            )->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->reload();
 
-        return Result::success();
+        return $result;
     }
 
     /**
      * Restore post from trash
      *
      * @return Result
-     * @see wp_untrash_post()
      */
     public function restore(): Result
     {
@@ -539,22 +637,19 @@ class Post implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_untrash_post(post_id: $this->id);
+        $result = static::restorePost(id: $this->id);
 
-        if (!$result instanceof WP_Post) {
-            return Result::error(
-                code: 'wp_untrash_post_failed',
-                message: __('wp_untrash_post() did not return a post.', 'charm')
-            )->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->reload();
 
-        return Result::success();
+        return $result;
     }
 
     /**
-     * Delete post permanently
+     * Permanently delete post
      *
      * @return Result
      * @see wp_delete_post()
@@ -568,18 +663,15 @@ class Post implements IsPersistable
             )->withData($this);
         }
 
-        $result = wp_delete_post(post_id: $this->id, force_delete: true);
+        $result = static::deletePost(id: $this->id);
 
-        if (!$result instanceof WP_Post) {
-            return Result::error(
-                code: 'wp_delete_post_failed',
-                message: __('wp_delete_post() did not return a post.', 'charm')
-            )->withData($this);
+        if ($result->hasFailed()) {
+            return $result;
         }
 
         $this->id = null;
 
-        return Result::success();
+        return $result;
     }
 
     // *************************************************************************
