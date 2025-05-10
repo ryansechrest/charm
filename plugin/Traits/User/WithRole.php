@@ -46,7 +46,7 @@ trait WithRole
         $this->pendingRole = is_string($role) ? Role::init($role) : $role;
 
         /** @var HasDeferredCalls $this */
-        $this->registerDeferred('persistRole');
+        $this->registerDeferred(method: 'persistRole');
 
         return $this;
     }
@@ -62,15 +62,15 @@ trait WithRole
     {
         if ($this->pendingRole === null) {
             return Result::error(
-                'role_not_persisted',
-                __('No valid role specified to be persisted.', 'charm')
+                code: 'role_not_persisted',
+                message: __('No valid role specified to be persisted.', 'charm')
             );
         }
 
         if (!$this->pendingRole->exists()) {
             return Result::error(
-                'role_not_found',
-                __('Role to be persisted does not exist.', 'charm')
+                code: 'role_not_found',
+                message: __('Role to be persisted does not exist.', 'charm')
             );
         }
 
