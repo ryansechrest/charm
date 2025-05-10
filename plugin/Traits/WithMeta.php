@@ -143,7 +143,7 @@ trait WithMeta
     {
         $metaClass = static::metaClass();
 
-        $meta = new $metaClass([
+        $meta = new $metaClass(data: [
             'objectId' => $this->getId(),
             'metaKey' => $key,
             'metaValue' => $value,
@@ -159,7 +159,7 @@ trait WithMeta
         $this->metaCache[$key][] = $meta;
 
         /** @var HasDeferredCalls $this */
-        $this->registerDeferred('persistMetas', $this->getId());
+        $this->registerDeferred(method: 'persistMetas', args: $this->getId());
 
         return Result::success();
     }
@@ -188,7 +188,7 @@ trait WithMeta
         $this->metaCache[$key][0] = $meta;
 
         /** @var HasDeferredCalls $this */
-        $this->registerDeferred('persistMetas', $this->getId());
+        $this->registerDeferred(method: 'persistMetas', args: $this->getId());
 
         return Result::success();
     }
@@ -248,12 +248,13 @@ trait WithMeta
         // If specified value was not found
         if ($value !== null && !$foundValue) {
             return Result::error(
-                'meta_not_found', __('Meta does not exist.', 'charm')
+                code: 'meta_not_found',
+                message: __('Meta does not exist.', 'charm')
             )->withData($this);
         }
 
         /** @var HasDeferredCalls $this */
-        $this->registerDeferred('persistMetas', $this->getId());
+        $this->registerDeferred(method: 'persistMetas', args: $this->getId());
 
         return Result::success();
     }
