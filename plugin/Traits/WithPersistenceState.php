@@ -68,8 +68,11 @@ trait WithPersistenceState
     {
         if (!$this instanceof IsPersistable) {
             return Result::error(
-                'model_not_persistable',
-                __('Ensure model implements `IsPersistable` interface.', 'charm')
+                code: 'model_not_persistable',
+                message: __(
+                    'Ensure model implements `IsPersistable` interface.',
+                    'charm'
+                )
             );
         }
 
@@ -79,8 +82,8 @@ trait WithPersistenceState
             PersistenceState::DIRTY => $this->update(),
             PersistenceState::DELETED => $this->delete(),
             default => Result::error(
-                'state_not_recognized',
-                __('Unknown model state cannot be persisted.', 'charm')
+                code: 'state_not_recognized',
+                message: __('Unknown model state cannot be persisted.', 'charm')
             )
         };
 
