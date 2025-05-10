@@ -57,7 +57,8 @@ class DateTime
         $dateTime = new static();
 
         $dateTime->dti = new DateTimeImmutable(
-            $wpGmtDateTime, new DateTimeZone('UTC')
+            datetime: $wpGmtDateTime,
+            timezone: new DateTimeZone('UTC')
         );
 
         return $dateTime;
@@ -70,7 +71,7 @@ class DateTime
      */
     public static function now(): static
     {
-        return static::init('now');
+        return static::init(wpGmtDateTime: 'now');
     }
 
     // *************************************************************************
@@ -95,7 +96,7 @@ class DateTime
      */
     public function asLocal(): static
     {
-        $this->as($this->getWpTimezoneString());
+        $this->as(timezone: $this->getWpTimezoneString());
 
         return $this;
     }
@@ -156,7 +157,7 @@ class DateTime
     protected function getWpTimezoneString(): string
     {
         return static::getWpOption(
-            'timezone_string', static::TIMEZONE
+            option: 'timezone_string', fallback: static::TIMEZONE
         );
     }
 
@@ -168,7 +169,7 @@ class DateTime
     protected function getWpDateFormat(): string
     {
         return static::getWpOption(
-            'date_format', static::DATE_FORMAT
+            option: 'date_format', fallback: static::DATE_FORMAT
         );
     }
 
@@ -180,7 +181,7 @@ class DateTime
     protected function getWpTimeFormat(): string
     {
         return static::getWpOption(
-            'time_format', static::TIME_FORMAT
+            option: 'time_format', fallback: static::TIME_FORMAT
         );
     }
 
