@@ -318,7 +318,6 @@ class Post implements IsPersistable
      *
      * @param int $id
      * @return ?static
-     * @see get_post()
      */
     public static function fromId(int $id): ?static
     {
@@ -336,7 +335,6 @@ class Post implements IsPersistable
      * @param string $path hello-world
      * @param string $postType post
      * @return ?static
-     * @see get_page_by_path()
      */
     public static function fromPath(string $path, string $postType): ?static
     {
@@ -350,7 +348,6 @@ class Post implements IsPersistable
      * Initialize post from global WP_Post
      *
      * @return ?static
-     * @see get_post()
      */
     public static function fromGlobalWpPost(): ?static
     {
@@ -409,7 +406,7 @@ class Post implements IsPersistable
      */
     public static function query(array $params): WP_Query
     {
-        return new WP_Query($params);
+        return new WP_Query(query: $params);
     }
 
     // -------------------------------------------------------------------------
@@ -1236,9 +1233,11 @@ class Post implements IsPersistable
             return;
         }
 
-        if (!$wpPost = get_post($id)) {
+        $wpPost = get_post($id);
+
+        if (!$wpPost instanceof WP_Post) {
             return;
-        };
+        }
 
         $this->loadFromWpPost($wpPost);
     }
@@ -1252,9 +1251,11 @@ class Post implements IsPersistable
      */
     protected function loadFromPath(string $path, string $postType): void
     {
-        if (!$wpPost = get_page_by_path(
+        $wpPost = get_page_by_path(
             page_path: $path, post_type: $postType
-        )) {
+        );
+
+        if (!$wpPost instanceof WP_Post) {
             return;
         }
 
@@ -1268,7 +1269,9 @@ class Post implements IsPersistable
      */
     protected function loadFromGlobalWpPost(): void
     {
-        if (!$wpPost = get_post()) {
+        $wpPost = get_post();
+
+        if (!$wpPost instanceof WP_Post) {
             return;
         }
 
