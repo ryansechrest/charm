@@ -168,6 +168,8 @@ class Meta implements IsPersistable
         return $metas[0];
     }
 
+    // -------------------------------------------------------------------------
+
     /**
      * Create meta with specified key and value on object
      *
@@ -339,10 +341,10 @@ class Meta implements IsPersistable
         }
 
         $result = static::createMeta(
-            $this->metaType,
-            $this->objectId,
-            $this->metaKey,
-            $this->metaValue
+            metaType: $this->metaType,
+            objectId: $this->objectId,
+            metaKey: $this->metaKey,
+            metaValue: $this->metaValue
         );
 
         if ($result->hasFailed()) {
@@ -369,11 +371,11 @@ class Meta implements IsPersistable
         }
 
         $result = static::updateMeta(
-            $this->metaType,
-            $this->objectId,
-            $this->metaKey,
-            $this->metaValue,
-            $this->prevMetaValue
+            metaType: $this->metaType,
+            objectId: $this->objectId,
+            metaKey: $this->metaKey,
+            metaValue: $this->metaValue,
+            prevMetaValue: $this->prevMetaValue
         );
 
         if ($result->hasFailed()) {
@@ -400,10 +402,10 @@ class Meta implements IsPersistable
         }
 
         $result = static::deleteMeta(
-            $this->metaType,
-            $this->objectId,
-            $this->metaKey,
-            $this->metaValue
+            metaType: $this->metaType,
+            objectId: $this->objectId,
+            metaKey: $this->metaKey,
+            metaValue: $this->metaValue
         );
 
         if ($result->hasFailed()) {
