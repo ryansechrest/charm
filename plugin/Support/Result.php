@@ -88,7 +88,7 @@ class Result
      */
     public static function success(): self
     {
-        return new self(true);
+        return new self(success: true);
     }
 
     /**
@@ -100,7 +100,9 @@ class Result
      */
     public static function error(string $code = '', string $message = ''): self
     {
-        return new self(false, $code, $message);
+        return new self(
+            success: false, errorCode: $code, errorMessage: $message
+        );
     }
 
     /**
@@ -112,10 +114,10 @@ class Result
     public static function wpError(WP_Error $wpError): self
     {
         return new self(
-            false,
-            $wpError->get_error_code(),
-            $wpError->get_error_message(),
-            $wpError
+            success: false,
+            errorCode: $wpError->get_error_code(),
+            errorMessage: $wpError->get_error_message(),
+            wpError: $wpError
         );
     }
 
