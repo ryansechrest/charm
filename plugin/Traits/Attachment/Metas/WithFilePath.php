@@ -21,7 +21,10 @@ trait WithFilePath
     public function getFilePath(): string
     {
         /** @var HasMeta $this */
-        return $this->getMeta('_wp_attached_file')->castValue()->toString();
+        return $this
+            ->getMeta(key: '_wp_attached_file')
+            ->castValue()
+            ->toString();
     }
 
     /**
@@ -33,7 +36,7 @@ trait WithFilePath
     public function setFilePath(string $filePath): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('_wp_attached_file', $filePath);
+        $this->updateMeta(key: '_wp_attached_file', value: $filePath);
 
         return $this;
     }

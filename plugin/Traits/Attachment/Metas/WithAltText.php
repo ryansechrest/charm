@@ -21,7 +21,10 @@ trait WithAltText
     public function getAltText(): string
     {
         /** @var HasMeta $this */
-        return $this->getMeta('_wp_attachment_image_alt')->castValue()->toString();
+        return $this
+            ->getMeta(key: '_wp_attachment_image_alt')
+            ->castValue()
+            ->toString();
     }
 
     /**
@@ -33,7 +36,7 @@ trait WithAltText
     public function setAltText(string $altText): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('_wp_attachment_image_alt', $altText);
+        $this->updateMeta(key: '_wp_attachment_image_alt', value: $altText);
 
         return $this;
     }

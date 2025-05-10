@@ -21,7 +21,7 @@ trait WithFirstName
     public function getFirstName(): string
     {
         /** @var HasMeta $this */
-        return $this->getMeta('first_name')->castValue()->toString();
+        return $this->getMeta(key: 'first_name')->castValue()->toString();
     }
 
     /**
@@ -33,7 +33,7 @@ trait WithFirstName
     public function setFirstName(string $firstName): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('first_name', $firstName);
+        $this->updateMeta(key: 'first_name', value: $firstName);
 
         return $this;
     }
@@ -46,7 +46,7 @@ trait WithFirstName
     public function deleteFirstName(): static
     {
         /** @var HasMeta $this */
-        $this->deleteMeta('first_name');
+        $this->deleteMeta(key: 'first_name');
 
         return $this;
     }

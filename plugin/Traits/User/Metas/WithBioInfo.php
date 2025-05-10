@@ -21,7 +21,7 @@ trait WithBioInfo
     public function getBioInfo(): string
     {
         /** @var HasMeta $this */
-        return $this->getMeta('description')->castValue()->toString();
+        return $this->getMeta(key: 'description')->castValue()->toString();
     }
 
     /**
@@ -33,7 +33,7 @@ trait WithBioInfo
     public function setBioInfo(string $bioInfo): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('description', $bioInfo);
+        $this->updateMeta(key: 'description', value: $bioInfo);
 
         return $this;
     }
@@ -46,7 +46,7 @@ trait WithBioInfo
     public function deleteBioInfo(): static
     {
         /** @var HasMeta $this */
-        $this->deleteMeta('description');
+        $this->deleteMeta(key: 'description');
 
         return $this;
     }

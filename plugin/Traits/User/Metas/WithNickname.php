@@ -21,7 +21,7 @@ trait WithNickname
     public function getNickname(): string
     {
         /** @var HasMeta $this */
-        return $this->getMeta('nickname')->castValue()->toString();
+        return $this->getMeta(key: 'nickname')->castValue()->toString();
     }
 
     /**
@@ -33,7 +33,7 @@ trait WithNickname
     public function setNickname(string $nickname): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('nickname', $nickname);
+        $this->updateMeta(key: 'nickname', value: $nickname);
 
         return $this;
     }
@@ -46,7 +46,7 @@ trait WithNickname
     public function deleteNickname(): static
     {
         /** @var HasMeta $this */
-        $this->deleteMeta('nickname');
+        $this->deleteMeta(key: 'nickname');
 
         return $this;
     }

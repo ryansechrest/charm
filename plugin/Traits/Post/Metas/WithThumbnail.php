@@ -21,7 +21,7 @@ trait WithThumbnail
     public function getThumbnailId(): int
     {
         /** @var HasMeta $this */
-        return $this->getMeta('_thumbnail_id')->castValue()->toInt();
+        return $this->getMeta(key: '_thumbnail_id')->castValue()->toInt();
     }
 
     /**
@@ -33,7 +33,7 @@ trait WithThumbnail
     public function setThumbnailId(int $id): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('_thumbnail_id', $id);
+        $this->updateMeta(key: '_thumbnail_id', value: $id);
 
         return $this;
     }
@@ -46,7 +46,7 @@ trait WithThumbnail
     public function deleteThumbnailId(): static
     {
         /** @var HasMeta $this */
-        $this->deleteMeta('_thumbnail_id');
+        $this->deleteMeta(key: '_thumbnail_id');
 
         return $this;
     }

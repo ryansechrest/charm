@@ -21,7 +21,7 @@ trait WithLastName
     public function getLastName(): string
     {
         /** @var HasMeta $this */
-        return $this->getMeta('last_name')->castValue()->toString();
+        return $this->getMeta(key: 'last_name')->castValue()->toString();
     }
 
     /**
@@ -33,7 +33,7 @@ trait WithLastName
     public function setLastName(string $lastName): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('last_name', $lastName);
+        $this->updateMeta(key: 'last_name', value: $lastName);
 
         return $this;
     }
@@ -46,7 +46,7 @@ trait WithLastName
     public function deleteLastName(): static
     {
         /** @var HasMeta $this */
-        $this->deleteMeta('last_name');
+        $this->deleteMeta(key: 'last_name');
 
         return $this;
     }

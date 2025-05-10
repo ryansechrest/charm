@@ -21,7 +21,10 @@ trait WithMetaData
     public function getMetaData(): array
     {
         /** @var HasMeta $this */
-        return $this->getMeta('_wp_attachment_metadata')->castValue()->toArray();
+        return $this
+            ->getMeta(key: '_wp_attachment_metadata')
+            ->castValue()
+            ->toArray();
     }
 
     /**
@@ -33,7 +36,7 @@ trait WithMetaData
     public function setMetaData(array $metaData): static
     {
         /** @var HasMeta $this */
-        $this->updateMeta('_wp_attachment_metadata', $metaData);
+        $this->updateMeta(key: '_wp_attachment_metadata', value: $metaData);
 
         return $this;
     }
