@@ -322,7 +322,7 @@ class Post implements IsPersistable
      */
     public static function fromId(int $id): ?static
     {
-        $post = new static;
+        $post = new static();
         $post->loadFromId($id);
 
         return $post->id ? $post : null;
@@ -340,7 +340,7 @@ class Post implements IsPersistable
      */
     public static function fromPath(string $path, string $postType): ?static
     {
-        $post = new static;
+        $post = new static();
         $post->loadFromPath($path, $postType);
 
         return $post->id ? $post : null;
@@ -354,7 +354,7 @@ class Post implements IsPersistable
      */
     public static function fromGlobalWpPost(): ?static
     {
-        $post = new static;
+        $post = new static();
         $post->loadFromGlobalWpPost();
 
         return $post->id ? $post : null;
@@ -368,7 +368,7 @@ class Post implements IsPersistable
      */
     public static function fromWpPost(WP_Post $wpPost): static
     {
-        $post = new static;
+        $post = new static();
         $post->loadFromWpPost($wpPost);
 
         return $post;
@@ -435,21 +435,21 @@ class Post implements IsPersistable
     {
         if ($this->id !== null) {
             return Result::error(
-                'post_id_exists',
-                __('Post already exists.', 'charm')
+                code: 'post_id_exists',
+                message: __('Post already exists.', 'charm')
             )->withData($this);
         }
 
-        $result = wp_insert_post($this->toWpPostArray());
+        $result = wp_insert_post(postarr: $this->toWpPostArray());
 
         if (is_wp_error($result)) {
-            return Result::wpError($result)->withData($this);
+            return Result::wpError(wpError: $result)->withData($this);
         }
 
         if (!is_int($result) || $result === 0) {
             return Result::error(
-                'wp_insert_post_failed',
-                __('wp_insert_post() did not return an ID.', 'charm')
+                code: 'wp_insert_post_failed',
+                message: __('wp_insert_post() did not return an ID.', 'charm')
             )->withData($this);
         }
 
@@ -470,23 +470,23 @@ class Post implements IsPersistable
     {
         if ($this->id === null) {
             return Result::error(
-                'post_id_missing',
-                __('Cannot update post with blank ID.', 'charm')
+                code: 'post_id_missing',
+                message: __('Cannot update post with blank ID.', 'charm')
             )->withData($this);
         }
 
         $result = wp_update_post(
-            $this->toWpPostArray(['ID' => $this->id])
+            postarr: $this->toWpPostArray(includeData: ['ID' => $this->id])
         );
 
         if (is_wp_error($result)) {
-            return Result::error($result)->withData($this);
+            return Result::wpError(wpError: $result)->withData($this);
         }
 
         if (!is_int($result) || $result === 0) {
             return Result::error(
-                'wp_update_post_failed',
-                __('wp_update_post() did not return an ID.', 'charm')
+                code: 'wp_update_post_failed',
+                message: __('wp_update_post() did not return an ID.', 'charm')
             )->withData($this);
         }
 
@@ -505,17 +505,17 @@ class Post implements IsPersistable
     {
         if ($this->id === null) {
             return Result::error(
-                'post_id_missing',
-                __('Cannot trash post with blank ID.', 'charm')
+                code: 'post_id_missing',
+                message: __('Cannot trash post with blank ID.', 'charm')
             )->withData($this);
         }
 
-        $result = wp_trash_post($this->id);
+        $result = wp_trash_post(post_id: $this->id);
 
         if (!$result instanceof WP_Post) {
             return Result::error(
-                'wp_trash_post_failed',
-                __('wp_trash_post() did not return a post.', 'charm')
+                code: 'wp_trash_post_failed',
+                message: __('wp_trash_post() did not return a post.', 'charm')
             )->withData($this);
         }
 
@@ -534,17 +534,17 @@ class Post implements IsPersistable
     {
         if ($this->id === null) {
             return Result::error(
-                'post_id_missing',
-                __('Cannot restore post with blank ID.', 'charm')
+                code: 'post_id_missing',
+                message: __('Cannot restore post with blank ID.', 'charm')
             )->withData($this);
         }
 
-        $result = wp_untrash_post($this->id);
+        $result = wp_untrash_post(post_id: $this->id);
 
         if (!$result instanceof WP_Post) {
             return Result::error(
-                'wp_untrash_post_failed',
-                __('wp_untrash_post() did not return a post.', 'charm')
+                code: 'wp_untrash_post_failed',
+                message: __('wp_untrash_post() did not return a post.', 'charm')
             )->withData($this);
         }
 
@@ -563,17 +563,17 @@ class Post implements IsPersistable
     {
         if ($this->id === null) {
             return Result::error(
-                'post_id_missing',
-                __('Cannot delete post with blank ID.', 'charm')
+                code: 'post_id_missing',
+                message: __('Cannot delete post with blank ID.', 'charm')
             )->withData($this);
         }
 
-        $result = wp_delete_post($this->id, true);
+        $result = wp_delete_post(post_id: $this->id, force_delete: true);
 
         if (!$result instanceof WP_Post) {
             return Result::error(
-                'wp_delete_post_failed',
-                __('wp_delete_post() did not return a post.', 'charm')
+                code: 'wp_delete_post_failed',
+                message: __('wp_delete_post() did not return a post.', 'charm')
             )->withData($this);
         }
 
@@ -1160,7 +1160,9 @@ class Post implements IsPersistable
      */
     protected function loadFromPath(string $path, string $postType): void
     {
-        if (!$wpPost = get_page_by_path($path, OBJECT, $postType)) {
+        if (!$wpPost = get_page_by_path(
+            page_path: $path, post_type: $postType
+        )) {
             return;
         }
 

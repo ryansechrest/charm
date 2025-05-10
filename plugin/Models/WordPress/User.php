@@ -178,7 +178,7 @@ class User implements IsPersistable
      */
     public static function fromId(int $id): ?static
     {
-        $user = new static;
+        $user = new static();
         $user->loadFromId($id);
 
         return $user->id ? $user : null;
@@ -194,7 +194,7 @@ class User implements IsPersistable
      */
     public static function fromUsername(string $username): ?static
     {
-        $user = new static;
+        $user = new static();
         $user->loadFromUsername($username);
 
         return $user->id ? $user : null;
@@ -210,7 +210,7 @@ class User implements IsPersistable
      */
     public static function fromSlug(string $slug): ?static
     {
-        $user = new static;
+        $user = new static();
         $user->loadFromSlug($slug);
 
         return $user->id ? $user : null;
@@ -226,7 +226,7 @@ class User implements IsPersistable
      */
     public static function fromEmail(string $email): ?static
     {
-        $user = new static;
+        $user = new static();
         $user->loadFromEmail($email);
 
         return $user->id ? $user : null;
@@ -240,7 +240,7 @@ class User implements IsPersistable
      */
     public static function fromGlobalWpUser(): ?static
     {
-        $user = new static;
+        $user = new static();
         $user->loadFromGlobalWpUser();
 
         return $user->id ? $user : null;
@@ -254,7 +254,7 @@ class User implements IsPersistable
      */
     public static function fromWpUser(WP_User $wpUser): static
     {
-        $user = new static;
+        $user = new static();
         $user->loadFromWpUser($wpUser);
 
         return $user;
@@ -295,7 +295,7 @@ class User implements IsPersistable
      */
     public static function query(array $params): WP_User_Query
     {
-        return new WP_User_Query($params);
+        return new WP_User_Query(query: $params);
     }
 
     // *************************************************************************
@@ -321,25 +321,25 @@ class User implements IsPersistable
     {
         if ($this->id !== null) {
             return Result::error(
-                'user_id_exists',
-                __('User already exists.', 'charm')
+                code: 'user_id_exists',
+                message: __('User already exists.', 'charm')
             )->withData($this);
         }
 
         $result = wp_insert_user(
-            $this->toWpUserArray(
-                ['user_login' => $this->userLogin]
+            userdata: $this->toWpUserArray(
+                includeData: ['user_login' => $this->userLogin]
             )
         );
 
         if (is_wp_error($result)) {
-            return Result::wpError($result)->withData($this);
+            return Result::wpError(wpError: $result)->withData($this);
         }
 
         if (!is_int($result)) {
             return Result::error(
-                'wp_insert_user_failed',
-                __('wp_insert_user() did not return an ID.', 'charm')
+                code: 'wp_insert_user_failed',
+                message: __('wp_insert_user() did not return an ID.', 'charm')
             )->withData($this);
         }
 
@@ -360,23 +360,23 @@ class User implements IsPersistable
     {
         if ($this->id === null) {
             return Result::error(
-                'user_id_missing',
-                __('Cannot update user with blank ID.', 'charm')
+                code: 'user_id_missing',
+                message: __('Cannot update user with blank ID.', 'charm')
             )->withData($this);
         }
 
-        $data = $this->toWpUserArray(['ID' => $this->id]);
+        $data = $this->toWpUserArray(includeData: ['ID' => $this->id]);
 
-        $result = wp_update_user($data);
+        $result = wp_update_user(userdata: $data);
 
         if (is_wp_error($result)) {
-            return Result::wpError($result)->withData($data);
+            return Result::wpError(wpError: $result)->withData($data);
         }
 
         if (!is_int($result)) {
             return Result::error(
-                'wp_update_user_failed',
-                __('wp_update_user() did not return an ID.', 'charm')
+                code: 'wp_update_user_failed',
+                message: __('wp_update_user() did not return an ID.', 'charm')
             )->withData($data);
         }
 
@@ -395,17 +395,17 @@ class User implements IsPersistable
     {
         if ($this->id === null) {
             return Result::error(
-                'user_id_missing',
-                __('Cannot delete user with blank ID.', 'charm')
+                code: 'user_id_missing',
+                message: __('Cannot delete user with blank ID.', 'charm')
             )->withData($this);
         }
 
-        $result = wp_delete_user($this->id);
+        $result = wp_delete_user(id: $this->id);
 
         if ($result !== true) {
             return Result::error(
-                'wp_delete_user_failed',
-                __('wp_delete_user() did not return true.', 'charm')
+                code: 'wp_delete_user_failed',
+                message: __('wp_delete_user() did not return true.', 'charm')
             )->withData($this);
         }
 
@@ -699,7 +699,7 @@ class User implements IsPersistable
             return;
         }
 
-        if (!$wpUser = static::getWpUserBy('id', $id)) {
+        if (!$wpUser = static::getWpUserBy(field: 'id', value: $id)) {
             return;
         }
 
@@ -713,7 +713,7 @@ class User implements IsPersistable
      */
     protected function loadFromUsername(string $username): void
     {
-        if (!$wpUser = static::getWpUserBy('login', $username)) {
+        if (!$wpUser = static::getWpUserBy(field: 'login', value: $username)) {
             return;
         }
 
@@ -727,7 +727,7 @@ class User implements IsPersistable
      */
     protected function loadFromSlug(string $slug): void
     {
-        if (!$wpUser = static::getWpUserBy('slug', $slug)) {
+        if (!$wpUser = static::getWpUserBy(field: 'slug', value: $slug)) {
             return;
         }
 
@@ -741,7 +741,7 @@ class User implements IsPersistable
      */
     protected function loadFromEmail(string $email): void
     {
-        if (!$wpUser = static::getWpUserBy('email', $email)) {
+        if (!$wpUser = static::getWpUserBy(field: 'email', value: $email)) {
             return;
         }
 

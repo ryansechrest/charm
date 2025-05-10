@@ -194,8 +194,8 @@ class Meta implements IsPersistable
 
         if ($result === false) {
             return Result::error(
-                'add_metadata_failed',
-                __('add_metadata() returned false.', 'charm')
+                code: 'add_metadata_failed',
+                message: __('add_metadata() returned false.', 'charm')
             )->withData(func_get_args());
         }
 
@@ -231,8 +231,8 @@ class Meta implements IsPersistable
 
         if ($result === false) {
             return Result::error(
-                'update_metadata_failed',
-                __('update_metadata() returned false.', 'charm')
+                code: 'update_metadata_failed',
+                message: __('update_metadata() returned false.', 'charm')
             )->withData(func_get_args());
         }
 
@@ -257,8 +257,8 @@ class Meta implements IsPersistable
 
         if ($result === false) {
             return Result::error(
-                'delete_metadata_failed',
-                __('delete_metadata() returned false.', 'charm')
+                code: 'delete_metadata_failed',
+                message: __('delete_metadata() returned false.', 'charm')
             )->withData(func_get_args());
         }
 
@@ -279,13 +279,17 @@ class Meta implements IsPersistable
     ): Result
     {
         $result = delete_metadata(
-            $metaType, 0, $metaKey, $metaValue, true
+            meta_type: $metaType,
+            object_id: 0,
+            meta_key: $metaKey,
+            meta_value: $metaValue,
+            delete_all: true
         );
 
         if ($result === false) {
             return Result::error(
-                'delete_metadata_failed',
-                __('delete_metadata() returned false.', 'charm')
+                code: 'delete_metadata_failed',
+                message: __('delete_metadata() returned false.', 'charm')
             )->withData(func_get_args());
         }
 
@@ -329,8 +333,8 @@ class Meta implements IsPersistable
     {
         if ($this->exists) {
             return Result::error(
-                'meta_exists',
-                __('Meta already exists.', 'charm')
+                code: 'meta_exists',
+                message: __('Meta already exists.', 'charm')
             )->withData($this);
         }
 
@@ -359,8 +363,8 @@ class Meta implements IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                'meta_not_found',
-                __('Meta does not exist.', 'charm')
+                code: 'meta_not_found',
+                message: __('Meta does not exist.', 'charm')
             )->withData($this);
         }
 
@@ -390,8 +394,8 @@ class Meta implements IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                'meta_not_found',
-                __('Meta does not exist.', 'charm')
+                code: 'meta_not_found',
+                message: __('Meta does not exist.', 'charm')
             )->withData($this);
         }
 
@@ -577,7 +581,9 @@ class Meta implements IsPersistable
 
         // Loop over every meta with same key
         foreach ($metaValues as $metaValue) {
-            $metas[] = self::getSingle($metaType, $objectId, $metaKey, $metaValue);
+            $metas[] = self::getSingle(
+                $metaType, $objectId, $metaKey, $metaValue
+            );
         }
 
         return $metas;
