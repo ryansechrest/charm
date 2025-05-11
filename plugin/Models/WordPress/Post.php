@@ -376,15 +376,15 @@ class Post implements IsPersistable
     /**
      * Get posts
      *
-     * See possible parameters:
+     * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_query/
      *
-     * @param array $params
+     * @param array $args
      * @return static[]
      */
-    public static function get(array $params): array
+    public static function get(array $args): array
     {
-        $wpQuery = self::query($params);
+        $wpQuery = self::query($args);
 
         if ($wpQuery->found_posts === 0) {
             return [];
@@ -398,15 +398,15 @@ class Post implements IsPersistable
     /**
      * Query posts with WP_Query
      *
-     * See possible parameters:
+     * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_query/
      *
-     * @param array $params
+     * @param array $args
      * @return WP_Query
      */
-    public static function query(array $params): WP_Query
+    public static function query(array $args): WP_Query
     {
-        return new WP_Query(query: $params);
+        return new WP_Query(query: $args);
     }
 
     // -------------------------------------------------------------------------
