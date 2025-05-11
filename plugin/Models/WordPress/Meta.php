@@ -365,8 +365,8 @@ class Meta implements IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                code: 'meta_not_found',
-                message: __('Meta does not exist.', 'charm')
+                code: 'meta_missing',
+                message: __('Cannot update meta that does not exist.', 'charm')
             )->withData($this);
         }
 
@@ -396,8 +396,8 @@ class Meta implements IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                code: 'meta_not_found',
-                message: __('Meta does not exist.', 'charm')
+                code: 'meta_missing',
+                message: __('Cannot delete meta that does not exist.', 'charm')
             )->withData($this);
         }
 
