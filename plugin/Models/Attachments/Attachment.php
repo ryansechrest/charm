@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Attachment;
+namespace Charm\Models\Attachments;
 
 use Charm\Models\Base;
 use Charm\Traits\Attachment\Fields\WithAttachedTo;

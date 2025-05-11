@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Attachment;
+namespace Charm\Models\Attachments;
 
 /**
  * Represents a video attachment in WordPress.

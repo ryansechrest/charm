@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Taxonomy;
+namespace Charm\Models\Taxonomies;
 
 use Charm\Models\Base;
 use Charm\Traits\Term\Fields\WithCount;

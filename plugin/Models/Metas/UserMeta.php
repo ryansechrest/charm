@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Meta;
+namespace Charm\Models\Metas;
 
 use Charm\Models\Base;
 

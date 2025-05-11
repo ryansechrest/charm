@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Attachment;
+namespace Charm\Models\Attachments;
 
 /**
  * Represents an audio attachment in WordPress.
