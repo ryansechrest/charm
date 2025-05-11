@@ -92,8 +92,9 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public static function get(int $objectId, string $metaKey = ''): array
     {
-        $wpMetas = WordPress\Meta::get(static::metaType(), $objectId, $metaKey);
-
+        $wpMetas = WordPress\Meta::get(
+            static::metaType(), $objectId, $metaKey
+        );
         $metas = [];
 
         foreach ($wpMetas as $metaKey => $wpMeta) {
@@ -110,7 +111,6 @@ abstract class Meta implements HasWpMeta, IsPersistable
                 $meta->wpMeta = $wpSingleMeta;
                 $metas[$metaKey][] = $meta;
             }
-
         }
 
         return $metas;
