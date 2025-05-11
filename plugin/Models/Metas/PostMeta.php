@@ -1,6 +1,8 @@
 <?php
 
-namespace Charm\Models;
+namespace Charm\Models\Meta;
+
+use Charm\Models\Base;
 
 /**
  * Represents a post meta in WordPress.

@@ -2,32 +2,30 @@
 
 namespace Charm\Models\Attachment;
 
-use Charm\Models\Attachment;
-
 /**
- * Represents a video attachment in WordPress.
+ * Represents an audio attachment in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-class VideoAttachment extends Attachment
+class AudioAttachment extends Attachment
 {
     /**
-     * Get video width
+     * Get album name
      */
-    public function getWidth(): string
+    public function getAlbum(): string
     {
-        return $this->getMetaData()['width'] ?? '';
+        return $this->getMetaData()['album'] ?? '';
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get video height
+     * Get artist name
      */
-    public function getHeight(): string
+    public function getArist(): string
     {
-        return $this->getMetaData()['height'] ?? '';
+        return $this->getMetaData()['artist'] ?? '';
     }
 
     // -------------------------------------------------------------------------

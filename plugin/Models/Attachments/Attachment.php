@@ -1,7 +1,8 @@
 <?php
 
-namespace Charm\Models;
+namespace Charm\Models\Attachment;
 
+use Charm\Models\Base;
 use Charm\Traits\Attachment\Fields\WithAttachedTo;
 use Charm\Traits\Attachment\Fields\WithCaption;
 use Charm\Traits\Attachment\Fields\WithDescription;

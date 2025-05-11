@@ -2,8 +2,6 @@
 
 namespace Charm\Models\Attachment;
 
-use Charm\Models\Attachment;
-
 /**
  * Represents an image attachment in WordPress.
  *
