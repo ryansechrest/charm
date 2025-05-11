@@ -265,15 +265,15 @@ class User implements IsPersistable
     /**
      * Get users
      *
-     * See possible parameters:
+     * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_user_query/
      *
-     * @param array $params
+     * @param array $args
      * @return static[]
      */
-    public static function get(array $params): array
+    public static function get(array $args): array
     {
-        $wpUserQuery = static::query($params);
+        $wpUserQuery = static::query($args);
 
         if ($wpUserQuery->get_total() === 0) {
             return [];
@@ -287,15 +287,15 @@ class User implements IsPersistable
     /**
      * Query users with WP_User_Query
      *
-     * See possible parameters:
+     * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_user_query/
      *
-     * @param array $params
+     * @param array $args
      * @return WP_User_Query
      */
-    public static function query(array $params): WP_User_Query
+    public static function query(array $args): WP_User_Query
     {
-        return new WP_User_Query(query: $params);
+        return new WP_User_Query(query: $args);
     }
 
     // -------------------------------------------------------------------------
