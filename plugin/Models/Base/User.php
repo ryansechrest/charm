@@ -4,12 +4,12 @@ namespace Charm\Models\Base;
 
 use Charm\Contracts\HasWpUser;
 use Charm\Contracts\IsPersistable;
-use Charm\Models\UserMeta;
+use Charm\Models\Meta\UserMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
-use Charm\Traits\WithPersistenceState;
 use Charm\Traits\WithMeta;
+use Charm\Traits\WithPersistenceState;
 use WP_User;
 use WP_User_Query;
 
@@ -124,13 +124,15 @@ abstract class User implements HasWpUser, IsPersistable
     /**
      * Get users
      *
-     * @param array $params
+     * See possible arguments:
+     * https://developer.wordpress.org/reference/classes/wp_user_query/
+     *
+     * @param array $args
      * @return static[]
      */
-    public static function get(array $params = ['search' => '']): array
+    public static function get(array $args = ['search' => '']): array
     {
-        $wpUsers = WordPress\User::get($params);
-
+        $wpUsers = WordPress\User::get($args);
         $users = [];
 
         foreach ($wpUsers as $wpUser) {
@@ -145,12 +147,15 @@ abstract class User implements HasWpUser, IsPersistable
     /**
      * Query users with WP_User_Query
      *
-     * @param array $params
+     * See possible arguments:
+     * https://developer.wordpress.org/reference/classes/wp_user_query/
+     *
+     * @param array $args
      * @return WP_User_Query
      */
-    public static function query(array $params): WP_User_Query
+    public static function query(array $args): WP_User_Query
     {
-        return WordPress\User::query($params);
+        return WordPress\User::query($args);
     }
 
     // *************************************************************************
