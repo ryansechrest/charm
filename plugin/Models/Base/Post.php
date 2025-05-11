@@ -4,12 +4,12 @@ namespace Charm\Models\Base;
 
 use Charm\Contracts\HasWpPost;
 use Charm\Contracts\IsPersistable;
-use Charm\Models\PostMeta;
+use Charm\Models\Meta\PostMeta;
 use Charm\Models\WordPress;
 use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
-use Charm\Traits\WithPersistenceState;
 use Charm\Traits\WithMeta;
+use Charm\Traits\WithPersistenceState;
 use WP_Post;
 use WP_Query;
 
@@ -64,6 +64,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function __construct(array $data = [])
     {
+        $data['postType'] = static::postType();
         $this->wpPost = new WordPress\Post($data);
     }
 
@@ -135,15 +136,16 @@ abstract class Post implements HasWpPost, IsPersistable
     /**
      * Get posts
      *
-     * @param array $params
+     * See possible arguments:
+     * https://developer.wordpress.org/reference/classes/wp_query/
+     *
+     * @param array $args
      * @return static[]
      */
-    public static function get(array $params = ['post_status' => 'any']): array
+    public static function get(array $args = ['post_status' => 'any']): array
     {
-        $params['post_type'] = static::postType();
-
-        $wpPosts = WordPress\Post::get($params);
-
+        $args['post_type'] = static::postType();
+        $wpPosts = WordPress\Post::get($args);
         $posts = [];
 
         foreach ($wpPosts as $wpPost) {
@@ -158,12 +160,15 @@ abstract class Post implements HasWpPost, IsPersistable
     /**
      * Query posts with WP_Query
      *
-     * @param array $params
+     * See possible arguments:
+     * https://developer.wordpress.org/reference/classes/wp_query/
+     *
+     * @param array $args
      * @return WP_Query
      */
-    public static function query(array $params): WP_Query
+    public static function query(array $args): WP_Query
     {
-        return WordPress\Post::query($params);
+        return WordPress\Post::query($args);
     }
 
     // *************************************************************************
