@@ -4,7 +4,6 @@ namespace Charm\Traits\Post\Fields;
 
 use Charm\Contracts\HasWpPost;
 use Charm\Models\Base;
-use Charm\Models\Post;
 
 /**
  * Adds parent to post model.
@@ -43,12 +42,12 @@ trait WithParent
     /**
      * Set parent
      *
-     * @param Post|int|null $parent
+     * @param Base\Post|int|null $parent
      * @return static
      */
-    public function setParent(Post|int|null $parent): static
+    public function setParent(Base\Post|int|null $parent): static
     {
-        $id = $parent instanceof Post ? $parent->wp()->getId() : $parent;
+        $id = $parent instanceof Base\Post ? $parent->wp()->getId() : $parent;
 
         /** @var HasWpPost $this */
         $this->wp()->setPostParent($id ?? 0);
