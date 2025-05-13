@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Contracts;
+namespace Charm\Contracts\WordPress;
 
 use WP_User;
 

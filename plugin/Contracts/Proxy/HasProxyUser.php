@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Contracts;
+namespace Charm\Contracts\Proxy;
 
 use Charm\Models\Proxy;
 
