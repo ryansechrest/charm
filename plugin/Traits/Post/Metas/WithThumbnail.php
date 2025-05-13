@@ -3,6 +3,7 @@
 namespace Charm\Traits\Post\Metas;
 
 use Charm\Contracts\HasMeta;
+use Charm\Models\Attachments\ImageAttachment;
 
 /**
  * Adds thumbnail to post model.
@@ -16,34 +17,42 @@ use Charm\Contracts\HasMeta;
 trait WithThumbnail
 {
     /**
-     * Get thumbnail ID
+     * Get thumbnail
      */
-    public function getThumbnailId(): int
+    public function getThumbnail(): ImageAttachment
     {
         /** @var HasMeta $this */
-        return $this->getMeta(key: '_thumbnail_id')->castValue()->toInt();
+        $thumbnailId = $this
+            ->getMeta(key: '_thumbnail_id')
+            ->castValue()
+            ->toInt();
+
+        return ImageAttachment::init($thumbnailId);
     }
 
     /**
-     * Set thumbnail ID
+     * Set thumbnail
      *
-     * @param int $id
+     * @param ImageAttachment|int $thumbnail
      * @return static
      */
-    public function setThumbnailId(int $id): static
+    public function setThumbnail(ImageAttachment|int $thumbnail): static
     {
         /** @var HasMeta $this */
+        $id = $thumbnail instanceof ImageAttachment
+            ? $thumbnail->getId() : $thumbnail;
+
         $this->updateMeta(key: '_thumbnail_id', value: $id);
 
         return $this;
     }
 
     /**
-     * Set thumbnail ID
+     * Delete thumbnail
      *
      * @return static
      */
-    public function deleteThumbnailId(): static
+    public function deleteThumbnail(): static
     {
         /** @var HasMeta $this */
         $this->deleteMeta(key: '_thumbnail_id');
