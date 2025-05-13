@@ -2,7 +2,7 @@
 
 namespace Charm\Structures;
 
-use Charm\Contracts\HasWpRole;
+use Charm\Contracts\HasProxyRole;
 use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_Role;
@@ -13,14 +13,14 @@ use WP_Role;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Role implements HasWpRole, IsPersistable
+class Role implements HasProxyRole, IsPersistable
 {
     /**
-     * WordPress role
+     * Proxy role
      *
-     * @var ?WordPress\Role
+     * @var ?Proxy\Role
      */
-    protected ?WordPress\Role $wpRole = null;
+    protected ?Proxy\Role $proxyRole = null;
 
     // *************************************************************************
 
@@ -31,19 +31,19 @@ class Role implements HasWpRole, IsPersistable
      */
     public function __construct(array $data = [])
     {
-        $this->wpRole = new WordPress\Role($data);
+        $this->proxyRole = new Proxy\Role($data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get WordPress role instance
+     * Get proxy role instance
      *
-     * @return ?WordPress\Role
+     * @return ?Proxy\Role
      */
-    public function wp(): ?WordPress\Role
+    public function proxyRole(): ?Proxy\Role
     {
-        return $this->wpRole;
+        return $this->proxyRole;
     }
 
     // -------------------------------------------------------------------------
@@ -59,18 +59,18 @@ class Role implements HasWpRole, IsPersistable
      */
     public static function init(string|WP_Role $key): ?static
     {
-        $wpRole = match (true) {
-            is_string($key) => WordPress\Role::fromSlug($key),
-            $key instanceof WP_Role => WordPress\Role::fromWpRole($key),
+        $proxyRole = match (true) {
+            is_string($key) => Proxy\Role::fromSlug($key),
+            $key instanceof WP_Role => Proxy\Role::fromWpRole($key),
             default => null,
         };
 
-        if ($wpRole === null) {
+        if ($proxyRole === null) {
             return null;
         }
 
         $role = new static();
-        $role->wpRole = $wpRole;
+        $role->proxyRole = $proxyRole;
 
         return $role;
     }
@@ -84,13 +84,13 @@ class Role implements HasWpRole, IsPersistable
      */
     public static function get(): array
     {
-        $wpRoles = WordPress\Role::get();
+        $wpRoles = Proxy\Role::get();
 
         $roles = [];
 
         foreach ($wpRoles as $wpRole) {
             $role = new static();
-            $role->wpRole = $wpRole;
+            $role->proxyRole = $wpRole;
             $roles[] = $role;
         }
 
@@ -106,7 +106,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function save(): Result
     {
-        return $this->wp()->save();
+        return $this->proxyRole()->save();
     }
 
     /**
@@ -116,7 +116,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function create(): Result
     {
-        return $this->wp()->create();
+        return $this->proxyRole()->create();
     }
 
     /**
@@ -126,7 +126,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function update(): Result
     {
-        return $this->wp()->update();
+        return $this->proxyRole()->update();
     }
 
     /**
@@ -136,7 +136,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->wp()->delete();
+        return $this->proxyRole()->delete();
     }
 
     // *************************************************************************
@@ -148,7 +148,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function getSlug(): string
     {
-        return $this->wp()->getSlug();
+        return $this->proxyRole()->getSlug();
     }
 
     // -------------------------------------------------------------------------
@@ -160,7 +160,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function getName(): string
     {
-        return $this->wp()->getName();
+        return $this->proxyRole()->getName();
     }
 
     /**
@@ -171,7 +171,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function setName(string $name): static
     {
-        $this->wp()->setName($name);
+        $this->proxyRole()->setName($name);
 
         return $this;
     }
@@ -185,7 +185,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function getCapabilities(): array
     {
-        return $this->wp()->getCapabilities();
+        return $this->proxyRole()->getCapabilities();
     }
 
     /**
@@ -196,7 +196,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function addCapability(string $capability): static
     {
-        $this->wp()->addCapability($capability);
+        $this->proxyRole()->addCapability($capability);
 
         return $this;
     }
@@ -209,7 +209,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function removeCapability(string $capability): static
     {
-        $this->wp()->removeCapability($capability);
+        $this->proxyRole()->removeCapability($capability);
 
         return $this;
     }
@@ -222,7 +222,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function setCapabilities(array $capabilities): static
     {
-        $this->wp()->setCapabilities($capabilities);
+        $this->proxyRole()->setCapabilities($capabilities);
 
         return $this;
     }
@@ -235,7 +235,7 @@ class Role implements HasWpRole, IsPersistable
      */
     public function hasCapability(string $capability): bool
     {
-        return $this->wp()->hasCapability($capability);
+        return $this->proxyRole()->hasCapability($capability);
     }
 
     // -------------------------------------------------------------------------
@@ -247,6 +247,6 @@ class Role implements HasWpRole, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->wp()->exists();
+        return $this->proxyRole()->exists();
     }
 }
