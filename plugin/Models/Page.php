@@ -2,17 +2,7 @@
 
 namespace Charm\Models;
 
-use Charm\Traits\Post\Fields\WithContent;
-use Charm\Traits\Post\Fields\WithCreatedAt;
-use Charm\Traits\Post\Fields\WithUser;
-use Charm\Traits\Post\Fields\WithExcerpt;
-use Charm\Traits\Post\Fields\WithMenuOrder;
-use Charm\Traits\Post\Fields\WithParent;
-use Charm\Traits\Post\Fields\WithPassword;
-use Charm\Traits\Post\Fields\WithSlug;
-use Charm\Traits\Post\Fields\WithStatus;
-use Charm\Traits\Post\Fields\WithTitle;
-use Charm\Traits\Post\Fields\WithUpdatedAt;
+use Charm\Traits\Post\Fields;
 use Charm\Traits\Post\WithPermalink;
 
 /**
@@ -25,20 +15,20 @@ class Page extends Base\Post
 {
     // --- Post Fields ---------------------------------------------------------
 
-    use WithUser;
-    use WithCreatedAt;
-    use WithUpdatedAt;
+    use Fields\WithUser;
+    use Fields\WithCreatedAt;
+    use Fields\WithUpdatedAt;
 
-    use WithTitle;
-    use WithSlug;
-    use WithContent;
-    use WithExcerpt;
+    use Fields\WithTitle;
+    use Fields\WithSlug;
+    use Fields\WithContent;
+    use Fields\WithExcerpt;
 
-    use WithStatus;
-    use WithPassword;
-    use WithMenuOrder;
+    use Fields\WithStatus;
+    use Fields\WithPassword;
+    use Fields\WithMenuOrder;
 
-    use WithParent;
+    use Fields\WithParent;
 
     // --- Post Helpers --------------------------------------------------------
 
