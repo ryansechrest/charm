@@ -1,18 +1,19 @@
 <?php
 
-namespace Charm\Structures\WordPress;
+namespace Charm\Structures\Proxy;
 
+use Charm\Contracts\HasWpRole;
 use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_Role;
 
 /**
- * Represents a user role in WordPress.
+ * Represents a proxy user role in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-class Role implements IsPersistable
+class Role implements HasWpRole, IsPersistable
 {
     /**
      * Role slug
