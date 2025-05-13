@@ -49,6 +49,13 @@ trait WithMeta
     // *************************************************************************
 
     /**
+     * Returns the ID of the model.
+     *
+     * @return int
+     */
+    abstract public function getId(): int;
+
+    /**
      * Returns the meta class name used by the model.
      *
      * Must be implemented by the model using this trait to define which
