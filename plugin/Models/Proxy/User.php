@@ -2,8 +2,8 @@
 
 namespace Charm\Models\Proxy;
 
-use Charm\Contracts\HasWpUser;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\WordPress\HasWpUser;
 use Charm\Support\Result;
 use WP_User;
 use WP_User_Query;

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasProxyPost;
+use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
  * Adds excerpt to post model.

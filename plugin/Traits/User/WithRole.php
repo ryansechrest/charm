@@ -3,7 +3,7 @@
 namespace Charm\Traits\User;
 
 use Charm\Contracts\HasDeferredCalls;
-use Charm\Contracts\HasProxyUser;
+use Charm\Contracts\Proxy\HasProxyUser;
 use Charm\Structures\Role;
 use Charm\Support\Result;
 

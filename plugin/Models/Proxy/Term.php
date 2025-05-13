@@ -2,8 +2,8 @@
 
 namespace Charm\Models\Proxy;
 
-use Charm\Contracts\HasWpTerm;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\WordPress\HasWpTerm;
 use Charm\Support\Result;
 use WP_Error;
 use WP_Term;

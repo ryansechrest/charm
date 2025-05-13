@@ -2,8 +2,8 @@
 
 namespace Charm\Models\Base;
 
-use Charm\Contracts\HasProxyUser;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\Proxy\HasProxyUser;
 use Charm\Models\Metas\UserMeta;
 use Charm\Models\Proxy;
 use Charm\Support\Result;

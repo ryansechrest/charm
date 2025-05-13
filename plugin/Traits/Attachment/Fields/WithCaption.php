@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Attachment\Fields;
 
-use Charm\Contracts\HasProxyPost;
+use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
  * Adds caption to attachment model.

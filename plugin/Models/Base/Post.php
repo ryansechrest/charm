@@ -2,8 +2,8 @@
 
 namespace Charm\Models\Base;
 
-use Charm\Contracts\HasProxyPost;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Models\Metas\PostMeta;
 use Charm\Models\Proxy;
 use Charm\Support\Result;

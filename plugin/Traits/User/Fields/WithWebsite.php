@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\HasProxyUser;
+use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
  * Adds website to user model.

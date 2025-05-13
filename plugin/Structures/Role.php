@@ -2,8 +2,8 @@
 
 namespace Charm\Structures;
 
-use Charm\Contracts\HasProxyRole;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\Proxy\HasProxyRole;
 use Charm\Support\Result;
 use WP_Role;
 

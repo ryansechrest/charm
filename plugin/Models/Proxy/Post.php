@@ -2,8 +2,8 @@
 
 namespace Charm\Models\Proxy;
 
-use Charm\Contracts\HasWpPost;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\WordPress\HasWpPost;
 use Charm\Support\Result;
 use WP_Post;
 use WP_Query;

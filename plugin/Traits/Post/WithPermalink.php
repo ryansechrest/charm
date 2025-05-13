@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\WordPress\HasWpPost;
 
 /**
  * Adds permalink to post model.

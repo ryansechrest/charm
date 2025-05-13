@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\HasProxyTerm;
+use Charm\Contracts\Proxy\HasProxyTerm;
 
 /**
  * Adds name to term model.

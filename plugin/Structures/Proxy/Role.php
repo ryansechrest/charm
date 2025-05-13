@@ -2,8 +2,8 @@
 
 namespace Charm\Structures\Proxy;
 
-use Charm\Contracts\HasWpRole;
 use Charm\Contracts\IsPersistable;
+use Charm\Contracts\WordPress\HasWpRole;
 use Charm\Support\Result;
 use WP_Role;
 
