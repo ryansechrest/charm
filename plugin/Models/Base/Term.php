@@ -2,33 +2,39 @@
 
 namespace Charm\Models\Base;
 
-use Charm\Contracts\HasWpTerm;
+use Charm\Contracts\HasProxyTerm;
 use Charm\Contracts\IsPersistable;
-use Charm\Models\WordPress;
-use Charm\Support\Cast;
+use Charm\Models\Metas\TermMeta;
+use Charm\Models\Proxy;
 use Charm\Support\Result;
+use Charm\Traits\WithDeferredCalls;
+use Charm\Traits\WithMeta;
 use Charm\Traits\WithPersistenceState;
+use Charm\Traits\WithTerm;
 use WP_Term;
 use WP_Term_Query;
 
 /**
- * Represents a base meta in WordPress.
+ * Represents a base term in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class Term implements HasWpTerm, IsPersistable
+abstract class Term implements HasProxyTerm, IsPersistable
 {
+    use WithDeferredCalls;
+    use WithMeta;
     use WithPersistenceState;
+    use WithTerm;
 
     // -------------------------------------------------------------------------
 
     /**
-     * WordPress term
+     * Proxy term
      *
-     * @var ?WordPress\Term
+     * @var ?Proxy\Term
      */
-    protected ?WordPress\Term $wpTerm = null;
+    protected ?Proxy\Term $proxyTerm = null;
 
     // *************************************************************************
 
@@ -41,6 +47,16 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     abstract protected static function taxonomy(): string;
 
+    /**
+     * Define default meta class
+     *
+     * @return string
+     */
+    protected static function metaClass(): string
+    {
+        return TermMeta::class;
+    }
+
     // *************************************************************************
 
     /**
@@ -51,19 +67,19 @@ abstract class Term implements HasWpTerm, IsPersistable
     public function __construct(array $data = [])
     {
         $data['taxonomy'] = static::taxonomy();
-        $this->wpTerm = new WordPress\Term($data);
+        $this->proxyTerm = new Proxy\Term($data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get WordPress term instance
+     * Get proxy term instance
      *
-     * @return ?WordPress\Term
+     * @return ?Proxy\Term
      */
-    public function wp(): ?WordPress\Term
+    public function proxyTerm(): ?Proxy\Term
     {
-        return $this->wpTerm;
+        return $this->proxyTerm;
     }
 
     // *************************************************************************
@@ -80,23 +96,23 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public static function init(int|string|WP_Term $key): ?static
     {
-        $wpTerm = match (true) {
-            is_numeric($key) => WordPress\Term::fromTermTaxonomyId((int) $key),
-            is_string($key) => WordPress\Term::fromSlug($key, static::taxonomy()),
-            $key instanceof WP_Term => WordPress\Term::fromWpTerm($key),
+        $proxyTerm = match (true) {
+            is_numeric($key) => Proxy\Term::fromTermTaxonomyId((int) $key),
+            is_string($key) => Proxy\Term::fromSlug($key, static::taxonomy()),
+            $key instanceof WP_Term => Proxy\Term::fromWpTerm($key),
             default => null,
         };
 
-        if ($wpTerm === null) {
+        if ($proxyTerm === null) {
             return null;
         }
 
-        if ($wpTerm->getTaxonomy() !== static::taxonomy()) {
+        if ($proxyTerm->getTaxonomy() !== static::taxonomy()) {
             return null;
         }
 
         $term = new static();
-        $term->wpTerm = $wpTerm;
+        $term->proxyTerm = $proxyTerm;
 
         return $term;
     }
@@ -115,12 +131,12 @@ abstract class Term implements HasWpTerm, IsPersistable
     public static function get(array $args = ['hide_empty' => false]): array
     {
         $args['taxonomy'] = static::taxonomy();
-        $wpTerms = WordPress\Term::get($args);
+        $proxyTerms = Proxy\Term::get($args);
         $terms = [];
 
-        foreach ($wpTerms as $wpTerm) {
+        foreach ($proxyTerms as $proxyTerm) {
             $term = new static();
-            $term->wpTerm = $wpTerm;
+            $term->proxyTerm = $proxyTerm;
             $terms[] = $term;
         }
 
@@ -138,7 +154,7 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public static function query(array $args): WP_Term_Query
     {
-        return WordPress\Term::query($args);
+        return Proxy\Term::query($args);
     }
 
     // *************************************************************************
@@ -150,7 +166,7 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public function save(): Result
     {
-        return $this->wp()->save();
+        return $this->proxyTerm()->save();
     }
 
     /**
@@ -160,7 +176,7 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public function create(): Result
     {
-        return $this->wp()->create();
+        return $this->proxyTerm()->create();
     }
 
     /**
@@ -170,7 +186,7 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public function update(): Result
     {
-        return $this->wp()->update();
+        return $this->proxyTerm()->update();
     }
 
     /**
@@ -180,7 +196,7 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->wp()->delete();
+        return $this->proxyTerm()->delete();
     }
 
     // *************************************************************************
@@ -192,7 +208,7 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public function getId(): int
     {
-        return $this->wp()->getTermTaxonomyId();
+        return $this->proxyTerm()->getTermTaxonomyId();
     }
 
     // -------------------------------------------------------------------------
@@ -204,6 +220,6 @@ abstract class Term implements HasWpTerm, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->wp()->exists();
+        return $this->proxyTerm()->exists();
     }
 }

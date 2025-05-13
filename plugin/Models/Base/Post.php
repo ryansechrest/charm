@@ -2,10 +2,10 @@
 
 namespace Charm\Models\Base;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 use Charm\Contracts\IsPersistable;
-use Charm\Models\Meta\PostMeta;
-use Charm\Models\WordPress;
+use Charm\Models\Metas\PostMeta;
+use Charm\Models\Proxy;
 use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
 use Charm\Traits\WithMeta;
@@ -19,7 +19,7 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class Post implements HasWpPost, IsPersistable
+abstract class Post implements HasProxyPost, IsPersistable
 {
     use WithDeferredCalls;
     use WithMeta;
@@ -28,11 +28,11 @@ abstract class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * WordPress post
+     * Proxy post
      *
-     * @var ?WordPress\Post
+     * @var ?Proxy\Post
      */
-    protected ?WordPress\Post $wpPost = null;
+    protected ?Proxy\Post $proxyPost = null;
 
     // *************************************************************************
 
@@ -65,19 +65,19 @@ abstract class Post implements HasWpPost, IsPersistable
     public function __construct(array $data = [])
     {
         $data['postType'] = static::postType();
-        $this->wpPost = new WordPress\Post($data);
+        $this->proxyPost = new Proxy\Post($data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get WordPress post instance
+     * Get proxy post instance
      *
-     * @return ?WordPress\Post
+     * @return ?Proxy\Post
      */
-    public function wp(): ?WordPress\Post
+    public function proxyPost(): ?Proxy\Post
     {
-        return $this->wpPost;
+        return $this->proxyPost;
     }
 
     // *************************************************************************
@@ -97,23 +97,23 @@ abstract class Post implements HasWpPost, IsPersistable
         int|null|string|WP_Post $key = null
     ): ?static
     {
-        $wpPost = match (true) {
-            is_numeric($key) => WordPress\Post::fromId((int) $key),
-            is_string($key) => WordPress\Post::fromPath($key, static::postType()),
-            $key instanceof WP_Post => WordPress\Post::fromWpPost($key),
-            default => WordPress\Post::fromGlobalWpPost(),
+        $proxyPost = match (true) {
+            is_numeric($key) => Proxy\Post::fromId((int) $key),
+            is_string($key) => Proxy\Post::fromPath($key, static::postType()),
+            $key instanceof WP_Post => Proxy\Post::fromWpPost($key),
+            default => Proxy\Post::fromGlobalWpPost(),
         };
 
-        if ($wpPost === null) {
+        if ($proxyPost === null) {
             return null;
         }
 
-        if ($wpPost->getPostType() !== static::postType()) {
+        if ($proxyPost->getPostType() !== static::postType()) {
             return null;
         }
 
         $post = new static();
-        $post->wpPost = $wpPost;
+        $post->proxyPost = $proxyPost;
 
         return $post;
     }
@@ -145,12 +145,12 @@ abstract class Post implements HasWpPost, IsPersistable
     public static function get(array $args = ['post_status' => 'any']): array
     {
         $args['post_type'] = static::postType();
-        $wpPosts = WordPress\Post::get($args);
+        $proxyPosts = Proxy\Post::get($args);
         $posts = [];
 
-        foreach ($wpPosts as $wpPost) {
+        foreach ($proxyPosts as $proxyPost) {
             $post = new static();
-            $post->wpPost = $wpPost;
+            $post->proxyPost = $proxyPost;
             $posts[] = $post;
         }
 
@@ -168,7 +168,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public static function query(array $args): WP_Query
     {
-        return WordPress\Post::query($args);
+        return Proxy\Post::query($args);
     }
 
     // *************************************************************************
@@ -190,7 +190,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function create(): Result
     {
-        $result = $this->wp()->create();
+        $result = $this->proxyPost()->create();
 
         if ($result->hasFailed()) {
             return $result;
@@ -208,7 +208,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function update(): Result
     {
-        $result = $this->wp()->update();
+        $result = $this->proxyPost()->update();
 
         if ($result->hasFailed()) {
             return $result;
@@ -226,7 +226,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function trash(): Result
     {
-        return $this->wp()->trash();
+        return $this->proxyPost()->trash();
     }
 
     /**
@@ -236,7 +236,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function restore(): Result
     {
-        return $this->wp()->restore();
+        return $this->proxyPost()->restore();
     }
 
     /**
@@ -246,7 +246,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->wp()->delete();
+        return $this->proxyPost()->delete();
     }
 
     // *************************************************************************
@@ -258,7 +258,7 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function getId(): int
     {
-        return $this->wp()->getId();
+        return $this->proxyPost()->getId();
     }
 
     // -------------------------------------------------------------------------
@@ -270,6 +270,6 @@ abstract class Post implements HasWpPost, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->wp()->exists();
+        return $this->proxyPost()->exists();
     }
 }

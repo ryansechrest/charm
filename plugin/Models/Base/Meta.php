@@ -2,9 +2,9 @@
 
 namespace Charm\Models\Base;
 
-use Charm\Contracts\HasWpMeta;
+use Charm\Contracts\HasProxyMeta;
 use Charm\Contracts\IsPersistable;
-use Charm\Models\WordPress;
+use Charm\Models\Proxy;
 use Charm\Support\Cast;
 use Charm\Support\Result;
 use Charm\Traits\WithPersistenceState;
@@ -15,18 +15,18 @@ use Charm\Traits\WithPersistenceState;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class Meta implements HasWpMeta, IsPersistable
+abstract class Meta implements HasProxyMeta, IsPersistable
 {
     use WithPersistenceState;
 
     // -------------------------------------------------------------------------
 
     /**
-     * WordPress meta
+     * Proxy meta
      *
-     * @var ?WordPress\Meta
+     * @var ?Proxy\Meta
      */
-    protected ?WordPress\Meta $wpMeta = null;
+    protected ?Proxy\Meta $proxyMeta = null;
 
     // *************************************************************************
 
@@ -48,19 +48,19 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function __construct(array $data = [])
     {
-        $this->wpMeta = new WordPress\Meta(static::metaType(), $data);
+        $this->proxyMeta = new Proxy\Meta(static::metaType(), $data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get WordPress meta instance
+     * Get proxy meta instance
      *
-     * @return ?WordPress\Meta
+     * @return ?Proxy\Meta
      */
-    public function wp(): ?WordPress\Meta
+    public function proxyMeta(): ?Proxy\Meta
     {
-        return $this->wpMeta;
+        return $this->proxyMeta;
     }
 
     // *************************************************************************
@@ -92,23 +92,23 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public static function get(int $objectId, string $metaKey = ''): array
     {
-        $wpMetas = WordPress\Meta::get(
+        $proxyMetas = Proxy\Meta::get(
             static::metaType(), $objectId, $metaKey
         );
         $metas = [];
 
-        foreach ($wpMetas as $metaKey => $wpMeta) {
+        foreach ($proxyMetas as $metaKey => $proxyMeta) {
 
-            if (!is_array($wpMeta)) {
+            if (!is_array($proxyMeta)) {
                 $meta = new static();
-                $meta->wpMeta = $wpMeta;
+                $meta->proxyMeta = $proxyMeta;
                 $metas[$metaKey] = $meta;
                 continue;
             }
 
-            foreach ($wpMeta as $wpSingleMeta) {
+            foreach ($proxyMeta as $singleProxyMeta) {
                 $meta = new static();
-                $meta->wpMeta = $wpSingleMeta;
+                $meta->proxyMeta = $singleProxyMeta;
                 $metas[$metaKey][] = $meta;
             }
         }
@@ -125,7 +125,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function save(): Result
     {
-        return $this->wp()->save();
+        return $this->proxyMeta()->save();
     }
 
     /**
@@ -135,7 +135,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function create(): Result
     {
-        return $this->wp()->create();
+        return $this->proxyMeta()->create();
     }
 
     /**
@@ -145,7 +145,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function update(): Result
     {
-        return $this->wp()->update();
+        return $this->proxyMeta()->update();
     }
 
     /**
@@ -155,7 +155,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->wp()->delete();
+        return $this->proxyMeta()->delete();
     }
 
     // *************************************************************************
@@ -167,7 +167,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getObjectId(): int
     {
-        return $this->wp()->getObjectId();
+        return $this->proxyMeta()->getObjectId();
     }
 
     /**
@@ -178,7 +178,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function setObjectId(int $objectId): static
     {
-        $this->wp()->setObjectId($objectId);
+        $this->proxyMeta()->setObjectId($objectId);
 
         return $this;
     }
@@ -192,7 +192,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getKey(): string
     {
-        return $this->wp()->getMetaKey();
+        return $this->proxyMeta()->getMetaKey();
     }
 
     /**
@@ -203,7 +203,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function setKey(string $key): static
     {
-        $this->wp()->setMetaKey($key);
+        $this->proxyMeta()->setMetaKey($key);
 
         return $this;
     }
@@ -217,7 +217,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function getValue(): mixed
     {
-        return $this->wp()->getMetaValue();
+        return $this->proxyMeta()->getMetaValue();
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function setValue(mixed $value): static
     {
-        $this->wp()->setMetaValue($value);
+        $this->proxyMeta()->setMetaValue($value);
 
         return $this;
     }
@@ -242,7 +242,7 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function castValue(): Cast
     {
-        return Cast::from($this->wp()->getMetaValue());
+        return Cast::from($this->proxyMeta()->getMetaValue());
     }
 
     // -------------------------------------------------------------------------
@@ -254,6 +254,6 @@ abstract class Meta implements HasWpMeta, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->wp()->exists();
+        return $this->proxyMeta()->exists();
     }
 }
