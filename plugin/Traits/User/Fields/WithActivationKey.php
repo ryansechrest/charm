@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\HasWpUser;
+use Charm\Contracts\HasProxyUser;
 
 /**
  * Adds activation key to user model.
@@ -22,8 +22,8 @@ trait WithActivationKey
      */
     public function getActivationKey(): ?string
     {
-        /** @var HasWpUser $this */
-        return $this->wp()->getUserActivationKey();
+        /** @var HasProxyUser $this */
+        return $this->proxyUser()->getUserActivationKey();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithActivationKey
      */
     public function setActivationKey(string $key): static
     {
-        /** @var HasWpUser $this */
-        $this->wp()->setUserActivationKey($key);
+        /** @var HasProxyUser $this */
+        $this->proxyUser()->setUserActivationKey($key);
 
         return $this;
     }

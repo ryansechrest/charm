@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\HasWpUser;
+use Charm\Contracts\HasProxyUser;
 
 /**
  * Adds username to user model.
@@ -22,8 +22,8 @@ trait WithUsername
      */
     public function getUsername(): string
     {
-        /** @var HasWpUser $this */
-        return $this->wp()->getUserLogin();
+        /** @var HasProxyUser $this */
+        return $this->proxyUser()->getUserLogin();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithUsername
      */
     public function setUsername(string $username): static
     {
-        /** @var HasWpUser $this */
-        $this->wp()->setUserLogin($username);
+        /** @var HasProxyUser $this */
+        $this->proxyUser()->setUserLogin($username);
 
         return $this;
     }

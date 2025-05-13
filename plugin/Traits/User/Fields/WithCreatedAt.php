@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\HasWpUser;
+use Charm\Contracts\HasProxyUser;
 use Charm\Utilities\DateTime;
 
 /**
@@ -23,8 +23,8 @@ trait WithCreatedAt
      */
     public function getCreatedAt(): DateTime
     {
-        /** @var HasWpUser $this */
-        return DateTime::init($this->wp()->getUserRegistered());
+        /** @var HasProxyUser $this */
+        return DateTime::init($this->proxyUser()->getUserRegistered());
     }
 
     /**
@@ -39,8 +39,8 @@ trait WithCreatedAt
             ? $dateTime->formatForDb()
             : $dateTime;
 
-        /** @var HasWpUser $this */
-        $this->wp()->setUserRegistered($value);
+        /** @var HasProxyUser $this */
+        $this->proxyUser()->setUserRegistered($value);
 
         return $this;
     }

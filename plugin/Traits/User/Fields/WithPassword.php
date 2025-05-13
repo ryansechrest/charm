@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\HasWpUser;
+use Charm\Contracts\HasProxyUser;
 
 /**
  * Adds password to user model.
@@ -22,8 +22,8 @@ trait WithPassword
      */
     public function getPassword(): ?string
     {
-        /** @var HasWpUser $this */
-        return $this->wp()->getUserPass();
+        /** @var HasProxyUser $this */
+        return $this->proxyUser()->getUserPass();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithPassword
      */
     public function setPassword(string $password): static
     {
-        /** @var HasWpUser $this */
-        $this->wp()->setUserPass($password);
+        /** @var HasProxyUser $this */
+        $this->proxyUser()->setUserPass($password);
 
         return $this;
     }
