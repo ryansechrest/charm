@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\WordPress;
+namespace Charm\Models\Proxy;
 
 use Charm\Contracts\HasWpPost;
 use Charm\Contracts\IsPersistable;
@@ -9,7 +9,7 @@ use WP_Post;
 use WP_Query;
 
 /**
- * Represents a post of any post type in WordPress.
+ * Represents a proxy post of any post type in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm

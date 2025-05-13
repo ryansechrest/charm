@@ -1,12 +1,12 @@
 <?php
 
-namespace Charm\Models\WordPress;
+namespace Charm\Models\Proxy;
 
 use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 
 /**
- * Represents a generic meta in WordPress.
+ * Represents a proxy meta belonging to any model in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm

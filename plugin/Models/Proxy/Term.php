@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\WordPress;
+namespace Charm\Models\Proxy;
 
 use Charm\Contracts\HasWpTerm;
 use Charm\Contracts\IsPersistable;
@@ -10,7 +10,7 @@ use WP_Term;
 use WP_Term_Query;
 
 /**
- * Represents a term in WordPress.
+ * Represents a proxy term belonging to any taxonomy in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
