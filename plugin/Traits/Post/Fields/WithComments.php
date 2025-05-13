@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 use Charm\Enums\Post\CommentStatus;
 
 /**
@@ -23,8 +23,8 @@ trait WithComments
      */
     public function getCommentStatus(): CommentStatus
     {
-        /** @var HasWpPost $this */
-        return CommentStatus::from($this->wp()->getCommentStatus());
+        /** @var HasProxyPost $this */
+        return CommentStatus::from($this->proxyPost()->getCommentStatus());
     }
 
     /**
@@ -37,8 +37,8 @@ trait WithComments
     {
         $value = $status instanceof CommentStatus ? $status->value : $status;
 
-        /** @var HasWpPost $this */
-        $this->wp()->setCommentStatus($value);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setCommentStatus($value);
 
         return $this;
     }
@@ -52,7 +52,7 @@ trait WithComments
      */
     public function getCommentCount(): int
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getCommentCount();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getCommentCount();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds filtered content to post model.
@@ -22,8 +22,8 @@ trait WithFilteredContent
      */
     public function getFilteredContent(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getPostContentFiltered();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getPostContentFiltered();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithFilteredContent
      */
     public function setFilteredContent(string $content): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPostContentFiltered($content);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostContentFiltered($content);
 
         return $this;
     }

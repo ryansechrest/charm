@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds title to post model.
@@ -22,8 +22,8 @@ trait WithTitle
      */
     public function getTitle(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getPostTitle();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getPostTitle();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithTitle
      */
     public function setTitle(string $title): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPostTitle($title);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostTitle($title);
 
         return $this;
     }

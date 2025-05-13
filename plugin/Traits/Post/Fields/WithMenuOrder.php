@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds menu order to post model.
@@ -22,8 +22,8 @@ trait WithMenuOrder
      */
     public function getMenuOrder(): int
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getMenuOrder();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getMenuOrder();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithMenuOrder
      */
     public function setMenuOrder(int $menuOrder): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setMenuOrder($menuOrder);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setMenuOrder($menuOrder);
 
         return $this;
     }

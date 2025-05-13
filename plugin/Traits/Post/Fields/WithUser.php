@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 use Charm\Models\Base;
 use Charm\Models\User;
 
@@ -39,8 +39,8 @@ trait WithUser
         /** @var class-string<Base\User> $userClass */
         $userClass = static::userClass();
 
-        /** @var HasWpPost $this */
-        return $userClass::init($this->wp()->getPostAuthor());
+        /** @var HasProxyPost $this */
+        return $userClass::init($this->proxyPost()->getPostAuthor());
     }
 
     /**
@@ -53,8 +53,8 @@ trait WithUser
     {
         $id = $user instanceof User ? $user->getId() : $user;
 
-        /** @var HasWpPost $this */
-        $this->wp()->setPostAuthor($id ?? 0);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostAuthor($id ?? 0);
 
         return $this;
     }

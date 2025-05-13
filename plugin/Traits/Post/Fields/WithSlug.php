@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds slug to post model.
@@ -22,8 +22,8 @@ trait WithSlug
      */
     public function getSlug(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getPostName();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getPostName();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithSlug
      */
     public function setSlug(string $slug): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPostName($slug);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostName($slug);
 
         return $this;
     }

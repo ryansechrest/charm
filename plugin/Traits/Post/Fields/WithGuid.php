@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds GUID to post model.
@@ -22,7 +22,7 @@ trait WithGuid
      */
     public function getGuid(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getGuid();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getGuid();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds password to post model.
@@ -22,8 +22,8 @@ trait WithPassword
      */
     public function getPassword(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getPostPassword();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getPostPassword();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithPassword
      */
     public function setPassword(string $password): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPostPassword($password);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostPassword($password);
 
         return $this;
     }

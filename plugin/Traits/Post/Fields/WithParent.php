@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 use Charm\Models\Base;
 
 /**
@@ -35,8 +35,8 @@ trait WithParent
         /** @var class-string<Base\Post> $parentClass */
         $parentClass = static::parentClass();
 
-        /** @var HasWpPost $this */
-        return $parentClass::init($this->wp()->getPostParent());
+        /** @var HasProxyPost $this */
+        return $parentClass::init($this->proxyPost()->getPostParent());
     }
 
     /**
@@ -47,10 +47,11 @@ trait WithParent
      */
     public function setParent(Base\Post|int|null $parent): static
     {
-        $id = $parent instanceof Base\Post ? $parent->wp()->getId() : $parent;
+        $id = $parent instanceof Base\Post
+            ? $parent->proxyPost()->getId() : $parent;
 
-        /** @var HasWpPost $this */
-        $this->wp()->setPostParent($id ?? 0);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostParent($id ?? 0);
 
         return $this;
     }

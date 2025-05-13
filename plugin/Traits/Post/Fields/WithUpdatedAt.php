@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 use Charm\Utilities\DateTime;
 
 /**
@@ -23,8 +23,8 @@ trait WithUpdatedAt
      */
     public function getUpdatedAt(): DateTime
     {
-        /** @var HasWpPost $this */
-        return DateTime::init($this->wp()->getPostModifiedGmt());
+        /** @var HasProxyPost $this */
+        return DateTime::init($this->proxyPost()->getPostModifiedGmt());
     }
 
     /**
@@ -39,8 +39,8 @@ trait WithUpdatedAt
             ? $dateTime->formatForDb()
             : $dateTime;
 
-        /** @var HasWpPost $this */
-        $this->wp()->setPostModifiedGmt($value);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostModifiedGmt($value);
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds content to post model.
@@ -22,8 +22,8 @@ trait WithContent
      */
     public function getContent(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getPostContent();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getPostContent();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithContent
      */
     public function setContent(string $content): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPostContent($content);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostContent($content);
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 use Charm\Enums\Post\PingStatus;
 
 /**
@@ -23,8 +23,8 @@ trait WithPingbacks
      */
     public function getPingStatus(): PingStatus
     {
-        /** @var HasWpPost $this */
-        return PingStatus::from($this->wp()->getPingStatus());
+        /** @var HasProxyPost $this */
+        return PingStatus::from($this->proxyPost()->getPingStatus());
     }
 
     /**
@@ -37,8 +37,8 @@ trait WithPingbacks
     {
         $value = $status instanceof PingStatus ? $status->value : $status;
 
-        /** @var HasWpPost $this */
-        $this->wp()->setPingStatus($value);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPingStatus($value);
 
         return $this;
     }
@@ -52,8 +52,8 @@ trait WithPingbacks
      */
     public function getPingedUrls(): array
     {
-        /** @var HasWpPost $this */
-        return explode("\n", $this->wp()->getPinged());
+        /** @var HasProxyPost $this */
+        return explode("\n", $this->proxyPost()->getPinged());
     }
 
     /**
@@ -64,8 +64,8 @@ trait WithPingbacks
      */
     public function setPingedUrls(array $urls): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPinged(implode("\n", $urls));
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPinged(implode("\n", $urls));
 
         return $this;
     }
@@ -79,8 +79,8 @@ trait WithPingbacks
      */
     public function getUrlsToPing(): array
     {
-        /** @var HasWpPost $this */
-        return explode("\n", $this->wp()->getToPing());
+        /** @var HasProxyPost $this */
+        return explode("\n", $this->proxyPost()->getToPing());
     }
 
     /**
@@ -91,8 +91,8 @@ trait WithPingbacks
      */
     public function setUrlsToPing(array $urls): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setToPing(implode("\n", $urls));
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setToPing(implode("\n", $urls));
 
         return $this;
     }

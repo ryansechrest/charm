@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\HasWpPost;
+use Charm\Contracts\HasProxyPost;
 
 /**
  * Adds excerpt to post model.
@@ -22,8 +22,8 @@ trait WithExcerpt
      */
     public function getExcerpt(): string
     {
-        /** @var HasWpPost $this */
-        return $this->wp()->getPostExcerpt();
+        /** @var HasProxyPost $this */
+        return $this->proxyPost()->getPostExcerpt();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithExcerpt
      */
     public function setExcerpt(string $excerpt): static
     {
-        /** @var HasWpPost $this */
-        $this->wp()->setPostExcerpt($excerpt);
+        /** @var HasProxyPost $this */
+        $this->proxyPost()->setPostExcerpt($excerpt);
 
         return $this;
     }
