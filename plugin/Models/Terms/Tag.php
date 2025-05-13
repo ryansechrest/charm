@@ -1,15 +1,12 @@
 <?php
 
-namespace Charm\Models\Taxonomies;
+namespace Charm\Models\Terms;
 
 use Charm\Models\Base;
-use Charm\Traits\Term\Fields\WithCount;
-use Charm\Traits\Term\Fields\WithDescription;
-use Charm\Traits\Term\Fields\WithName;
-use Charm\Traits\Term\Fields\WithSlug;
+use Charm\Traits\Term\Fields;
 
 /**
- * Represents a tag in WordPress.
+ * Represents a tag term in WordPress.
  *
  * @package Charm
  */
@@ -17,11 +14,11 @@ class Tag extends Base\Term
 {
     // --- Tag Fields ----------------------------------------------------------
 
-    use WithName;
-    use WithSlug;
-    use WithDescription;
+    use Fields\WithName;
+    use Fields\WithSlug;
+    use Fields\WithDescription;
 
-    use WithCount;
+    use Fields\WithCount;
 
     // *************************************************************************
 

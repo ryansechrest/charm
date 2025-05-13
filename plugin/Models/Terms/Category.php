@@ -1,16 +1,12 @@
 <?php
 
-namespace Charm\Models\Taxonomies;
+namespace Charm\Models\Terms;
 
 use Charm\Models\Base;
-use Charm\Traits\Term\Fields\WithCount;
-use Charm\Traits\Term\Fields\WithDescription;
-use Charm\Traits\Term\Fields\WithName;
-use Charm\Traits\Term\Fields\WithParent;
-use Charm\Traits\Term\Fields\WithSlug;
+use Charm\Traits\Term\Fields;
 
 /**
- * Represents a category in WordPress.
+ * Represents a category term in WordPress.
  *
  * @package Charm
  */
@@ -18,12 +14,12 @@ class Category extends Base\Term
 {
     // --- Category Fields -----------------------------------------------------
 
-    use WithName;
-    use WithSlug;
-    use WithDescription;
+    use Fields\WithName;
+    use Fields\WithSlug;
+    use Fields\WithDescription;
 
-    use WithParent;
-    use WithCount;
+    use Fields\WithParent;
+    use Fields\WithCount;
 
     // *************************************************************************
 
