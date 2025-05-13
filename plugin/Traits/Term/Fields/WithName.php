@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\HasWpTerm;
+use Charm\Contracts\HasProxyTerm;
 
 /**
  * Adds name to term model.
@@ -22,8 +22,8 @@ trait WithName
      */
     public function getName(): string
     {
-        /** @var HasWpTerm $this */
-        return $this->wp()->getName();
+        /** @var HasProxyTerm $this */
+        return $this->proxyTerm()->getName();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithName
      */
     public function setName(string $name): static
     {
-        /** @var HasWpTerm $this */
-        $this->wp()->setName($name);
+        /** @var HasProxyTerm $this */
+        $this->proxyTerm()->setName($name);
 
         return $this;
     }

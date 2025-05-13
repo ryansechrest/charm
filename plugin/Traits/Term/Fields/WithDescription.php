@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\HasWpTerm;
+use Charm\Contracts\HasProxyTerm;
 
 /**
  * Adds description to term model.
@@ -22,8 +22,8 @@ trait WithDescription
      */
     public function getDescription(): string
     {
-        /** @var HasWpTerm $this */
-        return $this->wp()->getDescription();
+        /** @var HasProxyTerm $this */
+        return $this->proxyTerm()->getDescription();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithDescription
      */
     public function setDescription(string $description): static
     {
-        /** @var HasWpTerm $this */
-        $this->wp()->setDescription($description);
+        /** @var HasProxyTerm $this */
+        $this->proxyTerm()->setDescription($description);
 
         return $this;
     }

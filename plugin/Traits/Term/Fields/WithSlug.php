@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\HasWpTerm;
+use Charm\Contracts\HasProxyTerm;
 
 /**
  * Adds slug to term model.
@@ -22,8 +22,8 @@ trait WithSlug
      */
     public function getSlug(): string
     {
-        /** @var HasWpTerm $this */
-        return $this->wp()->getSlug();
+        /** @var HasProxyTerm $this */
+        return $this->proxyTerm()->getSlug();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithSlug
      */
     public function setSlug(string $slug): static
     {
-        /** @var HasWpTerm $this */
-        $this->wp()->setSlug($slug);
+        /** @var HasProxyTerm $this */
+        $this->proxyTerm()->setSlug($slug);
 
         return $this;
     }

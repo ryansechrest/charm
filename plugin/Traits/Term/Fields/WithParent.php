@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\HasWpTerm;
+use Charm\Contracts\HasProxyTerm;
 use Charm\Models\Base;
 
 /**
@@ -23,8 +23,8 @@ trait WithParent
      */
     public function getParent(): ?Base\Term
     {
-        /** @var HasWpTerm $this */
-        return static::init($this->wp()->getParent());
+        /** @var HasProxyTerm $this */
+        return static::init($this->proxyTerm()->getParent());
     }
 
     /**
@@ -36,10 +36,10 @@ trait WithParent
     public function setParent(Base\Term|int|null $parent): static
     {
         $id = $parent instanceof Base\Term
-            ? $parent->wp()->getTermTaxonomyId() : $parent;
+            ? $parent->proxyTerm()->getTermTaxonomyId() : $parent;
 
-        /** @var HasWpTerm $this */
-        $this->wp()->setParent($id ?? 0);
+        /** @var HasProxyTerm $this */
+        $this->proxyTerm()->setParent($id ?? 0);
 
         return $this;
     }
