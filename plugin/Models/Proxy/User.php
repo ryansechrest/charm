@@ -2,6 +2,7 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\HasWpUser;
 use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_User;
@@ -13,7 +14,7 @@ use WP_User_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class User implements IsPersistable
+class User implements HasWpUser, IsPersistable
 {
     /**
      * ID
@@ -157,11 +158,11 @@ class User implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get WP_User instance
+     * Access WP_User instance
      *
      * @return ?WP_User
      */
-    public function core(): ?WP_User
+    public function wpUser(): ?WP_User
     {
         return $this->wpUser;
     }

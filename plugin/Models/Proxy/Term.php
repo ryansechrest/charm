@@ -2,6 +2,7 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\HasWpTerm;
 use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_Error;
@@ -14,7 +15,7 @@ use WP_Term_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Term implements IsPersistable
+class Term implements HasWpTerm, IsPersistable
 {
     /**
      * Term ID
@@ -162,11 +163,11 @@ class Term implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get WP_Term instance
+     * Access WP_Term instance
      *
      * @return ?WP_Term
      */
-    public function core(): ?WP_Term
+    public function wpTerm(): ?WP_Term
     {
         return $this->wpTerm;
     }

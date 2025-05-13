@@ -44,6 +44,15 @@ class Role implements IsPersistable
      */
     protected bool $exists = false;
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * WP_Role instance
+     *
+     * @var ?WP_Role
+     */
+    protected ?WP_Role $wpRole = null;
+
     // *************************************************************************
 
     /**
@@ -78,6 +87,18 @@ class Role implements IsPersistable
         if (isset($data['exists'])) {
             $this->exists = (bool) $data['exists'];
         }
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get WP_Role instance
+     *
+     * @return ?WP_Role
+     */
+    public function wpRole(): ?WP_Role
+    {
+        return $this->wpRole;
     }
 
     // *************************************************************************
@@ -371,6 +392,8 @@ class Role implements IsPersistable
     protected function loadFromWpRole(WP_Role $wpRole): void
     {
         $roles = wp_roles();
+
+        $this->wpRole = $wpRole;
 
         $this->slug = $wpRole->name;
         $this->name = $roles->role_names[$wpRole->name] ?: '';

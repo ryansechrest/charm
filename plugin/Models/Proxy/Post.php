@@ -2,6 +2,7 @@
 
 namespace Charm\Models\WordPress;
 
+use Charm\Contracts\HasWpPost;
 use Charm\Contracts\IsPersistable;
 use Charm\Support\Result;
 use WP_Post;
@@ -13,7 +14,7 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Post implements IsPersistable
+class Post implements HasWpPost, IsPersistable
 {
     /**
      * ID
@@ -300,11 +301,11 @@ class Post implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get WP_Post instance
+     * Access WP_Post instance
      *
      * @return ?WP_Post
      */
-    public function core(): ?WP_Post
+    public function wpPost(): ?WP_Post
     {
         return $this->wpPost;
     }
