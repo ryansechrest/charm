@@ -391,9 +391,10 @@ class Post implements HasWpPost, IsPersistable
             return [];
         }
 
-        return array_map(function (WP_Post $wpPost) {
-            return static::fromWpPost($wpPost);
-        }, $wpQuery->posts);
+        return array_map(
+            fn (WP_Post $wpPost) => static::fromWpPost($wpPost),
+            $wpQuery->posts
+        );
     }
 
     /**
