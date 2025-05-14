@@ -280,9 +280,10 @@ class User implements HasWpUser, IsPersistable
             return [];
         }
 
-        return array_map(function (WP_User $wpUser) {
-            return static::fromWpUser($wpUser);
-        }, $wpUserQuery->get_results());
+        return array_map(
+            fn(WP_User $wpUser) => static::fromWpUser($wpUser),
+            $wpUserQuery->get_results()
+        );
     }
 
     /**
@@ -461,7 +462,7 @@ class User implements HasWpUser, IsPersistable
             )->withData($this);
         }
 
-        $result =  static::deleteUser(id: $this->id);
+        $result = static::deleteUser(id: $this->id);
 
         if ($result->hasFailed()) {
             return $result;
