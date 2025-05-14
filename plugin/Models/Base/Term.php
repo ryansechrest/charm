@@ -10,7 +10,6 @@ use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
 use Charm\Traits\WithMeta;
 use Charm\Traits\WithPersistenceState;
-use Charm\Traits\WithTerm;
 use WP_Term;
 use WP_Term_Query;
 
@@ -25,7 +24,6 @@ abstract class Term implements HasProxyTerm, IsPersistable
     use WithDeferredCalls;
     use WithMeta;
     use WithPersistenceState;
-    use WithTerm;
 
     // -------------------------------------------------------------------------
 
@@ -199,14 +197,71 @@ abstract class Term implements HasProxyTerm, IsPersistable
         return $this->proxyTerm()->delete();
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Add term to model (appending to existing terms)
+     *
+     * @param $modelId
+     * @return Result
+     */
+    public function addModel($modelId): Result
+    {
+        return $this->proxyTerm()::addObjectTerms(
+            objectId: $modelId,
+            terms: $this->getId(),
+            taxonomy: static::taxonomy()
+        );
+    }
+
+    /**
+     * Remove term from model
+     *
+     * @param $modelId
+     * @return Result
+     */
+    public function removeModel($modelId): Result
+    {
+        return $this->proxyTerm()::removeObjectTerms(
+            objectId: $modelId,
+            terms: $this->getId(),
+            taxonomy: static::taxonomy()
+        );
+    }
+
+    /**
+     * Set term on model (replacing existing terms)
+     *
+     * @param $modelId
+     * @return Result
+     */
+    public function setModel($modelId): Result
+    {
+        return $this->proxyTerm()::setObjectTerms(
+            objectId: $modelId,
+            terms: $this->getId(),
+            taxonomy: static::taxonomy()
+        );
+    }
+
     // *************************************************************************
+
+    /**
+     * Get term ID
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->proxyTerm()->getTermId();
+    }
 
     /**
      * Get term taxonomy ID
      *
      * @return int
      */
-    public function getId(): int
+    public function getTaxonomyId(): int
     {
         return $this->proxyTerm()->getTermTaxonomyId();
     }
