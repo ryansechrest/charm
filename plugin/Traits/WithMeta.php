@@ -4,7 +4,7 @@ namespace Charm\Traits;
 
 use Charm\Contracts\HasDeferredCalls;
 use Charm\Enums\PersistenceState;
-use Charm\Models\Base;
+use Charm\Models\Base\Meta;
 use Charm\Support\Result;
 
 /**
@@ -42,7 +42,7 @@ trait WithMeta
     /**
      * Meta cache indexed by key.
      *
-     * @var array<string, Base\Meta[]>
+     * @var array<string, Meta[]>
      */
     protected array $metaCache = [];
 
@@ -61,7 +61,7 @@ trait WithMeta
      * Must be implemented by the model using this trait to define which
      * specialized `Meta` class (e.g. `PostMeta`, `UserMeta`) should be used.
      *
-     * @return class-string<Base\Meta>
+     * @return class-string<Meta>
      */
     abstract protected static function metaClass(): string;
 
@@ -103,9 +103,9 @@ trait WithMeta
      * Returns the first meta for the given key, from cache or database.
      *
      * @param string $key
-     * @return ?Base\Meta
+     * @return ?Meta
      */
-    protected function getMeta(string $key): ?Base\Meta
+    protected function getMeta(string $key): ?Meta
     {
         $metas = $this->getMetas($key);
 
@@ -123,7 +123,7 @@ trait WithMeta
      * database.
      *
      * @param string $key
-     * @return Base\Meta[]
+     * @return Meta[]
      */
     protected function getMetas(string $key): array
     {
