@@ -279,9 +279,10 @@ class Term implements HasWpTerm, IsPersistable
             return [];
         }
 
-        return array_map(function (WP_Term $wpTerm) {
-            return static::fromWpTerm($wpTerm);
-        }, $wpTermQuery->get_terms());
+        return array_map(
+            fn(WP_Term $wpTerm) => static::fromWpTerm($wpTerm),
+            $wpTermQuery->get_terms()
+        );
     }
 
     /**
@@ -380,6 +381,133 @@ class Term implements HasWpTerm, IsPersistable
         return Result::success();
     }
 
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get terms from object
+     *
+     * See possible arguments:
+     * https://developer.wordpress.org/reference/classes/wp_term_query/
+     *
+     * @param int $objectId 1
+     * @param string $taxonomy category
+     * @param array $args
+     * @return static[]
+     */
+    public static function getObjectTerms(
+        int $objectId, string $taxonomy, array $args = []
+    ): array
+    {
+        return static::get([
+            'object_ids' => $objectId, 'taxonomy' => $taxonomy,
+        ]);
+    }
+
+    /**
+     * Add terms to object (appends terms)
+     *
+     * $terms int    -> Term ID
+     *        string -> Term Slug
+     *        array  -> Term IDs/Slugs
+     *
+     * @param int $objectId 1
+     * @param int|string|array $terms
+     * @param string $taxonomy category
+     * @return Result
+     * @see wp_add_object_terms()
+     */
+    public static function addObjectTerms(
+        int $objectId, int|string|array $terms, string $taxonomy
+    ): Result
+    {
+        $result = wp_add_object_terms($objectId, $terms, $taxonomy);
+
+        if ($result instanceof WP_Error) {
+            return Result::wpError(wpError: $result);
+        }
+
+        if (!is_array($result)) {
+            return Result::error(
+                code: 'wp_add_object_terms_failed',
+                message: __(
+                    'wp_add_object_terms() did not return an array.', 'charm'
+                )
+            );
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Remove terms from object
+     *
+     * $terms int    -> Term ID
+     *        string -> Term Slug
+     *        array  -> Term IDs/Slugs
+     *
+     * @param int $objectId 1
+     * @param int|string|array $terms
+     * @param string $taxonomy category
+     * @return Result
+     * @see wp_remove_object_terms()
+     */
+    public static function removeObjectTerms(
+        int $objectId, int|string|array $terms, string $taxonomy
+    ): Result
+    {
+        $result = wp_remove_object_terms($objectId, $terms, $taxonomy);
+
+        if ($result instanceof WP_Error) {
+            return Result::wpError(wpError: $result);
+        }
+
+        if ($result !== true) {
+            return Result::error(
+                code: 'wp_remove_object_terms_failed',
+                message: __(
+                    'wp_remove_object_terms() did not return true.', 'charm'
+                )
+            );
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * Set terms on object (replaces terms)
+     *
+     * $terms int    -> Term ID
+     *        string -> Term Slug
+     *        array  -> Term IDs/Slugs
+     *
+     * @param int $objectId 1
+     * @param int|string|array $terms
+     * @param string $taxonomy category
+     * @return Result
+     * @see wp_set_object_terms()
+     */
+    public static function setObjectTerms(
+        int $objectId, int|string|array $terms, string $taxonomy
+    ): Result
+    {
+        $result = wp_set_object_terms($objectId, $terms, $taxonomy);
+
+        if ($result instanceof WP_Error) {
+            return Result::wpError(wpError: $result);
+        }
+
+        if (!is_array($result)) {
+            return Result::error(
+                code: 'wp_set_object_terms_failed',
+                message: __(
+                    'wp_set_object_terms() did not return an array.', 'charm'
+                )
+            );
+        }
+
+        return Result::success();
+    }
+
     // *************************************************************************
 
     /**
@@ -428,8 +556,9 @@ class Term implements HasWpTerm, IsPersistable
             return $result;
         }
 
-        $this->termId = $result->getData()['termId'] ?? 0;
-        $this->termTaxonomyId = $result->getData()['termTaxonomyId'] ?? 0;
+        $resultData = $result->getData();
+        $this->termId = $resultData['termId'] ?? 0;
+        $this->termTaxonomyId = $resultData['termTaxonomyId'] ?? 0;
         $this->reload();
 
         return $result;
@@ -470,8 +599,9 @@ class Term implements HasWpTerm, IsPersistable
             return $result;
         }
 
-        $this->termId = $result->getData()['termId'] ?? 0;
-        $this->termTaxonomyId = $result->getData()['termTaxonomyId'] ?? 0;
+        $resultData = $result->getData();
+        $this->termId = $resultData['termId'] ?? 0;
+        $this->termTaxonomyId = $resultData['termTaxonomyId'] ?? 0;
         $this->reload();
 
         return $result;
@@ -498,7 +628,7 @@ class Term implements HasWpTerm, IsPersistable
             )->withData($this);
         }
 
-        $result =  static::deleteTerm(
+        $result = static::deleteTerm(
             termId: $this->termId, taxonomy: $this->taxonomy
         );
 
