@@ -148,9 +148,10 @@ class Role implements HasWpRole, IsPersistable
             return [];
         }
 
-        return array_map(function (WP_Role $wpRole) {
-            return static::fromWpRole($wpRole);
-        }, $wpRoles);
+        return array_map(
+            fn(WP_Role $wpRole) => static::fromWpRole($wpRole),
+            $wpRoles
+        );
     }
 
     // *************************************************************************
