@@ -5,6 +5,7 @@ namespace Charm\Models;
 use Charm\Traits\Post\Fields;
 use Charm\Traits\Post\Metas;
 use Charm\Traits\Post\WithPermalink;
+use Charm\Traits\Taxonomy;
 
 /**
  * Represents a blog post in WordPress.
@@ -37,6 +38,11 @@ class Post extends Base\Post
     // --- Post Helpers --------------------------------------------------------
 
     use WithPermalink;
+
+    // --- Taxonomies ----------------------------------------------------------
+
+    use Taxonomy\WithCategories;
+    use Taxonomy\WithTags;
 
     // *************************************************************************
 
