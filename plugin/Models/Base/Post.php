@@ -10,6 +10,7 @@ use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
 use Charm\Traits\WithMeta;
 use Charm\Traits\WithPersistenceState;
+use Charm\Traits\WithTerms;
 use WP_Post;
 use WP_Query;
 
@@ -24,6 +25,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     use WithDeferredCalls;
     use WithMeta;
     use WithPersistenceState;
+    use WithTerms;
 
     // -------------------------------------------------------------------------
 
