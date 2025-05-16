@@ -115,6 +115,17 @@ abstract class Term implements HasProxyTerm, IsPersistable
         return $term;
     }
 
+    /**
+     * Initialize term and preload metas
+     *
+     * @param int|string|WP_Term $key
+     * @return ?static
+     */
+    public static function withMetas(int|string|WP_Term $key): ?static
+    {
+        return static::init($key)?->preloadMetas();
+    }
+
     // -------------------------------------------------------------------------
 
     /**
@@ -256,6 +267,8 @@ abstract class Term implements HasProxyTerm, IsPersistable
         return $this->proxyTerm()->getTermId();
     }
 
+    // -------------------------------------------------------------------------
+
     /**
      * Get term taxonomy ID
      *
@@ -264,6 +277,60 @@ abstract class Term implements HasProxyTerm, IsPersistable
     public function getTaxonomyId(): int
     {
         return $this->proxyTerm()->getTermTaxonomyId();
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get term name
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        /** @var HasProxyTerm $this */
+        return $this->proxyTerm()->getName();
+    }
+
+    /**
+     * Set term name
+     *
+     * @param string $name
+     * @return static
+     */
+    public function setName(string $name): static
+    {
+        /** @var HasProxyTerm $this */
+        $this->proxyTerm()->setName($name);
+
+        return $this;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get term slug
+     *
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        /** @var HasProxyTerm $this */
+        return $this->proxyTerm()->getSlug();
+    }
+
+    /**
+     * Set term slug
+     *
+     * @param string $slug
+     * @return static
+     */
+    public function setSlug(string $slug): static
+    {
+        /** @var HasProxyTerm $this */
+        $this->proxyTerm()->setSlug($slug);
+
+        return $this;
     }
 
     // -------------------------------------------------------------------------
