@@ -14,8 +14,6 @@ class Tag extends Base\Term
 {
     // --- Tag Fields ----------------------------------------------------------
 
-    use Fields\WithName;
-    use Fields\WithSlug;
     use Fields\WithDescription;
 
     use Fields\WithCount;

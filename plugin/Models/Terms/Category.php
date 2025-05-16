@@ -14,8 +14,6 @@ class Category extends Base\Term
 {
     // --- Category Fields -----------------------------------------------------
 
-    use Fields\WithName;
-    use Fields\WithSlug;
     use Fields\WithDescription;
 
     use Fields\WithParent;
