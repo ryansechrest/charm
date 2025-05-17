@@ -21,7 +21,7 @@ class Tag extends Base\Term
     // *************************************************************************
 
     /**
-     * Define taxonomy
+     * Set the name of the taxonomy.
      */
     protected static function taxonomy(): string
     {
