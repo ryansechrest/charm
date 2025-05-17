@@ -16,21 +16,21 @@ use WP_Role;
 class Role implements HasWpRole, IsPersistable
 {
     /**
-     * Role slug
+     * Role slug.
      *
      * @var ?string
      */
     protected ?string $slug = null;
 
     /**
-     * Role name
+     * Role name.
      *
      * @var ?string
      */
     protected ?string $name = null;
 
     /**
-     * Role capabilities
+     * Role capabilities.
      *
      * @var ?array
      */
@@ -39,7 +39,7 @@ class Role implements HasWpRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether role exists in database
+     * Whether the role exists in the database.
      *
      * @var bool
      */
@@ -48,7 +48,7 @@ class Role implements HasWpRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * WP_Role instance
+     * `WP_Role` instance.
      *
      * @var ?WP_Role
      */
@@ -57,7 +57,7 @@ class Role implements HasWpRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Role constructor
+     * Role constructor.
      *
      * @param array $data
      */
@@ -67,7 +67,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Load instance with data
+     * Load the instance with data.
      *
      * @param array $data
      */
@@ -93,7 +93,7 @@ class Role implements HasWpRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get WP_Role instance
+     * Get the `WP_Role` instance.
      *
      * @return ?WP_Role
      */
@@ -105,7 +105,7 @@ class Role implements HasWpRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize role from slug
+     * Initialize the role from a slug.
      *
      * @param string $slug administrator
      * @return ?static
@@ -119,7 +119,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Initialize role from WP_Role
+     * Initialize the role from a `WP_Role` instance.
      *
      * @param WP_Role $wpRole
      * @return static
@@ -135,7 +135,7 @@ class Role implements HasWpRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Get roles
+     * Get the roles.
      *
      * @return static[]
      * @see wp_roles()
@@ -157,7 +157,7 @@ class Role implements HasWpRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Save role
+     * Save the role.
      *
      * @return Result
      */
@@ -167,7 +167,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Create new role
+     * Create the role.
      *
      * @return Result
      * @see add_role()
@@ -200,7 +200,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Update existing role
+     * Update the role.
      *
      * @return Result
      */
@@ -219,7 +219,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Delete role
+     * Delete the role.
      *
      * @return Result
      * @see remove_role()
@@ -250,7 +250,7 @@ class Role implements HasWpRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Get slug
+     * Get the slug.
      *
      * @return string administrator
      */
@@ -262,7 +262,7 @@ class Role implements HasWpRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get name
+     * Get the name.
      *
      * @return string Administrator
      */
@@ -272,7 +272,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Set name
+     * Set the name.
      *
      * @param string $name Administrator
      * @return static
@@ -287,7 +287,7 @@ class Role implements HasWpRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get capabilities
+     * Get the capabilities.
      *
      * @return array ['read' => true, 'manage_options' => true, ...]
      */
@@ -297,7 +297,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Add capability
+     * Add a capability.
      *
      * @param string $capability switch_themes
      * @return static
@@ -310,7 +310,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Remove capability
+     * Remove a capability.
      *
      * @param string $capability switch_themes
      * @return static
@@ -323,7 +323,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Set capabilities
+     * Set the capabilities.
      *
      * @param array $capabilities ['read' => true, 'manage_options' => true, ...]
      * @return static
@@ -336,7 +336,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Whether role has capability
+     * Check whether the role has a capability.
      *
      * @param string $capability
      * @return bool
@@ -353,7 +353,7 @@ class Role implements HasWpRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether role exists in database
+     * Check whether the role exists in the database.
      *
      * @return bool
      */
@@ -365,7 +365,7 @@ class Role implements HasWpRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Load instance from slug
+     * Load the instance from a slug.
      *
      * @param string $slug
      * @return void
@@ -385,7 +385,7 @@ class Role implements HasWpRole, IsPersistable
     }
 
     /**
-     * Load instance from WP_Role
+     * Load the instance from a `WP_Role` instance.
      *
      * @param WP_Role $wpRole
      * @return void

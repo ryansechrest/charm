@@ -16,7 +16,7 @@ use WP_Role;
 class Role implements HasProxyRole, IsPersistable
 {
     /**
-     * Proxy role
+     * Proxy role.
      *
      * @var ?Proxy\Role
      */
@@ -25,7 +25,7 @@ class Role implements HasProxyRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Role constructor
+     * Role constructor.
      *
      * @param array $data
      */
@@ -37,7 +37,7 @@ class Role implements HasProxyRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get proxy role instance
+     * Get the proxy role instance.
      *
      * @return ?Proxy\Role
      */
@@ -49,10 +49,10 @@ class Role implements HasProxyRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Initialize role
+     * Initialize the role.
      *
-     * string  -> Role Slug
-     * WP_Role -> WP_Role instance
+     * `string`  -> Role Slug
+     * `WP_Role` -> WP_Role instance
      *
      * @param string|WP_Role $key
      * @return ?static
@@ -78,7 +78,7 @@ class Role implements HasProxyRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Get roles
+     * Get the roles.
      *
      * @return static[]
      */
@@ -100,7 +100,7 @@ class Role implements HasProxyRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Save role
+     * Save the role.
      *
      * @return Result
      */
@@ -110,7 +110,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Create new role
+     * Create the role.
      *
      * @return Result
      */
@@ -120,7 +120,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Update existing role
+     * Update the role.
      *
      * @return Result
      */
@@ -130,7 +130,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Delete role
+     * Delete the role.
      *
      * @return Result
      */
@@ -142,7 +142,7 @@ class Role implements HasProxyRole, IsPersistable
     // *************************************************************************
 
     /**
-     * Get slug
+     * Get the slug.
      *
      * @return string administrator
      */
@@ -154,7 +154,7 @@ class Role implements HasProxyRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get name
+     * Get the name.
      *
      * @return string Administrator
      */
@@ -164,7 +164,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Set name
+     * Set the name.
      *
      * @param string $name Administrator
      * @return static
@@ -179,7 +179,7 @@ class Role implements HasProxyRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get capabilities
+     * Get the capabilities.
      *
      * @return array ['read' => true, 'manage_options' => true, ...]
      */
@@ -189,7 +189,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Add capability
+     * Add a capability.
      *
      * @param string $capability switch_themes
      * @return static
@@ -202,7 +202,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Remove capability
+     * Remove a capability.
      *
      * @param string $capability switch_themes
      * @return static
@@ -215,7 +215,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Set capabilities
+     * Set the capabilities.
      *
      * @param array $capabilities ['read' => true, 'manage_options' => true, ...]
      * @return static
@@ -228,7 +228,7 @@ class Role implements HasProxyRole, IsPersistable
     }
 
     /**
-     * Whether role has capability
+     * Check whether the role has a capability.
      *
      * @param string $capability
      * @return bool
@@ -241,7 +241,7 @@ class Role implements HasProxyRole, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether role exists in database
+     * Check whether the role exists in the database.
      *
      * @return bool
      */
