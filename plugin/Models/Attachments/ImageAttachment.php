@@ -11,7 +11,7 @@ namespace Charm\Models\Attachments;
 class ImageAttachment extends Attachment
 {
     /**
-     * Get image width
+     * Get the image's width in pixels.
      */
     public function getWidth(): string
     {
@@ -21,7 +21,7 @@ class ImageAttachment extends Attachment
     // -------------------------------------------------------------------------
 
     /**
-     * Get image height
+     * Get the image's height in pixels.
      */
     public function getHeight(): string
     {
@@ -31,7 +31,7 @@ class ImageAttachment extends Attachment
     // -------------------------------------------------------------------------
 
     /**
-     * Get default image or specified size
+     * Get the image in its default or specified size.
      *
      * @param string $size medium
      * @return ?object
@@ -42,7 +42,7 @@ class ImageAttachment extends Attachment
     }
 
     /**
-     * Get image in every size
+     * Get the image in every size.
      *
      * @return array
      */

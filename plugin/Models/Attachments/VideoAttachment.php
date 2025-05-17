@@ -11,7 +11,7 @@ namespace Charm\Models\Attachments;
 class VideoAttachment extends Attachment
 {
     /**
-     * Get video width
+     * Get video's width in pixels.
      */
     public function getWidth(): string
     {
@@ -21,7 +21,7 @@ class VideoAttachment extends Attachment
     // -------------------------------------------------------------------------
 
     /**
-     * Get video height
+     * Get the video's height in pixels.
      */
     public function getHeight(): string
     {
@@ -31,7 +31,7 @@ class VideoAttachment extends Attachment
     // -------------------------------------------------------------------------
 
     /**
-     * Get length (in seconds)
+     * Get the video's length in seconds.
      */
     public function getLength(): string
     {

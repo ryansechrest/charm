@@ -11,7 +11,7 @@ namespace Charm\Models\Attachments;
 class AudioAttachment extends Attachment
 {
     /**
-     * Get album name
+     * Get the album's name.
      */
     public function getAlbum(): string
     {
@@ -21,7 +21,7 @@ class AudioAttachment extends Attachment
     // -------------------------------------------------------------------------
 
     /**
-     * Get artist name
+     * Get the artist's name.
      */
     public function getArist(): string
     {
@@ -31,7 +31,7 @@ class AudioAttachment extends Attachment
     // -------------------------------------------------------------------------
 
     /**
-     * Get length (in seconds)
+     * Get the audio's length in seconds.
      */
     public function getLength(): string
     {
