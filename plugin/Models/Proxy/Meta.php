@@ -14,14 +14,14 @@ use Charm\Support\Result;
 class Meta implements IsPersistable
 {
     /**
-     * Meta type
+     * Meta type.
      *
      * @var string `comment`, `post`, `term`, or `user`
      */
     protected string $metaType = '';
 
     /**
-     * Meta ID field
+     * Meta ID field.
      *
      * @var string `meta_id` or `umeta_id` (if $metaType === `user`)
      */
@@ -30,28 +30,28 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Object ID
+     * Object ID.
      *
      * @var ?int
      */
     protected ?int $objectId = null;
 
     /**
-     * Meta key
+     * Meta key.
      *
      * @var ?string
      */
     protected ?string $metaKey = null;
 
     /**
-     * Meta value
+     * Meta value.
      *
      * @var mixed
      */
     protected mixed $metaValue = null;
 
     /**
-     * Previous meta value
+     * Previous meta value.
      *
      * @var mixed
      */
@@ -60,7 +60,7 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether meta exists in database
+     * Whether the meta exists in the database.
      *
      * @var bool
      */
@@ -69,7 +69,7 @@ class Meta implements IsPersistable
     // *************************************************************************
 
     /**
-     * Meta constructor
+     * Meta constructor.
      *
      * @param string $metaType
      * @param array $data
@@ -83,7 +83,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Load instance with data
+     * Load the instance with data.
      *
      * @param array $data
      */
@@ -113,7 +113,28 @@ class Meta implements IsPersistable
     // *************************************************************************
 
     /**
-     * Get all metas or by specified key
+     * Get the first meta for the specified key.
+     *
+     * @param string $metaType
+     * @param int $objectId
+     * @param string $metaKey
+     * @return ?static
+     */
+    public static function getFirst(
+        string $metaType, int $objectId, string $metaKey
+    ): ?static
+    {
+        $metas = static::get($metaType, $objectId, $metaKey);
+
+        if (!isset($metas[0])) {
+            return null;
+        }
+
+        return $metas[0];
+    }
+
+    /**
+     * Get all metas or only the ones for the specified key.
      *
      * @param string $metaType
      * @param int $objectId
@@ -147,31 +168,10 @@ class Meta implements IsPersistable
         return static::getMultiple($metaType, $objectId, $metaKey, $metaValues);
     }
 
-    /**
-     * Get first meta by specified key
-     *
-     * @param string $metaType
-     * @param int $objectId
-     * @param string $metaKey
-     * @return ?static
-     */
-    public static function getFirst(
-        string $metaType, int $objectId, string $metaKey
-    ): ?static
-    {
-        $metas = static::get($metaType, $objectId, $metaKey);
-
-        if (!isset($metas[0])) {
-            return null;
-        }
-
-        return $metas[0];
-    }
-
     // -------------------------------------------------------------------------
 
     /**
-     * Create meta with specified key and value on object
+     * Create a meta for that object in the database.
      *
      * @param string $metaType
      * @param int $objectId
@@ -205,7 +205,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Update meta with specified key and value on object
+     * Update a meta for that object in the database.
      *
      * @param string $metaType
      * @param int $objectId
@@ -242,7 +242,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Delete meta with specified key (and optional value) from object
+     * Delete a meta (with optional value) for that object in the database.
      *
      * @param string $metaType
      * @param int $objectId
@@ -268,7 +268,8 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Purge meta with specified key (and optional value) from ALL objects
+     * Purge all the metas with the specified key (and optional value) from ALL
+     * objects in the database.
      *
      * @param string $metaType
      * @param string $metaKey
@@ -299,7 +300,8 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Whether meta with specified key (and optional value) exists on object
+     * Check whether the meta with the specified key (and optional value) exists
+     * for that object in the database.
      *
      * @param string $metaType
      * @param int $objectId
@@ -317,7 +319,7 @@ class Meta implements IsPersistable
     // *************************************************************************
 
     /**
-     * Save meta
+     * Save the meta in the database.
      *
      * @return Result
      */
@@ -327,7 +329,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Create new meta
+     * Create the meta in the database.
      *
      * @return Result
      */
@@ -357,7 +359,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Update existing meta
+     * Update the meta in the database.
      *
      * @return Result
      */
@@ -388,7 +390,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Delete meta
+     * Delete the meta from the database.
      *
      * @return Result
      */
@@ -420,7 +422,7 @@ class Meta implements IsPersistable
     // *************************************************************************
 
     /**
-     * Get meta type
+     * Get the meta type.
      *
      * @return string
      */
@@ -432,7 +434,7 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get object ID
+     * Get the object ID.
      *
      * @return int
      */
@@ -442,7 +444,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Set object ID
+     * Set the object ID.
      *
      * @param int $objectId
      * @return static
@@ -457,7 +459,7 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get meta key
+     * Get the meta key.
      *
      * @return string
      */
@@ -467,7 +469,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Set meta key
+     * Set the meta key.
      *
      * @param string $metaKey
      * @return static
@@ -482,7 +484,7 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get meta value
+     * Get the meta value.
      *
      * @return mixed
      */
@@ -492,7 +494,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Set meta value
+     * Set the meta value.
      *
      * @param mixed $metaValue
      * @return static
@@ -507,7 +509,7 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether meta exists in database
+     * Check whether the meta exists in the database.
      *
      * @return bool
      */
@@ -517,7 +519,8 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Whether meta has changed
+     * Check whether the meta has changed since it was retrieved from the
+     * database.
      *
      * @return bool
      */
@@ -529,7 +532,7 @@ class Meta implements IsPersistable
     // *************************************************************************
 
     /**
-     * Get all metas
+     * Get all the metas.
      *
      * @param string $metaType
      * @param int $objectId
@@ -568,7 +571,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Get meta with multiple, identical keys
+     * Get all the metas that match the specified key.
      *
      * @param string $metaType
      * @param int $objectId
@@ -592,7 +595,7 @@ class Meta implements IsPersistable
     }
 
     /**
-     * Get meta with single key and value
+     * Get the single meta.
      *
      * @param string $metaType
      * @param int $objectId
@@ -618,9 +621,9 @@ class Meta implements IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get meta ID field based on type
+     * Get the meta ID field based on its type.
      *
-     * @param string $metaType
+     * @param string $metaType `post`, `user`, `term`, etc.
      * @return string
      */
     protected static function getMetaIdField(string $metaType): string
