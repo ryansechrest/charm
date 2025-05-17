@@ -13,7 +13,7 @@ use Charm\Models\Base;
 class TermMeta extends Base\Meta
 {
     /**
-     * Define meta type
+     * Set the meta type.
      */
     protected static function metaType(): string
     {

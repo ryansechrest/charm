@@ -12,7 +12,7 @@ use Charm\Models\Base;
 class UserMeta extends Base\Meta
 {
     /**
-     * Define meta type
+     * Set the meta type.
      */
     protected static function metaType(): string
     {
