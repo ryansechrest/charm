@@ -13,28 +13,28 @@ use Charm\Support\Result;
 interface IsPersistable
 {
     /**
-     * Save model in database
+     * Saves the model in the database.
      *
      * @return Result
      */
     public function save(): Result;
 
     /**
-     * Create model in database
+     * Creates the model in the database.
      *
      * @return Result
      */
     public function create(): Result;
 
     /**
-     * Update model in database
+     * Updates the model in the database.
      *
      * @return Result
      */
     public function update(): Result;
 
     /**
-     * Delete model from database
+     * Deletes the model from the database.
      *
      * @return Result
      */

@@ -13,7 +13,7 @@ use Charm\Support\Result;
 interface HasDeferredCalls
 {
     /**
-     * Register a method to be executed later.
+     * Registers a method to be executed later.
      *
      * @param string $method
      * @return void
@@ -21,7 +21,7 @@ interface HasDeferredCalls
     function registerDeferred(string $method): void;
 
     /**
-     * Execute all registered methods.
+     * Executes all registered methods.
      *
      * @return Result[]
      */

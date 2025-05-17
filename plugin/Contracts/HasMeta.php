@@ -16,8 +16,8 @@ interface HasMeta
     /**
      * Loads all metas from the database into the cache.
      *
-     * Useful when multiple metas are expected, and it's more efficient to load
-     * them all in one query rather than fetching them one at a time.
+     * Useful when accessing multiple metas, because it's more efficient to
+     * load them in one query rather than fetching them one at a time.
      *
      * @return static
      */
@@ -26,7 +26,7 @@ interface HasMeta
     // *************************************************************************
 
     /**
-     * Returns the first meta for the given key, from cache or database.
+     * Returns the first meta for the given key from the cache or database.
      *
      * @param string $key
      * @return ?Base\Meta
@@ -34,10 +34,10 @@ interface HasMeta
     function getMeta(string $key): ?Base\Meta;
 
     /**
-     * Returns all metas for the given key, from cache or database.
+     * Returns all metas for the given key from the cache or database.
      *
-     * If the metas are not already in cache, they will be fetched from the
-     * database.
+     * If the metas are not already in the cache, they will be fetched from
+     * the database and then cached.
      *
      * @param string $key
      * @return Base\Meta[]
@@ -57,7 +57,7 @@ interface HasMeta
     function createMeta(string $key, mixed $value): Result;
 
     /**
-     * Updates an existing meta or creates a new one if none exists.
+     * Updates an existing meta or creates a new one if it doesn't exist.
      *
      * Marks the meta as `DIRTY` and defers persistence until `persistMetas()`
      * is called.
@@ -69,7 +69,7 @@ interface HasMeta
     function updateMeta(string $key, mixed $value): Result;
 
     /**
-     * Replaces all existing metas for a key with a new one.
+     * Replaces all existing metas for a key with the new one.
      *
      * Deletes all existing metas for the key and creates a new meta in the
      * cache.
@@ -81,10 +81,10 @@ interface HasMeta
     function replaceMeta(string $key, mixed $value): Result;
 
     /**
-     * Marks metas for deletion from cache.
+     * Marks metas for deletion in the cache.
      *
-     * If a value is provided, only the matching meta is deleted. If null,
-     * all metas for the key are deleted. Persistence is deferred.
+     * If a value is provided, only the matching meta is deleted, but ff null
+     * is provided, then all metas for the key are deleted.
      *
      * @param string $key
      * @param mixed $value
@@ -95,7 +95,7 @@ interface HasMeta
     // -------------------------------------------------------------------------
 
     /**
-     * Persists all cached metas to the database.
+     * Persists all cached metas in the database.
      *
      * Called automatically by the base model’s `create()` or `update()`
      * method. Applies each meta’s state (`NEW`, `DIRTY`, `DELETED`) and
