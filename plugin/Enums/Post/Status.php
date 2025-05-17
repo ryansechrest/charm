@@ -5,8 +5,8 @@ namespace Charm\Enums\Post;
 /**
  * Indicates the status of a post.
  *
- * Table: wp_posts
- * Column: post_status
+ * Table: `wp_posts`
+ * Column: `post_status`
  *
  * @author Ryan Sechrest
  * @package Charm

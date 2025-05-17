@@ -5,8 +5,8 @@ namespace Charm\Enums\Post;
 /**
  * Indicates the ping status on a post.
  *
- * Table: wp_posts
- * Column: ping_status
+ * Table: `wp_posts`
+ * Column: `ping_status`
  *
  * @author Ryan Sechrest
  * @package Charm
