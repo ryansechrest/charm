@@ -5,7 +5,7 @@ namespace Charm\Contracts\Proxy;
 use Charm\Models\Proxy;
 
 /**
- * Ensures that the model implements a WordPress\User instance.
+ * Ensures that the model implements a `WordPress\User` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use Charm\Models\Proxy;
 interface HasProxyUser
 {
     /**
-     * Provides access to WordPress\User instance.
+     * Provides access to the `WordPress\User` instance.
      *
      * @return ?Proxy\User
      */

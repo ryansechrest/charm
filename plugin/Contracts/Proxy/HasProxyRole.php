@@ -5,7 +5,7 @@ namespace Charm\Contracts\Proxy;
 use Charm\Structures\Proxy;
 
 /**
- * Ensures that the model implements a Proxy\Role instance.
+ * Ensures that the model implements a `Proxy\Role` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use Charm\Structures\Proxy;
 interface HasProxyRole
 {
     /**
-     * Provides access to Proxy\Role instance.
+     * Provides access to the `Proxy\Role` instance.
      *
      * @return ?Proxy\Role
      */

@@ -5,7 +5,7 @@ namespace Charm\Contracts\Proxy;
 use Charm\Models\Proxy;
 
 /**
- * Ensures that the model implements a WordPress\Meta instance.
+ * Ensures that the model implements a `WordPress\Meta` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use Charm\Models\Proxy;
 interface HasProxyMeta
 {
     /**
-     * Provides access to WordPress\Meta instance.
+     * Provides access to the `WordPress\Meta` instance.
      *
      * @return ?Proxy\Meta
      */
