@@ -28,7 +28,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy term
+     * Proxy term.
      *
      * @var ?Proxy\Term
      */
@@ -37,16 +37,14 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Force taxonomy definition
+     * Ensures that the taxonomy gets defined.
      *
-     * e.g. `category`, `post_tag`, etc.
-     *
-     * @return string
+     * @return string `category`, `post_tag`, etc.
      */
     abstract protected static function taxonomy(): string;
 
     /**
-     * Define default meta class
+     * Set the class to be used when instantiating a term meta.
      *
      * @return string
      */
@@ -58,7 +56,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Term constructor
+     * Term constructor.
      *
      * @param array $data
      */
@@ -71,7 +69,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get proxy term instance
+     * Get the proxy term instance.
      *
      * @return ?Proxy\Term
      */
@@ -83,7 +81,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize term
+     * Initialize the term.
      *
      * int     -> Term Taxonomy ID
      * string  -> Term Slug
@@ -116,7 +114,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Initialize term and preload metas
+     * Initialize the term and preload all of its metas.
      *
      * @param int|string|WP_Term $key
      * @return ?static
@@ -129,7 +127,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get terms
+     * Get the terms.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_term_query/
@@ -153,7 +151,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Query terms with WP_Term_Query
+     * Query the terms with `WP_Term_Query`.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_term_query/
@@ -169,7 +167,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Save term
+     * Save the term in the database,
      *
      * @return Result
      */
@@ -179,7 +177,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Create new term
+     * Create the term in the database.
      *
      * @return Result
      */
@@ -189,7 +187,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Update existing term
+     * Update the term in the database.
      *
      * @return Result
      */
@@ -199,7 +197,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Delete term
+     * Delete the term from the database.
      *
      * @return Result
      */
@@ -208,57 +206,10 @@ abstract class Term implements HasProxyTerm, IsPersistable
         return $this->proxyTerm()->delete();
     }
 
-    // -------------------------------------------------------------------------
-
-    /**
-     * Add term to model (appending to existing terms)
-     *
-     * @param $modelId
-     * @return Result
-     */
-    public function addModel($modelId): Result
-    {
-        return $this->proxyTerm()::addObjectTerms(
-            objectId: $modelId,
-            terms: $this->getId(),
-            taxonomy: static::taxonomy()
-        );
-    }
-
-    /**
-     * Remove term from model
-     *
-     * @param $modelId
-     * @return Result
-     */
-    public function removeModel($modelId): Result
-    {
-        return $this->proxyTerm()::removeObjectTerms(
-            objectId: $modelId,
-            terms: $this->getId(),
-            taxonomy: static::taxonomy()
-        );
-    }
-
-    /**
-     * Set term on model (replacing existing terms)
-     *
-     * @param $modelId
-     * @return Result
-     */
-    public function setModel($modelId): Result
-    {
-        return $this->proxyTerm()::setObjectTerms(
-            objectId: $modelId,
-            terms: $this->getId(),
-            taxonomy: static::taxonomy()
-        );
-    }
-
     // *************************************************************************
 
     /**
-     * Get term ID
+     * Get the term ID.
      *
      * @return int
      */
@@ -270,7 +221,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term taxonomy ID
+     * Get the term taxonomy ID.
      *
      * @return int
      */
@@ -282,7 +233,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term name
+     * Get the term's name.
      *
      * @return string
      */
@@ -293,7 +244,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Set term name
+     * Set the term's name.
      *
      * @param string $name
      * @return static
@@ -309,7 +260,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term slug
+     * Get the term's slug.
      *
      * @return string
      */
@@ -320,7 +271,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     }
 
     /**
-     * Set term slug
+     * Set the term's slug.
      *
      * @param string $slug
      * @return static
@@ -336,7 +287,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether term exists in database
+     * Check whether the term exists in the database.
      *
      * @return bool
      */
