@@ -17,70 +17,70 @@ use WP_User_Query;
 class User implements HasWpUser, IsPersistable
 {
     /**
-     * ID
+     * User ID.
      *
      * @var ?int
      */
     protected ?int $id = null;
 
     /**
-     * User login
+     * User login.
      *
      * @var ?string
      */
     protected ?string $userLogin = null;
 
     /**
-     * User pass
+     * User password.
      *
      * @var ?string
      */
     protected ?string $userPass = null;
 
     /**
-     * User nice name
+     * User nicename (slug).
      *
      * @var ?string
      */
     protected ?string $userNicename = null;
 
     /**
-     * User email
+     * User email address.
      *
      * @var ?string
      */
     protected ?string $userEmail = null;
 
     /**
-     * User URL
+     * User website URL.
      *
      * @var ?string
      */
     protected ?string $userUrl = null;
 
     /**
-     * User registered
+     * User registered date and time.
      *
      * @var ?string
      */
     protected ?string $userRegistered = null;
 
     /**
-     * User activation key
+     * User activation key.
      *
      * @var ?string
      */
     protected ?string $userActivationKey = null;
 
     /**
-     * User status
+     * User status.
      *
      * @var ?int
      */
     protected ?int $userStatus = null;
 
     /**
-     * User display name
+     * User display name.
      *
      * @var ?string
      */
@@ -89,7 +89,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * WP_User instance
+     * `WP_Use`r instance.
      *
      * @var ?WP_User
      */
@@ -98,7 +98,7 @@ class User implements HasWpUser, IsPersistable
     // *************************************************************************
 
     /**
-     * User constructor
+     * User constructor.
      *
      * @param array $data
      */
@@ -108,7 +108,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Load instance with data
+     * Load the instance with data.
      *
      * @param array $data
      */
@@ -158,7 +158,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Access WP_User instance
+     * Access the `WP_User` instance.
      *
      * @return ?WP_User
      */
@@ -170,9 +170,9 @@ class User implements HasWpUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize user from ID
+     * Initialize the user from an ID.
      *
-     * From: wp_user -> ID
+     * From: `wp_user` -> `ID`
      *
      * @param int $id
      * @return ?static
@@ -186,9 +186,9 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Initialize user from username
+     * Initialize the user from a username.
      *
-     * From: wp_user -> user_login
+     * From: `wp_user` -> `user_login`
      *
      * @param string $username john.doe
      * @return ?static
@@ -202,9 +202,9 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Initialize user from slug
+     * Initialize the user from a slug.
      *
-     * From: wp_user -> user_nicename
+     * From: `wp_user` -> `user_nicename`
      *
      * @param string $slug john-doe
      * @return ?static
@@ -218,9 +218,9 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Initialize user from email
+     * Initialize the user from an email address.
      *
-     * From: wp_user -> user_email
+     * From: `wp_user` -> `user_email`
      *
      * @param string $email john.doe@example.org
      * @return ?static
@@ -234,7 +234,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Initialize user from global WP_User
+     * Initialize the user from the global `WP_User` instance.
      *
      * @return ?static
      * @see wp_get_current_user()
@@ -248,7 +248,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Initialize user from WP_User
+     * Initialize the user from a `WP_User` instance.
      *
      * @param WP_User $wpUser
      * @return static
@@ -264,7 +264,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get users
+     * Get the users.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_user_query/
@@ -287,7 +287,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Query users with WP_User_Query
+     * Query the users with `WP_User_Query`.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_user_query/
@@ -303,7 +303,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Create new user
+     * Create a user in the database.
      *
      * @param array $data
      * @return Result
@@ -330,7 +330,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Update existing user
+     * Update a user in the database.
      *
      * @param array $data
      * @return Result
@@ -357,7 +357,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Delete user
+     * Delete a user from the database.
      *
      * @param int $id
      * @return Result
@@ -380,7 +380,7 @@ class User implements HasWpUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Save user
+     * Save the user in the database.
      *
      * @return Result
      */
@@ -390,7 +390,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Create new user
+     * Create the user in the database.
      *
      * @return Result
      * @see wp_insert_user()
@@ -422,7 +422,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Update existing user
+     * Update the user in the database.
      *
      * @return Result
      */
@@ -449,7 +449,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Delete user
+     * Delete the user from the database.
      *
      * @return Result
      */
@@ -476,7 +476,7 @@ class User implements HasWpUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Get ID
+     * Get the user ID.
      *
      * @return int
      */
@@ -488,7 +488,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user login
+     * Get the user login.
      *
      * @return string john.doe
      */
@@ -498,7 +498,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user login
+     * Set the user login.
      *
      * @param string $userLogin john.doe
      * @return static
@@ -513,7 +513,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user pass
+     * Get the user password.
      *
      * @return string Hashed password
      */
@@ -523,7 +523,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user pass
+     * Set the user password.
      *
      * @param string $userPass Cleartext password
      * @return static
@@ -538,7 +538,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user nicename
+     * Get the user nicename (slug).
      *
      * @return string john-doe
      */
@@ -548,7 +548,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user nicename
+     * Set the user nicename (slug).
      *
      * @param string $userNicename john-doe
      * @return static
@@ -563,7 +563,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user email
+     * Get the user email address.
      *
      * @return string john.doe@example.org
      */
@@ -573,7 +573,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user email
+     * Set the user email address.
      *
      * @param string $userEmail john.doe@example.org
      * @return static
@@ -588,7 +588,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user URL
+     * Get the user website URL.
      *
      * @return string https://example.org
      */
@@ -598,7 +598,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user URL
+     * Set the user website URL.
      *
      * @param string $userUrl https://example.org
      * @return static
@@ -613,7 +613,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user registered
+     * Get the user registered date and time.
      *
      * @return string 0000-00-00 00:00:00
      */
@@ -623,7 +623,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user registered
+     * Set the user registered date and time.
      *
      * @param string $userRegistered 0000-00-00 00:00:00
      * @return static
@@ -638,7 +638,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user activation key
+     * Get the user activation key.
      *
      * @return string Random string
      */
@@ -648,7 +648,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user activation key
+     * Set the user activation key.
      *
      * @param string $userActivationKey Random string
      * @return static
@@ -663,7 +663,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get user status
+     * Get the user status.
      *
      * @return int
      */
@@ -673,7 +673,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set user status
+     * Set the user status.
      *
      * @param int $userStatus
      * @return static
@@ -688,7 +688,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get display name
+     * Get the display name.
      *
      * @return string John Doe
      */
@@ -698,7 +698,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Set display name
+     * Set the display name.
      *
      * @param string $displayName John Doe
      * @return static
@@ -713,7 +713,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether user exists in database
+     * Check whether the user exists in the database.
      *
      * @return bool
      */
@@ -725,7 +725,7 @@ class User implements HasWpUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Get WP_User by field
+     * Get a `WP_User` by the specified database column.
      *
      * @param string $field
      * @param int|string $value
@@ -748,7 +748,7 @@ class User implements HasWpUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Load instance from ID
+     * Load the instance from an ID.
      *
      * @param int $id
      */
@@ -766,7 +766,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Load instance from username
+     * Load the instance from a username.
      *
      * @param string $username john.doe
      */
@@ -780,7 +780,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Load instance from slug
+     * Load the instance from a slug.
      *
      * @param string $slug john-doe
      */
@@ -794,7 +794,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Load instance from email
+     * Load the instance from an email address.
      *
      * @param string $email john.doe@example.org
      */
@@ -808,7 +808,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Load instance from global WP_User
+     * Load the instance from the global `WP_User` instance.
      *
      * @see wp_get_current_user()
      */
@@ -826,7 +826,7 @@ class User implements HasWpUser, IsPersistable
     }
 
     /**
-     * Load instance from WP_User
+     * Load the instance from a `WP_User` instance.
      *
      * @param WP_User $wpUser
      */
@@ -849,7 +849,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Reload instance from database
+     * Reload the instance from the database.
      */
     protected function reload(): void
     {
@@ -863,7 +863,7 @@ class User implements HasWpUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Cast user to array to be used by WordPress functions
+     * Cast the user to an array to be used by WordPress functions.
      *
      * Remove keys from array if the value is null,
      * since that indicates no value has been set.

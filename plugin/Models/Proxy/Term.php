@@ -18,30 +18,30 @@ use WP_Term_Query;
 class Term implements HasWpTerm, IsPersistable
 {
     /**
-     * Term ID
+     * Term ID.
      *
-     * Table: wp_terms
-     * Column: term_id
+     * Table: `wp_terms`
+     * Column: `term_id`
      *
      * @var ?int
      */
     protected ?int $termId = null;
 
     /**
-     * Term name
+     * Term name.
      *
-     * Table: wp_terms
-     * Column: name
+     * Table: `wp_terms`
+     * Column: `name`
      *
      * @var ?string
      */
     protected ?string $name = null;
 
     /**
-     * Term slug
+     * Term slug.
      *
-     * Table: wp_terms
-     * Column: slug
+     * Table: `wp_terms`
+     * Column: `slug`
      *
      * @var ?string
      */
@@ -50,50 +50,50 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Term taxonomy ID
+     * Term taxonomy ID.
      *
-     * Table: wp_term_taxonomy
-     * Column: term_taxonomy_id
+     * Table: `wp_term_taxonomy`
+     * Column: `term_taxonomy_id`
      *
      * @var ?int
      */
     protected ?int $termTaxonomyId = null;
 
     /**
-     * Term taxonomy slug
+     * Term taxonomy slug.
      *
-     * Table: wp_term_taxonomy
-     * Column: taxonomy
+     * Table: `wp_term_taxonomy`
+     * Column: `taxonomy`
      *
      * @var ?string
      */
     protected ?string $taxonomy = null;
 
     /**
-     * Term taxonomy description
+     * Term taxonomy description.
      *
-     * Table: wp_term_taxonomy
-     * Column: taxonomy
+     * Table: `wp_term_taxonomy`
+     * Column: `taxonomy`
      *
      * @var ?string
      */
     protected ?string $description = null;
 
     /**
-     * Parent term taxonomy ID
+     * Parent term taxonomy ID.
      *
-     * Table: wp_term_taxonomy
-     * Column: parent
+     * Table: `wp_term_taxonomy`
+     * Column: `parent`
      *
      * @var ?int
      */
     protected ?int $parent = null;
 
     /**
-     * Number of objects using term taxonomy
+     * Number of objects using the term taxonomy.
      *
-     * Table: wp_term_taxonomy
-     * Column: count
+     * Table: `wp_term_taxonomy`
+     * Column: `count`
      *
      * @var ?int
      */
@@ -102,7 +102,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * WP_Term instance
+     * `WP_Term` instance.
      *
      * @var ?WP_Term
      */
@@ -111,7 +111,7 @@ class Term implements HasWpTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Term constructor
+     * Term constructor.
      *
      * @param array $data
      */
@@ -121,7 +121,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Load instance with data
+     * Load the instance with data.
      *
      * @param array $data
      */
@@ -163,7 +163,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Access WP_Term instance
+     * Access the `WP_Term` instance.
      *
      * @return ?WP_Term
      */
@@ -175,10 +175,10 @@ class Term implements HasWpTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize term from term ID
+     * Initialize the term from a term ID.
      *
-     * From: wp_terms -> term_id
-     *       wp_term_taxonomy -> taxonomy
+     * From: `wp_terms` -> `term_id`
+     *       `wp_term_taxonomy` -> `taxonomy`
      *
      * @param int $termId 1
      * @param string $taxonomy category
@@ -193,10 +193,10 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Initialize term from term name
+     * Initialize the term from a term name.
      *
-     * From: wp_terms -> name
-     *       wp_term_taxonomy -> taxonomy
+     * From: `wp_terms` -> `name`
+     *       `wp_term_taxonomy` -> `taxonomy`
      *
      * @param string $name Uncategorized
      * @param string $taxonomy category
@@ -211,10 +211,10 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Initialize term from term slug
+     * Initialize the term from a term slug.
      *
-     * From: wp_terms -> slug
-     *       wp_term_taxonomy -> taxonomy
+     * From: `wp_terms` -> `slug`
+     *       `wp_term_taxonomy` -> `taxonomy`
      *
      * @param string $slug uncategorized
      * @param string $taxonomy category
@@ -229,9 +229,9 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Initialize term from term taxonomy ID
+     * Initialize the term from a term taxonomy ID.
      *
-     * From: wp_term_taxonomy -> term_taxonomy_id
+     * From: `wp_term_taxonomy` -> `term_taxonomy_id`
      *
      * @param int $termTaxonomyId
      * @return ?static
@@ -245,7 +245,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Initialize term from WP_Term
+     * Initialize the term from a `WP_Term` instance.
      *
      * @param WP_Term $wpTerm
      * @return static
@@ -261,7 +261,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get terms
+     * Get the terms.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_term_query/
@@ -286,7 +286,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Query terms with WP_Term_Query
+     * Query the terms with `WP_Term_Query`.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_term_query/
@@ -302,7 +302,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Create new term in taxonomy
+     * Create a term in a taxonomy.
      *
      * @param string $name Uncategorized
      * @param string $taxonomy category
@@ -329,7 +329,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Update existing term in taxonomy
+     * Update a term in a taxonomy.
      *
      * @param int $termId 1
      * @param string $taxonomy category
@@ -356,7 +356,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Delete term from taxonomy
+     * Delete a term from a taxonomy.
      *
      * @param int $termId 1
      * @param string $taxonomy category
@@ -384,7 +384,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get terms from object
+     * Get the terms from an object.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_term_query/
@@ -404,11 +404,11 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Add terms to object (appends terms)
+     * Add the terms to an object (appends terms).
      *
-     * $terms int    -> Term ID
-     *        string -> Term Slug
-     *        array  -> Term IDs/Slugs
+     * $terms `int`    -> Term ID
+     *        `string` -> Term Slug
+     *        `array`  -> Term IDs/Slugs
      *
      * @param int $objectId 1
      * @param int|string|array $terms
@@ -439,11 +439,11 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Remove terms from object
+     * Remove the terms from an object.
      *
-     * $terms int    -> Term ID
-     *        string -> Term Slug
-     *        array  -> Term IDs/Slugs
+     * $terms `int`    -> Term ID
+     *        `string` -> Term Slug
+     *        `array`  -> Term IDs/Slugs
      *
      * @param int $objectId 1
      * @param int|string|array $terms
@@ -474,11 +474,11 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Set terms on object (replaces terms)
+     * Set terms on an object (replaces terms)
      *
-     * $terms int    -> Term ID
-     *        string -> Term Slug
-     *        array  -> Term IDs/Slugs
+     * $terms `int`    -> Term ID
+     *        `string` -> Term Slug
+     *        `array`  -> Term IDs/Slugs
      *
      * @param int $objectId 1
      * @param int|string|array $terms
@@ -511,7 +511,7 @@ class Term implements HasWpTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Save term in taxonomy
+     * Save the term in the taxonomy.
      *
      * @return Result
      */
@@ -522,7 +522,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Create new term in taxonomy
+     * Create the term in the taxonomy.
      *
      * @return Result
      */
@@ -565,7 +565,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Update existing term in taxonomy
+     * Update the term in the taxonomy.
      *
      * @return Result
      */
@@ -608,7 +608,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Delete term from taxonomy
+     * Delete the term from the taxonomy.
      *
      * @return Result
      */
@@ -645,7 +645,7 @@ class Term implements HasWpTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Get term ID
+     * Get the term ID.
      *
      * @return int
      */
@@ -657,7 +657,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term name
+     * Get the term name.
      *
      * @return string
      */
@@ -667,7 +667,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Set term name
+     * Set the term name.
      *
      * @param string $name
      * @return static
@@ -682,7 +682,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term slug
+     * Get the term slug.
      *
      * @return string
      */
@@ -692,7 +692,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Set term slug
+     * Set the term slug.
      *
      * @param string $slug
      * @return static
@@ -707,7 +707,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term taxonomy ID
+     * Get the term taxonomy ID.
      *
      * @return int
      */
@@ -719,7 +719,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get taxonomy
+     * Get the taxonomy.
      *
      * @return string
      */
@@ -731,7 +731,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get term taxonomy description
+     * Get the term description in the taxonomy.
      *
      * @return string
      */
@@ -741,7 +741,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Set term taxonomy description
+     * Set the term description in the taxonomy.
      *
      * @param string $description
      * @return static
@@ -756,7 +756,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get parent term taxonomy
+     * Get the parent term in the taxonomy.
      *
      * @return int
      */
@@ -766,7 +766,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Set parent term taxonomy
+     * Set the parent term in the taxonomy.
      *
      * @param int $parent
      * @return static
@@ -781,7 +781,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get number of objects using term taxonomy
+     * Get the number of objects using that term within the taxonomy.
      *
      * @return int
      */
@@ -793,7 +793,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether term exists in database
+     * Check whether the term exists in the database.
      *
      * @return bool
      */
@@ -805,7 +805,7 @@ class Term implements HasWpTerm, IsPersistable
     // *************************************************************************
 
     /**
-     * Load instance from term ID
+     * Load the instance from a term ID.
      *
      * @param int $termId 1
      * @param string $taxonomy category
@@ -825,7 +825,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Load instance from term name
+     * Load the instance from a term name.
      *
      * @param string $name Uncategorized
      * @param string $taxonomy category
@@ -845,7 +845,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Load instance from term slug
+     * Load the instance from a term slug.
      *
      * @param string $slug uncategorized
      * @param string $taxonomy category
@@ -865,7 +865,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Load instance from term taxonomy ID
+     * Load the instance from term taxonomy ID.
      *
      * @param int $termTaxonomyId
      * @return void
@@ -884,7 +884,7 @@ class Term implements HasWpTerm, IsPersistable
     }
 
     /**
-     * Load instance from WP_Term
+     * Load the instance from a `WP_Term` instance.
      *
      * @param WP_Term $wpTerm
      */
@@ -905,7 +905,7 @@ class Term implements HasWpTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Reload instance from database
+     * Reload the instance from the database.
      */
     protected function reload(): void
     {

@@ -17,161 +17,161 @@ use WP_Query;
 class Post implements HasWpPost, IsPersistable
 {
     /**
-     * ID
+     * Post ID.
      *
      * @var ?int
      */
     protected ?int $id = null;
 
     /**
-     * Post author
+     * Post author.
      *
      * @var ?int
      */
     protected ?int $postAuthor = null;
 
     /**
-     * Post date
+     * Post created date and time.
      *
      * @var ?string
      */
     protected ?string $postDate = null;
 
     /**
-     * Post date (GMT)
+     * Post created date and time (GMT).
      *
      * @var ?string
      */
     protected ?string $postDateGmt = null;
 
     /**
-     * Post content
+     * Post content.
      *
      * @var ?string
      */
     protected ?string $postContent = null;
 
     /**
-     * Post title
+     * Post title.
      *
      * @var ?string
      */
     protected ?string $postTitle = null;
 
     /**
-     * Post excerpt
+     * Post excerpt.
      *
      * @var ?string
      */
     protected ?string $postExcerpt = null;
 
     /**
-     * Post status
+     * Post status.
      *
      * @var ?string
      */
     protected ?string $postStatus = null;
 
     /**
-     * Comment status
+     * Comment status.
      *
      * @var ?string
      */
     protected ?string $commentStatus = null;
 
     /**
-     * Ping status
+     * Ping status.
      *
      * @var ?string
      */
     protected ?string $pingStatus = null;
 
     /**
-     * Post password
+     * Post password.
      *
      * @var ?string
      */
     protected ?string $postPassword = null;
 
     /**
-     * Post name
+     * Post name.
      *
      * @var ?string
      */
     protected ?string $postName = null;
 
     /**
-     * URLs to ping
+     * URLs to ping.
      *
      * @var ?string
      */
     protected ?string $toPing = null;
 
     /**
-     * URLs pinged
+     * URLs pinged.
      *
      * @var ?string
      */
     protected ?string $pinged = null;
 
     /**
-     * Post modified
+     * Post modified date and time.
      *
      * @var ?string
      */
     protected ?string $postModified = null;
 
     /**
-     * Post modified (GMT)
+     * Post modified date and time (GMT).
      *
      * @var ?string
      */
     protected ?string $postModifiedGmt = null;
 
     /**
-     * Filtered post content
+     * Filtered post content.
      *
      * @var ?string
      */
     protected ?string $postContentFiltered = null;
 
     /**
-     * Post parent
+     * Post parent.
      *
      * @var ?int
      */
     protected ?int $postParent = null;
 
     /**
-     * GUID
+     * GUID.
      *
      * @var ?string
      */
     protected ?string $guid = null;
 
     /**
-     * Menu order
+     * Menu order.
      *
      * @var ?int
      */
     protected ?int $menuOrder = null;
 
     /**
-     * Post type
+     * Post type.
      *
      * @var ?string
      */
     protected ?string $postType = null;
 
     /**
-     * Post MIME type
+     * Post MIME type.
      *
      * @var ?string
      */
     protected ?string $postMimeType = null;
 
     /**
-     * Comment count
+     * Comment count.
      *
      * @var ?int
      */
@@ -180,7 +180,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * WP_Post instance
+     * `WP_Post` instance.
      *
      * @var ?WP_Post
      */
@@ -189,7 +189,7 @@ class Post implements HasWpPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Post constructor
+     * Post constructor.
      *
      * @param array $data
      */
@@ -199,7 +199,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Load instance with data
+     * Load the instance with data.
      *
      * @param array $data
      */
@@ -301,7 +301,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Access WP_Post instance
+     * Access the `WP_Post` instance.
      *
      * @return ?WP_Post
      */
@@ -313,9 +313,9 @@ class Post implements HasWpPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize post from ID
+     * Initialize the post from an ID.
      *
-     * From: wp_posts -> ID
+     * From: `wp_posts` -> `ID`
      *
      * @param int $id
      * @return ?static
@@ -329,9 +329,9 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Initialize post from path
+     * Initialize the post from a path.
      *
-     * From: wp_posts -> post_name
+     * From: `wp_posts` -> `post_name`
      *
      * @param string $path hello-world
      * @param string $postType post
@@ -346,7 +346,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Initialize post from global WP_Post
+     * Initialize the post from the global `WP_Post` instance.
      *
      * @return ?static
      */
@@ -359,7 +359,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Initialize post from WP_Post
+     * Initialize the post from the specified `WP_Post` instance.
      *
      * @param WP_Post $wpPost
      * @return static
@@ -375,7 +375,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get posts
+     * Get the posts.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_query/
@@ -398,7 +398,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Query posts with WP_Query
+     * Query the posts with `WP_Query`.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_query/
@@ -414,7 +414,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Create new post
+     * Create a post in the database.
      *
      * @param array $data
      * @return Result
@@ -441,7 +441,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Update existing post
+     * Update a post in the database.
      *
      * @param array $data
      * @return Result
@@ -468,7 +468,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Move post to trash
+     * Move a post to the trash.
      *
      * @param int $id
      * @return Result
@@ -489,7 +489,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Restore post from trash
+     * Restore a post from the trash.
      *
      * @param int $id
      * @return Result
@@ -510,7 +510,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Permanently delete post
+     * Permanently delete a post from the database.
      *
      * @param int $id
      * @return Result
@@ -533,7 +533,7 @@ class Post implements HasWpPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Save post
+     * Save the post in the database.
      *
      * @return Result
      */
@@ -543,7 +543,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Create new post
+     * Create the post in the database.
      *
      * @return Result
      */
@@ -569,7 +569,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Update existing post
+     * Update the post in the database.
      *
      * @return Result
      * @see wp_update_post()
@@ -598,7 +598,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Move post to trash
+     * Move the post to the trash.
      *
      * @return Result
      */
@@ -623,7 +623,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Restore post from trash
+     * Restore the post from the trash.
      *
      * @return Result
      */
@@ -648,7 +648,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Permanently delete post
+     * Permanently delete the post from the database.
      *
      * @return Result
      * @see wp_delete_post()
@@ -676,7 +676,7 @@ class Post implements HasWpPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Get ID
+     * Get the post ID.
      *
      * @return int
      */
@@ -688,7 +688,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post author
+     * Get the post author.
      *
      * @return int
      */
@@ -698,7 +698,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post author
+     * Set the post author.
      *
      * @param int $postAuthor
      * @return static
@@ -713,7 +713,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post date
+     * Get the post created date and time.
      *
      * @return string 0000-00-00 00:00:00
      */
@@ -723,7 +723,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post date
+     * Set the post created date and time.
      *
      * @param string $postDate 0000-00-00 00:00:00
      * @return static
@@ -738,7 +738,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post date (GMT)
+     * Get the post created date and time (GMT).
      *
      * @return string 0000-00-00 00:00:00
      */
@@ -748,7 +748,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post date (GMT)
+     * Set the post created date and time (GMT).
      *
      * @param string $postDateGmt 0000-00-00 00:00:00
      * @return static
@@ -763,7 +763,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post content
+     * Get the post content.
      *
      * @return string Welcome to WordPress.
      */
@@ -773,7 +773,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post content
+     * Set the post content.
      *
      * @param string $postContent Welcome to WordPress.
      * @return static
@@ -788,7 +788,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post title
+     * Get the post title.
      *
      * @return string Hello World
      */
@@ -798,7 +798,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post title
+     * Set the post title.
      *
      * @param string $postTitle Hello World
      * @return static
@@ -813,7 +813,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post excerpt
+     * Get the post excerpt.
      *
      * @return string
      */
@@ -823,7 +823,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post excerpt
+     * Set the post excerpt.
      *
      * @param string $postExcerpt
      * @return static
@@ -838,7 +838,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post status
+     * Get the post status.
      *
      * @return string publish
      */
@@ -848,7 +848,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post status
+     * Set the post status.
      *
      * @param string $postStatus publish
      * @return static
@@ -863,7 +863,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get comment status
+     * Get the comment status.
      *
      * @return string open
      */
@@ -873,7 +873,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set comment status
+     * Set the comment status.
      *
      * @param string $commentStatus open
      * @return static
@@ -888,7 +888,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get ping status
+     * Get the ping status.
      *
      * @return string open
      */
@@ -898,7 +898,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set ping status
+     * Set the ping status.
      *
      * @param string $pingStatus open
      * @return static
@@ -913,7 +913,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post password
+     * Get the post password.
      *
      * @return string foobar
      */
@@ -923,7 +923,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post password
+     * Set the post password.
      *
      * @param string $postPassword foobar
      * @return static
@@ -938,7 +938,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post name
+     * Get the post name.
      *
      * @return string hello-world
      */
@@ -948,7 +948,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post name
+     * Set the post name.
      *
      * @param string $postName hello-world
      * @return static
@@ -963,7 +963,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get URLs to ping
+     * Get the URLs to ping.
      *
      * @return string https://example.org
      */
@@ -973,7 +973,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set URLs to ping
+     * Set the URLs to ping.
      *
      * @param string $toPing https://example.org
      * @return static
@@ -988,7 +988,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get pinged URLs
+     * Get the pinged URLs.
      *
      * @return string https://example.org
      */
@@ -998,7 +998,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set pinged URLs
+     * Set the pinged URLs.
      *
      * @param string $pinged https://example.org
      * @return static
@@ -1013,7 +1013,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post modified
+     * Get the post modified date and time.
      *
      * @return string 0000-00-00 00:00:00
      */
@@ -1023,7 +1023,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post modified
+     * Set the post modified date and time.
      *
      * @param string $postModified 0000-00-00 00:00:00
      * @return static
@@ -1038,7 +1038,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post modified (GMT)
+     * Get the post modified date and time (GMT).
      *
      * @return string 0000-00-00 00:00:00
      */
@@ -1048,7 +1048,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post modified (GMT)
+     * Set the post modified date and time (GMT).
      *
      * @param string $postModifiedGmt 0000-00-00 00:00:00
      * @return static
@@ -1063,7 +1063,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get filtered post content
+     * Get the filtered post content.
      *
      * @return string
      */
@@ -1073,7 +1073,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set filtered post content
+     * Set the filtered post content.
      *
      * @param string $postContentFiltered
      * @return static
@@ -1088,7 +1088,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post parent
+     * Get the post parent.
      *
      * @return int
      */
@@ -1098,7 +1098,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post parent
+     * Set the post parent.
      *
      * @param int $postParent
      * @return static
@@ -1113,7 +1113,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get GUID
+     * Get the GUID.
      *
      * @return string
      */
@@ -1125,7 +1125,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get menu order
+     * Get the menu order.
      *
      * @return int
      */
@@ -1135,7 +1135,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set menu order
+     * Set the menu order.
      *
      * @param int $menuOrder
      * @return static
@@ -1150,7 +1150,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post type
+     * Get the post type.
      *
      * @return string post
      */
@@ -1160,7 +1160,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post type
+     * Set the post type.
      *
      * @param string $postType post
      * @return static
@@ -1175,7 +1175,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get post MIME type
+     * Get the post MIME type.
      *
      * @return string
      */
@@ -1185,7 +1185,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Set post MIME type
+     * Set the post MIME type.
      *
      * @param string $postMimeType
      * @return static
@@ -1200,7 +1200,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get comment count
+     * Get the comment count.
      *
      * @return int
      */
@@ -1212,7 +1212,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether post exists in database
+     * Check whether the post exists in the database.
      *
      * @return bool
      */
@@ -1224,7 +1224,7 @@ class Post implements HasWpPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Load instance from ID
+     * Load the instance from a post ID.
      *
      * @param int $id
      * @see get_post()
@@ -1245,7 +1245,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Load instance from path
+     * Load the instance from a post path.
      *
      * @param string $path hello-world
      * @param string $postType post
@@ -1265,7 +1265,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Load instance from global WP_Post
+     * Load the instance from the global `WP_Post` instance.
      *
      * @see get_post()
      */
@@ -1281,7 +1281,7 @@ class Post implements HasWpPost, IsPersistable
     }
 
     /**
-     * Load instance from WP_Post
+     * Load the instance from the specified `WP_Post` instance.
      *
      * @param WP_Post $wpPost
      */
@@ -1317,7 +1317,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Reload instance from database
+     * Reload the instance from the database.
      */
     protected function reload(): void
     {
@@ -1331,7 +1331,7 @@ class Post implements HasWpPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Cast post to array to be used by WordPress functions
+     * Cast the post to an array to be used by WordPress functions.
      *
      * Remove keys from array if the value is null,
      * since that indicates no value has been set.
