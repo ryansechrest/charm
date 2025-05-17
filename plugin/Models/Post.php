@@ -47,7 +47,7 @@ class Post extends Base\Post
     // *************************************************************************
 
     /**
-     * Define post type
+     * Set the post type slug.
      */
     protected static function postType(): string
     {

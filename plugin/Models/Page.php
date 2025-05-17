@@ -37,7 +37,7 @@ class Page extends Base\Post
     // *************************************************************************
 
     /**
-     * Define post type
+     * Set the post type slug.
      */
     protected static function postType(): string
     {
@@ -47,7 +47,7 @@ class Page extends Base\Post
     // -------------------------------------------------------------------------
 
     /**
-     * Define parent class
+     * Set the class to be instantiated when the parent is accessed.
      *
      * @return string
      */
