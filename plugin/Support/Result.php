@@ -13,35 +13,35 @@ use WP_Error;
 class Result
 {
     /**
-     * Whether operation was successful
+     * Whether the operation was successful.
      *
      * @var bool
      */
     private bool $success = false;
 
     /**
-     * Error code if operation failed
+     * Error code if the operation failed.
      *
      * @var string
      */
     private string $errorCode = '';
 
     /**
-     * Error message if operation failed
+     * Error message if the operation failed.
      *
      * @var string
      */
     private string $errorMessage = '';
 
     /**
-     * Associated data
+     * Associated data with error.
      *
      * @var ?mixed
      */
     private mixed $data = null;
 
     /**
-     * Relevant WP_Error instance
+     * Relevant `WP_Error` instance.
      *
      * @var ?WP_Error
      */
@@ -50,7 +50,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Related results triggered by main operation
+     * Related results triggered by the main operation.
      *
      * @var array
      */
@@ -59,7 +59,7 @@ class Result
     // *************************************************************************
 
     /**
-     * Result constructor
+     * Result constructor.
      *
      * @param bool $success
      * @param string $errorCode
@@ -82,7 +82,7 @@ class Result
     // *************************************************************************
 
     /**
-     * Initialize result that operation succeeded
+     * Initialize the result indicating a success operation.
      *
      * @return self
      */
@@ -92,7 +92,7 @@ class Result
     }
 
     /**
-     * Initialize result that operation failed
+     * Initialize the result indicated a failed operation.
      *
      * @param string $code
      * @param string $message
@@ -106,7 +106,7 @@ class Result
     }
 
     /**
-     * Initialize result from WP_Error
+     * Initialize the result from a `WP_Error` instance.
      *
      * @param WP_Error $wpError
      * @return self
@@ -124,7 +124,7 @@ class Result
     // *************************************************************************
 
     /**
-     * Whether operation succeeded
+     * Check whether the operation succeeded.
      *
      * @return bool
      */
@@ -134,7 +134,7 @@ class Result
     }
 
     /**
-     * Whether operation failed
+     * Check whether the operation failed.
      *
      * @return bool
      */
@@ -146,7 +146,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Get error code
+     * Get the error code.
      *
      * @return string
      */
@@ -156,7 +156,7 @@ class Result
     }
 
     /**
-     * Get error message
+     * Get the error message.
      *
      * @return string
      */
@@ -166,7 +166,7 @@ class Result
     }
 
     /**
-     * Get associated data
+     * Get the associated data.
      *
      * @return mixed
      */
@@ -176,7 +176,7 @@ class Result
     }
 
     /**
-     * Get WP_Error instance
+     * Get the `WP_Error` instance.
      *
      * @return ?WP_Error
      */
@@ -188,7 +188,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Ability to directly print result as message
+     * Print instance with a successful or failed message.
      *
      * @return string
      */
@@ -202,7 +202,7 @@ class Result
     // *************************************************************************
 
     /**
-     * Add data to result
+     * Add data to the result.
      *
      * @param mixed $data
      * @return self
@@ -217,7 +217,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Add single, related result
+     * Add a single, related result.
      *
      * @param Result $result
      * @return void
@@ -228,7 +228,7 @@ class Result
     }
 
     /**
-     * Add multiple, related results
+     * Add multiple, related results.
      *
      * @param Result[] $results
      * @return void
@@ -241,7 +241,7 @@ class Result
     }
 
     /**
-     * Get all results (main and related)
+     * Get all results (main and related).
      *
      * @return Result[]
      */
@@ -251,7 +251,7 @@ class Result
     }
 
     /**
-     * Get all failed (main and related) results
+     * Get all failed (main and related) results.
      *
      * @return Result[]
      */
@@ -266,7 +266,7 @@ class Result
     }
 
     /**
-     * Get all successful (main and related) results
+     * Get all successful (main and related) results.
      *
      * @return Result[]
      */
@@ -283,7 +283,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Whether any result (main or related) failed
+     * Check whether any result (main or related) failed.
      *
      * @return bool
      */

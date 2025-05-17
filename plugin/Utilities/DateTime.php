@@ -14,31 +14,31 @@ use DateTimeZone;
 class DateTime
 {
     /**
-     * Fallback timezone
+     * Fallback timezone.
      */
     protected const TIMEZONE = 'UTC';
 
     /**
-     * Fallback date format
+     * Fallback date format.
      */
     protected const DATE_FORMAT = 'Y-m-d';
 
     /**
-     * Fallback time format
+     * Fallback time format.
      */
     protected const TIME_FORMAT = 'H:i:s';
 
     // -------------------------------------------------------------------------
 
     /**
-     * Date and time
+     * Date and time.
      *
      * @var DateTimeImmutable
      */
     protected DateTimeImmutable $dti;
 
     /**
-     * Timezone
+     * Timezone.
      *
      * @var ?DateTimeZone
      */
@@ -47,7 +47,7 @@ class DateTime
     // *************************************************************************
 
     /**
-     * Initialize DateTime from WordPress GMT date string
+     * Initialize the `DateTime` from the WordPress GMT date string.
      *
      * @param string $wpGmtDateTime
      * @return static
@@ -65,7 +65,7 @@ class DateTime
     }
 
     /**
-     * Initialize DateTime from current time
+     * Initialize the `DateTime` from the current time.
      *
      * @return static
      */
@@ -77,7 +77,7 @@ class DateTime
     // *************************************************************************
 
     /**
-     * Set timezone as provided
+     * Set the timezone as provided.
      *
      * @param string $timezone
      * @return static
@@ -90,7 +90,7 @@ class DateTime
     }
 
     /**
-     * Set timezone as configured in WordPress
+     * Set the timezone as configured in WordPress.
      *
      * @return static
      */
@@ -104,7 +104,7 @@ class DateTime
     // -------------------------------------------------------------------------
 
     /**
-     * Format UTC time using WordPress or custom format
+     * Format the UTC date and time using the WordPress or a custom format.
      *
      * @param string $format
      * @return string
@@ -123,7 +123,7 @@ class DateTime
     }
 
     /**
-     * Format UTC time using WordPress database format
+     * Format the UTC date and time using the WordPress database format.
      *
      * @return string
      */
@@ -137,7 +137,7 @@ class DateTime
     // -------------------------------------------------------------------------
 
     /**
-     * Return local formatted string (default behavior)
+     * Return the formatted date and time string using the WordPress format.
      *
      * @return string
      */
@@ -149,7 +149,7 @@ class DateTime
     // *************************************************************************
 
     /**
-     * Get timezone string from WordPress
+     * Get the timezone string from WordPress.
      *
      * @return string
      * @see get_option()
@@ -162,7 +162,7 @@ class DateTime
     }
 
     /**
-     * Get date format from WordPress
+     * Get the date format from WordPress.
      *
      * @return string
      */
@@ -174,7 +174,7 @@ class DateTime
     }
 
     /**
-     * Get time format from WordPress
+     * Get the time format from WordPress.
      *
      * @return string
      */
@@ -186,7 +186,7 @@ class DateTime
     }
 
     /**
-     * Get option from WordPress
+     * Get an option from WordPress.
      *
      * @param string $option
      * @param string $fallback

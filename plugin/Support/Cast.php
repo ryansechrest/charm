@@ -11,7 +11,7 @@ namespace Charm\Support;
 class Cast
 {
     /**
-     * Value
+     * Value to be cast.
      *
      * @var mixed
      */
@@ -20,7 +20,7 @@ class Cast
     // *************************************************************************
 
     /**
-     * Cast constructor
+     * Cast constructor.
      *
      * @param mixed $value
      */
@@ -32,7 +32,7 @@ class Cast
     // *************************************************************************
 
     /**
-     * Initialize cast from value
+     * Initialize instance from q value.
      *
      * @param mixed $value
      * @return static
@@ -45,7 +45,7 @@ class Cast
     // *************************************************************************
 
     /**
-     * Cast value to array
+     * Cast the value to an array.
      *
      * @return array
      */
@@ -70,7 +70,7 @@ class Cast
     }
 
     /**
-     * Cast value to bool
+     * Cast the value to a bool.
      *
      * @return bool
      */
@@ -91,7 +91,7 @@ class Cast
     }
 
     /**
-     * Cast value to float
+     * Cast the value to a float.
      *
      * @return float
      */
@@ -101,7 +101,7 @@ class Cast
     }
 
     /**
-     * Cast value to integer
+     * Cast the value to an integer.
      *
      * @return int
      */
@@ -115,7 +115,7 @@ class Cast
     }
 
     /**
-     * Cast value to JSON
+     * Cast the value to a JSON string.
      *
      * @return string
      */
@@ -125,7 +125,7 @@ class Cast
     }
 
     /**
-     * Cast value to string
+     * Cast the value to a string.
      *
      * @return string
      */
