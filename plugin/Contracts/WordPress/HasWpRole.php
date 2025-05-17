@@ -5,7 +5,7 @@ namespace Charm\Contracts\WordPress;
 use WP_Role;
 
 /**
- * Ensures that the model implements a WP_Role instance.
+ * Ensures that the model implements a `WP_Role` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use WP_Role;
 interface HasWpRole
 {
     /**
-     * Provides access to WP_Role instance.
+     * Provides access to the `WP_Role` instance.
      *
      * @return ?WP_Role
      */

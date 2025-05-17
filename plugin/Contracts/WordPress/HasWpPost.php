@@ -5,7 +5,7 @@ namespace Charm\Contracts\WordPress;
 use WP_Post;
 
 /**
- * Ensures that the model implements a WP_Post instance.
+ * Ensures that the model implements a `WP_Post` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use WP_Post;
 interface HasWpPost
 {
     /**
-     * Provides access to WP_Post instance.
+     * Provides access to the `WP_Post` instance.
      *
      * @return ?WP_Post
      */

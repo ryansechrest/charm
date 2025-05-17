@@ -5,7 +5,7 @@ namespace Charm\Contracts\WordPress;
 use WP_Term;
 
 /**
- * Ensures that the model implements a WP_Term instance.
+ * Ensures that the model implements a `WP_Term` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use WP_Term;
 interface HasWpTerm
 {
     /**
-     * Provides access to WP_Term instance.
+     * Provides access to the `WP_Term` instance.
      *
      * @return ?WP_Term
      */
