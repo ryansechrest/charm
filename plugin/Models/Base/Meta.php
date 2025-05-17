@@ -22,7 +22,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy meta
+     * Proxy meta.
      *
      * @var ?Proxy\Meta
      */
@@ -31,18 +31,16 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // *************************************************************************
 
     /**
-     * Force meta type definition
+     * Ensures that the meta type gets defined.
      *
-     * e.g. `comment`, `post`, `term`, and `user`
-     *
-     * @return string
+     * @return string `comment`, `post`, `term`, or `user`
      */
     abstract protected static function metaType(): string;
 
     // *************************************************************************
 
     /**
-     * Meta constructor
+     * Meta constructor.
      *
      * @param array $data
      */
@@ -54,7 +52,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get proxy meta instance
+     * Get the proxy meta instance.
      *
      * @return ?Proxy\Meta
      */
@@ -66,7 +64,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // *************************************************************************
 
     /**
-     * Get first meta by specified key
+     * Get the first meta for the specified key.
      *
      * @param int $objectId
      * @param string $metaKey
@@ -84,7 +82,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Get all metas or by specified key
+     * Get all metas or only the ones for the specified key.
      *
      * @param int $objectId
      * @param string $metaKey
@@ -119,7 +117,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // *************************************************************************
 
     /**
-     * Save meta
+     * Save the meta in the database.
      *
      * @return Result
      */
@@ -129,7 +127,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Create new meta
+     * Create a new meta in the database.
      *
      * @return Result
      */
@@ -139,7 +137,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Update existing meta
+     * Update the existing meta in the database.
      *
      * @return Result
      */
@@ -149,7 +147,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Delete meta
+     * Delete the meta from the database.
      *
      * @return Result
      */
@@ -161,7 +159,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // *************************************************************************
 
     /**
-     * Get object ID
+     * Get the object ID.
      *
      * @return int
      */
@@ -171,7 +169,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Set object ID
+     * Set the object ID.
      *
      * @param int $objectId
      * @return static
@@ -186,7 +184,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get meta key
+     * Get the meta key.
      *
      * @return string
      */
@@ -196,7 +194,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Set meta key
+     * Set the meta key.
      *
      * @param string $key
      * @return static
@@ -211,7 +209,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get meta value
+     * Get the meta value.
      *
      * @return mixed
      */
@@ -221,7 +219,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     }
 
     /**
-     * Set meta value
+     * Set the meta value.
      *
      * @param mixed $value
      * @return static
@@ -236,7 +234,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Cast value to specified data type
+     * Cast the value to the desired data type.
      *
      * @return Cast
      */
@@ -248,7 +246,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether meta exists in database
+     * Check whether the meta exists in the database.
      *
      * @return bool
      */

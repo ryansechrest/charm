@@ -30,7 +30,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy post
+     * Proxy post.
      *
      * @var ?Proxy\Post
      */
@@ -39,16 +39,14 @@ abstract class Post implements HasProxyPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Force post type definition
+     * Ensures that the post type gets defined.
      *
-     * e.g. `post`, `page`, `attachment`, etc.
-     *
-     * @return string
+     * @return string `post`, `page`, `attachment`, etc.
      */
     abstract protected static function postType(): string;
 
     /**
-     * Define default meta class
+     * Set the class to be used when instantiating a post meta.
      *
      * @return string
      */
@@ -60,7 +58,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Post constructor
+     * Post constructor.
      *
      * @param array $data
      */
@@ -73,7 +71,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get proxy post instance
+     * Get the proxy post instance.
      *
      * @return ?Proxy\Post
      */
@@ -85,7 +83,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize post
+     * Initialize the post.
      *
      * int     -> Post ID
      * null    -> Global Post
@@ -121,7 +119,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Initialize post and preload metas
+     * Initialize the post and preload all of its metas.
      *
      * @param int|string|WP_Post|null $key
      * @return ?static
@@ -136,7 +134,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get posts
+     * Get the posts.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_query/
@@ -160,7 +158,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Query posts with WP_Query
+     * Query the posts with `WP_Query`.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_query/
@@ -176,7 +174,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Save post
+     * Save the post in the database.
      *
      * @return Result
      */
@@ -186,7 +184,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Create new post
+     * Create the post in the database.
      *
      * @return Result
      */
@@ -204,7 +202,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Update existing post
+     * Update the post in the database.
      *
      * @return Result
      */
@@ -222,7 +220,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Move post to trash
+     * Move the post to the trash.
      *
      * @return Result
      */
@@ -232,7 +230,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Restore post from trash
+     * Restore the post from the trash.
      *
      * @return Result
      */
@@ -242,7 +240,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     }
 
     /**
-     * Delete post permanently
+     * Delete the post permanently.
      *
      * @return Result
      */
@@ -254,7 +252,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // *************************************************************************
 
     /**
-     * Get ID
+     * Get the post ID.
      *
      * @return int
      */
@@ -266,7 +264,7 @@ abstract class Post implements HasProxyPost, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether post exists in database
+     * Check whether the post exists in the database.
      *
      * @return bool
      */

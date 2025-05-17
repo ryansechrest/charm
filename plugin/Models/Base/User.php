@@ -28,7 +28,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy user
+     * Proxy user.
      *
      * @var ?Proxy\User
      */
@@ -37,7 +37,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Define default meta class
+     * Set the class to be used when instantiating a user meta.
      *
      * @return string
      */
@@ -49,7 +49,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // *************************************************************************
 
     /**
-     * User constructor
+     * User constructor.
      *
      * @param array $data
      */
@@ -61,7 +61,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get proxy user instance
+     * Get the proxy user instance.
      *
      * @return ?Proxy\User
      */
@@ -73,7 +73,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Initialize user
+     * Initialize the user.
      *
      * int                -> User ID
      * null               -> Global User
@@ -107,7 +107,7 @@ abstract class User implements HasProxyUser, IsPersistable
     }
 
     /**
-     * Initialize user and preload metas
+     * Initialize the user and preload all of their metas.
      *
      * @param int|string|WP_User|null $key
      * @return ?static
@@ -122,7 +122,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Get users
+     * Get the users.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_user_query/
@@ -145,7 +145,7 @@ abstract class User implements HasProxyUser, IsPersistable
     }
 
     /**
-     * Query users with WP_User_Query
+     * Query the users with `WP_User_Query`.
      *
      * See possible arguments:
      * https://developer.wordpress.org/reference/classes/wp_user_query/
@@ -161,7 +161,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Save user
+     * Save the user in the database.
      *
      * @return Result
      */
@@ -171,7 +171,7 @@ abstract class User implements HasProxyUser, IsPersistable
     }
 
     /**
-     * Create new user
+     * Create the user in the database and run all the deferred methods.
      *
      * @return Result
      */
@@ -189,7 +189,7 @@ abstract class User implements HasProxyUser, IsPersistable
     }
 
     /**
-     * Update existing user
+     * Update the user in the database and run all the deferred methods.
      *
      * @return Result
      */
@@ -207,7 +207,7 @@ abstract class User implements HasProxyUser, IsPersistable
     }
 
     /**
-     * Delete user
+     * Delete the user from the database.
      *
      * @return Result
      */
@@ -219,7 +219,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // *************************************************************************
 
     /**
-     * Get ID
+     * Get the user ID.
      *
      * @return int
      */
@@ -231,7 +231,7 @@ abstract class User implements HasProxyUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Whether user exists in database
+     * Check whether the user exists in the database.
      *
      * @return bool
      */
