@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyUser;
 use Charm\Enums\User\Status;
 
 /**
- * Adds status to user model.
+ * Adds the status to a user model.
  *
- * Table: wp_users
- * Column: user_status
+ * Table: `wp_users`
+ * Column: `user_status`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Enums\User\Status;
 trait WithStatus
 {
     /**
-     * Get status
+     * Get the user's status.
      *
      * @return Status
      */
@@ -28,7 +28,7 @@ trait WithStatus
     }
 
     /**
-     * Set status
+     * Set the user's status.
      *
      * @param Status|int $status
      * @return static

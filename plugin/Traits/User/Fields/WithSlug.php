@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds slug to user model.
+ * Adds the slug to a user model.
  *
- * Table: wp_users
- * Column: user_nicename
+ * Table: `wp_users`
+ * Column: `user_nicename`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithSlug
 {
     /**
-     * Get slug
+     * Get the user's URL slug.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithSlug
     }
 
     /**
-     * Set slug
+     * Set user's URL slug.
      *
      * @param string $slug
      * @return static

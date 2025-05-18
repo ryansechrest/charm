@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds nickname to user model.
+ * Adds the nickname to a user model.
  *
- * Table: wp_usermeta
- * Meta Key: nickname
+ * Table: `wp_usermeta`
+ * Meta Key: `nickname`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithNickname
 {
     /**
-     * Get nickname
+     * Get the user's nickname.
      */
     public function getNickname(): string
     {
@@ -25,7 +25,7 @@ trait WithNickname
     }
 
     /**
-     * Set nickname
+     * Set the user's nickname.
      *
      * @param string $nickname
      * @return static

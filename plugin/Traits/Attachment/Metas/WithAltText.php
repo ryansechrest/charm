@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds alternative text to attachment model.
+ * Adds the alternative text to an attachment model.
  *
- * Table: wp_postmeta
- * Meta Key: _wp_attachment_image_alt
+ * Table: `wp_postmeta`
+ * Meta Key: `_wp_attachment_image_alt`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithAltText
 {
     /**
-     * Get alternative text
+     * Get the alternative text.
      */
     public function getAltText(): string
     {
@@ -28,7 +28,7 @@ trait WithAltText
     }
 
     /**
-     * Set alternative text
+     * Set the alternative text.
      *
      * @param string $altText
      * @return static

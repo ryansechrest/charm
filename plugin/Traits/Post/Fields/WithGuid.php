@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds GUID to post model.
+ * Adds the GUID to a post model.
  *
- * Table: wp_posts
- * Column: guid
+ * Table: `wp_posts`
+ * Column: `guid`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithGuid
 {
     /**
-     * Get GUID
+     * Get the post's GUID.
      *
      * @return string
      */

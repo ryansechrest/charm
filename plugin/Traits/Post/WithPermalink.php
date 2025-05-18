@@ -5,7 +5,7 @@ namespace Charm\Traits\Post;
 use Charm\Contracts\WordPress\HasWpPost;
 
 /**
- * Adds permalink to post model.
+ * Adds the permalink to a post model.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,7 +13,7 @@ use Charm\Contracts\WordPress\HasWpPost;
 trait WithPermalink
 {
     /**
-     * Get permalink
+     * Get the post's permalink.
      *
      * @return string
      * @see get_permalink()

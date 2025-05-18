@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds display name to user model.
+ * Adds the display name to a user model.
  *
- * Table: wp_users
- * Column: display_name
+ * Table: `wp_users`
+ * Column: `display_name`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithDisplayName
 {
     /**
-     * Get display name
+     * Get the user's display name.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithDisplayName
     }
 
     /**
-     * Set display name
+     * Set the user's display name.
      *
      * @param string $name
      * @return static

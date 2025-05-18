@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds file path to attachment model.
+ * Adds the file path to an attachment model.
  *
- * Table: wp_postmeta
- * Meta Key: _wp_attached_file
+ * Table: `wp_postmeta`
+ * Meta Key: `_wp_attached_file`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithFilePath
 {
     /**
-     * Get file path
+     * Get the file path.
      */
     public function getFilePath(): string
     {
@@ -28,7 +28,7 @@ trait WithFilePath
     }
 
     /**
-     * Set file path
+     * Set the file path.
      *
      * @param string $filePath
      * @return static

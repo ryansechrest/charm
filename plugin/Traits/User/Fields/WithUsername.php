@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds username to user model.
+ * Adds the username to a user model.
  *
- * Table: wp_users
- * Column: user_login
+ * Table: `wp_users`
+ * Column: `user_login`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithUsername
 {
     /**
-     * Get username
+     * Get the user's username.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithUsername
     }
 
     /**
-     * Set username
+     * Set the user's username.
      *
      * @param string $username
      * @return static

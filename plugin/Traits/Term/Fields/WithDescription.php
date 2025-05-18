@@ -5,10 +5,10 @@ namespace Charm\Traits\Term\Fields;
 use Charm\Contracts\Proxy\HasProxyTerm;
 
 /**
- * Adds description to term model.
+ * Adds the description to a term model.
  *
- * Table: wp_term_taxonomy
- * Column: description
+ * Table: `wp_term_taxonomy`
+ * Column: `description`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyTerm;
 trait WithDescription
 {
     /**
-     * Get term description
+     * Get the term's description.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithDescription
     }
 
     /**
-     * Set term description
+     * Set the term's description.
      *
      * @param string $description
      * @return static

@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds content to post model.
+ * Adds the content to a post model.
  *
- * Table: wp_posts
- * Column: post_content
+ * Table: `wp_posts`
+ * Column: `post_content`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithContent
 {
     /**
-     * Get content
+     * Get the posts's content.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithContent
     }
 
     /**
-     * Set content
+     * Set the post's content.
      *
      * @param string $content
      * @return static

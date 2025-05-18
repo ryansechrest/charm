@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds last name to user model.
+ * Adds the last name to a user model.
  *
- * Table: wp_usermeta
- * Meta Key: last_name
+ * Table: `wp_usermeta`
+ * Meta Key: `last_name`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithLastName
 {
     /**
-     * Get last name
+     * Get the user's last name.
      */
     public function getLastName(): string
     {
@@ -25,7 +25,7 @@ trait WithLastName
     }
 
     /**
-     * Set last name
+     * Set the user's last name.
      *
      * @param string $lastName
      * @return static

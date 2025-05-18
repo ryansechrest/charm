@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds caption to attachment model.
+ * Adds the caption to an attachment model.
  *
- * Table: wp_posts
- * Column: post_excerpt
+ * Table: `wp_posts`
+ * Column: `post_excerpt`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithCaption
 {
     /**
-     * Get caption
+     * Get the attachment's caption.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithCaption
     }
 
     /**
-     * Set caption
+     * Set the attachment's caption.
      *
      * @param string $caption
      * @return static

@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds activation key to user model.
+ * Adds the activation key to a user model.
  *
- * Table: wp_users
- * Column: user_activation_key
+ * Table: `wp_users`
+ * Column: `user_activation_key`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithActivationKey
 {
     /**
-     * Get activation key
+     * Get the user's activation key.
      *
      * @return string|null
      */
@@ -27,7 +27,7 @@ trait WithActivationKey
     }
 
     /**
-     * Set activation key
+     * Set the user's activation key.
      *
      * @param string $key
      * @return static

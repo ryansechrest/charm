@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds MIME type to attachment model.
+ * Adds the MIME type to an attachment model.
  *
- * Table: wp_posts
- * Column: post_mime_type
+ * Table: `wp_posts`
+ * Column: `post_mime_type`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithMimeType
 {
     /**
-     * Get MIME type
+     * Get the attachment's MIME type.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithMimeType
     }
 
     /**
-     * Set MIME type
+     * Set the attachment's MIME type.
      *
      * @param string $mimeType
      * @return static

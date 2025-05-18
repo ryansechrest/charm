@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Utilities\DateTime;
 
 /**
- * Adds updated date to post model.
+ * Adds the updated date to a post model.
  *
- * Table: wp_posts
- * Column: post_modified_gmt
+ * Table: `wp_posts`
+ * Column: `post_modified_gmt`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Utilities\DateTime;
 trait WithUpdatedAt
 {
     /**
-     * Get updated date
+     * Get the date and time the post was updated.
      *
      * @return DateTime
      */
@@ -28,7 +28,7 @@ trait WithUpdatedAt
     }
 
     /**
-     * Set updated date
+     * Set the date and time the post was updated.
      *
      * @param DateTime|string $dateTime
      * @return static

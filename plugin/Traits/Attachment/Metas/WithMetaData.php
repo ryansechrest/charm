@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds file path to attachment model.
+ * Adds the meta data to an attachment model.
  *
- * Table: wp_postmeta
- * Meta Key: _wp_attachment_metadata
+ * Table: `wp_postmeta`
+ * Meta Key: `_wp_attachment_metadata`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithMetaData
 {
     /**
-     * Get meta data
+     * Get the meta data.
      */
     public function getMetaData(): array
     {
@@ -28,7 +28,7 @@ trait WithMetaData
     }
 
     /**
-     * Set meta data
+     * Set the meta data.
      *
      * @param array $metaData
      * @return static

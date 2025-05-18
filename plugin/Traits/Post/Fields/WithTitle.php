@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds title to post model.
+ * Adds the title to a post model.
  *
- * Table: wp_posts
- * Column: post_title
+ * Table: `wp_posts`
+ * Column: `post_title`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithTitle
 {
     /**
-     * Get title
+     * Get the post's title.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithTitle
     }
 
     /**
-     * Set title
+     * Set the post's title.
      *
      * @param string $title
      * @return static

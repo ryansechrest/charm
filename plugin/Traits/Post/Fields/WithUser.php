@@ -7,10 +7,10 @@ use Charm\Models\Base;
 use Charm\Models\User;
 
 /**
- * Adds user to post model.
+ * Adds the user to a post model.
  *
- * Table: wp_posts
- * Column: post_author
+ * Table: `wp_posts`
+ * Column: `post_author`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -18,7 +18,7 @@ use Charm\Models\User;
 trait WithUser
 {
     /**
-     * Default user class definition
+     * Default user class definition.
      *
      * @return class-string<Base\User>
      */
@@ -30,7 +30,7 @@ trait WithUser
     // *************************************************************************
 
     /**
-     * Get user
+     * Get the user that owns the post.
      *
      * @return ?Base\User
      */
@@ -44,7 +44,7 @@ trait WithUser
     }
 
     /**
-     * Set user
+     * Set the user that owns the post.
      *
      * @param User|int|null $user
      * @return static

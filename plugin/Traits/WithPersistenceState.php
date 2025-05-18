@@ -20,9 +20,9 @@ use Charm\Support\Result;
  * This avoids having to manually call a persistence method on each `Meta` model
  * and ensures that `Meta` models don't change before the `Post` model.
  *
- * We accomplish this by tracking the persistence state within each `Meta`
- * model and calling a unified `persist()` method, which automatically invokes
- * the appropriate persistence method based on the model’s state.
+ * We achieve this by tracking the persistence state within each `Meta` model
+ * and calling a unified `persist()` method, which automatically invokes the
+ * appropriate persistence method based on the model’s state.
  *
  * @package Charm
  * @author Ryan Sechrest

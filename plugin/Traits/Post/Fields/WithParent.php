@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Models\Base;
 
 /**
- * Adds parent to post model.
+ * Adds the parent to a post model.
  *
- * Table: wp_posts
- * Column: post_parent
+ * Table: `wp_posts`
+ * Column: `post_parent`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Models\Base;
 trait WithParent
 {
     /**
-     * Force parent class definition
+     * Ensures that parent class is defined.
      *
      * @return class-string<Base\Post>
      */
@@ -26,7 +26,7 @@ trait WithParent
     // *************************************************************************
 
     /**
-     * Get parent
+     * Get the post's parent.
      *
      * @return ?Base\Post
      */
@@ -40,7 +40,7 @@ trait WithParent
     }
 
     /**
-     * Set parent
+     * Set the post's parent.
      *
      * @param Base\Post|int|null $parent
      * @return static

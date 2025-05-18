@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Enums\Post\PingStatus;
 
 /**
- * Adds pingbacks to post model.
+ * Adds pingbacks to a post model.
  *
- * Table: wp_posts
- * Columns: ping_status, pinged, to_ping
+ * Table: `wp_posts`
+ * Columns: `ping_status`, `pinged`, `to_ping`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Enums\Post\PingStatus;
 trait WithPingbacks
 {
     /**
-     * Get pingback status
+     * Get the post's pingback status.
      *
      * @return PingStatus
      */
@@ -28,7 +28,7 @@ trait WithPingbacks
     }
 
     /**
-     * Set pingback status
+     * Set the post's pingback status.
      *
      * @param PingStatus|string $status
      * @return static
@@ -46,7 +46,7 @@ trait WithPingbacks
     // -------------------------------------------------------------------------
 
     /**
-     * Get pinged URLs
+     * Get the pinged URLs.
      *
      * @return string[]
      */
@@ -57,7 +57,7 @@ trait WithPingbacks
     }
 
     /**
-     * Set pinged URLs
+     * Set the pinged URLs.
      *
      * @param string[] $urls
      * @return static
@@ -73,7 +73,7 @@ trait WithPingbacks
     // -------------------------------------------------------------------------
 
     /**
-     * Get URLs to ping
+     * Get the URLs to ping.
      *
      * @return string[]
      */
@@ -84,7 +84,7 @@ trait WithPingbacks
     }
 
     /**
-     * Set URLs to ping
+     * Set the URLs to ping.
      *
      * @param string[] $urls
      * @return static

@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds biographical information to user model.
+ * Adds the biographical information to a user model.
  *
- * Table: wp_usermeta
- * Meta Key: description
+ * Table: `wp_usermeta`
+ * Meta Key: `description`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithBioInfo
 {
     /**
-     * Get biographical info
+     * Get the user's biographical info.
      */
     public function getBioInfo(): string
     {
@@ -25,7 +25,7 @@ trait WithBioInfo
     }
 
     /**
-     * Set biographical info
+     * Set the user's biographical info.
      *
      * @param string $bioInfo
      * @return static

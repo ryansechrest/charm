@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Enums\Post\CommentStatus;
 
 /**
- * Adds comments to post model.
+ * Adds comments to a post model.
  *
- * Table: wp_posts
- * Columns: comment_status, comment_count
+ * Table: `wp_posts`
+ * Columns: `comment_status`, `comment_count`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Enums\Post\CommentStatus;
 trait WithComments
 {
     /**
-     * Get comment status
+     * Get the post's comment status.
      *
      * @return CommentStatus
      */
@@ -28,7 +28,7 @@ trait WithComments
     }
 
     /**
-     * Set comment status
+     * Set the post's comment status.
      *
      * @param CommentStatus|string $status
      * @return static
@@ -46,7 +46,7 @@ trait WithComments
     // -------------------------------------------------------------------------
 
     /**
-     * Get comment count
+     * Get the number of comments on the post.
      *
      * @return int
      */

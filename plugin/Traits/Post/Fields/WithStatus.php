@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Enums\Post\Status;
 
 /**
- * Adds status to post model.
+ * Adds the status to a post model.
  *
- * Table: wp_posts
- * Column: post_status
+ * Table: `wp_posts`
+ * Column: `post_status`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Enums\Post\Status;
 trait WithStatus
 {
     /**
-     * Get status
+     * Get the post's status.
      *
      * @return Status
      */
@@ -28,7 +28,7 @@ trait WithStatus
     }
 
     /**
-     * Set status
+     * Set the post's status.
      *
      * @param Status|string $status
      * @return static

@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds attachment context to attachment model.
+ * Adds the attachment context to an attachment model.
  *
- * Table: wp_posts
- * Column: post_parent
+ * Table: `wp_posts`
+ * Column: `post_parent`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithAttachedTo
 {
     /**
-     * Get ID of attached model
+     * Get the ID of the model the attachment belongs to.
      *
      * @return int
      */
@@ -27,7 +27,7 @@ trait WithAttachedTo
     }
 
     /**
-     * Set ID of attached model
+     * Set the ID of the model the attachment belongs to.
      *
      * @param int $postId
      * @return static

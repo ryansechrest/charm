@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds website to user model.
+ * Adds the website to a user model.
  *
- * Table: wp_users
- * Column: user_url
+ * Table: `wp_users`
+ * Column: `user_url`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithWebsite
 {
     /**
-     * Get website URL
+     * Get the user's website URL.
      *
      * @return string|null
      */
@@ -27,7 +27,7 @@ trait WithWebsite
     }
 
     /**
-     * Set website URL
+     * Set the user's website URL.
      *
      * @param string $url
      * @return static

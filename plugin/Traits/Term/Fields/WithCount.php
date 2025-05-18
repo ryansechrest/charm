@@ -5,10 +5,10 @@ namespace Charm\Traits\Term\Fields;
 use Charm\Contracts\Proxy\HasProxyTerm;
 
 /**
- * Adds total number of terms to term model.
+ * Adds the total number of terms to a term model.
  *
- * Table: wp_term_taxonomy
- * Column: count
+ * Table: `wp_term_taxonomy`
+ * Column: `count`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyTerm;
 trait WithCount
 {
     /**
-     * Get total number of terms
+     * Get the total number of terms.
      *
      * @return string
      */

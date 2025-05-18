@@ -40,7 +40,7 @@ use Charm\Support\Result;
 trait WithMeta
 {
     /**
-     * Meta cache indexed by key.
+     * Meta cache indexed by a key.
      *
      * @var array<string, Meta[]>
      */
@@ -119,8 +119,8 @@ trait WithMeta
     /**
      * Returns all metas for the given key, from cache or database.
      *
-     * If the metas are not already in cache, they will be fetched from the
-     * database.
+     * If the metas are not already in the cache, they will be fetched from
+     * the database.
      *
      * @param string $key
      * @return Meta[]
@@ -252,7 +252,7 @@ trait WithMeta
             }
         }
 
-        // If specified value was not found
+        // If the specified value was not found
         if ($value !== null && !$foundValue) {
             return Result::error(
                 code: 'meta_not_found',
@@ -286,25 +286,26 @@ trait WithMeta
             return $results;
         }
 
-        // Loop over every meta key in cache
+        // Loop over every meta key in the cache
         foreach ($this->metaCache as $key => $metas) {
 
-            // Loop over every meta value in cache
+            // Loop over every meta value in the cache
             foreach ($metas as $index => $meta) {
 
-                // Ensure object ID is set
+                // Ensure the object ID is set
                 $meta->setObjectId($objectId);
 
-                // Persist meta and save result
+                // Persist the meta and save the result
                 $results[] = $meta->persist();
 
-                // If meta was deleted, remove from cache
+                // If the meta was deleted, remove it from the cache
                 if ($meta->getPersistenceState() === PersistenceState::DELETED) {
                     unset($this->metaCache[$key][$index]);
                 }
             }
 
-            // If not values left for meta key, remove key from cache
+            // If there are no values left for the meta key, then remove the
+            // key from the cache
             if (count($this->metaCache[$key]) === 0) {
                 unset($this->metaCache[$key]);
             }

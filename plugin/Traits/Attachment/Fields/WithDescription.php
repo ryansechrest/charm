@@ -5,10 +5,10 @@ namespace Charm\Traits\Attachment\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds description to attachment model.
+ * Adds the description to an attachment model.
  *
- * Table: wp_posts
- * Column: post_content
+ * Table: `wp_posts`
+ * Column: `post_content`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithDescription
 {
     /**
-     * Get description
+     * Get the attachment's description.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithDescription
     }
 
     /**
-     * Set description
+     * Set the attachment's description.
      *
      * @param string $description
      * @return static

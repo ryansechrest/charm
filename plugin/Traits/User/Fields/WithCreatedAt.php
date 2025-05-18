@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyUser;
 use Charm\Utilities\DateTime;
 
 /**
- * Adds created date to user model.
+ * Adds the created date to a user model.
  *
- * Table: wp_users
- * Column: user_registered
+ * Table: `wp_users`
+ * Column: `user_registered`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Utilities\DateTime;
 trait WithCreatedAt
 {
     /**
-     * Get created date
+     * Get the date and time the user was created.
      *
      * @return DateTime
      */
@@ -28,7 +28,7 @@ trait WithCreatedAt
     }
 
     /**
-     * Set created date
+     * Set the date and time the user was created.
      *
      * @param DateTime|string $dateTime
      * @return static

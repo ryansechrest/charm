@@ -8,7 +8,7 @@ use Charm\Structures\Role;
 use Charm\Support\Result;
 
 /**
- * Adds role to user model.
+ * Adds the role to a user model.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Support\Result;
 trait WithRole
 {
     /**
-     * Role to assign user.
+     * Role to be assigned to the user.
      *
      * @var ?Role
      */
@@ -25,7 +25,7 @@ trait WithRole
     // *************************************************************************
 
     /**
-     * Get role
+     * Get the user's role.
      *
      * @return ?Role
      */
@@ -36,7 +36,7 @@ trait WithRole
     }
 
     /**
-     * Set role
+     * Set the user's role.
      *
      * @param Role|string $role
      * @return static
@@ -54,7 +54,7 @@ trait WithRole
     // *************************************************************************
 
     /**
-     * Persist pending role.
+     * Assign the pending role to the user.
      *
      * @return Result
      */

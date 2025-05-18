@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyPost;
 use Charm\Utilities\DateTime;
 
 /**
- * Adds created date to post model.
+ * Adds the created date to the post model.
  *
- * Table: wp_posts
- * Column: post_date_gmt
+ * Table: `wp_posts`
+ * Column: `post_date_gmt`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Utilities\DateTime;
 trait WithCreatedAt
 {
     /**
-     * Get created date
+     * Get the date and time the post was created.
      *
      * @return DateTime
      */
@@ -28,7 +28,7 @@ trait WithCreatedAt
     }
 
     /**
-     * Set created date
+     * Set the date and time the post was created.
      *
      * @param DateTime|string $dateTime
      * @return static

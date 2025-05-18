@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds password to user model.
+ * Adds the password to a user model.
  *
- * Table: wp_users
- * Column: user_pass
+ * Table: `wp_users`
+ * Column: `user_pass`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithPassword
 {
     /**
-     * Get password hash
+     * Get the user's hashed password.
      *
      * @return string|null
      */
@@ -27,7 +27,7 @@ trait WithPassword
     }
 
     /**
-     * Set password
+     * Set the user's password.
      *
      * @param string $password
      * @return static

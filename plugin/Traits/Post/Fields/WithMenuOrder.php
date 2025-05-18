@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds menu order to post model.
+ * Adds the menu order to a post model.
  *
- * Table: wp_posts
- * Column: menu_order
+ * Table: `wp_posts`
+ * Column: `menu_order`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithMenuOrder
 {
     /**
-     * Get menu order
+     * Get the menu order.
      *
      * @return int
      */
@@ -27,7 +27,7 @@ trait WithMenuOrder
     }
 
     /**
-     * Set menu order
+     * Set the menu order.
      *
      * @param int $menuOrder
      * @return $this

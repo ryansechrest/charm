@@ -6,10 +6,10 @@ use Charm\Contracts\Proxy\HasProxyTerm;
 use Charm\Models\Base;
 
 /**
- * Adds parent to term model.
+ * Adds the parent to a term model.
  *
- * Table: wp_term_taxonomy
- * Column: parent
+ * Table: `wp_term_taxonomy`
+ * Column: `parent`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Models\Base;
 trait WithParent
 {
     /**
-     * Get parent
+     * Get the term's parent.
      *
      * @return ?Base\Term
      */
@@ -28,7 +28,7 @@ trait WithParent
     }
 
     /**
-     * Set parent
+     * Set the term's parent.
      *
      * @param Base\Term|int|null $parent
      * @return static

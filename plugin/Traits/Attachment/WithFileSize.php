@@ -3,7 +3,7 @@
 namespace Charm\Traits\Attachment;
 
 /**
- * Adds file size to attachment model.
+ * Adds the file size to an attachment model.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -18,7 +18,7 @@ trait WithFileSize
     // *************************************************************************
 
     /**
-     * Get file size
+     * Get the file size.
      *
      * @return int 297532
      */

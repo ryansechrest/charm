@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds slug to post model.
+ * Adds the slug to a post model.
  *
- * Table: wp_posts
- * Column: post_name
+ * Table: `wp_posts`
+ * Column: `post_name`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithSlug
 {
     /**
-     * Get slug
+     * Get the post's slug.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithSlug
     }
 
     /**
-     * Set slug
+     * Set the post's slug.
      *
      * @param string $slug
      * @return static

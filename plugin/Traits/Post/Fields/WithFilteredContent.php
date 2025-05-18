@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds filtered content to post model.
+ * Adds the filtered content to a post model.
  *
- * Table: wp_posts
- * Column: post_content_filtered
+ * Table: `wp_posts`
+ * Column: `post_content_filtered`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithFilteredContent
 {
     /**
-     * Get filtered content
+     * Get the post's filtered content.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithFilteredContent
     }
 
     /**
-     * Set filtered content
+     * Set the post's filtered content.
      *
      * @param string $content
      * @return static

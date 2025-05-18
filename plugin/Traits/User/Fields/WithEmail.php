@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Fields;
 use Charm\Contracts\Proxy\HasProxyUser;
 
 /**
- * Adds email address to user model.
+ * Adds the email address to a user model.
  *
- * Table: wp_users
- * Column: user_email
+ * Table: `wp_users`
+ * Column: `user_email`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyUser;
 trait WithEmail
 {
     /**
-     * Get email
+     * Get the user's email address.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithEmail
     }
 
     /**
-     * Set email
+     * Set the user's email address.
      *
      * @param string $email
      * @return static

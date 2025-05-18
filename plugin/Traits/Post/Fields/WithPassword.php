@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds password to post model.
+ * Adds the password to a post model.
  *
- * Table: wp_posts
- * Column: post_password
+ * Table: `wp_posts`
+ * Column: `post_password`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithPassword
 {
     /**
-     * Get password
+     * Get the post's password.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithPassword
     }
 
     /**
-     * Set password
+     * Set the post's password.
      *
      * @param string $password
      * @return static

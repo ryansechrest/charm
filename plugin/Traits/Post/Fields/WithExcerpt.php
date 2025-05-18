@@ -5,10 +5,10 @@ namespace Charm\Traits\Post\Fields;
 use Charm\Contracts\Proxy\HasProxyPost;
 
 /**
- * Adds excerpt to post model.
+ * Adds the excerpt to a post model.
  *
- * Table: wp_posts
- * Column: post_excerpt
+ * Table: `wp_posts`
+ * Column: `post_excerpt`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\Proxy\HasProxyPost;
 trait WithExcerpt
 {
     /**
-     * Get excerpt
+     * Get the post's excerpt.
      *
      * @return string
      */
@@ -27,7 +27,7 @@ trait WithExcerpt
     }
 
     /**
-     * Set excerpt
+     * Set the post's excerpt.
      *
      * @param string $excerpt
      * @return static

@@ -5,10 +5,10 @@ namespace Charm\Traits\User\Metas;
 use Charm\Contracts\HasMeta;
 
 /**
- * Adds first name to user model.
+ * Adds the first name to a user model.
  *
- * Table: wp_usermeta
- * Meta Key: first_name
+ * Table: `wp_usermeta`
+ * Meta Key: `first_name`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -16,7 +16,7 @@ use Charm\Contracts\HasMeta;
 trait WithFirstName
 {
     /**
-     * Get first name
+     * Get the user's first name.
      */
     public function getFirstName(): string
     {
@@ -25,7 +25,7 @@ trait WithFirstName
     }
 
     /**
-     * Set first name
+     * Set the user's first name.
      *
      * @param string $firstName
      * @return static

@@ -6,10 +6,10 @@ use Charm\Contracts\HasMeta;
 use Charm\Models\Attachments\ImageAttachment;
 
 /**
- * Adds thumbnail to post model.
+ * Adds the thumbnail to a post model.
  *
- * Table: wp_postmeta
- * Meta Key: _thumbnail_id
+ * Table: `wp_postmeta`
+ * Meta Key: `_thumbnail_id`
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -17,7 +17,7 @@ use Charm\Models\Attachments\ImageAttachment;
 trait WithThumbnail
 {
     /**
-     * Get thumbnail
+     * Get the post's thumbnail.
      */
     public function getThumbnail(): ImageAttachment
     {
@@ -31,7 +31,7 @@ trait WithThumbnail
     }
 
     /**
-     * Set thumbnail
+     * Set the post's thumbnail.
      *
      * @param ImageAttachment|int $thumbnail
      * @return static
@@ -48,7 +48,7 @@ trait WithThumbnail
     }
 
     /**
-     * Delete thumbnail
+     * Delete the post's thumbnail.
      *
      * @return static
      */
