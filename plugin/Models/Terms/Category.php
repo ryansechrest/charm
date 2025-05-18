@@ -24,7 +24,7 @@ class Category extends Base\Term
     /**
      * Set the name of the taxonomy.
      */
-    protected static function taxonomy(): string
+    public static function taxonomy(): string
     {
         return 'category';
     }

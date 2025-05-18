@@ -23,7 +23,7 @@ class Tag extends Base\Term
     /**
      * Set the name of the taxonomy.
      */
-    protected static function taxonomy(): string
+    public static function taxonomy(): string
     {
         return 'post_tag';
     }
