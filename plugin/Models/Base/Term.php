@@ -41,7 +41,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      *
      * @return string `category`, `post_tag`, etc.
      */
-    abstract protected static function taxonomy(): string;
+    abstract public static function taxonomy(): string;
 
     /**
      * Set the class to be used when instantiating a term meta.
