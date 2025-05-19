@@ -6,7 +6,7 @@ use Charm\Models\Base;
 use Charm\Support\Result;
 
 /**
- * Ensures that the model can manage meta data.
+ * Ensures that the model can manage metadata.
  *
  * @author Ryan Sechrest
  * @package Charm

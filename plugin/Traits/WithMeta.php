@@ -8,10 +8,10 @@ use Charm\Models\Base\Meta;
 use Charm\Support\Result;
 
 /**
- * Adds support for managing (and caching) meta data on a model.
+ * Adds support for managing (and caching) metadata on a model.
  *
  * A model, like `Post` or `User`, can store data beyond its core fields,
- * referred to as meta data. Each piece of meta data is a key/value pair
+ * referred to as metadata. Each piece of metadata is a key/value pair
  * represented by another model called `Meta`.
  *
  * When a `Meta` is retrieved, created, updated, or deleted using one of the
@@ -32,7 +32,7 @@ use Charm\Support\Result;
  *
  * Therefore, each model must implement a `metaClass()` method that returns its
  * specialized meta class name, such as `PostMeta` or `UserMeta`, which
- * tells WordPress from which table to retrieve the meta data.
+ * tells WordPress from which table to retrieve the metadata.
  *
  * @author Ryan Sechrest
  * @package Charm

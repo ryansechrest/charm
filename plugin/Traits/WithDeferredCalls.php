@@ -8,7 +8,7 @@ use Charm\Support\Result;
  * Adds support for deferring method calls for later execution.
  *
  * Traits like `WithMetas` and `WithRole` provide functionality for managing
- * related data (e.g., meta data or roles) within a model like `Post` or `User`.
+ * related data (e.g., metadata or roles) within a model like `Post` or `User`.
  *
  * These traits define methods such as `createMeta()`, `updateMeta()`, or
  * `setRole()` that modify internal state, along with corresponding persistence
