@@ -7,6 +7,7 @@ use Charm\Models\Base;
 /**
  * Represents a user meta in WordPress.
  *
+ * @author Ryan Sechrest
  * @package Charm
  */
 class UserMeta extends Base\Meta
