@@ -51,8 +51,8 @@ class Role implements HasProxyRole, IsPersistable
     /**
      * Initialize the role.
      *
-     * `string`  -> Role Slug
-     * `WP_Role` -> WP_Role instance
+     * $key `string`  -> Role Slug
+     *      `WP_Role` -> `WP_Role` instance
      *
      * @param string|WP_Role $key
      * @return ?static
