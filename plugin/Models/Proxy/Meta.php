@@ -544,7 +544,7 @@ class Meta implements IsPersistable
     ): array {
         $metas = [];
 
-        // Loop over every meta with different key
+        // Loop over every meta with a different key
         foreach ($metaValues as $metaKey => $metaValue) {
 
             // They should all be arrays, even if just one item
@@ -552,7 +552,7 @@ class Meta implements IsPersistable
                 continue;
             }
 
-            // If array contains one item, save it and move on
+            // If the array contains one item, save it and move on
             if (count($metaValue) === 1 && isset($metaValue[0])) {
                 $metas[$metaKey] = self::getSingle(
                     $metaType, $objectId, $metaKey, $metaValue[0]
@@ -560,8 +560,8 @@ class Meta implements IsPersistable
                 continue;
             }
 
-            // Otherwise, if array contains multiple items with same key,
-            // put them in an array with that key
+            // Otherwise, if the array contains multiple items with the same
+            // key, then put them in an array with that key
             $metas[$metaKey] = self::getMultiple(
                 $metaType, $objectId, $metaKey, $metaValue
             );
@@ -584,7 +584,7 @@ class Meta implements IsPersistable
     ): array {
         $metas = [];
 
-        // Loop over every meta with same key
+        // Loop over every meta with the same key
         foreach ($metaValues as $metaValue) {
             $metas[] = self::getSingle(
                 $metaType, $objectId, $metaKey, $metaValue
