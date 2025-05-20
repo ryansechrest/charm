@@ -18,7 +18,7 @@ use Charm\Support\Result;
  * methods in this trait, the change is recorded in the `$metaCache` and not
  * persisted to the database.
  *
- * Each meta tracks its own internal state (e.g. created, updated, deleted), so
+ * Each meta tracks its own internal state (e.g., created, updated, deleted), so
  * when `persistMetas()` is called, it loops through the `$metaCache` and calls
  * `persist()` on each meta accordingly.
  *
@@ -139,14 +139,14 @@ trait WithMeta
     /**
      * Creates a new meta in the cache.
      *
-     * Marks the meta as `NEW` and defers persistence until `persistMetas()`
+     * Marks the meta as `New` and defers persistence until `persistMetas()`
      * is called.
      *
      * @param string $key
      * @param mixed $value
-     * @return Result
+     * @return static
      */
-    protected function createMeta(string $key, mixed $value): Result
+    protected function createMeta(string $key, mixed $value): static
     {
         $metaClass = static::metaClass();
 
@@ -156,11 +156,11 @@ trait WithMeta
             'metaValue' => $value,
         ]);
 
-        $meta->mark(PersistenceState::NEW);
+        $meta->mark(PersistenceState::New);
 
         if (!isset($this->metaCache[$key])) {
             $this->metaCache[$key] = [$meta];
-            return Result::success();
+            return $this;
         }
 
         $this->metaCache[$key][] = $meta;
@@ -168,20 +168,20 @@ trait WithMeta
         /** @var HasDeferredCalls $this */
         $this->registerDeferred(method: 'persistMetas', args: $this->getId());
 
-        return Result::success();
+        return $this;
     }
 
     /**
      * Updates an existing meta or creates a new one if none exists.
      *
-     * Marks the meta as `DIRTY` and defers persistence until `persistMetas()`
+     * Marks the meta as `Dirty` and defers persistence until `persistMetas()`
      * is called.
      *
      * @param string $key
      * @param mixed $value
-     * @return Result
+     * @return static
      */
-    protected function updateMeta(string $key, mixed $value): Result
+    protected function updateMeta(string $key, mixed $value): static
     {
         $meta = $this->getMeta($key);
 
@@ -190,14 +190,14 @@ trait WithMeta
         }
 
         $meta->setValue($value);
-        $meta->mark(PersistenceState::DIRTY);
+        $meta->mark(PersistenceState::Dirty);
 
         $this->metaCache[$key][0] = $meta;
 
         /** @var HasDeferredCalls $this */
         $this->registerDeferred(method: 'persistMetas', args: $this->getId());
 
-        return Result::success();
+        return $this;
     }
 
     /**
@@ -208,14 +208,14 @@ trait WithMeta
      *
      * @param string $key
      * @param mixed $value
-     * @return Result
+     * @return static
      */
-    protected function replaceMeta(string $key, mixed $value): Result
+    protected function replaceMeta(string $key, mixed $value): static
     {
         $this->deleteMeta($key);
         $this->createMeta($key, $value);
 
-        return Result::success();
+        return $this;
     }
 
     /**
@@ -226,9 +226,9 @@ trait WithMeta
      *
      * @param string $key
      * @param mixed $value
-     * @return Result
+     * @return static
      */
-    protected function deleteMeta(string $key, mixed $value = null): Result
+    protected function deleteMeta(string $key, mixed $value = null): static
     {
         $metas = $this->getMetas($key);
 
@@ -238,14 +238,14 @@ trait WithMeta
 
             // If no specified value, mark all metas as deleted
             if ($value === null) {
-                $meta->mark(PersistenceState::DELETED);
+                $meta->mark(PersistenceState::Deleted);
                 $this->metaCache[$key][$index] = $meta;
                 continue;
             }
 
             // Otherwise, exit loop early if value was found
             if ($meta->getValue() === $value) {
-                $meta->mark(PersistenceState::DELETED);
+                $meta->mark(PersistenceState::Deleted);
                 $this->metaCache[$key][$index] = $meta;
                 $foundValue = true;
                 break;
@@ -254,16 +254,13 @@ trait WithMeta
 
         // If the specified value was not found
         if ($value !== null && !$foundValue) {
-            return Result::error(
-                code: 'meta_not_found',
-                message: __('Meta does not exist.', 'charm')
-            )->withData($this);
+            return $this;
         }
 
         /** @var HasDeferredCalls $this */
         $this->registerDeferred(method: 'persistMetas', args: $this->getId());
 
-        return Result::success();
+        return $this;
     }
 
     // -------------------------------------------------------------------------
@@ -272,7 +269,7 @@ trait WithMeta
      * Persists all cached metas to the database.
      *
      * Called automatically by the base model’s `create()` or `update()`
-     * method. Applies each meta’s state (`NEW`, `DIRTY`, `DELETED`) and
+     * method. Applies each meta’s state (`New`, `Dirty`, `Deleted`) and
      * returns an array of results.
      *
      * @param int $objectId
@@ -299,7 +296,7 @@ trait WithMeta
                 $results[] = $meta->persist();
 
                 // If the meta was deleted, remove it from the cache
-                if ($meta->getPersistenceState() === PersistenceState::DELETED) {
+                if ($meta->getPersistenceState() === PersistenceState::Deleted) {
                     unset($this->metaCache[$key][$index]);
                 }
             }
