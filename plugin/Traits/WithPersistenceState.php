@@ -34,7 +34,7 @@ trait WithPersistenceState
      *
      * @var PersistenceState
      */
-    protected PersistenceState $state = PersistenceState::CLEAN;
+    protected PersistenceState $state = PersistenceState::Clean;
 
     // *************************************************************************
 
@@ -60,7 +60,7 @@ trait WithPersistenceState
      * Persist the model based on its persistence state.
      *
      * Executes the appropriate method, e.g. `create()`, `update()`, `delete()`,
-     * based on the internal state. If the state is `CLEAN`, no action is taken.
+     * based on the internal state. If the state is `Clean`, no action is taken.
      *
      * @return Result
      */
@@ -77,10 +77,10 @@ trait WithPersistenceState
         }
 
         $result = match ($this->state) {
-            PersistenceState::CLEAN => Result::success(),
-            PersistenceState::NEW => $this->create(),
-            PersistenceState::DIRTY => $this->update(),
-            PersistenceState::DELETED => $this->delete(),
+            PersistenceState::Clean => Result::success(),
+            PersistenceState::New => $this->create(),
+            PersistenceState::Dirty => $this->update(),
+            PersistenceState::Deleted => $this->delete(),
             default => Result::error(
                 code: 'state_not_recognized',
                 message: __('Unknown model state cannot be persisted.', 'charm')
@@ -88,7 +88,7 @@ trait WithPersistenceState
         };
 
         if ($result->hasSucceeded()) {
-            $this->state = PersistenceState::CLEAN;
+            $this->state = PersistenceState::Clean;
         }
 
         return $result;
