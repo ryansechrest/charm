@@ -31,12 +31,14 @@ trait WithCategories
      * $categories -> Array of category IDs, slugs, or `Category` instances.
      *
      * @param array $categories [1, 'uncategorized', $category]
-     * @return Result[]
+     * @return static
      */
-    public function addCategories(array $categories): array
+    public function addCategories(array $categories): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Category::class)->addTerms($categories);
+        $this->taxonomy(Category::class)->addTerms($categories);
+
+        return $this;
     }
 
     /**
@@ -45,12 +47,14 @@ trait WithCategories
      * $category -> Category ID, slug, or `Category` instance.
      *
      * @param int|string|Category $category uncategorized
-     * @return Result
+     * @return static
      */
-    public function addCategory(int|string|Category $category): Result
+    public function addCategory(int|string|Category $category): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Category::class)->addTerm($category);
+        $this->taxonomy(Category::class)->addTerm($category);
+
+        return $this;
     }
 
     /**
@@ -59,12 +63,14 @@ trait WithCategories
      * $categories -> Array of category IDs, slugs, or `Category` instances.
      *
      * @param array $categories [1, 'uncategorized', $category]
-     * @return Result[]
+     * @return static
      */
-    public function removeCategories(array $categories): array
+    public function removeCategories(array $categories): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Category::class)->removeTerms($categories);
+        $this->taxonomy(Category::class)->removeTerms($categories);
+
+        return $this;
     }
 
     /**
@@ -73,12 +79,14 @@ trait WithCategories
      * $category -> Category ID, slug, or `Category` instance.
      *
      * @param int|string|Category $category uncategorized
-     * @return Result
+     * @return static
      */
-    public function removeCategory(int|string|Category $category): Result
+    public function removeCategory(int|string|Category $category): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Category::class)->removeTerm($category);
+        $this->taxonomy(Category::class)->removeTerm($category);
+
+        return $this;
     }
 
     /**
@@ -87,11 +95,13 @@ trait WithCategories
      * $categories -> Array of category IDs, slugs, or `Category` instances.
      *
      * @param array $categories [1, 'uncategorized', $category]
-     * @return Result[]
+     * @return $this
      */
-    public function setCategories(array $categories): array
+    public function setCategories(array $categories): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Category::class)->setTerms($categories);
+        $this->taxonomy(Category::class)->setTerms($categories);
+
+        return $this;
     }
 }

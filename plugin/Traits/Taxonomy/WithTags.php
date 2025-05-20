@@ -4,7 +4,6 @@ namespace Charm\Traits\Taxonomy;
 
 use Charm\Contracts\HasTerms;
 use Charm\Models\Terms\Tag;
-use Charm\Support\Result;
 
 /**
  * Adds tags to a model.
@@ -30,12 +29,14 @@ trait WithTags
      * $tags -> Array of tag IDs, slugs, or `Tag` instances.
      *
      * @param array $tags [1, 'foobar', $tag]
-     * @return Result[]
+     * @return static
      */
-    public function addTags(array $tags): array
+    public function addTags(array $tags): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Tag::class)->addTerms($tags);
+        $this->taxonomy(Tag::class)->addTerms($tags);
+
+        return $this;
     }
 
     /**
@@ -44,12 +45,14 @@ trait WithTags
      * $tag -> Category ID, slug, or `Tag` instance.
      *
      * @param int|string|Tag $tag foobar
-     * @return Result
+     * @return static
      */
-    public function addTag(int|string|Tag $tag): Result
+    public function addTag(int|string|Tag $tag): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Tag::class)->addTerm($tag);
+        $this->taxonomy(Tag::class)->addTerm($tag);
+
+        return $this;
     }
 
     /**
@@ -58,12 +61,14 @@ trait WithTags
      * $tags -> Array of tag IDs, slugs, or `Tag` instances.
      *
      * @param array $tags [1, 'foobar', $tag]
-     * @return Result[]
+     * @return static
      */
-    public function removeTags(array $tags): array
+    public function removeTags(array $tags): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Tag::class)->removeTerms($tags);
+        $this->taxonomy(Tag::class)->removeTerms($tags);
+
+        return $this;
     }
 
     /**
@@ -72,12 +77,14 @@ trait WithTags
      * $tag -> Tag ID, slug, or `Tag` instance.
      *
      * @param int|string|Tag $tag foobar
-     * @return Result
+     * @return static
      */
-    public function removeTag(int|string|Tag $tag): Result
+    public function removeTag(int|string|Tag $tag): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Tag::class)->removeTerm($tag);
+        $this->taxonomy(Tag::class)->removeTerm($tag);
+
+        return $this;
     }
 
     /**
@@ -86,11 +93,13 @@ trait WithTags
      * $tags -> Array of tag IDs, slugs, or `Tag` instances.
      *
      * @param array $tags [1, 'foobar', $tag]
-     * @return Result[]
+     * @return static
      */
-    public function setTags(array $tags): array
+    public function setTags(array $tags): static
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Tag::class)->setTerms($tags);
+        $this->taxonomy(Tag::class)->setTerms($tags);
+
+        return $this;
     }
 }
