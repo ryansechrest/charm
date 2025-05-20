@@ -47,7 +47,7 @@ interface HasMeta
     /**
      * Creates a new meta in the cache.
      *
-     * Marks the meta as `NEW` and defers persistence until `persistMetas()`
+     * Marks the meta as `New` and defers persistence until `persistMetas()`
      * is called.
      *
      * @param string $key
@@ -59,7 +59,7 @@ interface HasMeta
     /**
      * Updates an existing meta or creates a new one if it doesn't exist.
      *
-     * Marks the meta as `DIRTY` and defers persistence until `persistMetas()`
+     * Marks the meta as `Dirty` and defers persistence until `persistMetas()`
      * is called.
      *
      * @param string $key
@@ -98,7 +98,7 @@ interface HasMeta
      * Persists all cached metas in the database.
      *
      * Called automatically by the base model’s `create()` or `update()`
-     * method. Applies each meta’s state (`NEW`, `DIRTY`, `DELETED`) and
+     * method. Applies each meta’s state (`New`, `Dirty`, `Deleted`) and
      * returns an array of results.
      *
      * @param int $objectId
