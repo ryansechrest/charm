@@ -83,9 +83,9 @@ abstract class Term implements HasProxyTerm, IsPersistable
     /**
      * Initialize the term.
      *
-     * int     -> Term Taxonomy ID
-     * string  -> Term Slug
-     * WP_Term -> WP_Term instance
+     * $key `int`     -> Term Taxonomy ID
+     *      `string`  -> Term Slug
+     *      `WP_Term` -> `WP_Term` instance
      *
      * @param int|string|WP_Term $key
      * @return ?static

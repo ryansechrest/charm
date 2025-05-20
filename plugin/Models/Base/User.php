@@ -75,11 +75,11 @@ abstract class User implements HasProxyUser, IsPersistable
     /**
      * Initialize the user.
      *
-     * int                -> User ID
-     * null               -> Global User
-     * string (not email) -> Username / User Login
-     * string (email)     -> Email Address
-     * WP_User            -> WP_User instance
+     * $key `int`                -> User ID
+     *      `null`               -> Global User
+     *      `string` (not email) -> Username / User Login
+     *      `string` (email)     -> Email Address
+     *      `WP_User`            -> `WP_User` instance
      *
      * @param int|null|string|WP_User $key
      * @return ?static

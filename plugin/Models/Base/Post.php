@@ -85,10 +85,10 @@ abstract class Post implements HasProxyPost, IsPersistable
     /**
      * Initialize the post.
      *
-     * int     -> Post ID
-     * null    -> Global Post
-     * string  -> Post Slug / Path
-     * WP_Post -> WP_Post instance
+     * $key `int`     -> Post ID
+     *      `null`    -> Global Post
+     *      `string`  -> Post Slug / Path
+     *      `WP_Post` -> `WP_Post` instance
      *
      * @param int|null|string|WP_Post $key
      * @return ?static
