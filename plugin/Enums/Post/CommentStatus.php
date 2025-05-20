@@ -13,9 +13,9 @@ namespace Charm\Enums\Post;
  */
 enum CommentStatus: string
 {
-    // Post is open for comments
-    case OPEN = 'open';
+    // The post is open for comments
+    case Open = 'open';
 
-    // Post is closed for comments
-    case CLOSED = 'closed';
+    // The post is closed for comments
+    case Closed = 'closed';
 }

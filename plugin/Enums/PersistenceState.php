@@ -10,15 +10,15 @@ namespace Charm\Enums;
  */
 enum PersistenceState
 {
-    // Model matches database
-    case CLEAN;
+    // The model matches the database
+    case Clean;
 
-    // Model does not exist in database
-    case NEW;
+    // The model does not exist in the database
+    case New;
 
-    // Model has changes that need to be written to database
-    case DIRTY;
+    // The model has changes that need to be written to the database
+    case Dirty;
 
-    // Model needs to be deleted from database
-    case DELETED;
+    // The model needs to be deleted from the database
+    case Deleted;
 }

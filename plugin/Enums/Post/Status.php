@@ -13,27 +13,27 @@ namespace Charm\Enums\Post;
  */
 enum Status: string
 {
-    // Post is published
-    case PUBLISHED = 'publish';
+    // The post is published
+    case Published = 'publish';
 
-    // Post is scheduled to be published
-    case SCHEDULED = 'future';
+    // The post is scheduled to be published
+    case Scheduled = 'future';
 
-    // Post is in draft and only viewable by authorized users
-    case DRAFT = 'draft';
+    // The post is in draft and only viewable by authorized users
+    case Draft = 'draft';
 
-    // Post is pending to be published by an authorized user
-    case PENDING = 'pending';
+    // The post is pending to be published by an authorized user
+    case Pending = 'pending';
 
-    // Post is private and only viewable by an administrator
-    case PRIVATE = 'private';
+    // The post is private and only viewable by an administrator
+    case Private = 'private';
 
-    // Post is trashed
-    case TRASHED = 'trash';
+    // The post is trashed
+    case Trashed = 'trash';
 
-    // Post is a revision that was automatically created by WordPress
-    case REVISION = 'auto-draft';
+    // The post is a revision automatically created by WordPress
+    case Revision = 'auto-draft';
 
-    // Post is inheriting its status from its parent
-    case INHERIT = 'inherit';
+    // The post is inheriting its status from its parent
+    case Inherit = 'inherit';
 }

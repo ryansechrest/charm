@@ -13,6 +13,6 @@ namespace Charm\Enums\User;
  */
 enum Status: int
 {
-    // User is active
-    case ACTIVE = 0;
+    // The user is active
+    case Active = 0;
 }

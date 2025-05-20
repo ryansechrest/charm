@@ -13,9 +13,9 @@ namespace Charm\Enums\Post;
  */
 enum PingStatus: string
 {
-    // Post is open for pings
-    case OPEN = 'open';
+    // The post is open for pings
+    case Open = 'open';
 
-    // Post is closed for pings
-    case CLOSED = 'closed';
+    // The post is closed for pings
+    case Closed = 'closed';
 }
