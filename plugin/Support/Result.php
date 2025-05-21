@@ -2,10 +2,12 @@
 
 namespace Charm\Support;
 
+use Charm\Enums\Result\Message;
+use Charm\Enums\Result\Status;
 use WP_Error;
 
 /**
- * Represents a result when performing an operation.
+ * Represents a result after performing an operation.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -13,28 +15,35 @@ use WP_Error;
 class Result
 {
     /**
-     * Whether the operation was successful.
+     * Status of the operation.
      *
-     * @var bool
+     * @var Status
      */
-    private bool $success = false;
+    private Status $status = Status::Success;
 
     /**
-     * Error code if the operation failed.
-     *
-     * @var string
-     */
-    private string $errorCode = '';
-
-    /**
-     * Error message if the operation failed.
+     * Code associated with the operation.
      *
      * @var string
      */
-    private string $errorMessage = '';
+    private string $code = '';
 
     /**
-     * Associated data with error.
+     * Message associated with the operation.
+     *
+     * @var string
+     */
+    private string $message = '';
+
+    /**
+     * Source of what triggered the operation.
+     *
+     * @var string
+     */
+    private string $source = '';
+
+    /**
+     * Associated data with the operation.
      *
      * @var ?mixed
      */
@@ -61,48 +70,93 @@ class Result
     /**
      * Result constructor.
      *
-     * @param bool $success
-     * @param string $errorCode
-     * @param string $errorMessage
-     * @param ?WP_Error $wpError
+     * @param array $data
      */
-    private function __construct(
-        bool $success,
-        string $errorCode = '',
-        string $errorMessage = '',
-        ?WP_Error $wpError = null
-    )
+    public function __construct(array $data)
     {
-        $this->success = $success;
-        $this->errorCode = $errorCode;
-        $this->errorMessage = $errorMessage;
-        $this->wpError = $wpError;
+        $this->load($data);
+    }
+
+    /**
+     * Load the instance with data.
+     *
+     * @param array $data
+     */
+    public function load(array $data): void
+    {
+        if (isset($data['status'])) {
+            $this->status = $data['status'];
+        }
+
+        if (isset($data['code'])) {
+            $this->code = $data['code'];
+        }
+
+        if (isset($data['message'])) {
+            $this->message = $data['message'];
+        }
+
+        if (isset($data['source'])) {
+            $this->source = $data['source'];
+        }
+
+        if (isset($data['data'])) {
+            $this->data = $data['data'];
+        }
+
+        if (isset($data['wpError'])) {
+            $this->wpError = $data['wpError'];
+        }
     }
 
     // *************************************************************************
 
     /**
-     * Initialize the result indicating a success operation.
+     * Initialize a result that indicates a successful operation.
      *
+     * @param Message $message
      * @return self
      */
-    public static function success(): self
+    public static function success(Message $message): self
     {
-        return new self(success: true);
+        return new self([
+            'status' => Status::Success,
+            'code' => $message->code(),
+            'message' => $message->message(),
+            'source' => 'Charm',
+        ]);
     }
 
     /**
-     * Initialize the result indicated a failed operation.
+     * Initialize a result that produced a warning.
      *
-     * @param string $code
-     * @param string $message
+     * @param Message $message
      * @return self
      */
-    public static function error(string $code = '', string $message = ''): self
+    public static function warning(Message $message): self
     {
-        return new self(
-            success: false, errorCode: $code, errorMessage: $message
-        );
+        return new self([
+            'status' => Status::Warning,
+            'code' => $message->code(),
+            'message' => $message->message(),
+            'source' => 'Charm',
+        ]);
+    }
+
+    /**
+     * Initialize a result that indicates a failed operation.
+     *
+     * @param Message $message
+     * @return self
+     */
+    public static function error(Message $message): self
+    {
+        return new self([
+            'status' => Status::Error,
+            'code' => $message->code(),
+            'message' => $message->message(),
+            'source' => 'Charm',
+        ]);
     }
 
     /**
@@ -113,12 +167,13 @@ class Result
      */
     public static function wpError(WP_Error $wpError): self
     {
-        return new self(
-            success: false,
-            errorCode: $wpError->get_error_code(),
-            errorMessage: $wpError->get_error_message(),
-            wpError: $wpError
-        );
+        return new self([
+            'status' => false,
+            'code' => $wpError->get_error_code(),
+            'message' => $wpError->get_error_message(),
+            'source' => 'WordPress',
+            'wpError' => $wpError,
+        ]);
     }
 
     // *************************************************************************
@@ -130,7 +185,7 @@ class Result
      */
     public function hasSucceeded(): bool
     {
-        return $this->success;
+        return in_array($this->status, [Status::Success, Status::Warning]);
     }
 
     /**
@@ -140,33 +195,43 @@ class Result
      */
     public function hasFailed(): bool
     {
-        return !$this->success;
+        return $this->status === Status::Error;
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get the error code.
+     * Get the code of the operation.
      *
-     * @return string
+     * @return string foobar_failed
      */
-    public function getErrorCode(): string
+    public function getCode(): string
     {
-        return $this->errorCode;
+        return $this->code;
     }
 
     /**
-     * Get the error message.
+     * Get the message of the operation.
      *
-     * @return string
+     * @return string Foobar could not be executed.
      */
-    public function getErrorMessage(): string
+    public function getMessage(): string
     {
-        return $this->errorMessage;
+        return $this->message;
     }
 
     /**
-     * Get the associated data.
+     * Get the source of the operation.
+     *
+     * @return string Charm
+     */
+    public function getSource(): string
+    {
+        return $this->message;
+    }
+
+    /**
+     * Get the data associated with the operation.
      *
      * @return mixed
      */
@@ -188,15 +253,13 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Print instance with a successful or failed message.
+     * Print instance with a status and message.
      *
      * @return string
      */
     public function __toString(): string
     {
-        return $this->hasSucceeded()
-            ? 'Success'
-            : 'Error: ' . $this->getErrorMessage();
+        return $this->status->label() . ': ' . $this->getMessage();
     }
 
     // *************************************************************************
@@ -241,7 +304,7 @@ class Result
     }
 
     /**
-     * Get all results (main and related).
+     * Get main and related results.
      *
      * @return Result[]
      */
@@ -251,7 +314,7 @@ class Result
     }
 
     /**
-     * Get all failed (main and related) results.
+     * Get main and related results that failed.
      *
      * @return Result[]
      */
@@ -266,7 +329,7 @@ class Result
     }
 
     /**
-     * Get all successful (main and related) results.
+     * Get main and related results that succeeded.
      *
      * @return Result[]
      */
@@ -283,7 +346,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Check whether any result (main or related) failed.
+     * Check whether any main or related result failed.
      *
      * @return bool
      */
