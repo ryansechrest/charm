@@ -2,8 +2,11 @@
 
 namespace Charm\Models\Proxy;
 
+use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
+use Charm\Enums\Result\Message;
 use Charm\Support\Result;
+use Charm\Traits\WithToArray;
 
 /**
  * Represents a proxy meta belonging to any model in WordPress.
@@ -11,8 +14,12 @@ use Charm\Support\Result;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Meta implements IsPersistable
+class Meta implements IsArrayable, IsPersistable
 {
+    use WithToArray;
+
+    // *************************************************************************
+
     /**
      * Meta type.
      *
@@ -187,6 +194,8 @@ class Meta implements IsPersistable
         mixed $metaValue
     ): Result
     {
+        // `int`  -> Meta ID -> Success: Meta created
+        // `bool` -> `false` -> Fail: Meta not created
         $result = add_metadata(
             $metaType,
             $objectId,
@@ -195,13 +204,13 @@ class Meta implements IsPersistable
         );
 
         if ($result === false) {
-            return Result::error(
-                code: 'add_metadata_failed',
-                message: __('add_metadata() returned false.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::MetaCreateFailed)
+                ->withData(func_get_args());
         }
 
-        return Result::success();
+        return Result::success(Message::MetaCreateSuccess)
+            ->withId($result)
+            ->withData(func_get_args());
     }
 
     /**
@@ -223,6 +232,9 @@ class Meta implements IsPersistable
         mixed $prevMetaValue = null
     ): Result
     {
+        // `int`  -> Meta ID -> Success: New meta created
+        // `bool` -> `true`  -> Success: Existing meta updated
+        // `bool` -> `false` -> Fail: Meta not updated or value already exists
         $result = update_metadata(
             $metaType,
             $objectId,
@@ -232,13 +244,18 @@ class Meta implements IsPersistable
         );
 
         if ($result === false) {
-            return Result::error(
-                code: 'update_metadata_failed',
-                message: __('update_metadata() returned false.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::MetaUpdateFailed)
+                ->withData(func_get_args());
         }
 
-        return Result::success();
+        if (is_int($result)) {
+            return Result::success(Message::MetaCreateSuccess)
+                ->withId($result)
+                ->withData(func_get_args());
+        }
+
+        return Result::success(Message::MetaUpdateSuccess)
+            ->withData(func_get_args());
     }
 
     /**
@@ -255,16 +272,17 @@ class Meta implements IsPersistable
         string $metaType, int $objectId, string $metaKey, mixed $metaValue = ''
     ): Result
     {
+        // `bool` -> `true`  -> Success: Meta deleted
+        // `bool` -> `false` -> Fail: Meta not deleted
         $result = delete_metadata($metaType, $objectId, $metaKey, $metaValue);
 
         if ($result === false) {
-            return Result::error(
-                code: 'delete_metadata_failed',
-                message: __('delete_metadata() returned false.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::MetaDeleteFailed)
+                ->withData(func_get_args());
         }
 
-        return Result::success();
+        return Result::success(Message::MetaDeleteSuccess)
+            ->withData(func_get_args());
     }
 
     /**
@@ -281,6 +299,8 @@ class Meta implements IsPersistable
         string $metaType, string $metaKey, string $metaValue = ''
     ): Result
     {
+        // `bool` -> `true`  -> Success: Metas deleted
+        // `bool` -> `false` -> Fail: Metas not deleted
         $result = delete_metadata(
             meta_type: $metaType,
             object_id: 0,
@@ -290,13 +310,12 @@ class Meta implements IsPersistable
         );
 
         if ($result === false) {
-            return Result::error(
-                code: 'delete_metadata_failed',
-                message: __('delete_metadata() returned false.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::MetaPurgeFailed)
+                ->withData(func_get_args());
         }
 
-        return Result::success();
+        return Result::success(Message::MetaPurgeSuccess)
+            ->withData(func_get_args());
     }
 
     /**
@@ -336,10 +355,8 @@ class Meta implements IsPersistable
     public function create(): Result
     {
         if ($this->exists) {
-            return Result::error(
-                code: 'meta_exists',
-                message: __('Meta already exists.', 'charm')
-            )->withData($this);
+            return Result::error(Message::MetaAlreadyExists)
+                ->withData($this->toArray());
         }
 
         $result = static::createMeta(
@@ -366,10 +383,8 @@ class Meta implements IsPersistable
     public function update(): Result
     {
         if (!$this->exists) {
-            return Result::error(
-                code: 'meta_missing',
-                message: __('Cannot update meta that does not exist.', 'charm')
-            )->withData($this);
+            return Result::error(Message::MetaNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::updateMeta(
@@ -397,10 +412,8 @@ class Meta implements IsPersistable
     public function delete(): Result
     {
         if (!$this->exists) {
-            return Result::error(
-                code: 'meta_missing',
-                message: __('Cannot delete meta that does not exist.', 'charm')
-            )->withData($this);
+            return Result::error(Message::MetaNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::deleteMeta(

@@ -2,9 +2,13 @@
 
 namespace Charm\Models\Proxy;
 
+use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
 use Charm\Contracts\WordPress\HasWpPost;
+use Charm\Enums\Result\Message;
+use Charm\Support\Filter;
 use Charm\Support\Result;
+use Charm\Traits\WithToArray;
 use WP_Post;
 use WP_Query;
 
@@ -14,8 +18,12 @@ use WP_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Post implements HasWpPost, IsPersistable
+class Post implements HasWpPost, IsArrayable, IsPersistable
 {
+    use WithToArray;
+
+    // *************************************************************************
+
     /**
      * Post ID.
      *
@@ -423,21 +431,22 @@ class Post implements HasWpPost, IsPersistable
      */
     public static function createPost(array $data): Result
     {
+        // `int`    -> Post ID    -> Success: Post created
+        // `int`    -> `0`        -> Fail: Post not created
+        // `object` -> `WP_Error` -> Fail: Post not created
         $result = wp_insert_post(postarr: $data, wp_error: true);
 
         if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)
-                ->withData(func_get_args());
+            return Result::wpError(wpError: $result)->withData($data);
         }
 
         if (!is_int($result) || $result === 0) {
-            return Result::error(
-                code: 'wp_insert_post_failed',
-                message: __('wp_insert_post() did not return an ID.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::PostCreateFailed)->withData($data);
         }
 
-        return Result::success()->withData($result);
+        return Result::success(Message::PostCreateSuccess)
+            ->withId($result)
+            ->withData($data);
     }
 
     /**
@@ -450,21 +459,22 @@ class Post implements HasWpPost, IsPersistable
      */
     public static function updatePost(array $data): Result
     {
+        // `int`    -> Post ID    -> Success: Post updated
+        // `int`    -> `0`        -> Fail: Post not updated
+        // `object` -> `WP_Error` -> Fail: Post not updated
         $result = wp_update_post(postarr: $data, wp_error: true);
 
         if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)
-                ->withData(func_get_args());
+            return Result::wpError(wpError: $result)->withData($data);
         }
 
         if (!is_int($result) || $result === 0) {
-            return Result::error(
-                code: 'wp_update_post_failed',
-                message: __('wp_update_post() did not return an ID.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::PostUpdateFailed)->withData($data);
         }
 
-        return Result::success();
+        return Result::success(Message::PostUpdateSuccess)
+            ->withId($result)
+            ->withData($data);
     }
 
     /**
@@ -476,16 +486,18 @@ class Post implements HasWpPost, IsPersistable
      */
     public static function trashPost(int $id): Result
     {
+        // `object` -> `WP_Post` -> Success: Post trashed
+        // `bool`   -> `false`   -> Fail: Post not trashed
+        // `null`   -> `null`    -> Fail: Post not trashed
         $result = wp_trash_post(post_id: $id);
 
         if (!$result instanceof WP_Post) {
-            return Result::error(
-                code: 'wp_trash_post_failed',
-                message: __('wp_trash_post() did not return a post.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::PostTrashFailed)->withId($id);
         }
 
-        return Result::success();
+        return Result::success(Message::PostTrashSuccess)
+            ->withId($result->ID)
+            ->withData(['postTitle' => $result->post_title]);
     }
 
     /**
@@ -497,16 +509,18 @@ class Post implements HasWpPost, IsPersistable
      */
     public static function restorePost(int $id): Result
     {
+        // `object` -> `WP_Post` -> Success: Post restored
+        // `bool`   -> `false`   -> Fail: Post not restored
+        // `null`   -> `null`    -> Fail: Post not restored
         $result = wp_untrash_post(post_id: $id);
 
         if (!$result instanceof WP_Post) {
-            return Result::error(
-                code: 'wp_untrash_post_failed',
-                message: __('wp_untrash_post() did not return a post.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::PostRestoreFailed)->withId($id);
         }
 
-        return Result::success();
+        return Result::success(Message::PostRestoreSuccess)
+            ->withId($result->ID)
+            ->withData(['postTitle' => $result->post_title]);
     }
 
     /**
@@ -518,16 +532,18 @@ class Post implements HasWpPost, IsPersistable
      */
     public static function deletePost(int $id): Result
     {
+        // `object` -> `WP_Post` -> Success: Post deleted
+        // `bool`   -> `false`   -> Fail: Post not deleted
+        // `null`   -> `null`    -> Fail: Post not deleted
         $result = wp_delete_post(post_id: $id, force_delete: true);
 
         if (!$result instanceof WP_Post) {
-            return Result::error(
-                code: 'wp_delete_post_failed',
-                message: __('wp_delete_post() did not return a post.', 'charm')
-            )->withData(func_get_args());
+            return Result::error(Message::PostDeleteFailed)->withId($id);
         }
 
-        return Result::success();
+        return Result::success(Message::PostDeleteSuccess)
+            ->withId($result->ID)
+            ->withData(['postTitle' => $result->post_title]);
     }
 
     // *************************************************************************
@@ -550,19 +566,19 @@ class Post implements HasWpPost, IsPersistable
     public function create(): Result
     {
         if ($this->id !== null) {
-            return Result::error(
-                code: 'post_id_exists',
-                message: __('Post already exists.', 'charm')
-            )->withData($this);
+            return Result::error(Message::PostAlreadyExists)
+                ->withData($this->toArray());
         }
 
-        $result = static::createPost(data: $this->toWpPostArray());
+        $result = static::createPost(
+            data: $this->toWpPostArray(except: ['ID', 'guid', 'comment_count'])
+        );
 
         if ($result->hasFailed()) {
             return $result;
         }
 
-        $this->id = $result->getData();
+        $this->id = $result->getId();
         $this->reload();
 
         return $result;
@@ -578,14 +594,12 @@ class Post implements HasWpPost, IsPersistable
     public function update(): Result
     {
         if ($this->id === null) {
-            return Result::error(
-                code: 'post_id_missing',
-                message: __('Cannot update post with blank ID.', 'charm')
-            )->withData($this);
+            return Result::error(Message::PostNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::updatePost(
-            data: $this->toWpPostArray(includeData: ['ID' => $this->id])
+            data: $this->toWpPostArray(except: ['guid', 'comment_count'])
         );
 
         if ($result->hasFailed()) {
@@ -605,10 +619,8 @@ class Post implements HasWpPost, IsPersistable
     public function trash(): Result
     {
         if ($this->id === null) {
-            return Result::error(
-                code: 'post_id_missing',
-                message: __('Cannot trash post with blank ID.', 'charm')
-            )->withData($this);
+            return Result::error(Message::PostNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::trashPost(id: $this->id);
@@ -630,10 +642,8 @@ class Post implements HasWpPost, IsPersistable
     public function restore(): Result
     {
         if ($this->id === null) {
-            return Result::error(
-                code: 'post_id_missing',
-                message: __('Cannot restore post with blank ID.', 'charm')
-            )->withData($this);
+            return Result::error(Message::PostNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::restorePost(id: $this->id);
@@ -656,10 +666,8 @@ class Post implements HasWpPost, IsPersistable
     public function delete(): Result
     {
         if ($this->id === null) {
-            return Result::error(
-                code: 'post_id_missing',
-                message: __('Cannot delete post with blank ID.', 'charm')
-            )->withData($this);
+            return Result::error(Message::PostNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::deletePost(id: $this->id);
@@ -1333,15 +1341,16 @@ class Post implements HasWpPost, IsPersistable
     /**
      * Cast the post to an array to be used by WordPress functions.
      *
-     * Remove keys from array if the value is null,
-     * since that indicates no value has been set.
+     * Remove keys from the array if the value is null, since that indicates
+     * that no value has been set.
      *
-     * @param array $includeData ['ID' => 1]
-     * @return array ['ID' => 1, 'post_author' => 1]
+     * @param array $except ['ID']
+     * @return array ['post_author' => 1, ...]
      */
-    protected function toWpPostArray(array $includeData = []): array
+    protected function toWpPostArray(array $except = []): array
     {
         $data = [
+            'ID' => $this->id,
             'post_author' => $this->postAuthor,
             'post_date' => $this->postDate,
             'post_date_gmt' => $this->postDateGmt,
@@ -1359,13 +1368,13 @@ class Post implements HasWpPost, IsPersistable
             'post_modified_gmt' => $this->postModifiedGmt,
             'post_content_filtered' => $this->postContentFiltered,
             'post_parent' => $this->postParent,
+            'guid' => $this->guid,
             'menu_order' => $this->menuOrder,
             'post_type' => $this->postType,
             'post_mime_type' => $this->postMimeType,
+            'comment_count' => $this->commentCount,
         ];
 
-        $data = array_merge($includeData, $data);
-
-        return array_filter($data, fn($value) => !is_null($value));
+        return Filter::array($data)->except($except)->withoutNulls()->get();
     }
 }

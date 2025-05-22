@@ -2,9 +2,13 @@
 
 namespace Charm\Models\Proxy;
 
+use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
 use Charm\Contracts\WordPress\HasWpUser;
+use Charm\Enums\Result\Message;
+use Charm\Support\Filter;
 use Charm\Support\Result;
+use Charm\Traits\WithToArray;
 use WP_User;
 use WP_User_Query;
 
@@ -14,8 +18,12 @@ use WP_User_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-class User implements HasWpUser, IsPersistable
+class User implements HasWpUser, IsArrayable, IsPersistable
 {
+    use WithToArray;
+
+    // *************************************************************************
+
     /**
      * User ID.
      *
@@ -312,21 +320,17 @@ class User implements HasWpUser, IsPersistable
      */
     public static function createUser(array $data): Result
     {
+        // `int`    -> User ID    -> Success: User created
+        // `object` -> `WP_Error` -> Fail: User not created
         $result = wp_insert_user(userdata: $data);
 
         if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)
-                ->withData(func_get_args());
+            return Result::wpError(wpError: $result)->withData($data);
         }
 
-        if (!is_int($result)) {
-            return Result::error(
-                code: 'wp_insert_user_failed',
-                message: __('wp_insert_user() did not return an ID.', 'charm')
-            )->withData(func_get_args());
-        }
-
-        return Result::success()->withData($result);
+        return Result::success(Message::UserCreateSuccess)
+            ->withId($result)
+            ->withData($data);
     }
 
     /**
@@ -339,21 +343,17 @@ class User implements HasWpUser, IsPersistable
      */
     public static function updateUser(array $data): Result
     {
+        // `int`    -> User ID    -> Success: User created
+        // `object` -> `WP_Error` -> Fail: User not created
         $result = wp_update_user(userdata: $data);
 
         if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)
-                ->withData($data);
+            return Result::wpError(wpError: $result)->withData($data);
         }
 
-        if (!is_int($result)) {
-            return Result::error(
-                code: 'wp_update_user_failed',
-                message: __('wp_update_user() did not return an ID.', 'charm')
-            )->withData($data);
-        }
-
-        return Result::success();
+        return Result::success(Message::UserUpdateSuccess)
+            ->withId($result)
+            ->withData($data);
     }
 
     /**
@@ -365,16 +365,15 @@ class User implements HasWpUser, IsPersistable
      */
     public static function deleteUser(int $id): Result
     {
+        // `bool` -> `true`  -> Success: User deleted
+        // `bool` -> `false` -> Fail: User not deleted
         $result = wp_delete_user(id: $id);
 
-        if ($result !== true) {
-            return Result::error(
-                code: 'wp_delete_user_failed',
-                message: __('wp_delete_user() did not return true.', 'charm')
-            )->withData(func_get_args());
+        if ($result === false) {
+            return Result::error(Message::UserDeleteFailed)->withId($id);
         }
 
-        return Result::success();
+        return Result::success(Message::UserDeleteSuccess)->withId($id);
     }
 
     // *************************************************************************
@@ -399,23 +398,19 @@ class User implements HasWpUser, IsPersistable
     public function create(): Result
     {
         if ($this->id !== null) {
-            return Result::error(
-                code: 'user_id_exists',
-                message: __('User already exists.', 'charm')
-            )->withData($this);
+            return Result::error(Message::UserAlreadyExists)
+                ->withData($this->toArray());
         }
 
         $result = static::createUser(
-            data: $this->toWpUserArray(
-                includeData: ['user_login' => $this->userLogin]
-            )
+            data: $this->toWpUserArray(except: ['ID'])
         );
 
         if ($result->hasFailed()) {
             return $result;
         }
 
-        $this->id = $result->getData();
+        $this->id = $result->getId();
         $this->reload();
 
         return $result;
@@ -429,15 +424,11 @@ class User implements HasWpUser, IsPersistable
     public function update(): Result
     {
         if ($this->id === null) {
-            return Result::error(
-                code: 'user_id_missing',
-                message: __('Cannot update user with blank ID.', 'charm')
-            )->withData($this);
+            return Result::error(Message::UserNotFound)
+                ->withData($this->toArray());
         }
 
-        $result = static::updateUser(
-            data: $this->toWpUserArray(includeData: ['ID' => $this->id])
-        );
+        $result = static::updateUser(data: $this->toWpUserArray());
 
         if ($result->hasFailed()) {
             return $result;
@@ -456,10 +447,8 @@ class User implements HasWpUser, IsPersistable
     public function delete(): Result
     {
         if ($this->id === null) {
-            return Result::error(
-                code: 'user_id_missing',
-                message: __('Cannot delete user with blank ID.', 'charm')
-            )->withData($this);
+            return Result::error(Message::UserNotFound)
+                ->withData($this->toArray());
         }
 
         $result = static::deleteUser(id: $this->id);
@@ -865,15 +854,17 @@ class User implements HasWpUser, IsPersistable
     /**
      * Cast the user to an array to be used by WordPress functions.
      *
-     * Remove keys from array if the value is null,
-     * since that indicates no value has been set.
+     * Remove keys from the array if the value is null, since that indicates
+     *  that no value has been set.
      *
-     * @param array $includeData ['ID' => 1]
-     * @return array ['ID' => 1, 'user_nicename' => 'charm']
+     * @param array $except ['ID']
+     * @return array ['user_login' => 'charm', ...]
      */
-    protected function toWpUserArray(array $includeData = []): array
+    protected function toWpUserArray(array $except = []): array
     {
         $data = [
+            'ID' => $this->id,
+            'user_login' => $this->userLogin,
             'user_pass' => $this->userPass,
             'user_nicename' => $this->userNicename,
             'user_email' => $this->userEmail,
@@ -884,8 +875,6 @@ class User implements HasWpUser, IsPersistable
             'display_name' => $this->displayName,
         ];
 
-        $data = array_merge($includeData, $data);
-
-        return array_filter($data, fn($value) => !is_null($value));
+        return Filter::array($data)->except($except)->withoutNulls()->get();
     }
 }
