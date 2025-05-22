@@ -32,7 +32,7 @@ class Cast
     // *************************************************************************
 
     /**
-     * Initialize instance from q value.
+     * Initialize the instance from a value.
      *
      * @param mixed $value
      * @return static
