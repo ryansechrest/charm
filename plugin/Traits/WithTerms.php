@@ -50,7 +50,7 @@ trait WithTerms
      */
     protected function taxonomy(string $termClass): TermRelationship
     {
-        // If the $termClass is not a subclass of the Term::class,
+        // If the `$termClass` is not a subclass of the `Term::class`,
         // abort with an exception to ensure compliance
         if (!is_subclass_of($termClass, Term::class)) {
             throw new InvalidArgumentException(
@@ -61,7 +61,8 @@ trait WithTerms
         /** @var HasDeferredCalls $this */
         $this->registerDeferred(method: 'persistTerms');
 
-        // If a term relationship doesn't exist for this taxonomy, create it
+        // If a `TermRelationship` instance doesn't exist for this taxonomy,
+        // then create it
         if (!isset($this->taxonomies[$termClass])) {
             $this->taxonomies[$termClass] = new TermRelationship([
                 'objectId' => $this->getId(),
