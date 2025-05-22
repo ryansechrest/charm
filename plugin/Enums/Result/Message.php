@@ -12,50 +12,73 @@ enum Message: string
 {
     // --- Meta ----------------------------------------------------------------
 
-    case CreateMetaSuccess = 'create_meta_success';
-    case CreateMetaFailed = 'create_meta_failed';
-    case UpdateMetaSuccess = 'update_meta_success';
-    case UpdateMetaFailed = 'update_meta_failed';
-    case DeleteMetaSuccess = 'delete_meta_success';
-    case DeleteMetaFailed = 'delete_meta_failed';
+    case MetaCreateSuccess = 'meta_create_success';
+    case MetaCreateFailed = 'meta_created_failed';
+    case MetaUpdateSuccess = 'meta_update_success';
+    case MetaUpdateFailed = 'meta_update_failed';
+    case MetaDeleteSuccess = 'meta_delete_success';
+    case MetaDeleteFailed = 'meta_delete_failed';
+    case MetaPurgeSuccess = 'meta_purge_success';
+    case MetaPurgeFailed = 'meta_purge_failed';
     case MetaAlreadyExists = 'meta_already_exists';
     case MetaNotFound = 'meta_not_found';
 
     // --- Post ----------------------------------------------------------------
 
-    case CreatePostSuccess = 'create_post_success';
-    case CreatePostFailed = 'create_post_failed';
-    case UpdatePostSuccess = 'update_post_success';
-    case UpdatePostFailed = 'update_post_failed';
-    case TrashPostSuccess = 'trash_post_success';
-    case TrashPostFailed = 'trash_post_failed';
-    case RestorePostSuccess = 'restore_post_success';
-    case RestorePostFailed = 'restore_post_failed';
-    case DeletePostSuccess = 'delete_post_success';
-    case DeletePostFailed = 'delete_post_failed';
+    case PostCreateSuccess = 'post_create_success';
+    case PostCreateFailed = 'post_create_failed';
+    case PostUpdateSuccess = 'post_update_success';
+    case PostUpdateFailed = 'post_update_failed';
+    case PostTrashSuccess = 'post_trash_success';
+    case PostTrashFailed = 'post_trash_failed';
+    case PostRestoreSuccess = 'post_restore_success';
+    case PostRestoreFailed = 'post_restore_failed';
+    case PostDeleteSuccess = 'post_delete_success';
+    case PostDeleteFailed = 'post_delete_failed';
     case PostAlreadyExists = 'post_already_exists';
     case PostNotFound = 'post_not_found';
 
     // --- Term ----------------------------------------------------------------
 
-    case CreateTermSuccess = 'create_term_success';
-    case UpdateTermSuccess = 'update_term_success';
-    case DeleteTermSuccess = 'delete_term_success';
-    case DeleteTermFailed = 'delete_term_failed';
+    case TermCreateSuccess = 'term_create_success';
+    case TermCreateFailed = 'term_create_failed';
+    case TermUpdateSuccess = 'term_update_success';
+    case TermUpdateFailed = 'term_update_failed';
+    case TermDeleteSuccess = 'term_delete_success';
+    case TermDeleteFailed = 'term_delete_failed';
     case TermAlreadyExists = 'term_already_exists';
     case TermNotFound = 'term_not_found';
     case TaxonomyNotFound = 'taxonomy_not_found';
+    case TermIsDefault = 'term_is_default';
 
     // --- User ----------------------------------------------------------------
 
-    case CreateUserSuccess = 'create_user_success';
-    case CreateUserFailed = 'create_user_failed';
-    case UpdateUserSuccess = 'update_user_success';
-    case UpdateUserFailed = 'update_user_failed';
-    case DeleteUserSuccess = 'delete_user_success';
-    case DeleteUserFailed = 'delete_user_failed';
+    case UserCreateSuccess = 'user_create_success';
+    case UserCreateFailed = 'user_create_failed';
+    case UserUpdateSuccess = 'user_update_success';
+    case UserUpdateFailed = 'user_update_failed';
+    case UserDeleteSuccess = 'user_delete_success';
+    case UserDeleteFailed = 'user_delete_failed';
     case UserAlreadyExists = 'user_already_exists';
     case UserNotFound = 'user_not_found';
+
+    // --- TermRelationship ----------------------------------------------------
+
+    case TermRelationshipAddSuccess = 'term_relationship_add_success';
+    case TermRelationshipAddFailed = 'term_relationship_add_failed';
+    case TermRelationshipRemoveSuccess = 'term_relationship_remove_success';
+    case TermRelationshipRemoveFailed = 'term_relationship_remove_failed';
+    case TermRelationshipSetSuccess = 'term_relationship_set_success';
+    case TermRelationshipSetFailed = 'term_relationship_set_failed';
+    case TermRelationshipNormalizedSuccess = 'term_relationship_normalized_success';
+    case TermRelationshipAlreadyNormalized = 'term_relationship_already_normalized';
+    case TermRelationshipInvalidSubclass = 'term_relationship_invalid_subclass';
+    case TermRelationshipNotFound = 'term_relationship_not_found';
+    case TermRelationshipObjectIdNotFound = 'term_relationship_object_id_not_found';
+
+    // --- WithPersistenceState ------------------------------------------------
+
+    
 
     // *************************************************************************
 
@@ -79,155 +102,222 @@ enum Message: string
 
             // --- Meta --------------------------------------------------------
 
-            self::CreateMetaSuccess => __(
-                'WordPress function `add_metadata()` did not return false.',
+            self::MetaCreateSuccess => __(
+                'Meta was successfully created.',
                 'charm'
             ),
-            self::CreateMetaFailed => __(
-                'WordPress function `add_metadata()` returned false.',
+            self::MetaCreateFailed => __(
+                'Meta was not created.',
                 'charm'
             ),
-            self::UpdateMetaSuccess => __(
-                'WordPress function `update_metadata()` did not return false.',
+            self::MetaUpdateSuccess => __(
+                'Meta was successfully updated.',
                 'charm'
             ),
-            self::UpdateMetaFailed => __(
-                'WordPress function `update_metadata()` returned false.',
+            self::MetaUpdateFailed => __(
+                'Meta was not updated; possibly because it already exists.',
                 'charm'
             ),
-            self::DeleteMetaSuccess => __(
-                'WordPress function `delete_metadata()` did not return false.',
+            self::MetaDeleteSuccess => __(
+                'Meta was successfully deleted.',
                 'charm'
             ),
-            self::DeleteMetaFailed => __(
-                'WordPress function `delete_metadata()` returned false.',
+            self::MetaDeleteFailed => __(
+                'Meta was not deleted.',
+                'charm'
+            ),
+            self::MetaPurgeSuccess => __(
+                'Metas were successfully purged.',
+                'charm'
+            ),
+            self::MetaPurgeFailed => __(
+                'Metas were not purged.',
                 'charm'
             ),
             self::MetaAlreadyExists => __(
-                'Meta already exists; cannot create.',
+                'Meta was not created because it already exists.',
                 'charm'
             ),
             self::MetaNotFound => __(
-                'Meta not found; cannot update or delete.',
+                'Meta was not updated or deleted because it does not exist.',
                 'charm'
             ),
 
             // --- Post --------------------------------------------------------
 
-            self::CreatePostSuccess => __(
-                'WordPress function `wp_insert_post()` returned a post ID.',
+            self::PostCreateSuccess => __(
+                'Post was successfully created.',
                 'charm'
             ),
-            self::CreatePostFailed => __(
-                'WordPress function `wp_insert_post()` did not return a post ID.',
+            self::PostCreateFailed => __(
+                'Post was not created.',
                 'charm'
             ),
-            self::UpdatePostSuccess => __(
-                'WordPress function `wp_update_post()` returned a post ID.',
+            self::PostUpdateSuccess => __(
+                'Post was successfully updated.',
                 'charm'
             ),
-            self::UpdatePostFailed => __(
-                'WordPress function `wp_update_post()` did not return a post ID.',
+            self::PostUpdateFailed => __(
+                'Post was not updated.',
                 'charm'
             ),
-            self::TrashPostSuccess => __(
-                'WordPress function `wp_trash_post()` returned a `WP_Post` instance.',
+            self::PostTrashSuccess => __(
+                'Post was successfully trashed.',
                 'charm'
             ),
-            self::TrashPostFailed => __(
-                'WordPress function `wp_trash_post()` did not return a `WP_Post` instance.',
+            self::PostTrashFailed => __(
+                'Post was not trashed.',
                 'charm'
             ),
-            self::RestorePostSuccess => __(
-                'WordPress function `wp_untrash_post()` return a `WP_Post` instance.',
+            self::PostRestoreSuccess => __(
+                'Post was successfully restored.',
                 'charm'
             ),
-            self::RestorePostFailed => __(
-                'WordPress function `wp_untrash_post()` did not return a `WP_Post` instance.',
+            self::PostRestoreFailed => __(
+                'Post was not restored.',
                 'charm'
             ),
-            self::DeletePostSuccess => __(
-                'WordPress function `wp_delete_post()` returned a `WP_Post` instance.',
+            self::PostDeleteSuccess => __(
+                'Post was successfully deleted.',
                 'charm'
             ),
-            self::DeletePostFailed => __(
-                'WordPress function `wp_delete_post()` did not return a `WP_Post` instance.',
+            self::PostDeleteFailed => __(
+                'Post was not deleted.',
                 'charm'
             ),
             self::PostAlreadyExists => __(
-                'Post already exists; cannot create a post with an existing post ID.',
+                'Post was not created because it already exists.',
                 'charm'
             ),
             self::PostNotFound => __(
-                'Post not found; cannot update or delete a post without a post ID.',
+                'Post was not updated or deleted because it does not exist.',
                 'charm'
             ),
 
-            // --- Post --------------------------------------------------------
+            // --- Term --------------------------------------------------------
 
-            self::CreateTermSuccess => __(
-                'WordPress function `wp_insert_term()` returned a term data array.',
+            self::TermCreateSuccess => __(
+                'Term was successfully created.',
                 'charm'
             ),
-            self::UpdateTermSuccess => __(
-                'WordPress function `wp_update_term()` returned a term data array.',
+            self::TermCreateFailed => __(
+                'Term was not created..',
                 'charm'
             ),
-            self::DeleteTermSuccess => __(
-                'WordPress function `wp_delete_term()` returned true.',
+            self::TermUpdateSuccess => __(
+                'Term was successfully updated.',
                 'charm'
             ),
-            self::DeleteTermFailed => __(
-                'WordPress function `wp_delete_term()` did not return true.',
+            self::TermUpdateFailed => __(
+                'Term was not updated.',
+                'charm'
+            ),
+            self::TermDeleteSuccess => __(
+                'Term was successfully deleted.',
+                'charm'
+            ),
+            self::TermDeleteFailed => __(
+                'Term not deleted.',
                 'charm'
             ),
             self::TermAlreadyExists => __(
-                'Term already exists; cannot create a term with an existing taxonomy term ID.',
+                'Term was not created because it already exists.',
                 'charm'
             ),
             self::TermNotFound => __(
-                'Term not found; cannot update or delete a term without a taxonomy term ID.',
+                'Term was not updated or deleted because it does not exist.',
                 'charm'
             ),
             self::TaxonomyNotFound => __(
-                'Taxonomy not found; cannot create, update or delete a term without a taxonomy.',
+                'Term was not created, updated, or deleted because the taxonomy does not exist.',
+                'charm'
+            ),
+            self::TermIsDefault => __(
+                'Term was not deleted because it is the default term for the taxonomy.',
                 'charm'
             ),
 
             // --- User --------------------------------------------------------
 
-            self::CreateUserSuccess => __(
-                'WordPress function `wp_insert_user()` returned a user ID.',
+            self::UserCreateSuccess => __(
+                'User was successfully created.',
                 'charm'
             ),
-            self::CreateUserFailed => __(
-                'WordPress function `wp_insert_user()` did not return a user ID.',
+            self::UserCreateFailed => __(
+                'User was not created.',
                 'charm'
             ),
-            self::UpdateUserSuccess => __(
-                'WordPress function `wp_update_user()` returned a user ID.',
+            self::UserUpdateSuccess => __(
+                'User was successfully updated.',
                 'charm'
             ),
-            self::UpdateUserFailed => __(
-                'WordPress function `wp_update_user()` did not return a user ID.',
+            self::UserUpdateFailed => __(
+                'User was not updated.',
                 'charm'
             ),
-            self::DeleteUserSuccess => __(
-                'WordPress function `delete_metadata()` did not return false.',
+            self::UserDeleteSuccess => __(
+                'User was successfully deleted.',
                 'charm'
             ),
-            self::DeleteUserFailed => __(
-                'WordPress function `delete_metadata()` returned false.',
+            self::UserDeleteFailed => __(
+                'User was not deleted.',
                 'charm'
             ),
             self::UserAlreadyExists => __(
-                'User already exists; cannot create a user with an existing user ID.',
+                'User was not created because they already exist.',
                 'charm'
             ),
             self::UserNotFound => __(
-                'User not found; cannot update or delete a user without a user ID.',
+                'User was not updated or deleted because they do not exist.',
                 'charm'
             ),
+
+            // --- TermRelationship --------------------------------------------
+
+            self::TermRelationshipAddSuccess => __(
+                'Term relationship was successfully added.',
+                'charm'
+            ),
+            self::TermRelationshipAddFailed => __(
+                'Term relationship was not added.',
+                'charm'
+            ),
+            self::TermRelationshipRemoveSuccess => __(
+                'Term relationship was successfully removed.',
+                'charm'
+            ),
+            self::TermRelationshipRemoveFailed => __(
+                'Term relationship was not removed.',
+                'charm'
+            ),
+            self::TermRelationshipSetSuccess => __(
+                'Term relationship was successfully set.',
+                'charm'
+            ),
+            self::TermRelationshipSetFailed => __(
+                'Term relationship was not set.',
+                'charm'
+            ),
+            self::TermRelationshipNormalizedSuccess => __(
+                'Term was successfully normalized.',
+                'charm'
+            ),
+            self::TermRelationshipAlreadyNormalized => __(
+                'Term was already normalized.',
+                'charm'
+            ),
+            self::TermRelationshipInvalidSubclass => __(
+                'Term class must be subclass of `Charm\Models\Base\Term`.',
+                'charm'
+            ),
+            self::TermRelationshipNotFound => __(
+                'Term was not initialized because term ID or slug does not exist.',
+                'charm'
+            ),
+            self::TermRelationshipObjectIdNotFound => __(
+                'Object ID is required to persist terms.',
+                'charm'
+            )
         };
     }
 }
