@@ -17,33 +17,43 @@ class Result
     /**
      * Status of the operation.
      *
-     * @var Status
+     * @var Status `Success`, `Warning`, `Error`, etc.
      */
     private Status $status = Status::Success;
 
     /**
+     * ID associated with the operation.
+     *
+     * @var int Post ID, Term ID, User ID, etc.
+     */
+    private int $id = 0;
+
+    /**
      * Code associated with the operation.
      *
-     * @var string
+     * @var string `post_already_exists`, `post_not_found`, etc.
      */
     private string $code = '';
 
     /**
      * Message associated with the operation.
      *
-     * @var string
+     * @var string `Post already exists; cannot create a post with an ID.`
      */
     private string $message = '';
 
     /**
      * Source of what triggered the operation.
      *
-     * @var string
+     * @var string `Charm` or `WordPress`
      */
     private string $source = '';
 
     /**
-     * Associated data with the operation.
+     * Data associated with the operation.
+     *
+     * Could be the arguments passed to the method, the return value of the
+     * operation, or a copy of the current instance state.
      *
      * @var ?mixed
      */
@@ -201,9 +211,19 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Get the code of the operation.
+     * Get the ID associated with the operation.
      *
-     * @return string foobar_failed
+     * @return int Post ID, Term ID, User ID, etc.
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the code associated with the operation.
+     *
+     * @return string `post_already_exists`, `post_not_found`, etc.
      */
     public function getCode(): string
     {
@@ -211,9 +231,9 @@ class Result
     }
 
     /**
-     * Get the message of the operation.
+     * Get the message associated with the operation.
      *
-     * @return string Foobar could not be executed.
+     * @return string `Post already exists; cannot create a post with an ID.`
      */
     public function getMessage(): string
     {
@@ -221,22 +241,36 @@ class Result
     }
 
     /**
-     * Get the source of the operation.
+     * Get the source of what triggered the operation.
      *
-     * @return string Charm
+     * @return string `Charm` or `WordPress`
      */
     public function getSource(): string
     {
-        return $this->message;
+        return $this->source;
     }
 
     /**
      * Get the data associated with the operation.
      *
+     * If the data is an array or object, a `$key` can be passed to return the
+     * value for that key. Furthermore, if the key is not found, the specified
+     * default can be returned instead.
+     *
+     * @param string $key id
+     * @param mixed $default 0
      * @return mixed
      */
-    public function getData(): mixed
+    public function getData(string $key = '', mixed $default = null): mixed
     {
+        if ($key !== '' && is_array($this->data)) {
+            return $this->data[$key] ?? $default;
+        }
+
+        if ($key !== '' && is_object($this->data)) {
+            return $this->data->$key ?? $default;
+        }
+
         return $this->data;
     }
 
@@ -263,6 +297,19 @@ class Result
     }
 
     // *************************************************************************
+
+    /**
+     * Add an ID to the result.
+     *
+     * @param int $id
+     * @return self
+     */
+    public function withId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Add data to the result.
