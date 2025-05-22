@@ -2,10 +2,10 @@
 
 namespace Charm\Relationships;
 
+use Charm\Enums\Result\Message;
 use Charm\Models\Base\Term;
 use Charm\Support\Result;
 use WP_Error;
-use WP_Term;
 
 /**
  * Represents the relationship between a model and its terms in WordPress.
@@ -104,24 +104,28 @@ class TermRelationship
         int $objectId, int|string|array $terms, string $taxonomy
     ): Result
     {
+        // `array`  -> Term Taxonomy IDs -> Success: Object terms added
+        // `object` -> `WP_Error`        -> Fail: Object terms not added
         $result = wp_add_object_terms(
             object_id: $objectId, terms: $terms, taxonomy: $taxonomy
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result);
+            return Result::wpError(wpError: $result)
+                ->withData([
+                    'objectId' => $objectId,
+                    'terms' => $terms,
+                    'taxonomy' => $taxonomy,
+                ]);
         }
 
-        if (!is_array($result)) {
-            return Result::error(
-                code: 'wp_add_object_terms_failed',
-                message: __(
-                    'wp_add_object_terms() did not return an array.', 'charm'
-                )
-            );
-        }
-
-        return Result::success();
+        return Result::success(Message::TermRelationshipAddSuccess)
+            ->withData([
+                'termTaxonomyIds' => $result,
+                'objectId' => $objectId,
+                'terms' => $terms,
+                'taxonomy' => $taxonomy,
+            ]);
     }
 
     /**
@@ -141,24 +145,37 @@ class TermRelationship
         int $objectId, int|string|array $terms, string $taxonomy
     ): Result
     {
+        // `bool`   -> `true`     -> Success: Object terms removed
+        // `bool`   -> `false`     > Fail: Object terms not removed
+        // `object` -> `WP_Error` -> Fail: Object terms not removed
         $result = wp_remove_object_terms(
             object_id: $objectId, terms: $terms, taxonomy: $taxonomy
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result);
+            return Result::wpError(wpError: $result)
+                ->withData([
+                    'objectId' => $objectId,
+                    'terms' => $terms,
+                    'taxonomy' => $taxonomy,
+                ]);
         }
 
-        if ($result !== true) {
-            return Result::error(
-                code: 'wp_remove_object_terms_failed',
-                message: __(
-                    'wp_remove_object_terms() did not return true.', 'charm'
-                )
-            );
+        if ($result === true) {
+            return Result::error(Message::TermRelationshipRemoveFailed)
+                ->withData([
+                    'objectId' => $objectId,
+                    'terms' => $terms,
+                    'taxonomy' => $taxonomy,
+                ]);
         }
 
-        return Result::success();
+        return Result::success(Message::TermRelationshipRemoveSuccess)
+            ->withData([
+                'objectId' => $objectId,
+                'terms' => $terms,
+                'taxonomy' => $taxonomy,
+            ]);
     }
 
     /**
@@ -178,24 +195,28 @@ class TermRelationship
         int $objectId, int|string|array $terms, string $taxonomy
     ): Result
     {
+        // `array`  -> Term Taxonomy IDs -> Success: Object terms set
+        // `object` -> `WP_Error`        -> Fail: Object terms not set
         $result = wp_set_object_terms(
             object_id: $objectId, terms: $terms, taxonomy: $taxonomy
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result);
+            return Result::wpError(wpError: $result)
+                ->withData([
+                    'objectId' => $objectId,
+                    'terms' => $terms,
+                    'taxonomy' => $taxonomy,
+                ]);
         }
 
-        if (!is_array($result)) {
-            return Result::error(
-                code: 'wp_set_object_terms_failed',
-                message: __(
-                    'wp_set_object_terms() did not return an array.', 'charm'
-                )
-            );
-        }
-
-        return Result::success();
+        return Result::success(Message::TermRelationshipSetSuccess)
+            ->withData([
+                'termTaxonomyIds' => $result,
+                'objectId' => $objectId,
+                'terms' => $terms,
+                'taxonomy' => $taxonomy,
+            ]);
     }
 
     // *************************************************************************
@@ -257,7 +278,7 @@ class TermRelationship
             return $result;
         }
 
-        $this->addTerms[] = $result->getData();
+        $this->addTerms[] = $result->getData('term');
 
         return $result;
     }
@@ -297,7 +318,7 @@ class TermRelationship
             return $result;
         }
 
-        $this->removeTerms[] = $result->getData();
+        $this->removeTerms[] = $result->getData('term');
 
         return $result;
     }
@@ -337,7 +358,7 @@ class TermRelationship
             return $result;
         }
 
-        $this->setTerms[] = $result->getData();
+        $this->setTerms[] = $result->getData('term');
 
         return $result;
     }
@@ -354,13 +375,7 @@ class TermRelationship
         // If the object ID is zero, abort because without an object ID,
         // terms cannot be associated with an object
         if ($this->getObjectId() === 0) {
-            return [Result::error(
-                code: 'object_id_missing',
-                message: __(
-                    'Object ID is required to persist terms.',
-                    'charm'
-                )
-            )];
+            return [Result::error(Message::TermRelationshipObjectIdNotFound)];
         }
 
         $results = [];
@@ -374,8 +389,9 @@ class TermRelationship
             $results[] = $term->create();
         }
 
-        // Set terms on object and exit, because set will remove all terms
-        // and would overwrite any terms that might have been added
+        // If terms are set, persist them on the object and exit, because
+        // setting terms takes precedence over terms that might have been
+        // added or removed
         if (count($this->setTerms) > 0) {
             $results[] = static::setObjectTerms(
                 objectId: $this->getObjectId(),
@@ -386,7 +402,7 @@ class TermRelationship
             return $results;
         }
 
-        // Remove terms from object
+        // Remove terms from the object
         if (count($this->removeTerms) > 0) {
             $results[] = static::removeObjectTerms(
                 objectId: $this->getObjectId(),
@@ -395,7 +411,7 @@ class TermRelationship
             );
         }
 
-        // Add terms to object
+        // Add terms to the object
         if (count($this->addTerms) > 0) {
             $results[] = static::addObjectTerms(
                 objectId: $this->getObjectId(),
@@ -485,36 +501,32 @@ class TermRelationship
      */
     protected function normalizeTerm(int|string|Term $term): Result
     {
-        // If term is already Term, return success with Term instance
+        // If the term is already a `Term` instance,
+        // then return success with the `Term` instance
         if ($term instanceof Term) {
-            return Result::success()->withData($term);
+            return Result::success(Message::TermRelationshipAlreadyNormalized)
+                ->withData(['term' => $term]);
         }
 
-        // If the $termClass is not a subclass of the Term::class,
-        // abort with an exception to ensure compliance
+        // If the `$termClass` is not a subclass of the `Term::class`,
+        // then abort with an error to ensure compliance
         if (!is_subclass_of($this->termClass, Term::class)) {
-            return Result::error(
-                code: 'term_class_invalid',
-                message: __(
-                    'Term class must be subclass of ' . Term::class . '.',
-                    'charm'
-                )
-            )->withData($term);
+            return Result::error(Message::TermRelationshipInvalidSubclass)
+                ->withData(['term' => $term]);
         }
 
         /** @var Term $termClass */
         $termInstance = $this->termClass::init($term);
 
-        // If term ID or slug doesn't exist, return error
+        // If the term ID or slug doesn't exist, then return an error
         if ($termInstance === null) {
-            return Result::error(
-                code: 'term_not_found',
-                message: __('Specified term does not exist', 'charm')
-            )->withData($term);
+            return Result::error(Message::TermRelationshipNotFound)
+                ->withData(['term' => $term]);
         }
 
         // Otherwise, return success with Term instance
-        return Result::success()->withData($termInstance);
+        return Result::success(Message::TermRelationshipNormalizedSuccess)
+            ->withData(['term' => $termInstance]);
     }
 
     /**
