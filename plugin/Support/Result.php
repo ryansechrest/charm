@@ -3,7 +3,7 @@
 namespace Charm\Support;
 
 use Charm\Enums\Result\Message;
-use Charm\Enums\Result\Status;
+use Charm\Enums\ResultStatus;
 use WP_Error;
 
 /**
@@ -17,43 +17,58 @@ class Result
     /**
      * Status of the operation.
      *
-     * @var Status `Success`, `Warning`, `Error`, etc.
+     * @var ResultStatus
      */
-    private Status $status = Status::Success;
+    private ResultStatus $status = ResultStatus::Success;
 
     /**
-     * ID associated with the operation.
+     * Main object ID associated with the operation.
      *
-     * @var int Post ID, Term ID, User ID, etc.
+     * For example, if the operation was to create, update, or delete a post,
+     * this would contain the post ID.
+     *
+     * @var int
      */
     private int $id = 0;
 
     /**
-     * Code associated with the operation.
+     * Result code associated with the operation.
      *
-     * @var string `post_already_exists`, `post_not_found`, etc.
+     * For example, if the operation was to create a post, the result code
+     * might be: `post_create_success`, `post_create_failed`, etc.
+     *
+     * @var string
      */
     private string $code = '';
 
     /**
-     * Message associated with the operation.
+     * Result message that describes the code in more detail.
      *
-     * @var string `Post already exists; cannot create a post with an ID.`
+     * For example, if the operation was to create a post, the message might
+     * say something like: `Post successfully created` or `Post could not be
+     * created because it already exists`.
+     *
+     * @var string
      */
     private string $message = '';
 
     /**
-     * Source of what triggered the operation.
+     * Return value of the operation.
      *
-     * @var string `Charm` or `WordPress`
+     * For example, if the operation was to create a post, the return value
+     * might be the post ID, but if the operation was to delete a post, it
+     * would contain a `WP_Post` instance of the deleted post.
+     *
+     * @var ?mixed
      */
-    private string $source = '';
+    private mixed $value = null;
 
     /**
      * Data associated with the operation.
      *
-     * Could be the arguments passed to the method, the return value of the
-     * operation, or a copy of the current instance state.
+     * For example, if the operation was to update a post, the data might be
+     * the method arguments passed to update the post. If the operation had no
+     * method arguments, data might refer to the instance cast to an array.
      *
      * @var ?mixed
      */
@@ -106,8 +121,8 @@ class Result
             $this->message = $data['message'];
         }
 
-        if (isset($data['source'])) {
-            $this->source = $data['source'];
+        if (isset($data['value'])) {
+            $this->value = $data['value'];
         }
 
         if (isset($data['data'])) {
@@ -122,67 +137,50 @@ class Result
     // *************************************************************************
 
     /**
-     * Initialize a result that indicates a successful operation.
+     * Initialize a result for a successful operation.
      *
-     * @param Message $message
+     * @param string $code post_create_success
+     * @param string $message Post was successfully created.
      * @return self
      */
-    public static function success(Message $message): self
+    public static function success(string $code, string $message): self
     {
         return new self([
-            'status' => Status::Success,
-            'code' => $message->code(),
-            'message' => $message->message(),
-            'source' => 'Charm',
+            'status' => ResultStatus::Success,
+            'code' => $code,
+            'message' => __($message, 'charm'),
         ]);
     }
 
     /**
-     * Initialize a result that produced a warning.
+     * Initialize a result for a successful operation with additional info.
      *
-     * @param Message $message
+     * @param string $code post_create_info
+     * @param string $message Post was not created because it already exists.
      * @return self
      */
-    public static function warning(Message $message): self
+    public static function info(string $code, string $message): self
     {
         return new self([
-            'status' => Status::Warning,
-            'code' => $message->code(),
-            'message' => $message->message(),
-            'source' => 'Charm',
+            'status' => ResultStatus::Info,
+            'code' => $code,
+            'message' => __($message, 'charm'),
         ]);
     }
 
     /**
-     * Initialize a result that indicates a failed operation.
+     * Initialize a result for a failed operation.
      *
-     * @param Message $message
+     * @param string $code post_create_failed
+     * @param string $message Post was not created due to a WordPress error.
      * @return self
      */
-    public static function error(Message $message): self
+    public static function error(string $code, string $message): self
     {
         return new self([
-            'status' => Status::Error,
-            'code' => $message->code(),
-            'message' => $message->message(),
-            'source' => 'Charm',
-        ]);
-    }
-
-    /**
-     * Initialize the result from a `WP_Error` instance.
-     *
-     * @param WP_Error $wpError
-     * @return self
-     */
-    public static function wpError(WP_Error $wpError): self
-    {
-        return new self([
-            'status' => false,
-            'code' => $wpError->get_error_code(),
-            'message' => $wpError->get_error_message(),
-            'source' => 'WordPress',
-            'wpError' => $wpError,
+            'status' => ResultStatus::Error,
+            'code' => $code,
+            'message' => __($message, 'charm'),
         ]);
     }
 
@@ -195,7 +193,7 @@ class Result
      */
     public function hasSucceeded(): bool
     {
-        return in_array($this->status, [Status::Success, Status::Warning]);
+        return in_array($this->status, [ResultStatus::Success, ResultStatus::Warning]);
     }
 
     /**
@@ -205,13 +203,13 @@ class Result
      */
     public function hasFailed(): bool
     {
-        return $this->status === Status::Error;
+        return $this->status === ResultStatus::Error;
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get the ID associated with the operation.
+     * Get the main object ID associated with the operation.
      *
      * @return int Post ID, Term ID, User ID, etc.
      */
@@ -221,7 +219,7 @@ class Result
     }
 
     /**
-     * Get the code associated with the operation.
+     * Get the result code associated with the operation.
      *
      * @return string `post_already_exists`, `post_not_found`, etc.
      */
@@ -231,7 +229,7 @@ class Result
     }
 
     /**
-     * Get the message associated with the operation.
+     * Get the result message that describes the code in more detail.
      *
      * @return string `Post already exists; cannot create a post with an ID.`
      */
@@ -241,13 +239,28 @@ class Result
     }
 
     /**
-     * Get the source of what triggered the operation.
+     * Get the return value of the operation.
      *
-     * @return string `Charm` or `WordPress`
+     * If the data is an array or object, a `$key` can be passed to return the
+     * value for that key. Furthermore, if the key is not found, the specified
+     * default can be returned instead.
+     *
+     * @param string $key id
+     * @param mixed $default 0
+     *
+     * @return mixed
      */
-    public function getSource(): string
+    public function getReturn(string $key = '', mixed $default = null): mixed
     {
-        return $this->source;
+        if ($key !== '' && is_array($this->value)) {
+            return $this->value[$key] ?? $default;
+        }
+
+        if ($key !== '' && is_object($this->value)) {
+            return $this->value->$key ?? $default;
+        }
+
+        return $this->value;
     }
 
     /**
@@ -275,7 +288,7 @@ class Result
     }
 
     /**
-     * Get the `WP_Error` instance.
+     * Get the relevant `WP_Error` instance.
      *
      * @return ?WP_Error
      */
@@ -287,7 +300,7 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Print instance with a status and message.
+     * Print the instance with a status and message.
      *
      * @return string
      */
@@ -312,6 +325,19 @@ class Result
     }
 
     /**
+     * Add a return value to the result.
+     *
+     * @param mixed $value
+     * @return self
+     */
+    public function withReturn(mixed $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
      * Add data to the result.
      *
      * @param mixed $data
@@ -320,6 +346,19 @@ class Result
     public function withData(mixed $data): self
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Add a `WP_Error` to the result.
+     *
+     * @param WP_Error $wpError
+     * @return self
+     */
+    public function withWpError(WP_Error $wpError): self
+    {
+        $this->wpError = $wpError;
 
         return $this;
     }
