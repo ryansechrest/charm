@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Enums\Result;
+namespace Charm\Enums;
 
 /**
  * Indicates the status of a result.
@@ -8,13 +8,13 @@ namespace Charm\Enums\Result;
  * @author Ryan Sechrest
  * @package Charm
  */
-enum Status: string
+enum ResultStatus: string
 {
     // The operation succeeded
     case Success = 'success';
 
-    // The operation succeeded but triggered a warning
-    case Warning = 'warning';
+    // The operation succeeded with additional information
+    case Info = 'info';
 
     // The operation failed
     case Error = 'error';
@@ -39,7 +39,7 @@ enum Status: string
     public function label(): string {
         return match ($this) {
             self::Success => __('Success', 'charm'),
-            self::Warning => __('Warning', 'charm'),
+            self::Info => __('Info', 'charm'),
             self::Error => __('Error', 'charm'),
         };
     }
