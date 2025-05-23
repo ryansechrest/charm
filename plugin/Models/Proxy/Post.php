@@ -437,16 +437,30 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
         $result = wp_insert_post(postarr: $data, wp_error: true);
 
         if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)->withData($data);
+            return Result::error(
+                'post_create_failed',
+                'Post could not be created. `wp_insert_post()` returned a `WP_Error` object.'
+            )->withReturn($result)->withData($data)->withWpError($result);
         }
 
-        if (!is_int($result) || $result === 0) {
-            return Result::error(Message::PostCreateFailed)->withData($data);
+        if ($result === 0) {
+            return Result::error(
+                'post_create_failed',
+                'Post could not be created. `wp_insert_post()` returned a `0`.'
+            )->withReturn($result)->withData($data);
         }
 
-        return Result::success(Message::PostCreateSuccess)
-            ->withId($result)
-            ->withData($data);
+        if (!is_int($result)) {
+            return Result::error(
+                'post_create_failed',
+                'Post could not be created. Expected `wp_insert_post()` to return a post ID, but received an unexpected result.'
+            )->withReturn($result)->withData($data);
+        }
+
+        return Result::success(
+            'post_create_success',
+            'Post successfully created.'
+        )->withId($result)->withReturn($result)->withData($data);
     }
 
     /**
@@ -465,16 +479,30 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
         $result = wp_update_post(postarr: $data, wp_error: true);
 
         if (is_wp_error($result)) {
-            return Result::wpError(wpError: $result)->withData($data);
+            return Result::error(
+                'post_update_failed',
+                'Post could not be updated. `wp_update_post()` returned a `WP_Error` object.'
+            )->withReturn($result)->withData($data)->withWpError($result);
         }
 
-        if (!is_int($result) || $result === 0) {
-            return Result::error(Message::PostUpdateFailed)->withData($data);
+        if ($result === 0) {
+            return Result::error(
+                'post_update_failed',
+                'Post could not be updated. `wp_update_post()` returned a `0`.'
+            )->withReturn($result)->withData($data);
         }
 
-        return Result::success(Message::PostUpdateSuccess)
-            ->withId($result)
-            ->withData($data);
+        if (!is_int($result)) {
+            return Result::error(
+                'post_update_failed',
+                'Post could not be updated. Expected `wp_update_post()` to return a post ID, but received an unexpected result.'
+            )->withReturn($result)->withData($data);
+        }
+
+        return Result::success(
+            'post_update_success',
+            'Post successfully updated.'
+        )->withId($result)->withReturn($result)->withData($data);
     }
 
     /**
@@ -491,13 +519,31 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
         // `null`   -> `null`    -> Fail: Post not trashed
         $result = wp_trash_post(post_id: $id);
 
-        if (!$result instanceof WP_Post) {
-            return Result::error(Message::PostTrashFailed)->withId($id);
+        if ($result === false) {
+            return Result::error(
+                'post_trash_failed',
+                'Post could not be trashed. `wp_trash_post()` returned `false`.'
+            )->withId($id)->withReturn($result);
         }
 
-        return Result::success(Message::PostTrashSuccess)
-            ->withId($result->ID)
-            ->withData(['postTitle' => $result->post_title]);
+        if ($result === null) {
+            return Result::error(
+                'post_trash_failed',
+                'Post could not be trashed. `wp_trash_post()` returned `null`.'
+            )->withId($id)->withReturn($result);
+        }
+
+        if (!$result instanceof WP_Post) {
+            return Result::error(
+                'post_trash_failed',
+                'Post could not be trashed. Expected `wp_trash_post()` to return a `WP_Post` object, but received an unexpected result.'
+            )->withId($id)->withReturn($result);
+        }
+
+        return Result::success(
+            'post_trash_success',
+            'Post successfully trashed.'
+        )->withId($result->ID)->withReturn($result);
     }
 
     /**
@@ -514,13 +560,31 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
         // `null`   -> `null`    -> Fail: Post not restored
         $result = wp_untrash_post(post_id: $id);
 
-        if (!$result instanceof WP_Post) {
-            return Result::error(Message::PostRestoreFailed)->withId($id);
+        if ($result === false) {
+            return Result::error(
+                'post_restore_failed',
+                'Post could not be restored. `wp_untrash_post()` returned `false`.'
+            )->withId($id)->withReturn($result);
         }
 
-        return Result::success(Message::PostRestoreSuccess)
-            ->withId($result->ID)
-            ->withData(['postTitle' => $result->post_title]);
+        if ($result === null) {
+            return Result::error(
+                'post_restore_failed',
+                'Post could not be restored. `wp_untrash_post()` returned `null`.'
+            )->withId($id)->withReturn($result);
+        }
+
+        if (!$result instanceof WP_Post) {
+            return Result::error(
+                'post_restore_failed',
+                'Post could not be restored. Expected `wp_untrash_post()` to return a `WP_Post` object, but received an unexpected result.'
+            )->withId($id)->withReturn($result);
+        }
+
+        return Result::success(
+            'post_restore_success',
+            'Post successfully restored.'
+        )->withId($result->ID)->withReturn($result);
     }
 
     /**
@@ -537,13 +601,31 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
         // `null`   -> `null`    -> Fail: Post not deleted
         $result = wp_delete_post(post_id: $id, force_delete: true);
 
-        if (!$result instanceof WP_Post) {
-            return Result::error(Message::PostDeleteFailed)->withId($id);
+        if ($result === false) {
+            return Result::error(
+                'post_delete_failed',
+                'Post could not be deleted. `wp_delete_post()` returned `false`.'
+            )->withId($id)->withReturn($result);
         }
 
-        return Result::success(Message::PostDeleteSuccess)
-            ->withId($result->ID)
-            ->withData(['postTitle' => $result->post_title]);
+        if ($result === null) {
+            return Result::error(
+                'post_delete_failed',
+                'Post could not be deleted. `wp_delete_post()` returned `null`.'
+            )->withId($id)->withReturn($result);
+        }
+
+        if (!$result instanceof WP_Post) {
+            return Result::error(
+                'post_delete_failed',
+                'Post could not be deleted. Expected `wp_delete_post()` to return a `WP_Post` object, but received an unexpected result.'
+            )->withId($id)->withReturn($result);
+        }
+
+        return Result::success(
+            'post_delete_success',
+            'Post successfully deleted.'
+        )->withId($result->ID)->withReturn($result);
     }
 
     // *************************************************************************
@@ -566,8 +648,10 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
     public function create(): Result
     {
         if ($this->id !== null) {
-            return Result::error(Message::PostAlreadyExists)
-                ->withData($this->toArray());
+            return Result::error(
+                'post_already_exists',
+                'Post was not created because it already exists.'
+            )->withId($this->id)->withData($this->toArray());
         }
 
         $result = static::createPost(
@@ -594,8 +678,10 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
     public function update(): Result
     {
         if ($this->id === null) {
-            return Result::error(Message::PostNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'post_not_found',
+                'Post was not updated because it does not exist.'
+            )->withData($this->toArray());
         }
 
         $result = static::updatePost(
@@ -619,8 +705,10 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
     public function trash(): Result
     {
         if ($this->id === null) {
-            return Result::error(Message::PostNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'post_not_found',
+                'Post was not trashed because it does not exist.'
+            )->withData($this->toArray());
         }
 
         $result = static::trashPost(id: $this->id);
@@ -642,8 +730,10 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
     public function restore(): Result
     {
         if ($this->id === null) {
-            return Result::error(Message::PostNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'post_not_found',
+                'Post was not restored because it does not exist.'
+            )->withData($this->toArray());
         }
 
         $result = static::restorePost(id: $this->id);
@@ -666,8 +756,10 @@ class Post implements HasWpPost, IsArrayable, IsPersistable
     public function delete(): Result
     {
         if ($this->id === null) {
-            return Result::error(Message::PostNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'post_not_found',
+                'Post was not deleted because it does not exist.'
+            )->withData($this->toArray());
         }
 
         $result = static::deletePost(id: $this->id);

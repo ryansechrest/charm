@@ -328,17 +328,25 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result)->withData(func_get_args());
+            return Result::error(
+                'create_term_failed',
+                'Term could not be created. `wp_insert_term()` returned a `WP_Error` object.'
+            )->withReturn($result)->withData(func_get_args())->withWpError($result);
         }
 
-        return Result::success(Message::TermCreateSuccess)
-            ->withId((int) $result['term_id'] ?? 0)
-            ->withData([
-                'termTaxonomyId' => (int) $result['term_taxonomy_id'] ?? 0,
-                'term' => $name,
-                'taxonomy' => $taxonomy,
-                'args' => $args,
-            ]);
+        if (!is_array($result)) {
+            return Result::error(
+                'create_term_failed',
+                'Term could not be created. Expected `wp_insert_term()` to return a term ID and taxonomy term ID, but received an unexpected result.'
+            )->withReturn($result)->withData(func_get_args());
+        }
+
+        $termId = (int) $result['term_id'] ?? 0;
+
+        return Result::success(
+            'create_term_success',
+            'Term successfully created.'
+        )->withId($termId)->withReturn($result)->withData(func_get_args());
     }
 
     /**
@@ -361,18 +369,25 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result)
-                ->withId($termId)
-                ->withData(['taxonomy' => $taxonomy, 'args' => $args]);
+            return Result::error(
+                'update_term_failed',
+                'Term could not be updated. `wp_update_term()` returned a `WP_Error` object.'
+            )->withReturn($result)->withData(func_get_args())->withWpError($result);
         }
 
-        return Result::success(Message::TermUpdateSuccess)
-            ->withId((int) $result['term_id'] ?? 0)
-            ->withData([
-                'termTaxonomyId' => (int) $result['term_taxonomy_id'] ?? 0,
-                'taxonomy' => $taxonomy,
-                'args' => $args,
-            ]);
+        if (!is_array($result)) {
+            return Result::error(
+                'update_term_failed',
+                'Term could not be updated. Expected `wp_update_term()` to return a term ID and taxonomy term ID, but received an unexpected result.'
+            )->withReturn($result)->withData(func_get_args());
+        }
+
+        $termId = (int) $result['term_id'] ?? 0;
+
+        return Result::success(
+            'update_term_success',
+            'Term successfully updated.'
+        )->withId($termId)->withReturn($result)->withData(func_get_args());
     }
 
     /**
@@ -392,26 +407,37 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
         $result = wp_delete_term(term: $termId, taxonomy: $taxonomy);
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result)
-                ->withId($termId)
-                ->withData(['taxonomy' => $taxonomy]);
+            return Result::error(
+                'delete_term_failed',
+                'Term could not be deleted. `wp_delete_term()` returned a `WP_Error` object.'
+            )->withReturn($result)->withData(func_get_args())->withWpError($result);
         }
 
         if ($result === false) {
-            return Result::error(Message::TermNotFound)
-                ->withId($termId)
-                ->withData(['taxonomy' => $taxonomy]);
+            return Result::error(
+                'delete_term_failed',
+                'Term could not be deleted. `wp_delete_term()` returned `false`.'
+            )->withReturn($result)->withData(func_get_args());
         }
 
         if ($result === 0) {
-            return Result::error(Message::TermIsDefault)
-                ->withId($termId)
-                ->withData(['taxonomy' => $taxonomy]);
+            return Result::error(
+                'delete_term_failed',
+                'Term could not be deleted. `wp_delete_term()` returned a `0`.'
+            )->withReturn($result)->withData(func_get_args());
         }
 
-        return Result::success(Message::TermDeleteSuccess)
-            ->withId($termId)
-            ->withData(['taxonomy' => $taxonomy]);
+        if ($result !== true) {
+            return Result::error(
+                'delete_term_failed',
+                'Term could not be deleted. Expected `wp_delete_term()` to return `true`, but received an unexpected result.'
+            )->withReturn($result)->withData(func_get_args());
+        }
+
+        return Result::success(
+            'delete_term_success',
+            'Term successfully deleted.'
+        )->withId($termId)->withReturn($result)->withData(func_get_args());
     }
 
     // *************************************************************************
@@ -435,13 +461,17 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
     public function create(): Result
     {
         if ($this->termId !== null) {
-            return Result::error(Message::TermAlreadyExists)
-                ->withData($this->toArray());
+            return Result::error(
+                'term_already_exists',
+                'Term was not created because it already exists.'
+            )->withId($this->termId)->withData($this->toArray());
         }
 
         if ($this->taxonomy === null) {
-            return Result::error(Message::TaxonomyNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'taxonomy_not_found',
+                'Term was not created because the provided taxonomy is invalid.'
+            )->withId($this->termId)->withData($this->toArray());
         }
 
         $result = static::createTerm(
@@ -459,7 +489,7 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
         }
 
         $this->termId = $result->getId();
-        $this->termTaxonomyId = $result->getData('termTaxonomyId', 0);
+        $this->termTaxonomyId = $result->getReturn('term_taxonomy_id', 0);
         $this->reload();
 
         return $result;
@@ -473,13 +503,17 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
     public function update(): Result
     {
         if ($this->termId === null) {
-            return Result::error(Message::TermNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'term_not_found',
+                'Term was not updated because it does not exist.'
+            )->withData($this->toArray());
         }
 
         if ($this->taxonomy === null) {
-            return Result::error(Message::TaxonomyNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'taxonomy_not_found',
+                'Term was not created because the provided taxonomy is invalid.'
+            )->withId($this->termId)->withData($this->toArray());
         }
 
         $result = static::updateTerm(
@@ -497,7 +531,7 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
         }
 
         $this->termId = $result->getId();
-        $this->termTaxonomyId = $result->getData('termTaxonomyId', 0);
+        $this->termTaxonomyId = $result->getReturn('term_taxonomy_id', 0);
         $this->reload();
 
         return $result;
@@ -511,13 +545,17 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
     public function delete(): Result
     {
         if ($this->termId === null) {
-            return Result::error(Message::TermNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'term_not_found',
+                'Term was not deleted because it does not exist.'
+            )->withData($this->toArray());
         }
 
         if ($this->taxonomy === null) {
-            return Result::error(Message::TaxonomyNotFound)
-                ->withData($this->toArray());
+            return Result::error(
+                'taxonomy_not_found',
+                'Term was not created because the provided taxonomy is invalid.'
+            )->withId($this->termId)->withData($this->toArray());
         }
 
         $result = static::deleteTerm(
