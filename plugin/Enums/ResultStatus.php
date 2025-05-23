@@ -22,6 +22,16 @@ enum Status: string
     // *************************************************************************
 
     /**
+     * Get the status code.
+     *
+     * @return string
+     */
+    public function code(): string
+    {
+        return $this->value;
+    }
+
+    /**
      * Get the status label.
      *
      * @return string
