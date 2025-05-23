@@ -4,6 +4,7 @@ namespace Charm\Traits;
 
 use Charm\Contracts\IsPersistable;
 use Charm\Enums\PersistenceState;
+use Charm\Enums\Result\Message;
 use Charm\Support\Result;
 
 /**
@@ -68,23 +69,17 @@ trait WithPersistenceState
     {
         if (!$this instanceof IsPersistable) {
             return Result::error(
-                code: 'model_not_persistable',
-                message: __(
-                    'Ensure model implements `IsPersistable` interface.',
-                    'charm'
-                )
+                'model_not_persistable',
+                'Model does not implement `IsPersistable` interface.'
             );
         }
 
         $result = match ($this->state) {
-            PersistenceState::Clean => Result::success(),
+            PersistenceState::Clean => Result::info('model_not_changed', 'Model was not persisted since it did not change.'),
             PersistenceState::New => $this->create(),
             PersistenceState::Dirty => $this->update(),
             PersistenceState::Deleted => $this->delete(),
-            default => Result::error(
-                code: 'state_not_recognized',
-                message: __('Unknown model state cannot be persisted.', 'charm')
-            )
+            default => Result::error('persistence_state_unknown', 'Model was not persisted due to unknown persistence state.')
         };
 
         if ($result->hasSucceeded()) {
@@ -97,7 +92,7 @@ trait WithPersistenceState
     // *************************************************************************
 
     /**
-     * Get current persistence state.
+     * Get the current persistence state.
      *
      * @return PersistenceState
      */

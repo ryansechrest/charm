@@ -2,7 +2,6 @@
 
 namespace Charm\Relationships;
 
-use Charm\Enums\Result\Message;
 use Charm\Models\Base\Term;
 use Charm\Support\Result;
 use WP_Error;
@@ -111,21 +110,23 @@ class TermRelationship
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result)
-                ->withData([
-                    'objectId' => $objectId,
-                    'terms' => $terms,
-                    'taxonomy' => $taxonomy,
-                ]);
+            return Result::error(
+                'term_relationship_add_failed',
+                'Terms could not be added to the object. `wp_add_object_terms()` return a `WP_Error` object.'
+            )->withId($objectId)->withReturn($result)->withData(func_get_args());
         }
 
-        return Result::success(Message::TermRelationshipAddSuccess)
-            ->withData([
-                'termTaxonomyIds' => $result,
-                'objectId' => $objectId,
-                'terms' => $terms,
-                'taxonomy' => $taxonomy,
-            ]);
+        if (!is_array($result)) {
+            return Result::error(
+                'term_relationship_add_failed',
+                'Terms could not be added to the object. Expected `wp_add_object_terms()` to return an array of term taxonomy IDs, but received an unexpected result.'
+            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+        }
+
+        return Result::success(
+            'term_relationship_add_success',
+            'Terms successfully added to the object'
+        )->withId($objectId)->withReturn($result)->withData(func_get_args());
     }
 
     /**
@@ -153,29 +154,30 @@ class TermRelationship
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result)
-                ->withData([
-                    'objectId' => $objectId,
-                    'terms' => $terms,
-                    'taxonomy' => $taxonomy,
-                ]);
+            return Result::error(
+                'term_relationship_remove_failed',
+                'Terms could not be removed from the object. `wp_remove_object_terms()` return a `WP_Error` object.'
+            )->withId($objectId)->withReturn($result)->withData(func_get_args());
         }
 
-        if ($result === true) {
-            return Result::error(Message::TermRelationshipRemoveFailed)
-                ->withData([
-                    'objectId' => $objectId,
-                    'terms' => $terms,
-                    'taxonomy' => $taxonomy,
-                ]);
+        if ($result === false) {
+            return Result::error(
+                'term_relationship_remove_failed',
+                'Terms could not be removed from the object. `wp_remove_object_terms()` return `false`.'
+            )->withId($objectId)->withReturn($result)->withData(func_get_args());
         }
 
-        return Result::success(Message::TermRelationshipRemoveSuccess)
-            ->withData([
-                'objectId' => $objectId,
-                'terms' => $terms,
-                'taxonomy' => $taxonomy,
-            ]);
+        if ($result !== true) {
+            return Result::error(
+                'term_relationship_remove_failed',
+                'Terms could not be removed from the object. Expected `wp_remove_object_terms()` to return `true`, but received an unexpected result.'
+            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+        }
+
+        return Result::success(
+            'term_relationship_remove_success',
+            'Terms successfully removed from the object'
+        )->withId($objectId)->withReturn($result)->withData(func_get_args());
     }
 
     /**
@@ -202,21 +204,23 @@ class TermRelationship
         );
 
         if ($result instanceof WP_Error) {
-            return Result::wpError(wpError: $result)
-                ->withData([
-                    'objectId' => $objectId,
-                    'terms' => $terms,
-                    'taxonomy' => $taxonomy,
-                ]);
+            return Result::error(
+                'term_relationship_set_failed',
+                'Terms could not be set on the object. `wp_set_object_terms()` return a `WP_Error` object.'
+            )->withId($objectId)->withReturn($result)->withData(func_get_args());
         }
 
-        return Result::success(Message::TermRelationshipSetSuccess)
-            ->withData([
-                'termTaxonomyIds' => $result,
-                'objectId' => $objectId,
-                'terms' => $terms,
-                'taxonomy' => $taxonomy,
-            ]);
+        if (!is_array($result)) {
+            return Result::error(
+                'term_relationship_set_failed',
+                'Terms could not be set on the object. Expected `wp_set_object_terms()` to return an array of term taxonomy IDs, but received an unexpected result.'
+            )->withReturn($result)->withData(func_get_args());
+        }
+
+        return Result::success(
+            'term_relationship_set_success',
+            'Terms successfully set on the object'
+        )->withId($objectId)->withReturn($result)->withData(func_get_args());
     }
 
     // *************************************************************************
@@ -375,7 +379,10 @@ class TermRelationship
         // If the object ID is zero, abort because without an object ID,
         // terms cannot be associated with an object
         if ($this->getObjectId() === 0) {
-            return [Result::error(Message::TermRelationshipObjectIdNotFound)];
+            return [Result::error(
+                'terms_persist_failed',
+                'Terms were not persisted because the object ID is zero.'
+            )];
         }
 
         $results = [];
@@ -504,15 +511,19 @@ class TermRelationship
         // If the term is already a `Term` instance,
         // then return success with the `Term` instance
         if ($term instanceof Term) {
-            return Result::success(Message::TermRelationshipAlreadyNormalized)
-                ->withData(['term' => $term]);
+            return Result::info(
+                'term_already_normalized',
+                'Term is already a `' . Term::class . '` instance.'
+            )->withData($term);
         }
 
         // If the `$termClass` is not a subclass of the `Term::class`,
         // then abort with an error to ensure compliance
         if (!is_subclass_of($this->termClass, Term::class)) {
-            return Result::error(Message::TermRelationshipInvalidSubclass)
-                ->withData(['term' => $term]);
+            return Result::error(
+                'term_normalize_failed',
+                'Term class is not a subclass of `' . Term::class . '`.'
+            )->withData($term);
         }
 
         /** @var Term $termClass */
@@ -520,13 +531,17 @@ class TermRelationship
 
         // If the term ID or slug doesn't exist, then return an error
         if ($termInstance === null) {
-            return Result::error(Message::TermRelationshipNotFound)
-                ->withData(['term' => $term]);
+            return Result::error(
+                'term_normalize_failed',
+                'Term could not be initialized from its ID or slug.'
+            )->withData($term);
         }
 
         // Otherwise, return success with Term instance
-        return Result::success(Message::TermRelationshipNormalizedSuccess)
-            ->withData(['term' => $termInstance]);
+        return Result::success(
+            'term_normalize_success',
+            'Term successfully normalized.'
+        )->withData(['term' => $termInstance]);
     }
 
     /**

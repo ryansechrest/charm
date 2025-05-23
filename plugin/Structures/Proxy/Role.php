@@ -2,9 +2,12 @@
 
 namespace Charm\Structures\Proxy;
 
+use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
 use Charm\Contracts\WordPress\HasWpRole;
+use Charm\Enums\Result\Message;
 use Charm\Support\Result;
+use Charm\Traits\WithToArray;
 use WP_Role;
 
 /**
@@ -13,8 +16,12 @@ use WP_Role;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Role implements HasWpRole, IsPersistable
+class Role implements HasWpRole, IsArrayable, IsPersistable
 {
+    use WithToArray;
+
+    // *************************************************************************
+
     /**
      * Role slug.
      *
@@ -176,11 +183,13 @@ class Role implements HasWpRole, IsPersistable
     {
         if ($this->exists) {
             return Result::error(
-                code: 'role_exists',
-                message: __('Role already exists.', 'charm')
-            )->withData($this);
+                'role_already_exists',
+                'Role was not created because it already exists.'
+            )->withData($this->toArray());
         }
 
+        // `object` -> `WP_Role` -> Success: Role created
+        // `void`   -> `void`    -> Fail: Role not created
         $result = add_role(
             role: $this->slug,
             display_name: $this->name,
@@ -189,14 +198,17 @@ class Role implements HasWpRole, IsPersistable
 
         if (!$result instanceof WP_Role) {
             return Result::error(
-                code: 'add_role_failed',
-                message: __('add_role() did not return WP_Role.', 'charm')
-            )->withData($this);
+                'role_create_failed',
+                'Role could not be created. `add_role()` did not return anything.'
+            )->withData($this->toArray());
         }
 
         $this->exists = true;
 
-        return Result::success();
+        return Result::success(
+            'role_create_success',
+            'Role successfully created.'
+        )->withData($this->toArray());
     }
 
     /**
@@ -208,9 +220,9 @@ class Role implements HasWpRole, IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                code: 'role_not_found',
-                message: __('Role does not exist.', 'charm')
-            )->withData($this);
+                'role_not_found',
+                'Role could not be updated because it does not exist.'
+            )->withData($this->toArray());
         }
 
         $this->delete();
@@ -228,23 +240,27 @@ class Role implements HasWpRole, IsPersistable
     {
         if (!$this->exists) {
             return Result::error(
-                code: 'role_not_found',
-                message: __('Role does not exist.', 'charm')
-            )->withData($this);
+                'role_not_found',
+                'Role could not be deleted because it does not exist.'
+            )->withData($this->toArray());
         }
 
+        // `void` -> `void` -> Success or fail
         remove_role(role: $this->name);
 
         if (static::fromSlug($this->name) !== null) {
             return Result::error(
-                code: 'role_not_deleted',
-                message: __('Role could not be deleted.', 'charm')
-            )->withData($this);
+                'role_delete_failed',
+                'Role could not be deleted. `remove_role()` returns nothing, so the reason is not clear.'
+            )->withData($this->toArray());
         }
 
         $this->exists = false;
 
-        return Result::success();
+        return Result::success(
+            'role_delete_success',
+            'Role successfully deleted.'
+        )->withData($this->toArray());
     }
 
     // *************************************************************************

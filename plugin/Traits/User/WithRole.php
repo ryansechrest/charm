@@ -61,17 +61,17 @@ trait WithRole
     protected function persistRole(): Result
     {
         if ($this->pendingRole === null) {
-            return Result::error(
-                code: 'role_not_persisted',
-                message: __('No valid role specified to be persisted.', 'charm')
-            );
+            return Result::info(
+                'role_not_updated',
+                'There was no pending role to be persisted.',
+            )->withData($this->pendingRole);
         }
 
         if (!$this->pendingRole->exists()) {
             return Result::error(
-                code: 'role_not_found',
-                message: __('Role to be persisted does not exist.', 'charm')
-            );
+                'role_not_found',
+                'Role to be persisted does not exist.',
+            )->withData($this->pendingRole);
         }
 
         /** @var HasProxyUser $this */
@@ -79,6 +79,9 @@ trait WithRole
 
         $this->pendingRole = null;
 
-        return Result::success();
+        return Result::success(
+            'role_persist_success',
+            'Role successfully persisted.'
+        )->withData($this->pendingRole);
     }
 }
