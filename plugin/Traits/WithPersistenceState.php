@@ -4,7 +4,6 @@ namespace Charm\Traits;
 
 use Charm\Contracts\IsPersistable;
 use Charm\Enums\PersistenceState;
-use Charm\Enums\Result\Message;
 use Charm\Support\Result;
 
 /**
