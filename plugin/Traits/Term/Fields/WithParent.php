@@ -35,8 +35,7 @@ trait WithParent
      */
     public function setParent(Base\Term|int|null $parent): static
     {
-        $id = $parent instanceof Base\Term
-            ? $parent->proxyTerm()->getTermTaxonomyId() : $parent;
+        $id = $parent instanceof Base\Term ? $parent->getId() : $parent;
 
         /** @var HasProxyTerm $this */
         $this->proxyTerm()->setParent($id ?? 0);
