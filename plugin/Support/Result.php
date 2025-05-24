@@ -89,13 +89,6 @@ class Result
      */
     private array $functionArgs = [];
 
-    /**
-     * Associated `WP_Error` instance.
-     *
-     * @var ?WP_Error
-     */
-    private ?WP_Error $wpError = null;
-
     // -------------------------------------------------------------------------
 
     /**
@@ -160,10 +153,6 @@ class Result
 
         if (isset($data['functionArgs'])) {
             $this->functionArgs = $data['functionArgs'];
-        }
-
-        if (isset($data['wpError'])) {
-            $this->wpError = $data['wpError'];
         }
     }
 
@@ -377,31 +366,6 @@ class Result
     public function setFunctionArgs(array $args): self
     {
         $this->functionArgs = $args;
-
-        return $this;
-    }
-
-    // -------------------------------------------------------------------------
-
-    /**
-     * Get the associated `WP_Error` instance.
-     *
-     * @return ?WP_Error
-     */
-    public function getWpError(): ?WP_Error
-    {
-        return $this->wpError;
-    }
-
-    /**
-     * Set the associated `WP_Error` instance.
-     *
-     * @param WP_Error $wpError
-     * @return self
-     */
-    public function setWpError(WP_Error $wpError): self
-    {
-        $this->wpError = $wpError;
 
         return $this;
     }
