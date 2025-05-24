@@ -4,7 +4,6 @@ namespace Charm\Models\Proxy;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
-use Charm\Enums\Result\Message;
 use Charm\Support\Result;
 use Charm\Traits\WithToArray;
 
@@ -194,6 +193,13 @@ class Meta implements IsArrayable, IsPersistable
         mixed $metaValue
     ): Result
     {
+        $args = [
+            'metaType' => $metaType,
+            'objectId' => $objectId,
+            'metaKey' => $metaKey,
+            'metaValue' => $metaValue,
+        ];
+
         // `int`  -> Meta ID -> Success: Meta created
         // `bool` -> `false` -> Fail: Meta not created
         $result = add_metadata(
@@ -207,20 +213,20 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_create_failed',
                 'Meta could not be created. `add_metadata()` returned `false`.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn(false)->setFunctionArgs($args);
         }
 
         if (!is_int($result)) {
             return Result::error(
                 'meta_create_failed',
                 'Meta could not be created. Expected `add_metadata()` to return `true`, but received an unexpected result.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'meta_create_success',
             'Meta successfully created.'
-        )->withId($result)->withReturn($result)->withData(func_get_args());
+        )->setObjectId($result)->setFunctionReturn($result)->setFunctionArgs($args);
     }
 
     /**
@@ -242,6 +248,14 @@ class Meta implements IsArrayable, IsPersistable
         mixed $prevMetaValue = null
     ): Result
     {
+        $args = [
+            'metaType' => $metaType,
+            'objectId' => $objectId,
+            'metaKey' => $metaKey,
+            'metaValue' => $metaValue,
+            'prevMetaValue' => $prevMetaValue,
+        ];
+
         // `int`  -> Meta ID -> Success: New meta created
         // `bool` -> `true`  -> Success: Existing meta updated
         // `bool` -> `false` -> Fail: Meta not updated or value already exists
@@ -257,27 +271,27 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_update_failed',
                 'Meta could not be updated. `update_metadata()` returned `false`.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn(false)->setFunctionArgs($args);
         }
 
         if (is_int($result)) {
             return Result::info(
                 'meta_update_create',
                 'Meta did not exist, so it was created instead.'
-            )->withId($result)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($result)->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         if ($result !== true) {
             return Result::error(
                 'meta_update_failed',
                 'Meta could not be updated. Expected `update_metadata()` to return `true`, but received an unexpected result.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'meta_update_success',
             'Meta successfully updated.'
-        )->withReturn($result)->withData(func_get_args());
+        )->setFunctionReturn(true)->setFunctionArgs($args);
     }
 
     /**
@@ -294,6 +308,13 @@ class Meta implements IsArrayable, IsPersistable
         string $metaType, int $objectId, string $metaKey, mixed $metaValue = ''
     ): Result
     {
+        $args = [
+            'metaType' => $metaType,
+            'objectId' => $objectId,
+            'metaKey' => $metaKey,
+            'metaValue' => $metaValue,
+        ];
+
         // `bool` -> `true`  -> Success: Meta deleted
         // `bool` -> `false` -> Fail: Meta not deleted
         $result = delete_metadata($metaType, $objectId, $metaKey, $metaValue);
@@ -302,20 +323,20 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_delete_failed',
                 'Meta could not be deleted. `delete_metadata()` returned `false`.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn(false)->setFunctionArgs($args);
         }
 
         if ($result !== true) {
             return Result::error(
                 'meta_delete_failed',
                 'Meta could not be deleted. Expected `delete_metadata()` to return `true`, but received an unexpected result.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'meta_delete_success',
             'Meta successfully deleted.'
-        )->withReturn($result)->withData(func_get_args());
+        )->setFunctionReturn(true)->setFunctionArgs($args);
     }
 
     /**
@@ -332,6 +353,12 @@ class Meta implements IsArrayable, IsPersistable
         string $metaType, string $metaKey, string $metaValue = ''
     ): Result
     {
+        $args = [
+            'metaType' => $metaType,
+            'metaKey' => $metaKey,
+            'metaValue' => $metaValue,
+        ];
+
         // `bool` -> `true`  -> Success: Metas deleted
         // `bool` -> `false` -> Fail: Metas not deleted
         $result = delete_metadata(
@@ -346,20 +373,20 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_purge_failed',
                 'Metas could not be purged. `delete_metadata()` returned `false`.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn(false)->setFunctionArgs($args);
         }
 
         if ($result !== true) {
             return Result::error(
                 'meta_purge_failed',
                 'Metas could not be purged. Expected `delete_metadata()` to return `true`, but received an unexpected result.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'meta_purge_success',
             'Metas successfully purged.'
-        )->withReturn($result)->withData(func_get_args());
+        )->setFunctionReturn(true)->setFunctionArgs($args);
     }
 
     /**
@@ -402,7 +429,7 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_already_exists',
                 'Meta was not created because it already exists.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $result = static::createMeta(
@@ -432,7 +459,7 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_not_exists',
                 'Meta was not updated because it does not exist.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $result = static::updateMeta(
@@ -463,7 +490,7 @@ class Meta implements IsArrayable, IsPersistable
             return Result::error(
                 'meta_not_exists',
                 'Meta was not deleted because it does not exist.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $result = static::deleteMeta(
