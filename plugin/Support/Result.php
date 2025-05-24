@@ -2,7 +2,6 @@
 
 namespace Charm\Support;
 
-use Charm\Enums\Result\Message;
 use Charm\Enums\ResultStatus;
 use WP_Error;
 
@@ -15,67 +14,83 @@ use WP_Error;
 class Result
 {
     /**
-     * Status of the operation.
+     * Result status of the operation.
+     *
+     * If the operation is to create a post, the result status might be
+     * `Success` when the post was successfully created, `Info` when it wasn't
+     * created because it already exists, and `Error` when the post couldn't
+     * be created.
      *
      * @var ResultStatus
      */
     private ResultStatus $status = ResultStatus::Success;
 
     /**
-     * Main object ID associated with the operation.
+     * Result code of the operation.
      *
-     * For example, if the operation was to create, update, or delete a post,
-     * this would contain the post ID.
-     *
-     * @var int
-     */
-    private int $id = 0;
-
-    /**
-     * Result code associated with the operation.
-     *
-     * For example, if the operation was to create a post, the result code
-     * might be: `post_create_success`, `post_create_failed`, etc.
+     * If the operation is to create a post, the code might be
+     * `post_create_success` when the post is successfully created,
+     * `post_already_exists` when it wasn't created because it already exists,
+     * and `post_created_failed` when the post couldn't be created.
      *
      * @var string
      */
     private string $code = '';
 
     /**
-     * Result message that describes the code in more detail.
+     * Result message of the operation.
      *
-     * For example, if the operation was to create a post, the message might
-     * say something like: `Post successfully created` or `Post could not be
-     * created because it already exists`.
+     * If the operation is to create a post, the message might be `Post
+     * successfully created`, `Post was not created because it already
+     * exists`, or `Post could not be created` depending on the result status.
      *
      * @var string
      */
     private string $message = '';
 
     /**
-     * Return value of the operation.
+     * Object ID of the object being manipulated.
      *
-     * For example, if the operation was to create a post, the return value
-     * might be the post ID, but if the operation was to delete a post, it
-     * would contain a `WP_Post` instance of the deleted post.
+     * If the operation is to create a post, and it was successful, this value
+     * would be the post ID.
+     *
+     * @var int
+     */
+    private int $objectId = 0;
+
+    /**
+     * Object snapshot of all its props and values in an array.
+     *
+     * If the operation is to create a post, it would the post cast to an array,
+     * meaning it would contain the post ID, post title, post content, etc.
+     *
+     * @var array
+     */
+    private array $objectSnapshot = [];
+
+    /**
+     * Return value from the function that executed the operation.
+     *
+     * If the operation is to create a post, it would contain the raw return
+     * value from the `wp_insert_post()` function.
      *
      * @var ?mixed
      */
-    private mixed $value = null;
+    private mixed $functionReturn = null;
 
     /**
-     * Data associated with the operation.
+     * Argument values passed to the function that executed the operation.
      *
-     * For example, if the operation was to update a post, the data might be
-     * the method arguments passed to update the post. If the operation had no
-     * method arguments, data might refer to the instance cast to an array.
+     * If the operation is to create a post, it would contain an array of fields
+     * that were passed to create said post, such as the post title, post
+     * content, post status, etc.
      *
-     * @var ?mixed
+     * @var array
      */
-    private mixed $data = null;
+    private array $functionArgs = [];
 
     /**
-     * Relevant `WP_Error` instance.
+     * Associated `WP_Error` instance.
      *
      * @var ?WP_Error
      */
@@ -103,6 +118,16 @@ class Result
     }
 
     /**
+     * Print the instance with a status and message.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->status->label() . ': ' . $this->getMessage();
+    }
+
+    /**
      * Load the instance with data.
      *
      * @param array $data
@@ -121,12 +146,20 @@ class Result
             $this->message = $data['message'];
         }
 
-        if (isset($data['value'])) {
-            $this->value = $data['value'];
+        if (isset($data['objectId'])) {
+            $this->objectId = (int) $data['objectId'];
         }
 
-        if (isset($data['data'])) {
-            $this->data = $data['data'];
+        if (isset($data['objectSnapshot'])) {
+            $this->objectSnapshot = $data['objectSnapshot'];
+        }
+
+        if (isset($data['functionReturn'])) {
+            $this->functionReturn = $data['functionReturn'];
+        }
+
+        if (isset($data['functionArgs'])) {
+            $this->functionArgs = $data['functionArgs'];
         }
 
         if (isset($data['wpError'])) {
@@ -193,7 +226,7 @@ class Result
      */
     public function hasSucceeded(): bool
     {
-        return in_array($this->status, [ResultStatus::Success, ResultStatus::Warning]);
+        return in_array($this->status, [ResultStatus::Success, ResultStatus::Info]);
     }
 
     /**
@@ -209,19 +242,9 @@ class Result
     // -------------------------------------------------------------------------
 
     /**
-     * Get the main object ID associated with the operation.
+     * Get the result code of the operation.
      *
-     * @return int Post ID, Term ID, User ID, etc.
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get the result code associated with the operation.
-     *
-     * @return string `post_already_exists`, `post_not_found`, etc.
+     * @return string
      */
     public function getCode(): string
     {
@@ -229,66 +252,139 @@ class Result
     }
 
     /**
-     * Get the result message that describes the code in more detail.
+     * Get the result message of the operation.
      *
-     * @return string `Post already exists; cannot create a post with an ID.`
+     * @return string
      */
     public function getMessage(): string
     {
         return $this->message;
     }
 
+    // -------------------------------------------------------------------------
+
     /**
-     * Get the return value of the operation.
+     * Get the object ID of the object being manipulated.
      *
-     * If the data is an array or object, a `$key` can be passed to return the
-     * value for that key. Furthermore, if the key is not found, the specified
-     * default can be returned instead.
-     *
-     * @param string $key id
-     * @param mixed $default 0
-     *
-     * @return mixed
+     * @return int
      */
-    public function getReturn(string $key = '', mixed $default = null): mixed
+    public function getObjectId(): int
     {
-        if ($key !== '' && is_array($this->value)) {
-            return $this->value[$key] ?? $default;
-        }
-
-        if ($key !== '' && is_object($this->value)) {
-            return $this->value->$key ?? $default;
-        }
-
-        return $this->value;
+        return $this->objectId;
     }
 
     /**
-     * Get the data associated with the operation.
+     * Set the object ID of the object being manipulated.
      *
-     * If the data is an array or object, a `$key` can be passed to return the
-     * value for that key. Furthermore, if the key is not found, the specified
-     * default can be returned instead.
-     *
-     * @param string $key id
-     * @param mixed $default 0
-     * @return mixed
+     * @param int $id
+     * @return self
      */
-    public function getData(string $key = '', mixed $default = null): mixed
+    public function setObjectId(int $id): self
     {
-        if ($key !== '' && is_array($this->data)) {
-            return $this->data[$key] ?? $default;
-        }
+        $this->objectId = $id;
 
-        if ($key !== '' && is_object($this->data)) {
-            return $this->data->$key ?? $default;
-        }
+        return $this;
+    }
 
-        return $this->data;
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the object snapshot of all its props and values in an array.
+     *
+     * @return array
+     */
+    public function getObjectSnapshot(): array
+    {
+        return $this->objectSnapshot;
     }
 
     /**
-     * Get the relevant `WP_Error` instance.
+     * Set the object snapshot of all its props and values in an array.
+     *
+     * @param array $snapshot
+     * @return self
+     */
+    public function setObjectSnapshot(array $snapshot): self
+    {
+        $this->objectSnapshot = $snapshot;
+
+        return $this;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the return value from the function that executed the operation.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getFunctionReturn(string $key = '', mixed $default = null): mixed
+    {
+        if ($key === '') {
+            return $this->functionReturn;
+        }
+
+        if (is_array($this->functionReturn)) {
+            return $this->functionReturn[$key] ?? $default;
+        }
+
+        if (is_object($this->functionReturn)) {
+            return $this->functionReturn->$key ?? $default;
+        }
+
+        return $default;
+    }
+
+    /**
+     * Set the return value from the function that executed the operation.
+     *
+     * @param mixed $value
+     * @return self
+     */
+    public function setFunctionReturn(mixed $value): self
+    {
+        $this->functionReturn = $value;
+
+        return $this;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the argument values passed to the function that executed the operation.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getFunctionArgs(string $key = '', mixed $default = null): mixed
+    {
+        if ($key === '') {
+            return $this->functionArgs;
+        }
+
+        return $this->functionArgs[$key] ?? $default;
+    }
+
+    /**
+     * Set the argument values passed to the function that executed the operation.
+     *
+     * @param array $args
+     * @return self
+     */
+    public function setFunctionArgs(array $args): self
+    {
+        $this->functionArgs = $args;
+
+        return $this;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the associated `WP_Error` instance.
      *
      * @return ?WP_Error
      */
@@ -297,73 +393,20 @@ class Result
         return $this->wpError;
     }
 
-    // -------------------------------------------------------------------------
-
     /**
-     * Print the instance with a status and message.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->status->label() . ': ' . $this->getMessage();
-    }
-
-    // *************************************************************************
-
-    /**
-     * Add an ID to the result.
-     *
-     * @param int $id
-     * @return self
-     */
-    public function withId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Add a return value to the result.
-     *
-     * @param mixed $value
-     * @return self
-     */
-    public function withReturn(mixed $value): self
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * Add data to the result.
-     *
-     * @param mixed $data
-     * @return self
-     */
-    public function withData(mixed $data): self
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-
-    /**
-     * Add a `WP_Error` to the result.
+     * Set the associated `WP_Error` instance.
      *
      * @param WP_Error $wpError
      * @return self
      */
-    public function withWpError(WP_Error $wpError): self
+    public function setWpError(WP_Error $wpError): self
     {
         $this->wpError = $wpError;
 
         return $this;
     }
 
-    // -------------------------------------------------------------------------
+    // *************************************************************************
 
     /**
      * Add a single, related result.
