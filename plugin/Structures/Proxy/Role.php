@@ -5,7 +5,6 @@ namespace Charm\Structures\Proxy;
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
 use Charm\Contracts\WordPress\HasWpRole;
-use Charm\Enums\Result\Message;
 use Charm\Support\Result;
 use Charm\Traits\WithToArray;
 use WP_Role;
@@ -185,7 +184,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
             return Result::error(
                 'role_already_exists',
                 'Role was not created because it already exists.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         // `object` -> `WP_Role` -> Success: Role created
@@ -200,7 +199,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
             return Result::error(
                 'role_create_failed',
                 'Role could not be created. `add_role()` did not return anything.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $this->exists = true;
@@ -208,7 +207,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
         return Result::success(
             'role_create_success',
             'Role successfully created.'
-        )->withData($this->toArray());
+        )->setObjectSnapshot($this->toArray());
     }
 
     /**
@@ -222,7 +221,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
             return Result::error(
                 'role_not_found',
                 'Role could not be updated because it does not exist.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $this->delete();
@@ -242,7 +241,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
             return Result::error(
                 'role_not_found',
                 'Role could not be deleted because it does not exist.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         // `void` -> `void` -> Success or fail
@@ -252,7 +251,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
             return Result::error(
                 'role_delete_failed',
                 'Role could not be deleted. `remove_role()` returns nothing, so the reason is not clear.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $this->exists = false;
@@ -260,7 +259,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
         return Result::success(
             'role_delete_success',
             'Role successfully deleted.'
-        )->withData($this->toArray());
+        )->setObjectSnapshot($this->toArray());
     }
 
     // *************************************************************************
