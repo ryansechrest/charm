@@ -5,7 +5,6 @@ namespace Charm\Models\Proxy;
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
 use Charm\Contracts\WordPress\HasWpUser;
-use Charm\Enums\Result\Message;
 use Charm\Support\Filter;
 use Charm\Support\Result;
 use Charm\Traits\WithToArray;
@@ -328,20 +327,20 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return Result::error(
                 'user_create_failed',
                 'User could not be created. `wp_insert_user()` returned a `WP_Error` object.'
-            )->withReturn($result)->withData($data)->withWpError($result);
+            )->setFunctionReturn($result)->setFunctionArgs($data);
         }
 
         if (!is_int($result)) {
             return Result::error(
                 'user_create_failed',
                 'User could not be created. Expected `wp_insert_post()` to return a user ID, but received an unexpected result.'
-            )->withReturn($result)->withData($data);
+            )->setFunctionReturn($result)->setFunctionArgs($data);
         }
 
         return Result::success(
             'user_create_success',
             'User successfully created.'
-        )->withId($result)->withReturn($result)->withData($data);
+        )->setObjectId($result)->setFunctionReturn($result)->setFunctionArgs($data);
     }
 
     /**
@@ -362,20 +361,20 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return Result::error(
                 'user_update_failed',
                 'User could not be updated. `wp_update_user()` returned a `WP_Error` object.'
-            )->withReturn($result)->withData($data)->withWpError($result);
+            )->setFunctionReturn($result)->setFunctionArgs($data);
         }
 
         if (!is_int($result)) {
             return Result::error(
                 'user_update_failed',
                 'User could not be updated. Expected `wp_update_user()` to return a user ID, but received an unexpected result.'
-            )->withReturn($result)->withData($data);
+            )->setFunctionReturn($result)->setFunctionArgs($data);
         }
 
         return Result::success(
             'user_update_success',
             'User successfully updated.'
-        )->withId($result)->withReturn($result)->withData($data);
+        )->setObjectId($result)->setFunctionReturn($result)->setFunctionArgs($data);
     }
 
     /**
@@ -395,20 +394,20 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return Result::error(
                 'user_delete_failed',
                 'User could not be deleted. `wp_delete_user()` returned `false`.'
-            )->withId($id)->withReturn($result);
+            )->setObjectId($id)->setFunctionReturn(false);
         }
 
         if ($result !== true) {
             return Result::error(
                 'user_delete_failed',
                 'User could not be deleted. Expected `wp_delete_user()` to return `true`, but received an unexpected result.'
-            )->withId($id)->withReturn($result);
+            )->setObjectId($id)->setFunctionReturn($result);
         }
 
         return Result::success(
             'user_delete_success',
             'User successfully deleted.'
-        )->withId($id)->withReturn($result);
+        )->setObjectId($id)->setFunctionReturn(true);
     }
 
     // *************************************************************************
@@ -436,7 +435,7 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return Result::error(
                 'user_already_exists',
                 'User was not created because they already exist.'
-            )->withId($this->id)->withData($this->toArray());
+            )->setObjectId($this->id)->setObjectSnapshot($this->toArray());
         }
 
         $result = static::createUser(
@@ -447,7 +446,7 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return $result;
         }
 
-        $this->id = $result->getId();
+        $this->id = $result->getObjectId();
         $this->reload();
 
         return $result;
@@ -464,7 +463,7 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return Result::error(
                 'user_not_found',
                 'User was not updated because they do not exist.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $result = static::updateUser(data: $this->toWpUserArray());
@@ -489,7 +488,7 @@ class User implements HasWpUser, IsArrayable, IsPersistable
             return Result::error(
                 'user_not_found',
                 'User was not deleted because they do not exist.'
-            )->withData($this->toArray());
+            )->setObjectSnapshot($this->toArray());
         }
 
         $result = static::deleteUser(id: $this->id);
