@@ -536,6 +536,7 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
             termId: $this->termId,
             taxonomy: $this->taxonomy,
             args: [
+                'name' => $this->name,
                 'slug' => $this->slug,
                 'description' => $this->description,
                 'parent' => $this->parent,
