@@ -25,6 +25,8 @@ trait WithCategories
         return $this->taxonomy(Category::class)->getTerms();
     }
 
+    // -------------------------------------------------------------------------
+
     /**
      * Add categories to the model.
      *
@@ -56,6 +58,8 @@ trait WithCategories
 
         return $this;
     }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Remove categories from the model.
@@ -89,6 +93,8 @@ trait WithCategories
         return $this;
     }
 
+    // -------------------------------------------------------------------------
+
     /**
      * Set categories on the model (replaces existing categories).
      *
@@ -103,5 +109,31 @@ trait WithCategories
         $this->taxonomy(Category::class)->setTerms($categories);
 
         return $this;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Check whether the model has the specified category.
+     *
+     * @param int|string|Category $category uncategorized
+     * @return Result
+     */
+    public function hasCategory(int|string|Category $category): Result
+    {
+        /** @var HasTerms $this */
+        return $this->taxonomy(Category::class)->hasTerm($category);
+    }
+
+    /**
+     * Check whether the model has at least one of the specified categories.
+     *
+     * @param array $categories [1, 'uncategorized', $category]
+     * @return Result
+     */
+    public function hasCategories(array $categories): Result
+    {
+        /** @var HasTerms $this */
+        return $this->taxonomy(Category::class)->hasTerms($categories);
     }
 }
