@@ -103,6 +103,12 @@ class TermRelationship
         int $objectId, int|string|array $terms, string $taxonomy
     ): Result
     {
+        $args = [
+            'objectId' => $objectId,
+            'terms' => $terms,
+            'taxonomy' => $taxonomy,
+        ];
+
         // `array`  -> Term Taxonomy IDs -> Success: Object terms added
         // `object` -> `WP_Error`        -> Fail: Object terms not added
         $result = wp_add_object_terms(
@@ -113,20 +119,20 @@ class TermRelationship
             return Result::error(
                 'term_relationship_add_failed',
                 'Terms could not be added to the object. `wp_add_object_terms()` return a `WP_Error` object.'
-            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         if (!is_array($result)) {
             return Result::error(
                 'term_relationship_add_failed',
                 'Terms could not be added to the object. Expected `wp_add_object_terms()` to return an array of term taxonomy IDs, but received an unexpected result.'
-            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'term_relationship_add_success',
-            'Terms successfully added to the object'
-        )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            'Terms successfully added to the object.'
+        )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
     }
 
     /**
@@ -146,6 +152,12 @@ class TermRelationship
         int $objectId, int|string|array $terms, string $taxonomy
     ): Result
     {
+        $args = [
+            'objectId' => $objectId,
+            'terms' => $terms,
+            'taxonomy' => $taxonomy,
+        ];
+
         // `bool`   -> `true`     -> Success: Object terms removed
         // `bool`   -> `false`     > Fail: Object terms not removed
         // `object` -> `WP_Error` -> Fail: Object terms not removed
@@ -157,31 +169,31 @@ class TermRelationship
             return Result::error(
                 'term_relationship_remove_failed',
                 'Terms could not be removed from the object. `wp_remove_object_terms()` return a `WP_Error` object.'
-            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         if ($result === false) {
             return Result::error(
                 'term_relationship_remove_failed',
                 'Terms could not be removed from the object. `wp_remove_object_terms()` return `false`.'
-            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($objectId)->setFunctionReturn(false)->setFunctionArgs($args);
         }
 
         if ($result !== true) {
             return Result::error(
                 'term_relationship_remove_failed',
                 'Terms could not be removed from the object. Expected `wp_remove_object_terms()` to return `true`, but received an unexpected result.'
-            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'term_relationship_remove_success',
-            'Terms successfully removed from the object'
-        )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            'Terms successfully removed from the object.'
+        )->setObjectId($objectId)->setFunctionReturn(true)->setFunctionArgs($args);
     }
 
     /**
-     * Set terms on an object (replaces terms)
+     * Set terms on an object (replaces terms).
      *
      * $terms `int`    -> Term ID
      *        `string` -> Term Slug
@@ -197,6 +209,12 @@ class TermRelationship
         int $objectId, int|string|array $terms, string $taxonomy
     ): Result
     {
+        $args = [
+            'objectId' => $objectId,
+            'terms' => $terms,
+            'taxonomy' => $taxonomy,
+        ];
+
         // `array`  -> Term Taxonomy IDs -> Success: Object terms set
         // `object` -> `WP_Error`        -> Fail: Object terms not set
         $result = wp_set_object_terms(
@@ -207,20 +225,76 @@ class TermRelationship
             return Result::error(
                 'term_relationship_set_failed',
                 'Terms could not be set on the object. `wp_set_object_terms()` return a `WP_Error` object.'
-            )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         if (!is_array($result)) {
             return Result::error(
                 'term_relationship_set_failed',
                 'Terms could not be set on the object. Expected `wp_set_object_terms()` to return an array of term taxonomy IDs, but received an unexpected result.'
-            )->withReturn($result)->withData(func_get_args());
+            )->setFunctionReturn($result)->setFunctionArgs($args);
         }
 
         return Result::success(
             'term_relationship_set_success',
-            'Terms successfully set on the object'
-        )->withId($objectId)->withReturn($result)->withData(func_get_args());
+            'Terms successfully set on the object.'
+        )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
+    }
+
+    /**
+     * Check whether the object has specified terms.
+     *
+     * $terms `int`    -> Term ID
+     *        `string` -> Term Name/Slug
+     *        `array`  -> Term IDs/Names/Slugs
+     *
+     * @param int $objectId 1
+     * @param string $taxonomy category
+     * @param array $terms
+     * @return Result
+     */
+    public static function hasObjectTerms(
+        int $objectId, string $taxonomy, array $terms = []
+    ): Result
+    {
+        $args = [
+            'objectId' => $objectId,
+            'taxonomy' => $taxonomy,
+            'terms' => $terms,
+        ];
+
+        // `bool`   -> `true`     -> Success: Object has terms
+        // `bool`   -> `false`    -> Fail: Object does not have terms
+        // `object` -> `WP_Error` -> Fail: Object could not be checked
+        $result = is_object_in_term(
+            object_id: $objectId, taxonomy: $taxonomy, terms: $terms
+        );
+
+        if ($result instanceof WP_Error) {
+            return Result::error(
+                'term_relationship_has_failed',
+                'Object could not be checked for the specified terms. `is_object_in_term()` return a `WP_Error` object.'
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
+        }
+
+        if ($result === false) {
+            return Result::error(
+                'term_relationship_has_failed',
+                'Object does not have any of the specified terms. `is_object_in_term()` return `false`.'
+            )->setObjectId($objectId)->setFunctionReturn(false)->setFunctionArgs($args);
+        }
+
+        if ($result !== true) {
+            return Result::error(
+                'term_relationship_has_failed',
+                'Object does not have any of the specified terms. Expected `is_object_in_term()` to return `true`, but received an unexpected result.'
+            )->setObjectId($objectId)->setFunctionReturn($result)->setFunctionArgs($args);
+        }
+
+        return Result::success(
+            'term_relationship_has_success',
+            'Object has one or more of the specified terms.'
+        )->setObjectId($objectId)->setFunctionReturn(true)->setFunctionArgs($args);
     }
 
     // *************************************************************************
@@ -279,10 +353,14 @@ class TermRelationship
     public function addTerm(int|string|Term $term): Result
     {
         if (($result = $this->normalizeTerm($term))->hasFailed()) {
-            return $result;
+            $this->addTerms[] = new $this->termClass(['name' => $term]);
+            return Result::info(
+                'term_relationship_add_info',
+                'Term could not be initialized from its ID or slug, so it was created instead.'
+            );
         }
 
-        $this->addTerms[] = $result->getData('term');
+        $this->addTerms[] = $result->getFunctionReturn();
 
         return $result;
     }
@@ -322,7 +400,7 @@ class TermRelationship
             return $result;
         }
 
-        $this->removeTerms[] = $result->getData('term');
+        $this->removeTerms[] = $result->getFunctionReturn();
 
         return $result;
     }
@@ -359,12 +437,49 @@ class TermRelationship
     public function setTerm(int|string|Term $term): Result
     {
         if (($result = $this->normalizeTerm($term))->hasFailed()) {
-            return $result;
+            $this->setTerms[] = new $this->termClass(['name' => $term]);
+            return Result::info(
+                'term_relationship_set_info',
+                'Term could not be initialized from its ID or slug, so it was created instead.'
+            );
         }
 
-        $this->setTerms[] = $result->getData('term');
+        $this->setTerms[] = $result->getFunctionReturn();
 
         return $result;
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Check whether the terms exist on the object.
+     *
+     * Accepts an array of term IDs, term names, term slugs, or `Term`
+     * instances.
+     *
+     * @param array $terms
+     * @return Result
+     */
+    public function hasTerms(array $terms): Result
+    {
+        return static::hasObjectTerms(
+            objectId: $this->getObjectId(),
+            taxonomy: $this->termClass::taxonomy(),
+            terms: array_map(fn($term) => $this->normalizeTerm($term), $terms)
+        );
+    }
+
+    /**
+     * Check whether the term exists on the object.
+     *
+     * Accepts a term ID, term name, term slug, or `Term` instance.
+     *
+     * @param int|string|Term $term
+     * @return Result
+     */
+    public function hasTerm(int|string|Term $term): Result
+    {
+        return $this->hasTerms([$term]);
     }
 
     // -------------------------------------------------------------------------
@@ -390,10 +505,7 @@ class TermRelationship
         // Persist any new terms that might have been added or set
         $terms = array_merge($this->addTerms, $this->setTerms);
         foreach ($terms as $term) {
-            if ($term->exists()) {
-                continue;
-            }
-            $results[] = $term->create();
+            $results[] = $term->save();
         }
 
         // If terms are set, persist them on the object and exit, because
@@ -508,40 +620,34 @@ class TermRelationship
      */
     protected function normalizeTerm(int|string|Term $term): Result
     {
-        // If the term is already a `Term` instance,
-        // then return success with the `Term` instance
+        $args = ['term' => $term];
+
+        // If the term is already a `Term` instance, then return an info status
+        // with the `Term` instance
         if ($term instanceof Term) {
             return Result::info(
                 'term_already_normalized',
                 'Term is already a `' . Term::class . '` instance.'
-            )->withData($term);
-        }
-
-        // If the `$termClass` is not a subclass of the `Term::class`,
-        // then abort with an error to ensure compliance
-        if (!is_subclass_of($this->termClass, Term::class)) {
-            return Result::error(
-                'term_normalize_failed',
-                'Term class is not a subclass of `' . Term::class . '`.'
-            )->withData($term);
+            )->setFunctionReturn($term)->setFunctionArgs($args);
         }
 
         /** @var Term $termClass */
         $termInstance = $this->termClass::init($term);
 
-        // If the term ID or slug doesn't exist, then return an error
+        // If the term ID or slug doesn't exist, then create and return it with
+        // an info status
         if ($termInstance === null) {
             return Result::error(
                 'term_normalize_failed',
                 'Term could not be initialized from its ID or slug.'
-            )->withData($term);
+            )->setFunctionArgs($args);
         }
 
-        // Otherwise, return success with Term instance
+        // Otherwise, return a success status with the Term instance
         return Result::success(
             'term_normalize_success',
             'Term successfully normalized.'
-        )->withData(['term' => $termInstance]);
+        )->setFunctionReturn($termInstance)->setFunctionArgs($args);
     }
 
     /**
