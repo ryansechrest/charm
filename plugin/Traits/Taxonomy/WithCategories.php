@@ -28,22 +28,6 @@ trait WithCategories
     // -------------------------------------------------------------------------
 
     /**
-     * Add categories to the model.
-     *
-     * $categories -> Array of category IDs, slugs, or `Category` instances.
-     *
-     * @param array $categories [1, 'uncategorized', $category]
-     * @return static
-     */
-    public function addCategories(array $categories): static
-    {
-        /** @var HasTerms $this */
-        $this->taxonomy(Category::class)->addTerms($categories);
-
-        return $this;
-    }
-
-    /**
      * Add a category to the model.
      *
      * $category -> Category ID, slug, or `Category` instance.
@@ -59,23 +43,23 @@ trait WithCategories
         return $this;
     }
 
-    // -------------------------------------------------------------------------
-
     /**
-     * Remove categories from the model.
+     * Add categories to the model.
      *
      * $categories -> Array of category IDs, slugs, or `Category` instances.
      *
      * @param array $categories [1, 'uncategorized', $category]
      * @return static
      */
-    public function removeCategories(array $categories): static
+    public function addCategories(array $categories): static
     {
         /** @var HasTerms $this */
-        $this->taxonomy(Category::class)->removeTerms($categories);
+        $this->taxonomy(Category::class)->addTerms($categories);
 
         return $this;
     }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Remove a category from the model.
@@ -89,6 +73,22 @@ trait WithCategories
     {
         /** @var HasTerms $this */
         $this->taxonomy(Category::class)->removeTerm($category);
+
+        return $this;
+    }
+
+    /**
+     * Remove categories from the model.
+     *
+     * $categories -> Array of category IDs, slugs, or `Category` instances.
+     *
+     * @param array $categories [1, 'uncategorized', $category]
+     * @return static
+     */
+    public function removeCategories(array $categories): static
+    {
+        /** @var HasTerms $this */
+        $this->taxonomy(Category::class)->removeTerms($categories);
 
         return $this;
     }
