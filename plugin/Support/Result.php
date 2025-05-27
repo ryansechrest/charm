@@ -376,25 +376,31 @@ class Result
      * Add a single, related result.
      *
      * @param Result $result
-     * @return void
+     * @return self
      */
-    public function addResult(Result $result): void
+    public function addResult(Result $result): self
     {
         $this->relatedResults[] = $result;
+
+        return $this;
     }
 
     /**
      * Add multiple, related results.
      *
      * @param Result[] $results
-     * @return void
+     * @return self
      */
-    public function addResults(array $results): void
+    public function addResults(array $results): self
     {
         foreach ($results as $result) {
             $this->addResult($result);
         }
+
+        return $this;
     }
+
+    // -------------------------------------------------------------------------
 
     /**
      * Get main and related results.
