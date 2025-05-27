@@ -462,11 +462,36 @@ class TermRelationship
      */
     public function hasTerms(array $terms): Result
     {
+        $errors = [];
+        $normalizedTerms = [];
+
+        foreach ($terms as $term) {
+            $result = $this->normalizeTerm($term);
+            if ($result->hasSucceeded()) {
+                $normalizedTerms[] = $result->getFunctionReturn();
+                continue;
+            }
+            $errors[] = $result;
+        }
+
+        // If there are no terms provided to `hasObjectTerms()`, the method
+        // will return `true` if the object has ANY term from this taxonomy
+        // associated with it. However, if there are no terms provided because
+        // `$normalizedTerms` has no terms due to normalization failing, we
+        // will return an error to make it clear that none of the specified
+        // terms were found to be associated with the object.
+        if (count($normalizedTerms) === 0 && count($errors) > 0) {
+            return Result::error(
+                'term_relationship_has_failed',
+                'There are no terms to check for on the object after normalization, but at least one term has failed to be normalized.'
+            )->addResults($errors);
+        }
+
         return static::hasObjectTerms(
             objectId: $this->getObjectId(),
             taxonomy: $this->termClass::taxonomy(),
-            terms: array_map(fn($term) => $this->normalizeTerm($term), $terms)
-        );
+            terms: $this->extractTermIds($normalizedTerms)
+        )->addResults($errors);
     }
 
     /**
@@ -505,7 +530,10 @@ class TermRelationship
         // Persist any new terms that might have been added or set
         $terms = array_merge($this->addTerms, $this->setTerms);
         foreach ($terms as $term) {
-            $results[] = $term->save();
+            if ($term->exists()) {
+                continue;
+            }
+            $results[] = $term->create();
         }
 
         // If terms are set, persist them on the object and exit, because
