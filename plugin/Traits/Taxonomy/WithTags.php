@@ -4,7 +4,6 @@ namespace Charm\Traits\Taxonomy;
 
 use Charm\Contracts\HasTerms;
 use Charm\Models\Terms\Tag;
-use Charm\Support\Result;
 
 /**
  * Adds tags to a model.
@@ -30,9 +29,7 @@ trait WithTags
     /**
      * Add a tag to the model.
      *
-     * $tag -> Category ID, slug, or `Tag` instance.
-     *
-     * @param int|string|Tag $tag foobar
+     * @param int|string|Tag $tag Tag ID, slug, or instance
      * @return static
      */
     public function addTag(int|string|Tag $tag): static
@@ -46,9 +43,7 @@ trait WithTags
     /**
      * Add tags to the model.
      *
-     * $tags -> Array of tag IDs, slugs, or `Tag` instances.
-     *
-     * @param array $tags [1, 'foobar', $tag]
+     * @param array $tags Array of tag IDs, slugs, or instances
      * @return static
      */
     public function addTags(array $tags): static
@@ -64,9 +59,7 @@ trait WithTags
     /**
      * Remove a tag from the model.
      *
-     * $tag -> Tag ID, slug, or `Tag` instance.
-     *
-     * @param int|string|Tag $tag foobar
+     * @param int|string|Tag $tag Tag ID, slug, or instance
      * @return static
      */
     public function removeTag(int|string|Tag $tag): static
@@ -80,9 +73,7 @@ trait WithTags
     /**
      * Remove tags from the model.
      *
-     * $tags -> Array of tag IDs, slugs, or `Tag` instances.
-     *
-     * @param array $tags [1, 'foobar', $tag]
+     * @param array $tags Array of tag IDs, slugs, or instances
      * @return static
      */
     public function removeTags(array $tags): static
@@ -98,9 +89,7 @@ trait WithTags
     /**
      * Set tags on the model (replaces existing tags).
      *
-     * $tags -> Array of tag IDs, slugs, or `Tag` instances.
-     *
-     * @param array $tags [1, 'foobar', $tag]
+     * @param array $tags Array of tag IDs, slugs, or instances
      * @return static
      */
     public function setTags(array $tags): static
@@ -116,24 +105,36 @@ trait WithTags
     /**
      * Check whether the model has the specified tag.
      *
-     * @param int|string|Tag $tag foobar
-     * @return Result
+     * @param int|string|Tag $tag Tag ID, slug, or instance
+     * @return bool
      */
-    public function hasTag(int|string|Tag $tag): Result
+    public function hasTag(int|string|Tag $tag): bool
     {
         /** @var HasTerms $this */
         return $this->taxonomy(Tag::class)->hasTerm($tag);
     }
 
     /**
-     * Check whether the model has at least one of the specified tags.
+     * Check whether the model has ALL the specified tags.
      *
-     * @param array $tags [1, 'foobar', $tag]
-     * @return Result
+     * @param array $tags Array of tag IDs, slugs, or instances
+     * @return bool
      */
-    public function hasTags(array $tags): Result
+    public function hasAllTags(array $tags): bool
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Tag::class)->hasTerms($tags);
+        return $this->taxonomy(Tag::class)->hasAllTerms($tags);
+    }
+
+    /**
+     * Check whether the model has ANY of the specified tags.
+     *
+     * @param array $tags Array of tag IDs, slugs, or instances
+     * @return bool
+     */
+    public function hasAnyTags(array $tags): bool
+    {
+        /** @var HasTerms $this */
+        return $this->taxonomy(Tag::class)->hasAnyTerms($tags);
     }
 }
