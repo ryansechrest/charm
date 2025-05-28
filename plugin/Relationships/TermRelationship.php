@@ -263,6 +263,10 @@ class TermRelationship
             'terms' => $terms,
         ];
 
+        // @todo WordPress returns `true` if it finds at least one of the
+        //   specified terms on the object, but it would feel more intuitive to
+        //   only return `true` if all of the terms are found.
+
         // `bool`   -> `true`     -> Success: Object has terms
         // `bool`   -> `false`    -> Fail: Object does not have terms
         // `object` -> `WP_Error` -> Fail: Object could not be checked
@@ -326,9 +330,7 @@ class TermRelationship
     /**
      * Add the terms to the object.
      *
-     * Accepts an array of term IDs, term slugs, or `Term` instances.
-     *
-     * @param array $terms
+     * @param array $terms Array of term IDs, slugs, or instances
      * @return array
      */
     public function addTerms(array $terms): array
@@ -345,24 +347,27 @@ class TermRelationship
     /**
      * Add the term to the object.
      *
-     * Accepts a term ID, term slug, or `Term` instance.
-     *
-     * @param int|string|Term $term
+     * @param int|string|Term $term Term ID, slug, or instance
      * @return Result
      */
     public function addTerm(int|string|Term $term): Result
     {
-        if (($result = $this->normalizeTerm($term))->hasFailed()) {
+        $args = ['term' => $term];
+
+        if (!$normalizedTerm = $this->normalizeTerm($term)) {
             $this->addTerms[] = new $this->termClass(['name' => $term]);
             return Result::info(
                 'term_relationship_add_info',
                 'Term could not be initialized from its ID or slug, so it was created instead.'
-            );
+            )->setFunctionArgs($args);
         }
 
-        $this->addTerms[] = $result->getFunctionReturn();
+        $this->addTerms[] = $normalizedTerm;
 
-        return $result;
+        return Result::success(
+            'term_relationship_add_success',
+            'Term successfully saved to be added to the object.'
+        )->setFunctionArgs($args);
     }
 
     // -------------------------------------------------------------------------
@@ -370,9 +375,7 @@ class TermRelationship
     /**
      * Remove the terms from the object.
      *
-     * Accepts an array of term IDs, term slugs, or `Term` instances.
-     *
-     * @param array $terms
+     * @param array $terms Array of term IDs, slugs, or instances
      * @return array
      */
     public function removeTerms(array $terms): array
@@ -389,20 +392,26 @@ class TermRelationship
     /**
      * Remove the term from the object.
      *
-     * Accepts a term ID, term slug, or `Term` instance.
-     *
-     * @param int|string|Term $term
+     * @param int|string|Term $term Term ID, slug, or instance
      * @return Result
      */
     public function removeTerm(int|string|Term $term): Result
     {
-        if (($result = $this->normalizeTerm($term))->hasFailed()) {
-            return $result;
+        $args = ['term' => $term];
+
+        if (!$normalizedTerm = $this->normalizeTerm($term)) {
+            return Result::error(
+                'term_relationship_remove_failed',
+                'Term could not be initialized from its ID or slug.'
+            )->setFunctionArgs($args);
         }
 
-        $this->removeTerms[] = $result->getFunctionReturn();
+        $this->removeTerms[] = $normalizedTerm;
 
-        return $result;
+        return Result::success(
+            'term_relationship_remove_success',
+            'Term successfully saved to be removed from the object.'
+        )->setFunctionArgs($args);
     }
 
     // -------------------------------------------------------------------------
@@ -410,9 +419,7 @@ class TermRelationship
     /**
      * Set the terms on the object.
      *
-     * Accepts an array of term IDs, term slugs, or `Term` instances.
-     *
-     * @param array $terms
+     * @param array $terms Array of term IDs, slugs, or instances
      * @return array
      */
     public function setTerms(array $terms): array
@@ -429,82 +436,129 @@ class TermRelationship
     /**
      * Set the term on the object.
      *
-     * Accepts a term ID, term slug, or `Term` instance.
-     *
-     * @param int|string|Term $term
+     * @param int|string|Term $term Term ID, slug, or instance
      * @return Result
      */
     public function setTerm(int|string|Term $term): Result
     {
-        if (($result = $this->normalizeTerm($term))->hasFailed()) {
+        $args = ['term' => $term];
+
+        if ($normalizedTerm = $this->normalizeTerm($term)) {
             $this->setTerms[] = new $this->termClass(['name' => $term]);
             return Result::info(
                 'term_relationship_set_info',
                 'Term could not be initialized from its ID or slug, so it was created instead.'
-            );
+            )->setFunctionArgs($args);
         }
 
-        $this->setTerms[] = $result->getFunctionReturn();
+        $this->setTerms[] = $normalizedTerm;
 
-        return $result;
+        return Result::success(
+            'term_relationship_set_success',
+            'Term successfully saved to be set on the object.'
+        )->setFunctionArgs($args);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Check whether the terms exist on the object.
+     * Check whether the object has a single specific term.
      *
-     * Accepts an array of term IDs, term names, term slugs, or `Term`
-     * instances.
-     *
-     * @param array $terms
-     * @return Result
+     * @param int|string|Term $term Term ID, slug, or instance
+     * @return bool
      */
-    public function hasTerms(array $terms): Result
+    public function hasTerm(int|string|Term $term): bool
     {
-        $errors = [];
-        $normalizedTerms = [];
-
-        foreach ($terms as $term) {
-            $result = $this->normalizeTerm($term);
-            if ($result->hasSucceeded()) {
-                $normalizedTerms[] = $result->getFunctionReturn();
-                continue;
-            }
-            $errors[] = $result;
+        if (!$normalizedTerm = $this->normalizeTerm($term)) {
+            return false;
         }
 
-        // If there are no terms provided to `hasObjectTerms()`, the method
-        // will return `true` if the object has ANY term from this taxonomy
-        // associated with it. However, if there are no terms provided because
-        // `$normalizedTerms` has no terms due to normalization failing, we
-        // will return an error to make it clear that none of the specified
-        // terms were found to be associated with the object.
-        if (count($normalizedTerms) === 0 && count($errors) > 0) {
-            return Result::error(
-                'term_relationship_has_failed',
-                'There are no terms to check for on the object after normalization, but at least one term has failed to be normalized.'
-            )->addResults($errors);
-        }
-
-        return static::hasObjectTerms(
+        $result = static::hasObjectTerms(
             objectId: $this->getObjectId(),
             taxonomy: $this->termClass::taxonomy(),
-            terms: $this->extractTermIds($normalizedTerms)
-        )->addResults($errors);
+            terms: [$normalizedTerm->getId()]
+        );
+
+        return $result->hasSucceeded();
     }
 
     /**
-     * Check whether the term exists on the object.
+     * Check whether the object has ALL the specified terms.
      *
-     * Accepts a term ID, term name, term slug, or `Term` instance.
-     *
-     * @param int|string|Term $term
-     * @return Result
+     * @param array $terms Array of term IDs, slugs, or instances
+     * @return bool
      */
-    public function hasTerm(int|string|Term $term): Result
+    public function hasAllTerms(array $terms): bool
     {
-        return $this->hasTerms([$term]);
+        // If there were no terms provided, then the object can't have all
+        if (count($terms) === 0) {
+            return false;
+        }
+
+        $normalizedTerms = [];
+        $failedNormalizations = [];
+
+        foreach ($terms as $term) {
+            if ($normalizedTerm = $this->normalizeTerm($term)) {
+                $normalizedTerms[] = $normalizedTerm;
+                continue;
+            }
+            $failedNormalizations[] = $term;
+        }
+
+        // If there are failed normalizations, then the object can't have all
+        if (count($failedNormalizations) > 0) {
+            return false;
+        }
+
+        $missingTermIds = array_diff(
+            $this->extractTermIds($normalizedTerms),
+            $this->extractTermIds($this->getTerms())
+        );
+
+        // If there are missing Term IDs, then the object doesn't have all
+        if (count($missingTermIds) > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check whether the object has ANY of the specified terms.
+     *
+     * @param array $terms Array of term IDs, slugs, or instances
+     * @return bool
+     */
+    public function hasAnyTerms(array $terms): bool
+    {
+        // If there were no terms provided, then the object can't have any
+        if (count($terms) === 0) {
+            return false;
+        }
+
+        $normalizedTerms = [];
+
+        foreach ($terms as $term) {
+            if (!$normalizedTerm = $this->normalizeTerm($term)) {
+                continue;
+            }
+            $normalizedTerms[] = $normalizedTerm;
+        }
+
+
+        // If there are no normalized terms, then the object can't have any
+        if (count($normalizedTerms) === 0) {
+            return false;
+        }
+
+        $result = static::hasObjectTerms(
+            objectId: $this->getObjectId(),
+            taxonomy: $this->termClass::taxonomy(),
+            terms: $this->extractTermIds($normalizedTerms)
+        );
+
+        return $result->hasSucceeded();
     }
 
     // -------------------------------------------------------------------------
@@ -520,7 +574,7 @@ class TermRelationship
         // terms cannot be associated with an object
         if ($this->getObjectId() === 0) {
             return [Result::error(
-                'terms_persist_failed',
+                'term_relationship_persist_failed',
                 'Terms were not persisted because the object ID is zero.'
             )];
         }
@@ -644,38 +698,17 @@ class TermRelationship
      * `Term` instance.
      *
      * @param int|string|Term $term
-     * @return Result
+     * @return ?Term
      */
-    protected function normalizeTerm(int|string|Term $term): Result
+    protected function normalizeTerm(int|string|Term $term): ?Term
     {
-        $args = ['term' => $term];
-
-        // If the term is already a `Term` instance, then return an info status
-        // with the `Term` instance
+        // If the term is already a `Term` instance, then return it
         if ($term instanceof Term) {
-            return Result::info(
-                'term_already_normalized',
-                'Term is already a `' . Term::class . '` instance.'
-            )->setFunctionReturn($term)->setFunctionArgs($args);
+            return $term;
         }
 
         /** @var Term $termClass */
-        $termInstance = $this->termClass::init($term);
-
-        // If the term ID or slug doesn't exist, then create and return it with
-        // an info status
-        if ($termInstance === null) {
-            return Result::error(
-                'term_normalize_failed',
-                'Term could not be initialized from its ID or slug.'
-            )->setFunctionArgs($args);
-        }
-
-        // Otherwise, return a success status with the Term instance
-        return Result::success(
-            'term_normalize_success',
-            'Term successfully normalized.'
-        )->setFunctionReturn($termInstance)->setFunctionArgs($args);
+        return $this->termClass::init($term);
     }
 
     /**
