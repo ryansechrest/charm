@@ -4,7 +4,6 @@ namespace Charm\Traits\Taxonomy;
 
 use Charm\Contracts\HasTerms;
 use Charm\Models\Terms\Category;
-use Charm\Support\Result;
 
 /**
  * Adds categories to a model.
@@ -30,9 +29,7 @@ trait WithCategories
     /**
      * Add a category to the model.
      *
-     * $category -> Category ID, slug, or `Category` instance.
-     *
-     * @param int|string|Category $category uncategorized
+     * @param int|string|Category $category Category ID, slug, or instance
      * @return static
      */
     public function addCategory(int|string|Category $category): static
@@ -46,9 +43,7 @@ trait WithCategories
     /**
      * Add categories to the model.
      *
-     * $categories -> Array of category IDs, slugs, or `Category` instances.
-     *
-     * @param array $categories [1, 'uncategorized', $category]
+     * @param array $categories Array of category IDs, slugs, or instances
      * @return static
      */
     public function addCategories(array $categories): static
@@ -64,9 +59,7 @@ trait WithCategories
     /**
      * Remove a category from the model.
      *
-     * $category -> Category ID, slug, or `Category` instance.
-     *
-     * @param int|string|Category $category uncategorized
+     * @param int|string|Category $category Category ID, slug, or instance
      * @return static
      */
     public function removeCategory(int|string|Category $category): static
@@ -80,9 +73,7 @@ trait WithCategories
     /**
      * Remove categories from the model.
      *
-     * $categories -> Array of category IDs, slugs, or `Category` instances.
-     *
-     * @param array $categories [1, 'uncategorized', $category]
+     * @param array $categories Array of category IDs, slugs, or instances
      * @return static
      */
     public function removeCategories(array $categories): static
@@ -98,9 +89,7 @@ trait WithCategories
     /**
      * Set categories on the model (replaces existing categories).
      *
-     * $categories -> Array of category IDs, slugs, or `Category` instances.
-     *
-     * @param array $categories [1, 'uncategorized', $category]
+     * @param array $categories Array of category IDs, slugs, or instances
      * @return $this
      */
     public function setCategories(array $categories): static
@@ -116,24 +105,36 @@ trait WithCategories
     /**
      * Check whether the model has the specified category.
      *
-     * @param int|string|Category $category uncategorized
-     * @return Result
+     * @param int|string|Category $category Category ID, slug, or instance
+     * @return bool
      */
-    public function hasCategory(int|string|Category $category): Result
+    public function hasCategory(int|string|Category $category): bool
     {
         /** @var HasTerms $this */
         return $this->taxonomy(Category::class)->hasTerm($category);
     }
 
     /**
-     * Check whether the model has at least one of the specified categories.
+     * Check whether the model has ALL the specified categories.
      *
-     * @param array $categories [1, 'uncategorized', $category]
-     * @return Result
+     * @param array $categories Array of category IDs, slugs, or instances
+     * @return bool
      */
-    public function hasCategories(array $categories): Result
+    public function hasAllCategories(array $categories): bool
     {
         /** @var HasTerms $this */
-        return $this->taxonomy(Category::class)->hasTerms($categories);
+        return $this->taxonomy(Category::class)->hasAllTerms($categories);
+    }
+
+    /**
+     * Check whether the model has ANY of the specified categories.
+     *
+     * @param array $categories Array of category IDs, slugs, or instances
+     * @return bool
+     */
+    public function hasAnyCategories(array $categories): bool
+    {
+        /** @var HasTerms $this */
+        return $this->taxonomy(Category::class)->hasAnyTerms($categories);
     }
 }
