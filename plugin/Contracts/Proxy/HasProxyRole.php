@@ -2,7 +2,7 @@
 
 namespace Charm\Contracts\Proxy;
 
-use Charm\Structures\Proxy;
+use Charm\Models\Proxy;
 
 /**
  * Ensures that the model implements a `Proxy\Role` instance.
