@@ -4,7 +4,7 @@ namespace Charm\Traits\User;
 
 use Charm\Contracts\HasDeferredCalls;
 use Charm\Contracts\Proxy\HasProxyUser;
-use Charm\Structures\Role;
+use Charm\Models\Role;
 use Charm\Support\Result;
 
 /**
@@ -60,18 +60,20 @@ trait WithRole
      */
     protected function persistRole(): Result
     {
+        $args = ['pendingRole' => $this->pendingRole];
+
         if ($this->pendingRole === null) {
             return Result::info(
                 'role_not_updated',
                 'There was no pending role to be persisted.',
-            )->withData($this->pendingRole);
+            )->setFunctionArgs($args);
         }
 
         if (!$this->pendingRole->exists()) {
             return Result::error(
                 'role_not_found',
                 'Role to be persisted does not exist.',
-            )->withData($this->pendingRole);
+            )->setFunctionArgs($args);
         }
 
         /** @var HasProxyUser $this */
@@ -82,6 +84,6 @@ trait WithRole
         return Result::success(
             'role_persist_success',
             'Role successfully persisted.'
-        )->withData($this->pendingRole);
+        )->setFunctionArgs($args);
     }
 }
