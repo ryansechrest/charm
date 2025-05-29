@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Structures\Proxy;
+namespace Charm\Models\Proxy;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
