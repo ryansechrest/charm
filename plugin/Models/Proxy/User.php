@@ -96,7 +96,7 @@ class User implements HasWpUser, IsArrayable, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * `WP_Use`r instance.
+     * `WP_User` instance.
      *
      * @var ?WP_User
      */
