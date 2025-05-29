@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Structures;
+namespace Charm\Models;
 
 use Charm\Contracts\IsPersistable;
 use Charm\Contracts\Proxy\HasProxyRole;
