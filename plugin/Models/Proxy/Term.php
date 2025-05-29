@@ -278,7 +278,7 @@ class Term implements HasWpTerm, IsArrayable, IsPersistable
     public static function get(array $args): array
     {
         $wpTermQuery = self::query(
-            array_merge($args, ['fields' => 'all'])
+            array_merge($args, ['fields' => 'all', 'hide_empty' => false])
         );
 
         if (count($wpTermQuery->get_terms()) === 0) {
