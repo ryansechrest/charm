@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 use Charm\Enums\Post\PingStatus;
 
 /**
@@ -23,8 +23,8 @@ trait WithPingbacks
      */
     public function getPingStatus(): PingStatus
     {
-        /** @var HasProxyPost $this */
-        return PingStatus::from($this->proxyPost()->getPingStatus());
+        /** @var HasCorePost $this */
+        return PingStatus::from($this->corePost()->getPingStatus());
     }
 
     /**
@@ -37,8 +37,8 @@ trait WithPingbacks
     {
         $value = $status instanceof PingStatus ? $status->value : $status;
 
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPingStatus($value);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPingStatus($value);
 
         return $this;
     }
@@ -52,8 +52,8 @@ trait WithPingbacks
      */
     public function getPingedUrls(): array
     {
-        /** @var HasProxyPost $this */
-        return explode("\n", $this->proxyPost()->getPinged());
+        /** @var HasCorePost $this */
+        return explode("\n", $this->corePost()->getPinged());
     }
 
     /**
@@ -64,8 +64,8 @@ trait WithPingbacks
      */
     public function setPingedUrls(array $urls): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPinged(implode("\n", $urls));
+        /** @var HasCorePost $this */
+        $this->corePost()->setPinged(implode("\n", $urls));
 
         return $this;
     }
@@ -79,8 +79,8 @@ trait WithPingbacks
      */
     public function getUrlsToPing(): array
     {
-        /** @var HasProxyPost $this */
-        return explode("\n", $this->proxyPost()->getToPing());
+        /** @var HasCorePost $this */
+        return explode("\n", $this->corePost()->getToPing());
     }
 
     /**
@@ -91,8 +91,8 @@ trait WithPingbacks
      */
     public function setUrlsToPing(array $urls): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setToPing(implode("\n", $urls));
+        /** @var HasCorePost $this */
+        $this->corePost()->setToPing(implode("\n", $urls));
 
         return $this;
     }

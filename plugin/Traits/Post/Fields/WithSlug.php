@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the slug to a post model.
@@ -22,8 +22,8 @@ trait WithSlug
      */
     public function getSlug(): string
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostName();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostName();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithSlug
      */
     public function setSlug(string $slug): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostName($slug);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostName($slug);
 
         return $this;
     }

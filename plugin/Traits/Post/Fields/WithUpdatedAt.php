@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 use Charm\Utilities\DateTime;
 
 /**
@@ -23,8 +23,8 @@ trait WithUpdatedAt
      */
     public function getUpdatedAt(): DateTime
     {
-        /** @var HasProxyPost $this */
-        return DateTime::init($this->proxyPost()->getPostModifiedGmt());
+        /** @var HasCorePost $this */
+        return DateTime::init($this->corePost()->getPostModifiedGmt());
     }
 
     /**
@@ -39,8 +39,8 @@ trait WithUpdatedAt
             ? $dateTime->formatForDb()
             : $dateTime;
 
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostModifiedGmt($value);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostModifiedGmt($value);
 
         return $this;
     }

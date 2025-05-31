@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the filtered content to a post model.
@@ -22,8 +22,8 @@ trait WithFilteredContent
      */
     public function getFilteredContent(): string
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostContentFiltered();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostContentFiltered();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithFilteredContent
      */
     public function setFilteredContent(string $content): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostContentFiltered($content);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostContentFiltered($content);
 
         return $this;
     }

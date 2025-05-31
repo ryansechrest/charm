@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 use Charm\Utilities\DateTime;
 
 /**
@@ -23,8 +23,8 @@ trait WithCreatedAt
      */
     public function getCreatedAt(): DateTime
     {
-        /** @var HasProxyPost $this */
-        return DateTime::init($this->proxyPost()->getPostDateGmt());
+        /** @var HasCorePost $this */
+        return DateTime::init($this->corePost()->getPostDateGmt());
     }
 
     /**
@@ -39,8 +39,8 @@ trait WithCreatedAt
             ? $dateTime->formatForDb()
             : $dateTime;
 
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostDateGmt($value);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostDateGmt($value);
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the menu order to a post model.
@@ -22,8 +22,8 @@ trait WithMenuOrder
      */
     public function getMenuOrder(): int
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getMenuOrder();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getMenuOrder();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithMenuOrder
      */
     public function setMenuOrder(int $menuOrder): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setMenuOrder($menuOrder);
+        /** @var HasCorePost $this */
+        $this->corePost()->setMenuOrder($menuOrder);
 
         return $this;
     }

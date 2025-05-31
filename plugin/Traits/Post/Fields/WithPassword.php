@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the password to a post model.
@@ -22,8 +22,8 @@ trait WithPassword
      */
     public function getPassword(): string
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostPassword();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostPassword();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithPassword
      */
     public function setPassword(string $password): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostPassword($password);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostPassword($password);
 
         return $this;
     }

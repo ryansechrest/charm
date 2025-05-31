@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Post\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 use Charm\Enums\Post\Status;
 
 /**
@@ -23,8 +23,8 @@ trait WithStatus
      */
     public function getStatus(): Status
     {
-        /** @var HasProxyPost $this */
-        return Status::from($this->proxyPost()->getPostStatus());
+        /** @var HasCorePost $this */
+        return Status::from($this->corePost()->getPostStatus());
     }
 
     /**
@@ -37,8 +37,8 @@ trait WithStatus
     {
         $value = $status instanceof Status ? $status->value : $status;
 
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostStatus($value);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostStatus($value);
 
         return $this;
     }
