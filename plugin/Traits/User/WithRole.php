@@ -3,7 +3,7 @@
 namespace Charm\Traits\User;
 
 use Charm\Contracts\HasDeferredCalls;
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 use Charm\Models\Role;
 use Charm\Support\Result;
 
@@ -31,8 +31,8 @@ trait WithRole
      */
     public function getRole(): ?Role
     {
-        /** @var HasProxyUser $this */
-        return Role::init($this->proxyUser()->wpUser()->roles[0] ?? '');
+        /** @var HasCoreUser $this */
+        return Role::init($this->coreUser()->wpUser()->roles[0] ?? '');
     }
 
     /**
@@ -76,8 +76,8 @@ trait WithRole
             )->setFunctionArgs($args);
         }
 
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->wpUser()->set_role($this->pendingRole->getSlug());
+        /** @var HasCoreUser $this */
+        $this->coreUser()->wpUser()->set_role($this->pendingRole->getSlug());
 
         $this->pendingRole = null;
 
