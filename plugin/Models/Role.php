@@ -3,7 +3,7 @@
 namespace Charm\Models;
 
 use Charm\Contracts\IsPersistable;
-use Charm\Contracts\Proxy\HasProxyRole;
+use Charm\Contracts\Core\HasCoreRole;
 use Charm\Support\Result;
 use WP_Role;
 
@@ -13,14 +13,14 @@ use WP_Role;
  * @author Ryan Sechrest
  * @package Charm
  */
-class Role implements HasProxyRole, IsPersistable
+class Role implements HasCoreRole, IsPersistable
 {
     /**
-     * Proxy role.
+     * Core role.
      *
-     * @var ?Proxy\Role
+     * @var ?Core\Role
      */
-    protected ?Proxy\Role $proxyRole = null;
+    protected ?Core\Role $coreRole = null;
 
     // *************************************************************************
 
@@ -31,19 +31,19 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function __construct(array $data = [])
     {
-        $this->proxyRole = new Proxy\Role($data);
+        $this->coreRole = new Core\Role($data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get the proxy role instance.
+     * Get the core role instance.
      *
-     * @return ?Proxy\Role
+     * @return ?Core\Role
      */
-    public function proxyRole(): ?Proxy\Role
+    public function coreRole(): ?Core\Role
     {
-        return $this->proxyRole;
+        return $this->coreRole;
     }
 
     // -------------------------------------------------------------------------
@@ -59,18 +59,18 @@ class Role implements HasProxyRole, IsPersistable
      */
     public static function init(string|WP_Role $key): ?static
     {
-        $proxyRole = match (true) {
-            is_string($key) => Proxy\Role::fromSlug($key),
-            $key instanceof WP_Role => Proxy\Role::fromWpRole($key),
+        $coreRole = match (true) {
+            is_string($key) => Core\Role::fromSlug($key),
+            $key instanceof WP_Role => Core\Role::fromWpRole($key),
             default => null,
         };
 
-        if ($proxyRole === null) {
+        if ($coreRole === null) {
             return null;
         }
 
         $role = new static();
-        $role->proxyRole = $proxyRole;
+        $role->coreRole = $coreRole;
 
         return $role;
     }
@@ -84,13 +84,13 @@ class Role implements HasProxyRole, IsPersistable
      */
     public static function get(): array
     {
-        $wpRoles = Proxy\Role::get();
+        $wpRoles = Core\Role::get();
 
         $roles = [];
 
         foreach ($wpRoles as $wpRole) {
             $role = new static();
-            $role->proxyRole = $wpRole;
+            $role->coreRole = $wpRole;
             $roles[] = $role;
         }
 
@@ -106,7 +106,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function save(): Result
     {
-        return $this->proxyRole()->save();
+        return $this->coreRole()->save();
     }
 
     /**
@@ -116,7 +116,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function create(): Result
     {
-        return $this->proxyRole()->create();
+        return $this->coreRole()->create();
     }
 
     /**
@@ -126,7 +126,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function update(): Result
     {
-        return $this->proxyRole()->update();
+        return $this->coreRole()->update();
     }
 
     /**
@@ -136,7 +136,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->proxyRole()->delete();
+        return $this->coreRole()->delete();
     }
 
     // *************************************************************************
@@ -148,7 +148,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function getSlug(): string
     {
-        return $this->proxyRole()->getSlug();
+        return $this->coreRole()->getSlug();
     }
 
     // -------------------------------------------------------------------------
@@ -160,7 +160,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function getName(): string
     {
-        return $this->proxyRole()->getName();
+        return $this->coreRole()->getName();
     }
 
     /**
@@ -171,7 +171,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function setName(string $name): static
     {
-        $this->proxyRole()->setName($name);
+        $this->coreRole()->setName($name);
 
         return $this;
     }
@@ -185,7 +185,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function getCapabilities(): array
     {
-        return $this->proxyRole()->getCapabilities();
+        return $this->coreRole()->getCapabilities();
     }
 
     /**
@@ -196,7 +196,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function addCapability(string $capability): static
     {
-        $this->proxyRole()->addCapability($capability);
+        $this->coreRole()->addCapability($capability);
 
         return $this;
     }
@@ -209,7 +209,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function removeCapability(string $capability): static
     {
-        $this->proxyRole()->removeCapability($capability);
+        $this->coreRole()->removeCapability($capability);
 
         return $this;
     }
@@ -222,7 +222,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function setCapabilities(array $capabilities): static
     {
-        $this->proxyRole()->setCapabilities($capabilities);
+        $this->coreRole()->setCapabilities($capabilities);
 
         return $this;
     }
@@ -235,7 +235,7 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function hasCapability(string $capability): bool
     {
-        return $this->proxyRole()->hasCapability($capability);
+        return $this->coreRole()->hasCapability($capability);
     }
 
     // -------------------------------------------------------------------------
@@ -247,6 +247,6 @@ class Role implements HasProxyRole, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->proxyRole()->exists();
+        return $this->coreRole()->exists();
     }
 }
