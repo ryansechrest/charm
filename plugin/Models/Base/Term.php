@@ -3,9 +3,9 @@
 namespace Charm\Models\Base;
 
 use Charm\Contracts\IsPersistable;
-use Charm\Contracts\Proxy\HasProxyTerm;
+use Charm\Contracts\Core\HasCoreTerm;
 use Charm\Models\Metas\TermMeta;
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
 use Charm\Traits\WithMeta;
@@ -19,7 +19,7 @@ use WP_Term_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class Term implements HasProxyTerm, IsPersistable
+abstract class Term implements HasCoreTerm, IsPersistable
 {
     use WithDeferredCalls;
     use WithMeta;
@@ -28,11 +28,11 @@ abstract class Term implements HasProxyTerm, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy term.
+     * Core term.
      *
-     * @var ?Proxy\Term
+     * @var ?Core\Term
      */
-    protected ?Proxy\Term $proxyTerm = null;
+    protected ?Core\Term $coreTerm = null;
 
     // *************************************************************************
 
@@ -63,19 +63,19 @@ abstract class Term implements HasProxyTerm, IsPersistable
     public function __construct(array $data = [])
     {
         $data['taxonomy'] = static::taxonomy();
-        $this->proxyTerm = new Proxy\Term($data);
+        $this->coreTerm = new Core\Term($data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get the proxy term instance.
+     * Get the core term instance.
      *
-     * @return ?Proxy\Term
+     * @return ?Core\Term
      */
-    public function proxyTerm(): ?Proxy\Term
+    public function coreTerm(): ?Core\Term
     {
-        return $this->proxyTerm;
+        return $this->coreTerm;
     }
 
     // *************************************************************************
@@ -92,23 +92,23 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public static function init(int|string|WP_Term $key): ?static
     {
-        $proxyTerm = match (true) {
-            is_numeric($key) => Proxy\Term::fromTermTaxonomyId((int) $key),
-            is_string($key) => Proxy\Term::fromSlug($key, static::taxonomy()),
-            $key instanceof WP_Term => Proxy\Term::fromWpTerm($key),
+        $coreTerm = match (true) {
+            is_numeric($key) => Core\Term::fromTermTaxonomyId((int) $key),
+            is_string($key) => Core\Term::fromSlug($key, static::taxonomy()),
+            $key instanceof WP_Term => Core\Term::fromWpTerm($key),
             default => null,
         };
 
-        if ($proxyTerm === null) {
+        if ($coreTerm === null) {
             return null;
         }
 
-        if ($proxyTerm->getTaxonomy() !== static::taxonomy()) {
+        if ($coreTerm->getTaxonomy() !== static::taxonomy()) {
             return null;
         }
 
         $term = new static();
-        $term->proxyTerm = $proxyTerm;
+        $term->coreTerm = $coreTerm;
 
         return $term;
     }
@@ -138,12 +138,12 @@ abstract class Term implements HasProxyTerm, IsPersistable
     public static function get(array $args = ['hide_empty' => false]): array
     {
         $args['taxonomy'] = static::taxonomy();
-        $proxyTerms = Proxy\Term::get($args);
+        $coreTerms = Core\Term::get($args);
         $terms = [];
 
-        foreach ($proxyTerms as $proxyTerm) {
+        foreach ($coreTerms as $coreTerm) {
             $term = new static();
-            $term->proxyTerm = $proxyTerm;
+            $term->coreTerm = $coreTerm;
             $terms[] = $term;
         }
 
@@ -161,7 +161,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public static function query(array $args): WP_Term_Query
     {
-        return Proxy\Term::query($args);
+        return Core\Term::query($args);
     }
 
     // *************************************************************************
@@ -173,7 +173,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function save(): Result
     {
-        return $this->proxyTerm()->save();
+        return $this->coreTerm()->save();
     }
 
     /**
@@ -183,7 +183,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function create(): Result
     {
-        return $this->proxyTerm()->create();
+        return $this->coreTerm()->create();
     }
 
     /**
@@ -193,7 +193,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function update(): Result
     {
-        return $this->proxyTerm()->update();
+        return $this->coreTerm()->update();
     }
 
     /**
@@ -203,7 +203,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->proxyTerm()->delete();
+        return $this->coreTerm()->delete();
     }
 
     // *************************************************************************
@@ -215,7 +215,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function getId(): int
     {
-        return $this->proxyTerm()->getTermId();
+        return $this->coreTerm()->getTermId();
     }
 
     // -------------------------------------------------------------------------
@@ -227,7 +227,7 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function getTaxonomyId(): int
     {
-        return $this->proxyTerm()->getTermTaxonomyId();
+        return $this->coreTerm()->getTermTaxonomyId();
     }
 
     // -------------------------------------------------------------------------
@@ -239,8 +239,8 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function getName(): string
     {
-        /** @var HasProxyTerm $this */
-        return $this->proxyTerm()->getName();
+        /** @var HasCoreTerm $this */
+        return $this->coreTerm()->getName();
     }
 
     /**
@@ -251,8 +251,8 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function setName(string $name): static
     {
-        /** @var HasProxyTerm $this */
-        $this->proxyTerm()->setName($name);
+        /** @var HasCoreTerm $this */
+        $this->coreTerm()->setName($name);
 
         return $this;
     }
@@ -266,8 +266,8 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function getSlug(): string
     {
-        /** @var HasProxyTerm $this */
-        return $this->proxyTerm()->getSlug();
+        /** @var HasCoreTerm $this */
+        return $this->coreTerm()->getSlug();
     }
 
     /**
@@ -278,8 +278,8 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function setSlug(string $slug): static
     {
-        /** @var HasProxyTerm $this */
-        $this->proxyTerm()->setSlug($slug);
+        /** @var HasCoreTerm $this */
+        $this->coreTerm()->setSlug($slug);
 
         return $this;
     }
@@ -293,6 +293,6 @@ abstract class Term implements HasProxyTerm, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->proxyTerm()->exists();
+        return $this->coreTerm()->exists();
     }
 }

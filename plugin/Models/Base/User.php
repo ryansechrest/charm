@@ -3,9 +3,9 @@
 namespace Charm\Models\Base;
 
 use Charm\Contracts\IsPersistable;
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 use Charm\Models\Metas\UserMeta;
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 use Charm\Support\Result;
 use Charm\Traits\WithDeferredCalls;
 use Charm\Traits\WithMeta;
@@ -19,7 +19,7 @@ use WP_User_Query;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class User implements HasProxyUser, IsPersistable
+abstract class User implements HasCoreUser, IsPersistable
 {
     use WithDeferredCalls;
     use WithMeta;
@@ -28,11 +28,11 @@ abstract class User implements HasProxyUser, IsPersistable
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy user.
+     * Core user.
      *
-     * @var ?Proxy\User
+     * @var ?Core\User
      */
-    protected ?Proxy\User $proxyUser = null;
+    protected ?Core\User $coreUser = null;
 
     // *************************************************************************
 
@@ -55,19 +55,19 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public function __construct(array $data = [])
     {
-        $this->proxyUser = new Proxy\User($data);
+        $this->coreUser = new Core\User($data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get the proxy user instance.
+     * Get the core user instance.
      *
-     * @return ?Proxy\User
+     * @return ?Core\User
      */
-    public function proxyUser(): ?Proxy\User
+    public function coreUser(): ?Core\User
     {
-        return $this->proxyUser;
+        return $this->coreUser;
     }
 
     // *************************************************************************
@@ -88,20 +88,20 @@ abstract class User implements HasProxyUser, IsPersistable
         int|null|string|WP_User $key = null
     ): ?static
     {
-        $proxyUser = match (true) {
-            is_numeric($key) => Proxy\User::fromId((int) $key),
-            is_string($key) && !is_email($key) => Proxy\User::fromUsername($key),
-            is_string($key) && is_email($key) => Proxy\User::fromEmail($key),
-            $key instanceof WP_User => Proxy\User::fromWpUser($key),
-            default => Proxy\User::fromGlobalWpUser(),
+        $coreUser = match (true) {
+            is_numeric($key) => Core\User::fromId((int) $key),
+            is_string($key) && !is_email($key) => Core\User::fromUsername($key),
+            is_string($key) && is_email($key) => Core\User::fromEmail($key),
+            $key instanceof WP_User => Core\User::fromWpUser($key),
+            default => Core\User::fromGlobalWpUser(),
         };
 
-        if ($proxyUser === null) {
+        if ($coreUser === null) {
             return null;
         }
 
         $user = new static();
-        $user->proxyUser = $proxyUser;
+        $user->coreUser = $coreUser;
 
         return $user;
     }
@@ -132,12 +132,12 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public static function get(array $args = ['search' => '']): array
     {
-        $proxyUsers = Proxy\User::get($args);
+        $coreUsers = Core\User::get($args);
         $users = [];
 
-        foreach ($proxyUsers as $proxyUser) {
+        foreach ($coreUsers as $coreUser) {
             $user = new static();
-            $user->proxyUser = $proxyUser;
+            $user->coreUser = $coreUser;
             $users[] = $user;
         }
 
@@ -155,7 +155,7 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public static function query(array $args): WP_User_Query
     {
-        return Proxy\User::query($args);
+        return Core\User::query($args);
     }
 
     // *************************************************************************
@@ -177,7 +177,7 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public function create(): Result
     {
-        $result = $this->proxyUser()->create();
+        $result = $this->coreUser()->create();
 
         if ($result->hasFailed()) {
             return $result;
@@ -195,7 +195,7 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public function update(): Result
     {
-        $result = $this->proxyUser()->update();
+        $result = $this->coreUser()->update();
 
         if ($result->hasFailed()) {
             return $result;
@@ -213,7 +213,7 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->proxyUser()->delete();
+        return $this->coreUser()->delete();
     }
 
     // *************************************************************************
@@ -225,7 +225,7 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public function getId(): int
     {
-        return $this->proxyUser()->getId();
+        return $this->coreUser()->getId();
     }
 
     // -------------------------------------------------------------------------
@@ -237,6 +237,6 @@ abstract class User implements HasProxyUser, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->proxyUser()->exists();
+        return $this->coreUser()->exists();
     }
 }

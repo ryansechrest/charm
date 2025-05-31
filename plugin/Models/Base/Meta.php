@@ -3,8 +3,8 @@
 namespace Charm\Models\Base;
 
 use Charm\Contracts\IsPersistable;
-use Charm\Contracts\Proxy\HasProxyMeta;
-use Charm\Models\Proxy;
+use Charm\Contracts\Core\HasCoreMeta;
+use Charm\Models\Core;
 use Charm\Support\Cast;
 use Charm\Support\Result;
 use Charm\Traits\WithPersistenceState;
@@ -15,18 +15,18 @@ use Charm\Traits\WithPersistenceState;
  * @author Ryan Sechrest
  * @package Charm
  */
-abstract class Meta implements HasProxyMeta, IsPersistable
+abstract class Meta implements HasCoreMeta, IsPersistable
 {
     use WithPersistenceState;
 
     // -------------------------------------------------------------------------
 
     /**
-     * Proxy meta.
+     * Core meta.
      *
-     * @var ?Proxy\Meta
+     * @var ?Core\Meta
      */
-    protected ?Proxy\Meta $proxyMeta = null;
+    protected ?Core\Meta $coreMeta = null;
 
     // *************************************************************************
 
@@ -46,19 +46,19 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function __construct(array $data = [])
     {
-        $this->proxyMeta = new Proxy\Meta(static::metaType(), $data);
+        $this->coreMeta = new Core\Meta(static::metaType(), $data);
     }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Get the proxy meta instance.
+     * Get the core meta instance.
      *
-     * @return ?Proxy\Meta
+     * @return ?Core\Meta
      */
-    public function proxyMeta(): ?Proxy\Meta
+    public function coreMeta(): ?Core\Meta
     {
-        return $this->proxyMeta;
+        return $this->coreMeta;
     }
 
     // *************************************************************************
@@ -90,23 +90,23 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public static function get(int $objectId, string $metaKey = ''): array
     {
-        $proxyMetas = Proxy\Meta::get(
+        $coreMetas = Core\Meta::get(
             static::metaType(), $objectId, $metaKey
         );
         $metas = [];
 
-        foreach ($proxyMetas as $metaKey => $proxyMeta) {
+        foreach ($coreMetas as $metaKey => $coreMeta) {
 
-            if (!is_array($proxyMeta)) {
+            if (!is_array($coreMeta)) {
                 $meta = new static();
-                $meta->proxyMeta = $proxyMeta;
+                $meta->coreMeta = $coreMeta;
                 $metas[$metaKey] = $meta;
                 continue;
             }
 
-            foreach ($proxyMeta as $singleProxyMeta) {
+            foreach ($coreMeta as $singleCoreMeta) {
                 $meta = new static();
-                $meta->proxyMeta = $singleProxyMeta;
+                $meta->coreMeta = $singleCoreMeta;
                 $metas[$metaKey][] = $meta;
             }
         }
@@ -123,7 +123,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function save(): Result
     {
-        return $this->proxyMeta()->save();
+        return $this->coreMeta()->save();
     }
 
     /**
@@ -133,7 +133,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function create(): Result
     {
-        return $this->proxyMeta()->create();
+        return $this->coreMeta()->create();
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function update(): Result
     {
-        return $this->proxyMeta()->update();
+        return $this->coreMeta()->update();
     }
 
     /**
@@ -153,7 +153,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function delete(): Result
     {
-        return $this->proxyMeta()->delete();
+        return $this->coreMeta()->delete();
     }
 
     // *************************************************************************
@@ -165,7 +165,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function getObjectId(): int
     {
-        return $this->proxyMeta()->getObjectId();
+        return $this->coreMeta()->getObjectId();
     }
 
     /**
@@ -176,7 +176,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function setObjectId(int $objectId): static
     {
-        $this->proxyMeta()->setObjectId($objectId);
+        $this->coreMeta()->setObjectId($objectId);
 
         return $this;
     }
@@ -190,7 +190,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function getKey(): string
     {
-        return $this->proxyMeta()->getMetaKey();
+        return $this->coreMeta()->getMetaKey();
     }
 
     /**
@@ -201,7 +201,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function setKey(string $key): static
     {
-        $this->proxyMeta()->setMetaKey($key);
+        $this->coreMeta()->setMetaKey($key);
 
         return $this;
     }
@@ -215,7 +215,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function getValue(): mixed
     {
-        return $this->proxyMeta()->getMetaValue();
+        return $this->coreMeta()->getMetaValue();
     }
 
     /**
@@ -226,7 +226,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function setValue(mixed $value): static
     {
-        $this->proxyMeta()->setMetaValue($value);
+        $this->coreMeta()->setMetaValue($value);
 
         return $this;
     }
@@ -240,7 +240,7 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function castValue(): Cast
     {
-        return Cast::from($this->proxyMeta()->getMetaValue());
+        return Cast::from($this->coreMeta()->getMetaValue());
     }
 
     // -------------------------------------------------------------------------
@@ -252,6 +252,6 @@ abstract class Meta implements HasProxyMeta, IsPersistable
      */
     public function exists(): bool
     {
-        return $this->proxyMeta()->exists();
+        return $this->coreMeta()->exists();
     }
 }
