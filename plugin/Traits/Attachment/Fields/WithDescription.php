@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Attachment\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the description to an attachment model.
@@ -22,8 +22,8 @@ trait WithDescription
      */
     public function getDescription(): string
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostContent();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostContent();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithDescription
      */
     public function setDescription(string $description): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostContent($description);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostContent($description);
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Attachment\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the caption to an attachment model.
@@ -22,8 +22,8 @@ trait WithCaption
      */
     public function getCaption(): string
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostExcerpt();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostExcerpt();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithCaption
      */
     public function setCaption(string $caption): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostExcerpt($caption);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostExcerpt($caption);
 
         return $this;
     }

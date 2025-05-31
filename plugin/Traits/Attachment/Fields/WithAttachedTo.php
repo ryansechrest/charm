@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Attachment\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the attachment context to an attachment model.
@@ -22,8 +22,8 @@ trait WithAttachedTo
      */
     public function getAttachedTo(): int
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostParent();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostParent();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithAttachedTo
      */
     public function setAttachedTo(int $postId): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostParent($postId);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostParent($postId);
 
         return $this;
     }

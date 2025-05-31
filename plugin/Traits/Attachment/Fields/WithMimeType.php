@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Attachment\Fields;
 
-use Charm\Contracts\Proxy\HasProxyPost;
+use Charm\Contracts\Core\HasCorePost;
 
 /**
  * Adds the MIME type to an attachment model.
@@ -22,8 +22,8 @@ trait WithMimeType
      */
     public function getMimeType(): string
     {
-        /** @var HasProxyPost $this */
-        return $this->proxyPost()->getPostMimeType();
+        /** @var HasCorePost $this */
+        return $this->corePost()->getPostMimeType();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithMimeType
      */
     public function setMimeType(string $mimeType): static
     {
-        /** @var HasProxyPost $this */
-        $this->proxyPost()->setPostMimeType($mimeType);
+        /** @var HasCorePost $this */
+        $this->corePost()->setPostMimeType($mimeType);
 
         return $this;
     }
