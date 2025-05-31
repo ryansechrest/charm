@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\Proxy\HasProxyTerm;
+use Charm\Contracts\Core\HasCoreTerm;
 use Charm\Models\Base;
 
 /**
@@ -23,8 +23,8 @@ trait WithParent
      */
     public function getParent(): ?Base\Term
     {
-        /** @var HasProxyTerm $this */
-        return static::init($this->proxyTerm()->getParent());
+        /** @var HasCoreTerm $this */
+        return static::init($this->coreTerm()->getParent());
     }
 
     /**
@@ -37,8 +37,8 @@ trait WithParent
     {
         $id = $parent instanceof Base\Term ? $parent->getId() : $parent;
 
-        /** @var HasProxyTerm $this */
-        $this->proxyTerm()->setParent($id ?? 0);
+        /** @var HasCoreTerm $this */
+        $this->coreTerm()->setParent($id ?? 0);
 
         return $this;
     }

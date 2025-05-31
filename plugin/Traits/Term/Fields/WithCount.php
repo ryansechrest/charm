@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\Term\Fields;
 
-use Charm\Contracts\Proxy\HasProxyTerm;
+use Charm\Contracts\Core\HasCoreTerm;
 
 /**
  * Adds the total number of terms to a term model.
@@ -22,7 +22,7 @@ trait WithCount
      */
     public function getCount(): string
     {
-        /** @var HasProxyTerm $this */
-        return $this->proxyTerm()->getCount();
+        /** @var HasCoreTerm $this */
+        return $this->coreTerm()->getCount();
     }
 }
