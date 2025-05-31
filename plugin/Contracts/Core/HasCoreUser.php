@@ -1,21 +1,21 @@
 <?php
 
-namespace Charm\Contracts\Proxy;
+namespace Charm\Contracts\Core;
 
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 
 /**
- * Ensures that the model implements a `WordPress\User` instance.
+ * Ensures that the model implements a `Core\User` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-interface HasProxyUser
+interface HasCoreUser
 {
     /**
-     * Provides access to the `WordPress\User` instance.
+     * Provides access to the `Core\User` instance.
      *
-     * @return ?Proxy\User
+     * @return ?Core\User
      */
-    public function proxyUser(): ?Proxy\User;
+    public function coreUser(): ?Core\User;
 }

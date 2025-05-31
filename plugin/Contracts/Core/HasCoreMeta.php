@@ -1,21 +1,21 @@
 <?php
 
-namespace Charm\Contracts\Proxy;
+namespace Charm\Contracts\Core;
 
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 
 /**
- * Ensures that the model implements a `WordPress\Meta` instance.
+ * Ensures that the model implements a `Core\Meta` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-interface HasProxyMeta
+interface HasCoreMeta
 {
     /**
-     * Provides access to the `WordPress\Meta` instance.
+     * Provides access to the `Core\Meta` instance.
      *
-     * @return ?Proxy\Meta
+     * @return ?Core\Meta
      */
-    public function proxyMeta(): ?Proxy\Meta;
+    public function coreMeta(): ?Core\Meta;
 }

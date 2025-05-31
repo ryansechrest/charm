@@ -1,21 +1,21 @@
 <?php
 
-namespace Charm\Contracts\Proxy;
+namespace Charm\Contracts\Core;
 
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 
 /**
- * Ensures that the model implements a `WordPress\Term` instance.
+ * Ensures that the model implements a `Core\Term` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-interface HasProxyTerm
+interface HasCoreTerm
 {
     /**
-     * Provides access to the `WordPress\Term` instance.
+     * Provides access to the `Core\Term` instance.
      *
-     * @return ?Proxy\Term
+     * @return ?Core\Term
      */
-    public function proxyTerm(): ?Proxy\Term;
+    public function coreTerm(): ?Core\Term;
 }

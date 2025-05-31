@@ -1,21 +1,21 @@
 <?php
 
-namespace Charm\Contracts\Proxy;
+namespace Charm\Contracts\Core;
 
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 
 /**
- * Ensures that the model implements a `WordPress\Post` instance.
+ * Ensures that the model implements a `Core\Post` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-interface HasProxyPost
+interface HasCorePost
 {
     /**
-     * Provides access to the `WordPress\Post` instance.
+     * Provides access to the `Core\Post` instance.
      *
-     * @return ?Proxy\Post
+     * @return ?Core\Post
      */
-    public function proxyPost(): ?Proxy\Post;
+    public function corePost(): ?Core\Post;
 }

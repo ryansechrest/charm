@@ -1,21 +1,21 @@
 <?php
 
-namespace Charm\Contracts\Proxy;
+namespace Charm\Contracts\Core;
 
-use Charm\Models\Proxy;
+use Charm\Models\Core;
 
 /**
- * Ensures that the model implements a `Proxy\Role` instance.
+ * Ensures that the model implements a `Core\Role` instance.
  *
  * @author Ryan Sechrest
  * @package Charm
  */
-interface HasProxyRole
+interface HasCoreRole
 {
     /**
-     * Provides access to the `Proxy\Role` instance.
+     * Provides access to the `Core\Role` instance.
      *
-     * @return ?Proxy\Role
+     * @return ?Core\Role
      */
-    public function proxyRole(): ?Proxy\Role;
+    public function coreRole(): ?Core\Role;
 }
