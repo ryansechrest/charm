@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Proxy;
+namespace Charm\Models\Core;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
@@ -12,7 +12,7 @@ use WP_Term;
 use WP_Term_Query;
 
 /**
- * Represents a proxy term belonging to any taxonomy in WordPress.
+ * Represents a core term belonging to any taxonomy in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm

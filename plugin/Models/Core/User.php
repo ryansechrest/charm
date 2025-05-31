@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Proxy;
+namespace Charm\Models\Core;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
@@ -12,7 +12,7 @@ use WP_User;
 use WP_User_Query;
 
 /**
- * Represents a proxy user in WordPress.
+ * Represents a core user in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm

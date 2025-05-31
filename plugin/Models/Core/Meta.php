@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Proxy;
+namespace Charm\Models\Core;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
@@ -8,7 +8,7 @@ use Charm\Support\Result;
 use Charm\Traits\WithToArray;
 
 /**
- * Represents a proxy meta belonging to any model in WordPress.
+ * Represents a core meta belonging to any model in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm

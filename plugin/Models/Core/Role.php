@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Proxy;
+namespace Charm\Models\Core;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
@@ -10,7 +10,7 @@ use Charm\Traits\WithToArray;
 use WP_Role;
 
 /**
- * Represents a proxy user role in WordPress.
+ * Represents a core user role in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
@@ -415,6 +415,7 @@ class Role implements HasWpRole, IsArrayable, IsPersistable
         $this->slug = $wpRole->name;
         $this->name = $roles->role_names[$wpRole->name] ?: '';
         $this->capabilities = $wpRole->capabilities;
+
         $this->exists = true;
     }
 }

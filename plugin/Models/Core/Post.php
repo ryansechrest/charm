@@ -1,6 +1,6 @@
 <?php
 
-namespace Charm\Models\Proxy;
+namespace Charm\Models\Core;
 
 use Charm\Contracts\IsArrayable;
 use Charm\Contracts\IsPersistable;
@@ -12,7 +12,7 @@ use WP_Post;
 use WP_Query;
 
 /**
- * Represents a proxy post of any post type in WordPress.
+ * Represents a core post of any post type in WordPress.
  *
  * @author Ryan Sechrest
  * @package Charm
