@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 
 /**
  * Adds the email address to a user model.
@@ -22,8 +22,8 @@ trait WithEmail
      */
     public function getEmail(): string
     {
-        /** @var HasProxyUser $this */
-        return $this->proxyUser()->getUserEmail();
+        /** @var HasCoreUser $this */
+        return $this->coreUser()->getUserEmail();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithEmail
      */
     public function setEmail(string $email): static
     {
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setUserEmail($email);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setUserEmail($email);
 
         return $this;
     }

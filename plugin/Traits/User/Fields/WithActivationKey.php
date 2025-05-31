@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 
 /**
  * Adds the activation key to a user model.
@@ -22,8 +22,8 @@ trait WithActivationKey
      */
     public function getActivationKey(): ?string
     {
-        /** @var HasProxyUser $this */
-        return $this->proxyUser()->getUserActivationKey();
+        /** @var HasCoreUser $this */
+        return $this->coreUser()->getUserActivationKey();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithActivationKey
      */
     public function setActivationKey(string $key): static
     {
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setUserActivationKey($key);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setUserActivationKey($key);
 
         return $this;
     }

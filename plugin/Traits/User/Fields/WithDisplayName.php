@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 
 /**
  * Adds the display name to a user model.
@@ -22,8 +22,8 @@ trait WithDisplayName
      */
     public function getDisplayName(): string
     {
-        /** @var HasProxyUser $this */
-        return $this->proxyUser()->getDisplayName();
+        /** @var HasCoreUser $this */
+        return $this->coreUser()->getDisplayName();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithDisplayName
      */
     public function setDisplayName(string $name): static
     {
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setDisplayName($name);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setDisplayName($name);
 
         return $this;
     }

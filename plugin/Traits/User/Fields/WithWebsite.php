@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 
 /**
  * Adds the website to a user model.
@@ -22,8 +22,8 @@ trait WithWebsite
      */
     public function getWebsite(): ?string
     {
-        /** @var HasProxyUser $this */
-        return $this->proxyUser()->getUserUrl();
+        /** @var HasCoreUser $this */
+        return $this->coreUser()->getUserUrl();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithWebsite
      */
     public function setWebsite(string $url): static
     {
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setUserUrl($url);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setUserUrl($url);
 
         return $this;
     }

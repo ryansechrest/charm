@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 
 /**
  * Adds the slug to a user model.
@@ -22,8 +22,8 @@ trait WithSlug
      */
     public function getSlug(): string
     {
-        /** @var HasProxyUser $this */
-        return $this->proxyUser()->getUserNicename();
+        /** @var HasCoreUser $this */
+        return $this->coreUser()->getUserNicename();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithSlug
      */
     public function setSlug(string $slug): static
     {
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setUserNicename($slug);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setUserNicename($slug);
 
         return $this;
     }

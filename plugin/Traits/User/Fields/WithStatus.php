@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 use Charm\Enums\User\Status;
 
 /**
@@ -23,8 +23,8 @@ trait WithStatus
      */
     public function getStatus(): Status
     {
-        /** @var HasProxyUser $this */
-        return Status::from($this->proxyUser()->getUserStatus());
+        /** @var HasCoreUser $this */
+        return Status::from($this->coreUser()->getUserStatus());
     }
 
     /**
@@ -37,8 +37,8 @@ trait WithStatus
     {
         $value = $status instanceof Status ? $status->value : $status;
 
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setUserStatus($value);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setUserStatus($value);
 
         return $this;
     }

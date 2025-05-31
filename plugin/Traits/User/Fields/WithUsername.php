@@ -2,7 +2,7 @@
 
 namespace Charm\Traits\User\Fields;
 
-use Charm\Contracts\Proxy\HasProxyUser;
+use Charm\Contracts\Core\HasCoreUser;
 
 /**
  * Adds the username to a user model.
@@ -22,8 +22,8 @@ trait WithUsername
      */
     public function getUsername(): string
     {
-        /** @var HasProxyUser $this */
-        return $this->proxyUser()->getUserLogin();
+        /** @var HasCoreUser $this */
+        return $this->coreUser()->getUserLogin();
     }
 
     /**
@@ -34,8 +34,8 @@ trait WithUsername
      */
     public function setUsername(string $username): static
     {
-        /** @var HasProxyUser $this */
-        $this->proxyUser()->setUserLogin($username);
+        /** @var HasCoreUser $this */
+        $this->coreUser()->setUserLogin($username);
 
         return $this;
     }
