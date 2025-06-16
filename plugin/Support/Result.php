@@ -3,7 +3,6 @@
 namespace Charm\Support;
 
 use Charm\Enums\ResultStatus;
-use WP_Error;
 
 /**
  * Represents a result after performing an operation.
