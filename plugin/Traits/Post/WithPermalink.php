@@ -21,6 +21,6 @@ trait WithPermalink
     public function getPermalink(): string
     {
         /** @var HasWpPost $this */
-        return get_permalink($this->wp()->getId());
+        return get_permalink($this->corePost()->getId());
     }
 }
