@@ -671,7 +671,7 @@ class PostType
     // *************************************************************************
 
     /**
-     * Register the post type.1
+     * Register the post type.
      *
      * @return Result
      */
@@ -1403,7 +1403,7 @@ class PostType
 
     /**
      * Set rewrite options for this post type.
-     * 
+     *
      * @param array $rewrite
      * @return $this
      */
@@ -1580,7 +1580,7 @@ class PostType
         $this->showInAdminBar = $wpPostType->show_in_admin_bar;
         $this->showInRest = $wpPostType->show_in_rest;
         $this->restBase = $wpPostType->rest_base;
-        $this->restNamespace = $wpPostType->rest_base;
+        $this->restNamespace = $wpPostType->rest_namespace;
         $this->restControllerClass = $wpPostType->rest_controller_class;
         $this->autosaveRestControllerClass = $wpPostType->autosave_rest_controller_class;
         $this->revisionsRestControllerClass = $wpPostType->revisions_rest_controller_class;
@@ -1632,7 +1632,39 @@ class PostType
     protected function toWpPostTypeArray(array $except = []): array
     {
         $data = [
+            'label' => $this->label,
+            'labels' => $this->labels,
+            'description' => $this->description,
             'public' => $this->public,
+            'hierarchical' => $this->hierarchical,
+            'exclude_from_search' => $this->excludeFromSearch,
+            'publicly_queryable' => $this->publiclyQueryable,
+            'show_ui' => $this->showUi,
+            'show_in_menu' => $this->showInMenu,
+            'show_in_nav_menus' => $this->showInNavMenus,
+            'show_in_admin_bar' => $this->showInAdminBar,
+            'show_in_rest' => $this->showInRest,
+            'rest_base' => $this->restBase,
+            'rest_namespace' => $this->restNamespace,
+            'rest_controller_class' => $this->restControllerClass,
+            'autosave_rest_controller_class' => $this->autosaveRestControllerClass,
+            'revisions_rest_controller_class' => $this->revisionsRestControllerClass,
+            'late_route_registration' => $this->lateRouteRegistration,
+            'menu_position' => $this->menuPosition,
+            'menu_icon' => $this->menuIcon,
+            'capability_type' => $this->capabilityType,
+            'capabilities' => $this->capabilities,
+            'map_meta_cap' => $this->mapMetaCap,
+            'supports' => $this->supports,
+            'register_meta_box_cb' => $this->registerMetaBoxCb,
+            'taxonomies' => $this->taxonomies,
+            'has_archive' => $this->hasArchive,
+            'rewrite' => $this->rewrite,
+            'query_var' => $this->queryVar,
+            'can_export' => $this->canExport,
+            'delete_with_user' => $this->deleteWithUser,
+            'template' => $this->template,
+            'template_lock' => $this->templateLock,
         ];
 
         return Filter::array($data)->except($except)->withoutNulls()->get();
