@@ -51,11 +51,15 @@ abstract class User implements HasCoreUser, IsPersistable
     /**
      * User constructor.
      *
-     * @param array $data
+     * @param Core\User|array $coreUserOrData
      */
-    public function __construct(array $data = [])
+    public function __construct(Core\User|array $coreUserOrData = [])
     {
-        $this->coreUser = new Core\User($data);
+        $this->coreUser = match (true) {
+            $coreUserOrData instanceof Core\User => $coreUserOrData,
+            is_array($coreUserOrData) => new Core\User($coreUserOrData),
+            default => null
+        };
     }
 
     // -------------------------------------------------------------------------
@@ -75,11 +79,11 @@ abstract class User implements HasCoreUser, IsPersistable
     /**
      * Initialize the user.
      *
-     * $key `int`                -> User ID
-     *      `null`               -> Global User
-     *      `string` (not email) -> Username / User Login
-     *      `string` (email)     -> Email Address
-     *      `WP_User`            -> `WP_User` instance
+     * $key `int` -> User ID
+     *      `null` -> Global user
+     *      `string` (not email) -> Username / User login
+     *      `string` (email) -> Email address
+     *      `WP_User` -> `WP_User` instance
      *
      * @param int|null|string|WP_User $key
      * @return ?static
@@ -100,10 +104,7 @@ abstract class User implements HasCoreUser, IsPersistable
             return null;
         }
 
-        $user = new static();
-        $user->coreUser = $coreUser;
-
-        return $user;
+        return new static($coreUser);
     }
 
     /**
@@ -136,9 +137,7 @@ abstract class User implements HasCoreUser, IsPersistable
         $users = [];
 
         foreach ($coreUsers as $coreUser) {
-            $user = new static();
-            $user->coreUser = $coreUser;
-            $users[] = $user;
+            $users[] = new static($coreUser);
         }
 
         return $users;
