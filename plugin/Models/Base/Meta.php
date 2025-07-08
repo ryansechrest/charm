@@ -42,11 +42,18 @@ abstract class Meta implements HasCoreMeta, IsPersistable
     /**
      * Meta constructor.
      *
-     * @param array $data
+     * @param Core\Meta|array $coreMetaOrData
      */
-    public function __construct(array $data = [])
+    public function __construct(Core\Meta|array $coreMetaOrData = [])
     {
-        $this->coreMeta = new Core\Meta(static::metaType(), $data);
+        $this->coreMeta = match (true) {
+            $coreMetaOrData instanceof Core\Meta => $coreMetaOrData,
+            is_array($coreMetaOrData) => new Core\Meta(
+                static::metaType(),
+                $coreMetaOrData
+            ),
+            default => null
+        };
     }
 
     // -------------------------------------------------------------------------
@@ -98,16 +105,12 @@ abstract class Meta implements HasCoreMeta, IsPersistable
         foreach ($coreMetas as $metaKey => $coreMeta) {
 
             if (!is_array($coreMeta)) {
-                $meta = new static();
-                $meta->coreMeta = $coreMeta;
-                $metas[$metaKey] = $meta;
+                $metas[$metaKey] = new static($coreMeta);
                 continue;
             }
 
             foreach ($coreMeta as $singleCoreMeta) {
-                $meta = new static();
-                $meta->coreMeta = $singleCoreMeta;
-                $metas[$metaKey][] = $meta;
+                $metas[$metaKey][] = new static($singleCoreMeta);
             }
         }
 
