@@ -60,12 +60,18 @@ abstract class Post implements HasCorePost, IsPersistable
     /**
      * Post constructor.
      *
-     * @param array $data
+     * @param Core\Post|array $corePostOrData
      */
-    public function __construct(array $data = [])
+    public function __construct(Core\Post|array $corePostOrData = [])
     {
-        $data['postType'] = static::postType();
-        $this->corePost = new Core\Post($data);
+        $this->corePost = match (true) {
+            $corePostOrData instanceof Core\Post => $corePostOrData,
+            is_array($corePostOrData) => new Core\Post([
+                ...$corePostOrData,
+                'postType' => static::postType()
+            ]),
+            default => null
+        };
     }
 
     // -------------------------------------------------------------------------
@@ -85,9 +91,9 @@ abstract class Post implements HasCorePost, IsPersistable
     /**
      * Initialize the post.
      *
-     * $key `int`     -> Post ID
-     *      `null`    -> Global Post
-     *      `string`  -> Post Slug / Path
+     * $key `int` -> Post ID
+     *      `null` -> Global post
+     *      `string` -> Post slug / Path
      *      `WP_Post` -> `WP_Post` instance
      *
      * @param int|null|string|WP_Post $key
@@ -112,10 +118,7 @@ abstract class Post implements HasCorePost, IsPersistable
             return null;
         }
 
-        $post = new static();
-        $post->corePost = $corePost;
-
-        return $post;
+        return new static($corePost);
     }
 
     /**
@@ -149,9 +152,7 @@ abstract class Post implements HasCorePost, IsPersistable
         $posts = [];
 
         foreach ($corePosts as $corePost) {
-            $post = new static();
-            $post->corePost = $corePost;
-            $posts[] = $post;
+            $posts[] = new static($corePost);
         }
 
         return $posts;
