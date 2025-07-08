@@ -58,12 +58,18 @@ abstract class Term implements HasCoreTerm, IsPersistable
     /**
      * Term constructor.
      *
-     * @param array $data
+     * @param Core\Term|array $coreTermOrData
      */
-    public function __construct(array $data = [])
+    public function __construct(Core\Term|array $coreTermOrData = [])
     {
-        $data['taxonomy'] = static::taxonomy();
-        $this->coreTerm = new Core\Term($data);
+        $this->coreTerm = match (true) {
+            $coreTermOrData instanceof Core\Term => $coreTermOrData,
+            is_array($coreTermOrData) => new Core\Term([
+                ...$coreTermOrData,
+                'taxonomy' => static::taxonomy()
+            ]),
+            default => null
+        };
     }
 
     // -------------------------------------------------------------------------
@@ -83,8 +89,8 @@ abstract class Term implements HasCoreTerm, IsPersistable
     /**
      * Initialize the term.
      *
-     * $key `int`     -> Term Taxonomy ID
-     *      `string`  -> Term Slug
+     * $key `int` -> Term taxonomy ID
+     *      `string` -> Term slug
      *      `WP_Term` -> `WP_Term` instance
      *
      * @param int|string|WP_Term $key
@@ -107,10 +113,7 @@ abstract class Term implements HasCoreTerm, IsPersistable
             return null;
         }
 
-        $term = new static();
-        $term->coreTerm = $coreTerm;
-
-        return $term;
+        return new static($coreTerm);
     }
 
     /**
@@ -142,9 +145,7 @@ abstract class Term implements HasCoreTerm, IsPersistable
         $terms = [];
 
         foreach ($coreTerms as $coreTerm) {
-            $term = new static();
-            $term->coreTerm = $coreTerm;
-            $terms[] = $term;
+            $terms[] = new static($coreTerm);
         }
 
         return $terms;
