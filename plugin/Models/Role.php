@@ -27,11 +27,15 @@ class Role implements HasCoreRole, IsPersistable
     /**
      * Role constructor.
      *
-     * @param array $data
+     * @param Core\Role|array $coreRoleOrData
      */
-    public function __construct(array $data = [])
+    public function __construct(Core\Role|array $coreRoleOrData = [])
     {
-        $this->coreRole = new Core\Role($data);
+        $this->coreRole = match (true) {
+            $coreRoleOrData instanceof Core\Role => $coreRoleOrData,
+            is_array($coreRoleOrData) => new Core\Role($coreRoleOrData),
+            default => null
+        };
     }
 
     // -------------------------------------------------------------------------
@@ -51,7 +55,7 @@ class Role implements HasCoreRole, IsPersistable
     /**
      * Initialize the role.
      *
-     * $key `string`  -> Role Slug
+     * $key `string` -> Role slug
      *      `WP_Role` -> `WP_Role` instance
      *
      * @param string|WP_Role $key
@@ -69,10 +73,7 @@ class Role implements HasCoreRole, IsPersistable
             return null;
         }
 
-        $role = new static();
-        $role->coreRole = $coreRole;
-
-        return $role;
+        return new static($coreRole);
     }
 
     // *************************************************************************
@@ -84,14 +85,12 @@ class Role implements HasCoreRole, IsPersistable
      */
     public static function get(): array
     {
-        $wpRoles = Core\Role::get();
+        $coreRoles = Core\Role::get();
 
         $roles = [];
 
-        foreach ($wpRoles as $wpRole) {
-            $role = new static();
-            $role->coreRole = $wpRole;
-            $roles[] = $role;
+        foreach ($coreRoles as $coreRole) {
+            $roles[] = new static($coreRole);
         }
 
         return $roles;
